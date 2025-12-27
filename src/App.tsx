@@ -52,6 +52,7 @@ import EditJob from "./pages/EditJob";
 import EditService from "./pages/EditService";
 import JobDetails from "./pages/JobDetails";
 import PublicStats from "./pages/PublicStats";
+import AuthCallback from "./pages/AuthCallback";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -103,6 +104,7 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/cadastro" element={<Auth />} />
                 <Route path="/recover-cpf" element={<RecoverByCPF />} />
                 <Route path="/edit-job/:id" element={
