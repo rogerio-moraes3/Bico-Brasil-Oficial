@@ -33,37 +33,31 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white transition-opacity duration-300 ${isFadingOut ? 'opacity-0' : 'opacity-100'
                 }`}
         >
-            {/* Container centralizado com fade-in */}
-            <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
+            {/* Container centralizado */}
+            <div className="flex flex-col items-center gap-8 animate-in fade-in duration-500">
 
                 {/* Título Superior - BICO BRASIL */}
-                <h1 className="text-4xl font-bold text-[#10B981] tracking-wide">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#004d08] tracking-wide">
                     BICO BRASIL
                 </h1>
 
                 {/* Bonequinho Trabalhador */}
-                <div className="w-64 h-64 flex items-center justify-center">
-                    {/* Imagem do bonequinho trabalhador */}
+                <div className="w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
                     <img
-                        src="/uploaded_image_0_1766799557829.png"
+                        src="/worker-mascot.png"
                         alt="Trabalhador Bico Brasil"
                         className="w-full h-full object-contain drop-shadow-2xl"
+                        onError={(e) => {
+                            // Fallback se imagem não carregar
+                            e.currentTarget.style.display = 'none';
+                        }}
                     />
                 </div>
 
                 {/* Slogan Inferior - TRABALHOU, TÁ PAGO! */}
-                <p className="text-4xl font-bold text-[#10B981] tracking-wide">
+                <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#004d08] tracking-wide">
                     TRABALHOU, TÁ PAGO!
                 </p>
-            </div>
-
-            {/* Loading indicator sutil */}
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
-                <div className="flex gap-1.5">
-                    <div className="w-2 h-2 bg-[#10B981] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-[#10B981] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-[#10B981] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                </div>
             </div>
         </div>
     );

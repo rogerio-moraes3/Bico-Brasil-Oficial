@@ -1,9 +1,9 @@
 import {
-  require_prop_types
-} from "./chunk-ZYQIF643.js";
-import {
   clsx_default
 } from "./chunk-KDVGFZWC.js";
+import {
+  require_prop_types
+} from "./chunk-ZYQIF643.js";
 import {
   require_react_dom
 } from "./chunk-UR7M4CTY.js";
