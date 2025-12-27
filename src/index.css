@@ -1,0 +1,518 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Modo Claro - Cores Pastel Suaves */
+    --background: 220 20% 97%;        /* #F6F7F9 - pastel suave */
+    --foreground: 0 0% 9%;            /* #161616 - texto escuro */
+
+    --card: 0 0% 100%;                /* #FFFFFF - cards brancos */
+    --card-foreground: 0 0% 16%;      /* #2A2A2A - texto dos cards */
+
+    --popover: 0 0% 100%;             /* #FFFFFF */
+    --popover-foreground: 0 0% 16%;   /* #2A2A2A */
+
+    --primary: 29 100% 50%;           /* #FF7A00 - laranja */
+    --primary-foreground: 0 0% 100%;  /* branco */
+
+    --secondary: 209 72% 53%;         /* #2E86DE - azul secundário */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 14% 96%;             /* cinza claro pastel */
+    --muted-foreground: 0 0% 45%;     /* texto secundário */
+
+    --accent: 29 100% 50%;            /* #FF7A00 - laranja */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 80%;            /* #C4C9D4 - borda visível */
+    --input: 0 0% 95%;                /* #F2F2F2 - inputs */
+    --ring: 29 100% 50%;
+
+    --radius: 0.75rem;
+
+    --gradient-primary: linear-gradient(135deg, hsl(29 100% 50%), hsl(35 100% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(209 72% 53%), hsl(215 70% 60%));
+    
+    --shadow-glow: 0 10px 40px -10px hsl(29 100% 50% / 0.3);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 220 20% 97%;
+    --sidebar-foreground: 0 0% 16%;
+    --sidebar-primary: 0 0% 9%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 29 100% 50%;
+  }
+
+  .dark {
+    /* Modo Escuro - Azul Terracota Escuro #001F3F */
+    --background: 209 100% 12%;       /* #001F3F - azul terracota escuro */
+    --foreground: 0 0% 100%;          /* #FFFFFF - texto branco */
+
+    --card: 209 100% 15%;             /* #00264D - cards azul escuro */
+    --card-foreground: 0 0% 100%;     /* #FFFFFF */
+
+    --popover: 209 100% 15%;          /* #00264D */
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 29 100% 50%;           /* #FF7A00 - laranja para botões */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 209 100% 12%;        /* #001F3F - igual ao background */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 209 100% 18%;            /* #003366 - azul escuro médio */
+    --muted-foreground: 210 30% 85%;  /* texto secundário claro */
+
+    --accent: 29 100% 50%;            /* #FF7A00 - laranja para acentos */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 209 80% 22%;            /* #003366 - bordas azul escuro */
+    --input: 209 100% 15%;            /* #00264D - inputs azul escuro */
+    --ring: 29 100% 50%;
+    
+    --sidebar-background: 209 100% 12%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 29 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 209 100% 18%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 209 80% 22%;
+    --sidebar-ring: 29 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+  }
+
+  /* Forçar contraste de headings no dark mode */
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .dark p, .dark span, .dark label {
+    color: hsl(var(--foreground));
+  }
+
+  .lucide {
+    stroke-width: 2;
+  }
+}
+
+@layer utilities {
+  /* ===== ACESSIBILIDADE - Focus Ring ===== */
+  .focus-ring:focus,
+  .focus-visible\:ring-2:focus-visible {
+    outline: 3px solid hsl(var(--ring) / 0.5);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+  }
+  
+  /* Esconder outline padrão e usar apenas quando navegando por teclado */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  
+  /* ===== CORREÇÕES DEFINITIVAS MODO ESCURO ===== */
+  
+  /* Forçar fundo escuro em TODAS as páginas no dark mode */
+  html.dark body,
+  .dark .bg-white,
+  .dark .bg-gray-50,
+  .dark .bg-gray-100 {
+    background-color: hsl(209 100% 12%) !important;
+  }
+  
+  /* Garantir texto claro em dark mode */
+  .dark .text-black,
+  .dark .text-gray-800,
+  .dark .text-gray-700,
+  .dark .text-gray-900 {
+    color: hsl(0 0% 100%) !important;
+  }
+  
+  /* Cards e containers no dark mode */
+  .dark .bg-card,
+  .dark [class*="bg-card"] {
+    background-color: hsl(209 100% 15%);
+  }
+  
+  /* Bordas visíveis no dark mode */
+  .dark .border,
+  .dark [class*="border-"] {
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+  
+  /* Prose (texto de páginas institucionais) no dark mode */
+  .dark .prose,
+  .dark .prose p,
+  .dark .prose li,
+  .dark .prose ul,
+  .dark .prose ol {
+    color: hsl(0 0% 90%) !important;
+  }
+  
+  .dark .prose strong {
+    color: hsl(0 0% 100%) !important;
+  }
+
+  /* Números grandes e textos em bold nos cards de métricas */
+  .dark .text-2xl,
+  .dark .text-3xl,
+  .dark .font-bold {
+    color: hsl(0 0% 100%);
+  }
+
+  /* Badges com cores hardcoded - ajustar para dark mode */
+  .dark .bg-green-100 {
+    background-color: hsl(140 70% 20%);
+  }
+  .dark .text-green-800 {
+    color: hsl(140 70% 85%);
+  }
+  .dark .bg-blue-100 {
+    background-color: hsl(210 70% 20%);
+  }
+  .dark .text-blue-800 {
+    color: hsl(210 70% 85%);
+  }
+  .dark .bg-yellow-100 {
+    background-color: hsl(45 70% 20%);
+  }
+  .dark .text-yellow-800 {
+    color: hsl(45 70% 85%);
+  }
+  .dark .bg-red-100 {
+    background-color: hsl(0 70% 20%);
+  }
+  .dark .text-red-800 {
+    color: hsl(0 70% 85%);
+  }
+
+  /* Tabelas - garantir texto visível */
+  .dark table,
+  .dark th,
+  .dark td {
+    color: hsl(0 0% 100%);
+    border-color: hsl(209 80% 22%);
+  }
+
+  .dark thead {
+    background-color: hsl(209 100% 18%);
+  }
+
+  .dark tbody tr:hover {
+    background-color: hsl(209 100% 20%);
+  }
+
+  /* Inputs e selects no dark mode */
+  .dark input,
+  .dark select,
+  .dark textarea {
+    background-color: hsl(209 100% 15%);
+    border-color: hsl(209 80% 30%);
+    color: hsl(0 0% 100%);
+  }
+
+  /* Botões outline no dark mode */
+  .dark .border-input {
+    border-color: hsl(209 80% 30%);
+  }
+
+  /* Separadores visíveis */
+  .dark [data-orientation="horizontal"] {
+    background-color: hsl(209 80% 25%);
+  }
+
+  /* Bordas translúcidas para containers no dark mode */
+  .dark .border-border {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Garantir que CardTitle seja visível */
+  .dark [class*="CardTitle"],
+  .dark .card-title {
+    color: hsl(0 0% 100%);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Avatar Fallback - garantir que nunca mostre "?" */
+  .avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  /* LazyImage - melhor fallback para mobile */
+  img[alt]:after {
+    content: attr(alt);
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.05));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  /* ===== INPUTS - EVITAR SOBREPOSIÇÃO ===== */
+  input,
+  select,
+  textarea {
+    line-height: 1.5 !important;
+    min-height: 44px !important;
+  }
+  
+  /* ===== EFEITOS SOFISTICADOS SPLIT-SCREEN ===== */
+  
+  /* ========================================
+     EFEITOS FUTURISTAS - SOMENTE WEBSITE
+     Não aparece no PWA/App instalado
+     ======================================== */
+}
+
+/* Efeitos visuais SOMENTE para navegador (website) */
+@media (display-mode: browser) {
+  /* Grade metálica diagonal animada */
+  .metallic-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+      linear-gradient(-45deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 25px 25px;
+    animation: gridSlide 6s linear infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes gridSlide {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: 25px 25px, -25px 25px; }
+  }
+  
+  /* Brilho metálico intenso */
+  .shine-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 0%,
+      transparent 30%,
+      rgba(255,255,255,0.18) 42%,
+      rgba(255,255,255,0.35) 50%,
+      rgba(255,255,255,0.18) 58%,
+      transparent 70%,
+      transparent 100%
+    );
+    background-size: 250% 100%;
+    animation: sheenMove 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes sheenMove {
+    0% { background-position: 150% 0; }
+    100% { background-position: -50% 0; }
+  }
+  
+  /* Borda luminosa interna forte */
+  .inner-glow {
+    position: absolute;
+    inset: 0;
+    box-shadow: 
+      inset 0 0 100px rgba(255,255,255,0.12),
+      inset 0 0 40px rgba(255,255,255,0.08);
+    pointer-events: none;
+  }
+  
+  /* Gradiente de profundidade nas bordas */
+  .edge-fade {
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(to right, rgba(0,0,0,0.2) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.2) 100%),
+      linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 25%, transparent 75%, rgba(0,0,0,0.15) 100%);
+    pointer-events: none;
+  }
+  
+  /* Partículas aleatórias flutuantes */
+  .noise-texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    background: 
+      radial-gradient(2px 2px at 30% 40%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(3px 3px at 65% 25%, rgba(255,255,255,0.15), transparent),
+      radial-gradient(2px 2px at 80% 60%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(3px 3px at 45% 80%, rgba(255,255,255,0.18), transparent),
+      radial-gradient(2px 2px at 10% 55%, rgba(255,255,255,0.22), transparent),
+      radial-gradient(2px 2px at 90% 85%, rgba(255,255,255,0.15), transparent);
+    animation: particleFloat 8s ease-in-out infinite alternate;
+  }
+  
+  .noise-texture::before,
+  .noise-texture::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    animation: floatParticle 4s ease-in-out infinite;
+  }
+  
+  .noise-texture::before {
+    top: 15%;
+    left: 20%;
+    animation-delay: 0s;
+  }
+  
+  .noise-texture::after {
+    top: 70%;
+    left: 75%;
+    animation-delay: 2s;
+  }
+  
+  @keyframes floatParticle {
+    0%, 100% { 
+      opacity: 0.2;
+      transform: translateY(0) scale(1);
+    }
+    50% { 
+      opacity: 0.4;
+      transform: translateY(-15px) scale(1.3);
+    }
+  }
+  
+  @keyframes particleFloat {
+    0% { 
+      opacity: 0.7;
+      transform: translateY(0);
+    }
+    100% { 
+      opacity: 1;
+      transform: translateY(-10px);
+    }
+  }
+  
+  /* Linha divisória central luminosa */
+  .center-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(255,255,255,0.4) 15%,
+      rgba(255,255,255,0.7) 50%,
+      rgba(255,255,255,0.4) 85%,
+      transparent 100%
+    );
+    box-shadow: 0 0 15px rgba(255,255,255,0.3);
+  }
+}
+
+/* PWA/App instalado - Esconder TODOS os efeitos futuristas */
+@media (display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui) {
+  .metallic-grid,
+  .shine-overlay,
+  .inner-glow,
+  .edge-fade,
+  .noise-texture,
+  .center-divider {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+}

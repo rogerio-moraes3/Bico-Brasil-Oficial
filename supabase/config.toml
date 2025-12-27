@@ -1,0 +1,46 @@
+project_id = "lohzlvkotuawqaxxqjah"
+
+[functions.create-pix-payment]
+verify_jwt = false
+
+[functions.get-payment-status]
+verify_jwt = true
+
+[functions.mercadopago-webhook]
+verify_jwt = false
+
+[functions.mercadopago-destaque-webhook]
+verify_jwt = false
+
+[functions.expire-old-payments]
+verify_jwt = false
+
+[functions.get-webhook-urls]
+verify_jwt = true
+
+[functions.validate-mp-credentials]
+verify_jwt = true
+
+[functions.create-destaque-payment]
+verify_jwt = false
+
+[functions.send-email]
+verify_jwt = true
+
+[functions.send-profile-completion-email]
+verify_jwt = true
+
+[functions.notify-new-lead]
+verify_jwt = false
+
+[functions.notify-job-expiration]
+verify_jwt = false
+
+[functions.notify-new-job]
+verify_jwt = false
+
+[functions.recover-by-cpf]
+verify_jwt = false
+
+[functions.create-mercadopago-payment]
+verify_jwt = false
