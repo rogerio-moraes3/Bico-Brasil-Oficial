@@ -10,29 +10,21 @@ export default function AuthCallback() {
     useEffect(() => {
         const handleCallback = async () => {
             try {
-                console.log('[AuthCallback] Processando callback OAuth...');
+                console.log('[AuthCallback] Processando callback PKCE...');
 
-                // Obter sessão (Supabase processa automaticamente o hash)
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                // Processar PKCE flow com exchangeCodeForSession
+                const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
 
-                if (sessionError) {
-                    console.error('[AuthCallback] Erro ao obter sessão:', sessionError);
+                if (exchangeError) {
+                    console.error('[AuthCallback] Erro ao trocar code por sessão:', exchangeError);
                     setError('Erro ao finalizar login');
                     return;
                 }
 
-                if (session) {
-                    console.log('[AuthCallback] Sessão criada com sucesso!', session.user.id);
+                console.log('[AuthCallback] Sessão PKCE criada com sucesso!');
 
-                    // LIMPAR O HASH DA URL IMEDIATAMENTE (mata o loop)
-                    window.history.replaceState({}, document.title, '/');
-
-                    // Redirecionar para /app
-                    navigate('/app', { replace: true });
-                } else {
-                    console.log('[AuthCallback] Sem sessão, exibindo erro');
-                    setError('Sessão não encontrada');
-                }
+                // Redirecionar para /app
+                window.location.replace('/app');
             } catch (error: any) {
                 console.error('[AuthCallback] Erro inesperado:', error);
                 setError('Erro inesperado ao processar login');
