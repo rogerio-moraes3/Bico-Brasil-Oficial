@@ -12,22 +12,56 @@ export default function AuthCallback() {
             try {
                 console.log('[AuthCallback] Processando callback PKCE...');
 
-                // Processar PKCE flow com exchangeCodeForSession
-                const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+                // PASSO 1: Processar PKCE flow
+                const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
+                    window.location.href
+                );
 
                 if (exchangeError) {
-                    console.error('[AuthCallback] Erro ao trocar code por sessão:', exchangeError);
+                    console.error('[AuthCallback] Erro ao trocar code:', exchangeError);
                     setError('Erro ao finalizar login');
                     return;
                 }
 
-                console.log('[AuthCallback] Sessão PKCE criada com sucesso!');
+                // PASSO 2: Obter sessão
+                const { data: { session } } = await supabase.auth.getSession();
 
-                // Redirecionar para /app
+                if (!session) {
+                    setError('Sessão não encontrada');
+                    return;
+                }
+
+                console.log('[AuthCallback] Sessão criada, sincronizando usuário...');
+
+                // PASSO 3: Chamar Edge Function para sincronizar usuário
+                const syncResponse = await fetch(
+                    'https://pyelmqmhraczgptagvve.supabase.co/functions/v1/sync_user_profile',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${session.access_token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            access_token: session.access_token
+                        })
+                    }
+                );
+
+                if (!syncResponse.ok) {
+                    const syncError = await syncResponse.json();
+                    console.error('[AuthCallback] Erro ao sincronizar usuário:', syncError);
+                    setError('Erro ao criar perfil');
+                    return;
+                }
+
+                console.log('[AuthCallback] Usuário sincronizado com sucesso!');
+
+                // PASSO 4: Redirecionar para /app
                 window.location.replace('/app');
             } catch (error: any) {
                 console.error('[AuthCallback] Erro inesperado:', error);
-                setError('Erro inesperado ao processar login');
+                setError('Erro inesperado');
             }
         };
 
