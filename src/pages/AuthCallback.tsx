@@ -10,37 +10,9 @@ export default function AuthCallback() {
     useEffect(() => {
         const handleCallback = async () => {
             try {
-                // Verificar se há hash na URL (#access_token=...)
-                const hashParams = new URLSearchParams(window.location.hash.substring(1));
-                const accessToken = hashParams.get('access_token');
-                const refreshToken = hashParams.get('refresh_token');
+                console.log('[AuthCallback] Processando callback OAuth...');
 
-                if (accessToken && refreshToken) {
-                    // Processar tokens do hash e criar sessão
-                    console.log('[AuthCallback] Processando tokens do hash...');
-                    const { data, error } = await supabase.auth.setSession({
-                        access_token: accessToken,
-                        refresh_token: refreshToken
-                    });
-
-                    if (error) {
-                        console.error('[AuthCallback] Erro ao criar sessão:', error);
-                        setError(error.message);
-                        setTimeout(() => navigate('/auth?mode=login'), 2000);
-                        return;
-                    }
-
-                    if (data.session) {
-                        console.log('[AuthCallback] Sessão criada com sucesso!', data.session.user.id);
-                        // Limpar hash da URL
-                        window.history.replaceState(null, '', window.location.pathname);
-                        // Aguardar um pouco para garantir que a sessão foi persistida
-                        setTimeout(() => navigate('/app'), 500);
-                        return;
-                    }
-                }
-
-                // Se não há hash, tentar obter sessão existente
+                // Usar getSession() que processa automaticamente hash e code
                 const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
                 if (sessionError) {
@@ -51,8 +23,13 @@ export default function AuthCallback() {
                 }
 
                 if (session) {
-                    console.log('[AuthCallback] Sessão existente encontrada');
-                    navigate('/app');
+                    console.log('[AuthCallback] Sessão criada com sucesso!', session.user.id);
+                    // Limpar hash se existir
+                    if (window.location.hash) {
+                        window.history.replaceState(null, '', window.location.pathname);
+                    }
+                    // Usar replace para evitar voltar ao callback
+                    navigate('/app', { replace: true });
                 } else {
                     console.log('[AuthCallback] Sem sessão, redirecionando para login');
                     navigate('/auth?mode=login');
