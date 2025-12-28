@@ -34,30 +34,40 @@ export default function AuthCallback() {
                 console.log('[AuthCallback] Sessão criada, sincronizando usuário...');
 
                 // PASSO 3: Chamar Edge Function para sincronizar usuário
-                const syncResponse = await fetch(
-                    'https://pyelmqmhraczgptagvve.supabase.co/functions/v1/sync_user_profile',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${session.access_token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            access_token: session.access_token
-                        })
-                    }
-                );
+                try {
+                    const syncResponse = await fetch(
+                        'https://pyelmqmhraczgptagvve.supabase.co/functions/v1/sync_user_profile',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${session.access_token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                access_token: session.access_token
+                            })
+                        }
+                    );
 
-                if (!syncResponse.ok) {
-                    const syncError = await syncResponse.json();
-                    console.error('[AuthCallback] Erro ao sincronizar usuário:', syncError);
-                    setError('Erro ao criar perfil');
-                    return;
+                    console.log('[AuthCallback] Resposta da Edge Function:', syncResponse.status);
+
+                    if (!syncResponse.ok) {
+                        const syncError = await syncResponse.json().catch(() => ({ error: 'Erro desconhecido' }));
+                        console.error('[AuthCallback] Erro ao sincronizar usuário:', syncError);
+                        // NÃO bloquear o login se a Edge Function falhar
+                        console.warn('[AuthCallback] Continuando login mesmo com erro na sincronização');
+                    } else {
+                        const syncResult = await syncResponse.json();
+                        console.log('[AuthCallback] Usuário sincronizado com sucesso:', syncResult);
+                    }
+                } catch (syncError) {
+                    console.error('[AuthCallback] Erro ao chamar Edge Function:', syncError);
+                    // NÃO bloquear o login se a Edge Function falhar
+                    console.warn('[AuthCallback] Continuando login mesmo com erro na Edge Function');
                 }
 
-                console.log('[AuthCallback] Usuário sincronizado com sucesso!');
-
                 // PASSO 4: Redirecionar para /app
+                console.log('[AuthCallback] Redirecionando para /app...');
                 window.location.replace('/app');
             } catch (error: any) {
                 console.error('[AuthCallback] Erro inesperado:', error);
