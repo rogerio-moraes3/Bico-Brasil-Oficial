@@ -27,12 +27,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener FIRST (prevents missing auth events)
+    let mounted = true;
+
+    const init = async () => {
+      // PRIMEIRO: obter sessão existente
+      const { data: { session }, error } = await supabase.auth.getSession();
+
+      if (mounted) {
+        if (error) console.error('[AuthContext] Erro ao obter sessão:', error);
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+        console.log('[AuthContext] Sessão inicial:', session?.user?.id || 'nenhuma');
+      }
+    };
+
+    init();
+
+    // DEPOIS: configurar listener para mudanças futuras
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('[AuthContext] Auth state changed:', event, session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
 
       // Atualizar foto do Google se o perfil já existe mas não tem foto
       if (event === 'SIGNED_IN' && session?.user) {
@@ -62,20 +78,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, userData: any) => {
     try {
       console.log('[AuthContext] Iniciando signup para:', email);
-      
+
       // O trigger handle_new_user() no banco de dados criará o perfil automaticamente
       // Passamos os dados via user_metadata para o trigger usar
       const { data, error } = await supabase.auth.signUp({
