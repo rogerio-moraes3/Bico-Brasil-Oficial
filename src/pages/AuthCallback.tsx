@@ -1,105 +1,72 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { useEffect } from 'react'
+import { supabase } from '@/integrations/supabase/client'
 
 export default function AuthCallback() {
-    const navigate = useNavigate();
-    const [error, setError] = useState<string | null>(null);
-
     useEffect(() => {
-        const handleCallback = async () => {
-            try {
-                console.log('[AuthCallback] Processando callback PKCE...');
+        const run = async () => {
+            console.log('🔵 CALLBACK START')
 
-                // PASSO 1: Processar PKCE flow
-                const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
-                    window.location.href
-                );
+            // Aguardar um pouco para garantir que o Supabase processou
+            await new Promise(resolve => setTimeout(resolve, 500))
 
-                if (exchangeError) {
-                    console.error('[AuthCallback] Erro ao trocar code:', exchangeError);
-                    setError('Erro ao finalizar login');
-                    return;
-                }
+            const { data, error } = await supabase.auth.getSession()
 
-                // PASSO 2: Obter sessão
-                const { data: { session } } = await supabase.auth.getSession();
+            console.log('🔵 SESSION RESULT', data, error)
 
-                if (!session) {
-                    setError('Sessão não encontrada');
-                    return;
-                }
-
-                console.log('[AuthCallback] Sessão criada, sincronizando usuário...');
-
-                // PASSO 3: Chamar Edge Function para sincronizar usuário
-                try {
-                    const syncResponse = await fetch(
-                        'https://pyelmqmhraczgptagvve.supabase.co/functions/v1/sync_user_profile',
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${session.access_token}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                access_token: session.access_token
-                            })
-                        }
-                    );
-
-                    console.log('[AuthCallback] Resposta da Edge Function:', syncResponse.status);
-
-                    if (!syncResponse.ok) {
-                        const syncError = await syncResponse.json().catch(() => ({ error: 'Erro desconhecido' }));
-                        console.error('[AuthCallback] Erro ao sincronizar usuário:', syncError);
-                        // NÃO bloquear o login se a Edge Function falhar
-                        console.warn('[AuthCallback] Continuando login mesmo com erro na sincronização');
-                    } else {
-                        const syncResult = await syncResponse.json();
-                        console.log('[AuthCallback] Usuário sincronizado com sucesso:', syncResult);
-                    }
-                } catch (syncError) {
-                    console.error('[AuthCallback] Erro ao chamar Edge Function:', syncError);
-                    // NÃO bloquear o login se a Edge Function falhar
-                    console.warn('[AuthCallback] Continuando login mesmo com erro na Edge Function');
-                }
-
-                // PASSO 4: Redirecionar para /app
-                console.log('[AuthCallback] Redirecionando para /app...');
-                window.location.replace('/app');
-            } catch (error: any) {
-                console.error('[AuthCallback] Erro inesperado:', error);
-                setError('Erro inesperado');
+            if (!data?.session) {
+                console.error('🔴 NO SESSION')
+                // Redirecionar para login após 2s
+                setTimeout(() => {
+                    window.location.href = '/auth?mode=login'
+                }, 2000)
+                return
             }
-        };
 
-        handleCallback();
-    }, [navigate]);
+            console.log('✅ SESSION OK:', data.session.user.id)
 
-    if (error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-white">
-                <div className="text-center">
-                    <p className="text-red-600 mb-4">{error}</p>
-                    <button
-                        onClick={() => navigate('/auth?mode=login')}
-                        className="text-blue-600 hover:underline"
-                    >
-                        Voltar para login
-                    </button>
-                </div>
-            </div>
-        );
-    }
+            // Chamar Edge Function para sincronizar usuário
+            try {
+                const syncResponse = await fetch(
+                    'https://pyelmqmhraczgptagvve.supabase.co/functions/v1/sync_user_profile',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${data.session.access_token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                )
+
+                console.log('🔵 SYNC RESPONSE:', syncResponse.status)
+
+                if (syncResponse.ok) {
+                    const syncResult = await syncResponse.json()
+                    console.log('✅ USER SYNCED:', syncResult)
+                } else {
+                    console.warn('⚠️ SYNC FAILED, continuing anyway')
+                }
+            } catch (syncError) {
+                console.warn('⚠️ SYNC ERROR, continuing anyway:', syncError)
+            }
+
+            // Limpar hash da URL
+            window.history.replaceState({}, '', '/')
+
+            console.log('🔵 REDIRECTING TO /app')
+
+            // Redirecionamento HARD (não react-router)
+            window.location.href = '/app'
+        }
+
+        run()
+    }, [])
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white">
             <div className="text-center">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-500 mx-auto mb-4" />
-                <p className="text-gray-600">Finalizando login...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <p className="text-gray-600">Processando login…</p>
             </div>
         </div>
-    );
+    )
 }
