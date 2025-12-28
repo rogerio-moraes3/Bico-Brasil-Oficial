@@ -6,16 +6,24 @@ export default function AuthCallback() {
         const run = async () => {
             console.log('🔵 CALLBACK START')
 
-            // Aguardar um pouco para garantir que o Supabase processou
-            await new Promise(resolve => setTimeout(resolve, 500))
+            // FORÇAR processamento do hash (Implicit Flow)
+            // O Supabase processa automaticamente ao chamar getSession()
+            await new Promise(resolve => setTimeout(resolve, 1000))
 
             const { data, error } = await supabase.auth.getSession()
 
             console.log('🔵 SESSION RESULT', data, error)
 
+            if (error) {
+                console.error('🔴 SESSION ERROR:', error)
+                setTimeout(() => {
+                    window.location.href = '/auth?mode=login'
+                }, 2000)
+                return
+            }
+
             if (!data?.session) {
                 console.error('🔴 NO SESSION')
-                // Redirecionar para login após 2s
                 setTimeout(() => {
                     window.location.href = '/auth?mode=login'
                 }, 2000)
@@ -26,6 +34,7 @@ export default function AuthCallback() {
 
             // Chamar Edge Function para sincronizar usuário
             try {
+                console.log('🔵 Chamando Edge Function...')
                 const syncResponse = await fetch(
                     'https://pyelmqmhraczgptagvve.supabase.co/functions/v1/sync_user_profile',
                     {
@@ -43,19 +52,23 @@ export default function AuthCallback() {
                     const syncResult = await syncResponse.json()
                     console.log('✅ USER SYNCED:', syncResult)
                 } else {
-                    console.warn('⚠️ SYNC FAILED, continuing anyway')
+                    const syncError = await syncResponse.text()
+                    console.warn('⚠️ SYNC FAILED:', syncError)
                 }
             } catch (syncError) {
-                console.warn('⚠️ SYNC ERROR, continuing anyway:', syncError)
+                console.warn('⚠️ SYNC ERROR:', syncError)
             }
 
             // Limpar hash da URL
-            window.history.replaceState({}, '', '/')
+            console.log('🔵 Limpando hash da URL...')
+            window.history.replaceState({}, '', window.location.pathname)
 
             console.log('🔵 REDIRECTING TO /app')
 
-            // Redirecionamento HARD (não react-router)
-            window.location.href = '/app'
+            // Redirecionamento HARD
+            setTimeout(() => {
+                window.location.href = '/app'
+            }, 500)
         }
 
         run()
