@@ -250,10 +250,6 @@ export default function Auth() {
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent'
-          },
           skipBrowserRedirect: false
         }
       });

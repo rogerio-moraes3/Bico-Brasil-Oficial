@@ -1,51 +1,62 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 
 export default function AuthCallback() {
     const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const finalizeAuth = async () => {
+        const handleCallback = async () => {
             try {
                 console.log('[AuthCallback] Processando callback OAuth...');
 
-                // 🔴 CHAVE: getSessionFromUrl processa o hash e persiste a sessão
-                const { data, error } = await supabase.auth.getSessionFromUrl({
-                    storeSession: true,
-                });
+                // Obter sessão (Supabase processa automaticamente o hash)
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-                if (error) {
-                    console.error('[AuthCallback] Erro no callback:', error);
-                    navigate("/auth?error=oauth");
+                if (sessionError) {
+                    console.error('[AuthCallback] Erro ao obter sessão:', sessionError);
+                    setError('Erro ao finalizar login');
                     return;
                 }
 
-                if (data?.session) {
-                    console.log('[AuthCallback] Sessão criada com sucesso!', data.session.user.id);
+                if (session) {
+                    console.log('[AuthCallback] Sessão criada com sucesso!', session.user.id);
 
-                    // 🔴 LIMPA O HASH DA URL (mata o loop)
-                    window.history.replaceState(
-                        {},
-                        document.title,
-                        window.location.pathname
-                    );
+                    // LIMPAR O HASH DA URL IMEDIATAMENTE (mata o loop)
+                    window.history.replaceState({}, document.title, '/');
 
-                    navigate("/app", { replace: true });
-                    return;
+                    // Redirecionar para /app
+                    navigate('/app', { replace: true });
+                } else {
+                    console.log('[AuthCallback] Sem sessão, exibindo erro');
+                    setError('Sessão não encontrada');
                 }
-
-                console.log('[AuthCallback] Sem sessão, redirecionando para login');
-                navigate("/auth?error=no_session");
             } catch (error: any) {
                 console.error('[AuthCallback] Erro inesperado:', error);
-                navigate("/auth?error=unexpected");
+                setError('Erro inesperado ao processar login');
             }
         };
 
-        finalizeAuth();
+        handleCallback();
     }, [navigate]);
+
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">{error}</p>
+                    <button
+                        onClick={() => navigate('/auth?mode=login')}
+                        className="text-blue-600 hover:underline"
+                    >
+                        Voltar para login
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white">
