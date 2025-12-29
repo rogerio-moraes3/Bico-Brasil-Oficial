@@ -20,7 +20,7 @@ export default function CompleteProfile() {
   const { user } = useAuth();
   const { toast } = useToast();
   const missingFields = location.state?.missingFields || [];
-  
+
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [cities, setCities] = useState<any[]>([]);
@@ -44,7 +44,7 @@ export default function CompleteProfile() {
   const loadData = async () => {
     const [profileRes, citiesRes, categoriesRes] = await Promise.all([
       supabase.from('users').select('*').eq('auth_id', user!.id).maybeSingle(),
-      supabase.from('cities').select('*').eq('active', true).order('name'),
+      supabase.from('cities').select('*').order('name'),
       supabase.from('categories').select('*').order('name'),
     ]);
 
@@ -144,7 +144,7 @@ export default function CompleteProfile() {
   return (
     <>
       <Header />
-      
+
       <div className="container mx-auto px-4 py-8 min-h-screen overflow-y-auto pb-20 md:pb-8">
         <Card className="max-w-2xl mx-auto max-h-[85vh] overflow-y-auto">
           <CardHeader>
