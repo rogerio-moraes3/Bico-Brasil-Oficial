@@ -18,6 +18,7 @@ interface City {
 export const CitySelector = () => {
   const [cities, setCities] = useState<City[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadCities();
@@ -25,12 +26,14 @@ export const CitySelector = () => {
   }, []);
 
   const loadCities = async () => {
+    setLoading(true);
     // Aguardar sessão estar pronta antes de fazer query
     const { data: { session } } = await supabase.auth.getSession();
 
     // Se não tem sessão, não faz query (evita 401)
     if (!session) {
       console.log('[CitySelector] Sem sessão, pulando load de cities');
+      setLoading(false);
       return;
     }
 
@@ -41,10 +44,12 @@ export const CitySelector = () => {
 
     if (error) {
       console.error("Error loading cities:", error);
+      setLoading(false);
       return;
     }
 
     setCities(data || []);
+    setLoading(false);
   };
 
   const loadSelectedCity = () => {
