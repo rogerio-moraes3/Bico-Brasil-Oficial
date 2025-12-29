@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { validateCPF, formatCPF } from '@/lib/validators';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
@@ -26,6 +27,7 @@ export default function CompleteProfile() {
   const [cities, setCities] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [formData, setFormData] = useState({
+    cpf: '',
     phone: '',
     phone_type: 'whatsapp_only',
     neighborhood: '',
@@ -51,6 +53,7 @@ export default function CompleteProfile() {
     if (profileRes.data) {
       setProfile(profileRes.data);
       setFormData({
+        cpf: profileRes.data.cpf || '',
         phone: profileRes.data.phone || '',
         phone_type: (profileRes.data as any).phone_type || 'whatsapp_only',
         neighborhood: profileRes.data.neighborhood || '',
@@ -68,7 +71,47 @@ export default function CompleteProfile() {
     setLoading(true);
 
     try {
-      // Validação
+      // Validação CPF
+      if (!formData.cpf.trim()) {
+        toast({
+          title: 'Campo obrigatório',
+          description: 'CPF é obrigatório',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      const cpfClean = formData.cpf.replace(/\D/g, '');
+      if (!validateCPF(cpfClean)) {
+        toast({
+          title: 'CPF inválido',
+          description: 'Digite um CPF válido',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Verificar CPF duplicado
+      const { data: existingCpf } = await supabase
+        .from('users')
+        .select('id')
+        .eq('cpf', cpfClean)
+        .neq('auth_id', user!.id)
+        .maybeSingle();
+
+      if (existingCpf) {
+        toast({
+          title: 'CPF já cadastrado',
+          description: 'Este CPF já está em uso por outro usuário',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Validação telefone
       if (!formData.phone.trim()) {
         toast({
           title: 'Campo obrigatório',
@@ -113,6 +156,7 @@ export default function CompleteProfile() {
       const { error } = await supabase
         .from('users')
         .update({
+          cpf: cpfClean,
           phone: formData.phone.trim(),
           phone_type: formData.phone_type,
           neighborhood: formData.neighborhood.trim(),
@@ -167,6 +211,21 @@ export default function CompleteProfile() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="cpf">CPF *</Label>
+                <Input
+                  id="cpf"
+                  placeholder="000.000.000-00"
+                  value={formData.cpf}
+                  onChange={(e) => setFormData({ ...formData, cpf: formatCPF(e.target.value) })}
+                  maxLength={14}
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  Seu CPF é necessário para validação e segurança da plataforma
+                </p>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefone/WhatsApp *</Label>
                 <Input
