@@ -58,7 +58,7 @@ export default function SearchWorkers() {
   const loadFilters = async () => {
     try {
       const [citiesRes, categoriesRes] = await Promise.all([
-        supabase.from('cities').select('*').order('name'),
+        supabase.from('cities').select('*').eq('active', true).order('name'),
         supabase.from('categories').select('*')
       ]);
 
@@ -101,7 +101,8 @@ export default function SearchWorkers() {
       console.log('🔍 FASE 2: Buscando serviços ativos...');
       let servicesQuery = supabase
         .from('worker_services')
-        .select('*, category:categories(name), subcategory:subcategories(name)');
+        .select('*, category:categories(name), subcategory:subcategories(name)')
+        .eq('active', true);
 
       if (filters.category !== 'all') {
         console.log('📌 Filtro categoria aplicado:', filters.category);

@@ -46,7 +46,7 @@ export default function CompleteProfile() {
   const loadData = async () => {
     const [profileRes, citiesRes, categoriesRes] = await Promise.all([
       supabase.from('users').select('*').eq('auth_id', user!.id).maybeSingle(),
-      supabase.from('cities').select('*').order('name'),
+      supabase.from('cities').select('*').eq('active', true).order('name'),
       supabase.from('categories').select('*').order('name'),
     ]);
 

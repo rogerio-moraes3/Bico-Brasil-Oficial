@@ -76,6 +76,7 @@ const ProcurarBicos = () => {
     const { data, error } = await supabase
       .from('cities')
       .select('id, name, state')
+      .eq('active', true)
       .order('name');
 
     if (!error && data) {

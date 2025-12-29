@@ -901,7 +901,12 @@ export default function Admin() {
                   </TableHeader>
                   <TableBody>
                     {filteredLeads.slice(0, 50).map((user) => (
-                      <TableRow key={user.id}>
+                      <TableRow
+                        key={user.id}
+                        className="cursor-pointer hover:bg-muted/50 transition-colors"
+                        onClick={() => navigate(`/worker/${user.id}`)}
+                        title="Clique para ver detalhes do usuário"
+                      >
                         <TableCell className="font-mono text-[10px] text-muted-foreground whitespace-nowrap">
                           {user.id?.slice(0, 8)}...
                         </TableCell>

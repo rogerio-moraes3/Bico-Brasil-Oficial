@@ -50,7 +50,7 @@ export default function OfferServices() {
 
   const loadData = async () => {
     const [citiesRes, categoriesRes, profileRes] = await Promise.all([
-      supabase.from('cities').select('*').order('name'),
+      supabase.from('cities').select('*').eq('active', true).order('name'),
       supabase.from('categories').select('*'),
       supabase.from('users').select('phone, city_id, neighborhood').eq('auth_id', user!.id).single()
     ]);

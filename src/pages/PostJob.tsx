@@ -47,7 +47,7 @@ export default function PostJob() {
 
   const loadData = async () => {
     const [citiesRes, categoriesRes] = await Promise.all([
-      supabase.from('cities').select('*').order('name'),
+      supabase.from('cities').select('*').eq('active', true).order('name'),
       supabase.from('categories').select('*')
     ]);
 

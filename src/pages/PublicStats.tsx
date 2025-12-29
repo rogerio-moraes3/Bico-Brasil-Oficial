@@ -22,9 +22,9 @@ export default function PublicStats() {
   const loadStats = async () => {
     try {
       const [servicesRes, jobsRes, citiesRes] = await Promise.all([
-        supabase.from('worker_services').select('id', { count: 'exact', head: true }),
+        supabase.from('worker_services').select('id', { count: 'exact', head: true }).eq('active', true),
         supabase.from('job_postings').select('id', { count: 'exact', head: true }).eq('status', 'open'),
-        supabase.from('cities').select('id', { count: 'exact', head: true })
+        supabase.from('cities').select('id', { count: 'exact', head: true }).eq('active', true)
       ]);
 
       setStats({

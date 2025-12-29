@@ -48,7 +48,7 @@ export default function EditJob() {
 
   const loadData = async () => {
     const [citiesRes, categoriesRes, jobRes] = await Promise.all([
-      supabase.from('cities').select('*').order('name'),
+      supabase.from('cities').select('*').eq('active', true).order('name'),
       supabase.from('categories').select('*'),
       supabase.from('job_postings').select('*').eq('id', id).single()
     ]);

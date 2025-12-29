@@ -16,6 +16,7 @@ import { cn, safeGoBack } from "@/lib/utils";
 import { Badge } from "./ui/badge";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { useUserMode } from "@/contexts/UserModeContext";
+import { ModeToggle } from "./ModeToggle";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -120,6 +121,11 @@ export const Header = () => {
               <FreePostsBadge />
             )}
 
+            {/* Mode Toggle (Contratar/Trabalhar) */}
+            <div className="hidden lg:block ml-4">
+              <ModeToggle />
+            </div>
+
             <PWAInstallButton />
             <ThemeToggle />
 
@@ -193,6 +199,10 @@ export const Header = () => {
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 mt-6">
+                  <div className="px-2 mb-4">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">Modo de Uso</p>
+                    <ModeToggle />
+                  </div>
                   {user && (
                     <div className="flex items-center gap-3 p-3 border rounded-lg mb-2">
                       <Avatar className="h-10 w-10">
