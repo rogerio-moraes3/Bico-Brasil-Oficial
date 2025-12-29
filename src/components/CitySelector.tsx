@@ -65,9 +65,9 @@ export const CitySelector = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-center md:justify-start gap-2 max-w-xs mx-auto md:mx-0">
           <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
-          <Select value={selectedCity} onValueChange={handleCityChange}>
+          <Select value={selectedCity} onValueChange={handleCityChange} disabled={loading}>
             <SelectTrigger className="h-10 bg-background border border-border">
-              <SelectValue placeholder="Selecione sua cidade" />
+              <SelectValue placeholder={loading ? "Carregando cidades..." : "Selecione sua cidade"} />
             </SelectTrigger>
             <SelectContent className="max-h-[300px]">
               {cities
