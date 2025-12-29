@@ -43,12 +43,12 @@ export default function SearchWorkers() {
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  
-  const { 
-    isTester, 
-    isPremium, 
-    canViewProfiles, 
-    remainingFreeViews 
+
+  const {
+    isTester,
+    isPremium,
+    canViewProfiles,
+    remainingFreeViews
   } = useAccessControl();
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function SearchWorkers() {
   const loadFilters = async () => {
     try {
       const [citiesRes, categoriesRes] = await Promise.all([
-        supabase.from('cities').select('*').eq('active', true),
+        supabase.from('cities').select('*').order('name'),
         supabase.from('categories').select('*')
       ]);
 
@@ -75,13 +75,13 @@ export default function SearchWorkers() {
 
   const handleCategoryChange = async (categoryId: string) => {
     setFilters({ ...filters, category: categoryId, subcategory: 'all' });
-    
+
     if (categoryId && categoryId !== 'all') {
       const { data } = await supabase
         .from('subcategories')
         .select('*')
         .eq('category_id', categoryId);
-      
+
       setSubcategories(data || []);
     } else {
       setSubcategories([]);
@@ -96,13 +96,12 @@ export default function SearchWorkers() {
     try {
       console.log('🔍 Iniciando busca de profissionais...');
       console.log('📊 Filtros aplicados:', filters);
-      
+
       // FASE 2: Buscar serviços com busca inteligente
       console.log('🔍 FASE 2: Buscando serviços ativos...');
       let servicesQuery = supabase
         .from('worker_services')
-        .select('*, category:categories(name), subcategory:subcategories(name)')
-        .eq('active', true);
+        .select('*, category:categories(name), subcategory:subcategories(name)');
 
       if (filters.category !== 'all') {
         console.log('📌 Filtro categoria aplicado:', filters.category);
@@ -116,7 +115,7 @@ export default function SearchWorkers() {
 
       if (searchQuery.trim()) {
         const expandedTerms = expandSearchTerms(searchQuery);
-        const orConditions = expandedTerms.map(term => 
+        const orConditions = expandedTerms.map(term =>
           `title.ilike.%${term}%,description.ilike.%${term}%`
         ).join(',');
         servicesQuery = servicesQuery.or(orConditions);
@@ -143,7 +142,7 @@ export default function SearchWorkers() {
       console.log('👥 FASE 3: Buscando usuários dos serviços...');
       const userIds = servicesData.map(s => s.user_id);
       console.log('🔑 IDs de usuários encontrados nos serviços:', userIds);
-      
+
       // Use secure view that doesn't expose PII (phone, email, cpf, address)
       let usersQuery = supabase
         .from('public_worker_profiles')
@@ -200,7 +199,7 @@ export default function SearchWorkers() {
         const service = servicesData.find(s => s.user_id === user.id);
         const hasDestaque = user.destaque_expires_at && new Date(user.destaque_expires_at) > new Date();
         const isPremium = user.plan_active && user.subscription_end && new Date(user.subscription_end) > new Date();
-        
+
         return {
           id: user.id,
           name: user.name,
@@ -239,7 +238,7 @@ export default function SearchWorkers() {
 
       console.log(`✅ Total de profissionais combinados: ${combined.length}`);
       setWorkers(combined);
-      
+
       if (combined.length === 0) {
         setError("Nenhum profissional encontrado. Tente remover alguns filtros ou usar palavras-chave diferentes.");
       } else {
@@ -261,8 +260,8 @@ export default function SearchWorkers() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      
-      
+
+
       {/* Banner de acesso para testers */}
       {isTester && (
         <div className="bg-purple-900/30 border-b border-purple-500/30 py-3">
@@ -274,7 +273,7 @@ export default function SearchWorkers() {
           </div>
         </div>
       )}
-      
+
       {/* Banner de limite para usuários gratuitos */}
       {!isTester && !isPremium && (
         <div className="bg-yellow-900/30 border-b border-yellow-500/30 py-3">
@@ -282,14 +281,14 @@ export default function SearchWorkers() {
             <div className="flex items-center gap-2">
               <Crown className="h-5 w-5 text-yellow-400" />
               <span className="text-sm text-foreground">
-                {remainingFreeViews > 0 
-                  ? `Você tem ${remainingFreeViews} visualizações gratuitas restantes` 
+                {remainingFreeViews > 0
+                  ? `Você tem ${remainingFreeViews} visualizações gratuitas restantes`
                   : 'Limite de visualizações atingido'}
               </span>
             </div>
-            <Button 
-              size="sm" 
-              variant="outline" 
+            <Button
+              size="sm"
+              variant="outline"
               onClick={() => navigate('/premium')}
               className="border-yellow-500 text-yellow-400 hover:bg-yellow-900/50"
             >
@@ -298,7 +297,7 @@ export default function SearchWorkers() {
           </div>
         </div>
       )}
-      
+
       <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <h1 className="text-3xl font-bold mb-8">Buscar Profissionais</h1>
 
@@ -401,7 +400,7 @@ export default function SearchWorkers() {
                   'Buscar'
                 )}
               </Button>
-              <Button 
+              <Button
                 onClick={() => {
                   setFilters({
                     category: 'all',
@@ -423,7 +422,7 @@ export default function SearchWorkers() {
 
             {/* Geolocalização */}
             <div className="pt-4 border-t">
-              <GeolocationSearch 
+              <GeolocationSearch
                 onLocationChange={(lat, lng, radius) => setGeoLocation({ lat, lng, radius })}
               />
             </div>
@@ -433,7 +432,7 @@ export default function SearchWorkers() {
         {/* Contador de resultados */}
         {searched && !loading && !error && workers.length > 0 && (
           <div className="mb-4 text-sm text-muted-foreground">
-            Encontrados {workers.length} profissionai{workers.length !== 1 ? 's' : ''} 
+            Encontrados {workers.length} profissionai{workers.length !== 1 ? 's' : ''}
             {filters.category !== 'all' && ` em ${categories.find(c => c.id === filters.category)?.name}`}
             {filters.city_id !== 'all' && ` em ${cities.find(c => c.id === filters.city_id)?.name}`}
           </div>
@@ -477,10 +476,10 @@ export default function SearchWorkers() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto">
                 {workers.map((worker) => {
                   const isOwner = user?.id === worker.id;
-                  
+
                   return (
                     <Card key={worker.id} className="h-full hover:shadow-lg transition-shadow">
-                      <Link 
+                      <Link
                         to={`/worker/${worker.id}`}
                         onClick={(e) => {
                           console.log('🔗 Navegando para perfil do profissional:', worker.id);
@@ -495,8 +494,8 @@ export default function SearchWorkers() {
                           <div className="flex flex-col items-center gap-4 mb-4">
                             <div className="relative">
                               <Avatar className="h-24 w-24">
-                                <AvatarImage 
-                                  src={worker.profile_photo || ''} 
+                                <AvatarImage
+                                  src={worker.profile_photo || ''}
                                   alt={worker.name}
                                 />
                                 <AvatarFallback>
@@ -519,7 +518,7 @@ export default function SearchWorkers() {
                               <p className="text-sm font-medium text-primary mb-3">
                                 {worker.service_title || worker.category}
                               </p>
-                              
+
                               <div className="flex gap-2 justify-center flex-wrap mb-3">
                                 {worker.destaque_expires_at && new Date(worker.destaque_expires_at) > new Date() && (
                                   <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
@@ -569,7 +568,7 @@ export default function SearchWorkers() {
                           )}
                         </CardContent>
                       </Link>
-                      
+
                       {!isOwner && worker.phone && (
                         <div className="px-6 pb-6 pt-2 border-t">
                           <WhatsAppContactButton
@@ -583,20 +582,20 @@ export default function SearchWorkers() {
                       )}
                     </Card>
                   );
-              })}
-            </div>
-          ) : null}
-        </div>
-      )}
-    </main>
-    
-    <UpgradeModal 
-      open={showUpgradeModal}
-      onOpenChange={setShowUpgradeModal}
-      remainingViews={remainingFreeViews}
-    />
+                })}
+              </div>
+            ) : null}
+          </div>
+        )}
+      </main>
 
-    <Footer />
-  </div>
-);
+      <UpgradeModal
+        open={showUpgradeModal}
+        onOpenChange={setShowUpgradeModal}
+        remainingViews={remainingFreeViews}
+      />
+
+      <Footer />
+    </div>
+  );
 }

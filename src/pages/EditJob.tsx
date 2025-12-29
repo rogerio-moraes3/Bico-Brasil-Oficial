@@ -48,7 +48,7 @@ export default function EditJob() {
 
   const loadData = async () => {
     const [citiesRes, categoriesRes, jobRes] = await Promise.all([
-      supabase.from('cities').select('*').eq('active', true),
+      supabase.from('cities').select('*').order('name'),
       supabase.from('categories').select('*'),
       supabase.from('job_postings').select('*').eq('id', id).single()
     ]);
@@ -128,11 +128,11 @@ export default function EditJob() {
   return (
     <div className="min-h-screen flex flex-col pb-20 md:pb-0">
       <Header />
-      
-      
+
+
       <main className="flex-grow container mx-auto px-4 py-8">
         <Breadcrumbs />
-        
+
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -140,7 +140,7 @@ export default function EditJob() {
               Editar Trabalho
             </CardTitle>
           </CardHeader>
-          
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
@@ -149,7 +149,7 @@ export default function EditJob() {
                   id="title"
                   placeholder="Ex: Preciso de um pedreiro para reforma"
                   value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   required
                 />
               </div>
@@ -160,7 +160,7 @@ export default function EditJob() {
                   id="description"
                   placeholder="Descreva o trabalho que precisa..."
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
                   required
                 />
@@ -169,7 +169,7 @@ export default function EditJob() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="category">Categoria *</Label>
-                  <Select value={formData.category_id} onValueChange={(value) => setFormData({...formData, category_id: value})}>
+                  <Select value={formData.category_id} onValueChange={(value) => setFormData({ ...formData, category_id: value })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
@@ -185,7 +185,7 @@ export default function EditJob() {
 
                 <div className="space-y-2">
                   <Label htmlFor="city">Cidade *</Label>
-                  <Select value={formData.city_id} onValueChange={(value) => setFormData({...formData, city_id: value})}>
+                  <Select value={formData.city_id} onValueChange={(value) => setFormData({ ...formData, city_id: value })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
@@ -206,7 +206,7 @@ export default function EditJob() {
                   id="neighborhood"
                   placeholder="Ex: Centro"
                   value={formData.neighborhood}
-                  onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
                 />
               </div>
 
@@ -216,7 +216,7 @@ export default function EditJob() {
                   id="date_time"
                   type="datetime-local"
                   value={formData.date_time}
-                  onChange={(e) => setFormData({...formData, date_time: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, date_time: e.target.value })}
                 />
               </div>
 
@@ -224,7 +224,7 @@ export default function EditJob() {
                 <Switch
                   id="urgent"
                   checked={formData.urgent}
-                  onCheckedChange={(checked) => setFormData({...formData, urgent: checked})}
+                  onCheckedChange={(checked) => setFormData({ ...formData, urgent: checked })}
                 />
                 <Label htmlFor="urgent">Trabalho Urgente</Label>
               </div>

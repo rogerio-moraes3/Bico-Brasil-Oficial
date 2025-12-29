@@ -22,9 +22,9 @@ export default function PublicStats() {
   const loadStats = async () => {
     try {
       const [servicesRes, jobsRes, citiesRes] = await Promise.all([
-        supabase.from('worker_services').select('id', { count: 'exact', head: true }).eq('active', true),
+        supabase.from('worker_services').select('id', { count: 'exact', head: true }),
         supabase.from('job_postings').select('id', { count: 'exact', head: true }).eq('status', 'open'),
-        supabase.from('cities').select('id', { count: 'exact', head: true }).eq('active', true)
+        supabase.from('cities').select('id', { count: 'exact', head: true })
       ]);
 
       setStats({
@@ -42,11 +42,11 @@ export default function PublicStats() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <div className="max-w-4xl mx-auto">
           <Breadcrumbs />
-          
+
           <h1 className="text-3xl md:text-4xl font-bold mb-4">Relação com Usuários</h1>
           <p className="text-muted-foreground mb-8">
             Informações públicas sobre a plataforma Bico Brasil
@@ -103,16 +103,16 @@ export default function PublicStats() {
             <CardContent className="pt-6">
               <h2 className="text-lg font-semibold mb-4">Sobre nossa Relação com Usuários</h2>
               <p className="text-muted-foreground mb-4">
-                O Bico Brasil atua como uma plataforma de intermediação, conectando contratantes 
-                e prestadores de serviços para trabalhos manuais. Não intermediamos pagamentos 
+                O Bico Brasil atua como uma plataforma de intermediação, conectando contratantes
+                e prestadores de serviços para trabalhos manuais. Não intermediamos pagamentos
                 nem somos responsáveis pela execução dos serviços.
               </p>
               <p className="text-muted-foreground mb-6">
-                Para informações detalhadas ou dados administrativos, investidores podem entrar 
+                Para informações detalhadas ou dados administrativos, investidores podem entrar
                 em contato pelo e-mail:
               </p>
-              <a 
-                href="mailto:contato.bicobrasil@gmail.com" 
+              <a
+                href="mailto:contato.bicobrasil@gmail.com"
                 className="text-primary hover:underline font-medium text-lg"
               >
                 contato.bicobrasil@gmail.com

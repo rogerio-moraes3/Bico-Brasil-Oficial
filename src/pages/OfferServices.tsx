@@ -50,7 +50,7 @@ export default function OfferServices() {
 
   const loadData = async () => {
     const [citiesRes, categoriesRes, profileRes] = await Promise.all([
-      supabase.from('cities').select('*').eq('active', true),
+      supabase.from('cities').select('*').order('name'),
       supabase.from('categories').select('*'),
       supabase.from('users').select('phone, city_id, neighborhood').eq('auth_id', user!.id).single()
     ]);
@@ -70,27 +70,27 @@ export default function OfferServices() {
 
   const handleCategoryChange = async (categoryId: string) => {
     if (categoryId === 'outros') {
-      setFormData({ 
-        ...formData, 
-        category: categoryId, 
+      setFormData({
+        ...formData,
+        category: categoryId,
         subcategory: '',
-        isCustomCategory: true 
+        isCustomCategory: true
       });
       setSubcategories([]);
     } else {
-      setFormData({ 
-        ...formData, 
-        category: categoryId, 
+      setFormData({
+        ...formData,
+        category: categoryId,
         subcategory: '',
         isCustomCategory: false,
         customCategory: ''
       });
-      
+
       const { data } = await supabase
         .from('subcategories')
         .select('*')
         .eq('category_id', categoryId);
-      
+
       setSubcategories(data || []);
     }
   };
@@ -180,7 +180,7 @@ export default function OfferServices() {
   return (
     <>
       <Header />
-      
+
       <div className="container mx-auto px-4 py-8 pb-20 md:pb-8 max-w-3xl">
         <Card className="max-h-[80vh] overflow-y-auto">
           <CardHeader>
@@ -191,15 +191,15 @@ export default function OfferServices() {
                   Cadastre seu serviço e seja encontrado por clientes
                 </p>
               </div>
-              <ShareButtons 
-                text="Quer fazer bicos e ganhar dinheiro extra? Cadastre-se no Bico Brasil!" 
+              <ShareButtons
+                text="Quer fazer bicos e ganhar dinheiro extra? Cadastre-se no Bico Brasil!"
                 url="https://bicobrasil.com.br/offer-services"
               />
             </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              
+
               {/* Título do Serviço */}
               <div>
                 <Label htmlFor="service_title">Título do Serviço *</Label>
@@ -207,7 +207,7 @@ export default function OfferServices() {
                   id="service_title"
                   placeholder="Ex: Sou pedreiro — Faço reboco, contrapiso, reformas"
                   value={formData.service_title}
-                  onChange={(e) => setFormData({...formData, service_title: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, service_title: e.target.value })}
                   required
                 />
               </div>
@@ -236,7 +236,7 @@ export default function OfferServices() {
                     id="customCategory"
                     placeholder="Ex: Instalação de antenas, montagem de móveis planejados..."
                     value={formData.customCategory}
-                    onChange={(e) => setFormData({...formData, customCategory: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, customCategory: e.target.value })}
                     required
                     maxLength={100}
                   />
@@ -247,7 +247,7 @@ export default function OfferServices() {
               {formData.category && !formData.isCustomCategory && subcategories.length > 0 && (
                 <div>
                   <Label>Subcategoria</Label>
-                  <Select value={formData.subcategory} onValueChange={(val) => setFormData({...formData, subcategory: val})}>
+                  <Select value={formData.subcategory} onValueChange={(val) => setFormData({ ...formData, subcategory: val })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione a subcategoria" />
                     </SelectTrigger>
@@ -267,7 +267,7 @@ export default function OfferServices() {
                   id="description"
                   placeholder="Ex: Sou pedreiro com 8 anos de experiência. Faço reboco, contrapiso, colocação de pisos, reformas e manutenções gerais. Orçamentos sem compromisso."
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={5}
                   required
                 />
@@ -280,14 +280,14 @@ export default function OfferServices() {
                   id="price"
                   placeholder="Ex: R$ 150 por diária / R$ 40 m²"
                   value={formData.price}
-                  onChange={(e) => setFormData({...formData, price: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 />
               </div>
 
               {/* Cidade */}
               <div>
                 <Label>Cidade *</Label>
-                <Select value={formData.city_id} onValueChange={(val) => setFormData({...formData, city_id: val})}>
+                <Select value={formData.city_id} onValueChange={(val) => setFormData({ ...formData, city_id: val })}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione a cidade" />
                   </SelectTrigger>
@@ -306,7 +306,7 @@ export default function OfferServices() {
                   id="neighborhood"
                   placeholder="Digite o bairro"
                   value={formData.neighborhood}
-                  onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
                 />
               </div>
 
@@ -317,7 +317,7 @@ export default function OfferServices() {
                   id="address"
                   placeholder="Rua, número, complemento"
                   value={formData.address}
-                  onChange={(e) => setFormData({...formData, address: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 />
               </div>
 
@@ -329,7 +329,7 @@ export default function OfferServices() {
                   type="tel"
                   placeholder="(18) 99999-9999"
                   value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   required
                 />
               </div>
@@ -337,7 +337,7 @@ export default function OfferServices() {
               {/* Disponibilidade */}
               <div>
                 <Label>Disponibilidade *</Label>
-                <Select value={formData.availability} onValueChange={(val) => setFormData({...formData, availability: val})}>
+                <Select value={formData.availability} onValueChange={(val) => setFormData({ ...formData, availability: val })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>

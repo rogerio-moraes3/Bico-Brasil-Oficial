@@ -47,7 +47,7 @@ export default function PostJob() {
 
   const loadData = async () => {
     const [citiesRes, categoriesRes] = await Promise.all([
-      supabase.from('cities').select('*').eq('active', true),
+      supabase.from('cities').select('*').order('name'),
       supabase.from('categories').select('*')
     ]);
 
@@ -61,7 +61,7 @@ export default function PostJob() {
 
     try {
       console.log('📝 Iniciando publicação de trabalho...');
-      
+
       // Validações
       if (!formData.title.trim()) {
         throw new Error('Título do trabalho é obrigatório');
@@ -89,7 +89,7 @@ export default function PostJob() {
         console.error('❌ Erro ao buscar usuário:', userError);
         throw new Error('Erro ao buscar dados do usuário: ' + userError.message);
       }
-      
+
       if (!userData) {
         console.error('❌ Usuário não encontrado no banco');
         throw new Error('Usuário não encontrado. Complete seu perfil primeiro.');
@@ -171,11 +171,11 @@ export default function PostJob() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
-      
+
+
       <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <Breadcrumbs />
-        
+
         <Card className="max-w-3xl mx-auto max-h-[80vh] overflow-y-auto">
           <CardHeader>
             <div className="flex items-center gap-3">
@@ -186,7 +186,7 @@ export default function PostJob() {
               Descreva o trabalho e receba propostas de profissionais
             </p>
           </CardHeader>
-          
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -238,7 +238,7 @@ export default function PostJob() {
                       <SelectItem value="outros">Outros</SelectItem>
                     </SelectContent>
                   </Select>
-                  
+
                   {/* Campo personalizado "Outros" */}
                   {formData.category === 'outros' && (
                     <div className="mt-2">

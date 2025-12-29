@@ -28,7 +28,7 @@ const ProcurarBicos = () => {
   const { toast } = useToast();
   const { isTester, isPremium, canViewContacts, remainingFreeViews } = useAccessControl();
   const { user } = useAuth();
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [jobs, setJobs] = useState<any[]>([]);
@@ -36,11 +36,11 @@ const ProcurarBicos = () => {
   const [selectedJob, setSelectedJob] = useState<any | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  
+
   const [cities, setCities] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [subcategories, setSubcategories] = useState<any[]>([]);
-  
+
   const [filters, setFilters] = useState({
     city_id: 'all',
     category_id: 'all',
@@ -76,9 +76,8 @@ const ProcurarBicos = () => {
     const { data, error } = await supabase
       .from('cities')
       .select('id, name, state')
-      .eq('active', true)
       .order('name');
-    
+
     if (!error && data) {
       setCities(data);
     }
@@ -89,7 +88,7 @@ const ProcurarBicos = () => {
       .from('categories')
       .select('id, name')
       .order('name');
-    
+
     if (!error && data) {
       setCategories(data);
     }
@@ -101,7 +100,7 @@ const ProcurarBicos = () => {
       .select('id, name')
       .eq('category_id', categoryId)
       .order('name');
-    
+
     if (!error && data) {
       setSubcategories(data);
     }
@@ -137,7 +136,7 @@ const ProcurarBicos = () => {
       }
 
       // Nota: job_postings não tem subcategory_id (só workers_services tem)
-      
+
       // Filtro de urgência
       if (filters.urgent) {
         query = query.eq('urgent', true);
@@ -157,9 +156,9 @@ const ProcurarBicos = () => {
       }
 
       const { data, error } = await query;
-      
+
       if (error) throw error;
-      
+
       console.log('📞 Jobs carregados:', {
         total: data?.length,
         sample: data?.[0] ? {
@@ -169,7 +168,7 @@ const ProcurarBicos = () => {
           user_phone: data[0].user?.phone
         } : 'Nenhum job'
       });
-      
+
       setJobs(data || []);
     } catch (error) {
       console.error('Erro ao buscar bicos:', error);
@@ -215,7 +214,7 @@ const ProcurarBicos = () => {
   // Verificar se o usuário é dono do job
   const isJobOwner = (job: any) => {
     if (!user) return false;
-    
+
     console.log('🔍 Verificando ownership do anúncio:', {
       job_id: job.id,
       job_title: job.title,
@@ -223,12 +222,12 @@ const ProcurarBicos = () => {
       job_user_auth_id: job.user?.auth_id,
       current_user_id: user.id
     });
-    
+
     // Comparar auth_id do job.user com o auth_id do usuário logado
     // Incluir fallback verificando user_id diretamente caso o join falhe
     const isOwner = job.user?.auth_id === user.id || job.user_id === user.id;
     console.log('✅ Resultado ownership:', isOwner);
-    
+
     return isOwner;
   };
 
@@ -239,7 +238,7 @@ const ProcurarBicos = () => {
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
-    
+
     if (diffMins < 60) return `${diffMins}min atrás`;
     if (diffHours < 24) return `${diffHours}h atrás`;
     return `${diffDays}d atrás`;
@@ -248,36 +247,36 @@ const ProcurarBicos = () => {
   const handleDeleteJob = async (jobId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!confirm('Tem certeza que deseja excluir este anúncio?')) return;
-    
+
     try {
       console.log('🗑️ Tentando excluir anúncio:', jobId);
-      
+
       const { error } = await supabase
         .from('job_postings')
         .delete()
         .eq('id', jobId);
-        
+
       if (error) {
         console.error('❌ Erro RLS ao excluir:', error);
-        toast({ 
-          title: "Erro ao excluir", 
-          description: error.code === '42501' 
+        toast({
+          title: "Erro ao excluir",
+          description: error.code === '42501'
             ? "Você não tem permissão para excluir este anúncio."
             : `Erro: ${error.message}`,
-          variant: "destructive" 
+          variant: "destructive"
         });
         return;
       }
-      
+
       console.log('✅ Anúncio excluído com sucesso');
       toast({ title: "Anúncio excluído com sucesso" });
       loadJobs();
     } catch (err) {
       console.error('Erro inesperado:', err);
-      toast({ 
-        title: "Erro inesperado", 
+      toast({
+        title: "Erro inesperado",
         description: "Tente novamente mais tarde.",
-        variant: "destructive" 
+        variant: "destructive"
       });
     }
   };
@@ -285,18 +284,18 @@ const ProcurarBicos = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      
-      
+
+
       <main className="flex-1 container mx-auto px-4 py-6 pb-20 md:pb-6 overflow-y-auto">
         <Breadcrumbs />
-        
+
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Procurar Bicos</h1>
             <p className="text-muted-foreground">Encontre oportunidades de trabalho na sua região</p>
           </div>
-          <ShareButtons 
-            text="Procurando bicos? Encontre oportunidades de trabalho no Bico Brasil!" 
+          <ShareButtons
+            text="Procurando bicos? Encontre oportunidades de trabalho no Bico Brasil!"
             url="https://bicobrasil.com.br/procurar-bicos"
           />
         </div>
@@ -316,7 +315,7 @@ const ProcurarBicos = () => {
                   className="pl-9"
                 />
               </div>
-              
+
               <Select value={filters.city_id} onValueChange={(value) => setFilters(prev => ({ ...prev, city_id: value }))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todas as cidades" />
@@ -330,7 +329,7 @@ const ProcurarBicos = () => {
                   ))}
                 </SelectContent>
               </Select>
-              
+
               <Select value={filters.category_id} onValueChange={(value) => setFilters(prev => ({ ...prev, category_id: value }))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todas as categorias" />
@@ -359,16 +358,16 @@ const ProcurarBicos = () => {
                   <SelectItem value="month">Último mês</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="urgent" 
+                <Checkbox
+                  id="urgent"
                   checked={filters.urgent}
                   onCheckedChange={(checked) => setFilters(prev => ({ ...prev, urgent: checked as boolean }))}
                 />
                 <Label htmlFor="urgent" className="cursor-pointer">Apenas urgentes</Label>
               </div>
-              
+
               <div className="flex gap-2 md:col-span-3">
                 <Button onClick={handleSearch} className="flex-1">
                   <Search className="h-4 w-4 mr-2" />
@@ -377,7 +376,7 @@ const ProcurarBicos = () => {
                 <Button onClick={handleClearFilters} variant="outline">
                   Limpar
                 </Button>
-                <Button 
+                <Button
                   onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
                   variant="outline"
                   size="icon"
@@ -432,7 +431,7 @@ const ProcurarBicos = () => {
                       <AvatarImage src={job.user?.profile_photo} />
                       <AvatarFallback>{job.user?.name?.[0] || '?'}</AvatarFallback>
                     </Avatar>
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex-1 min-w-0">
@@ -460,12 +459,12 @@ const ProcurarBicos = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                         {job.description}
                       </p>
-                      
-                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+
+                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                         {job.city?.name && (
                           <div className="flex items-center gap-1">
                             <MapPin className="h-4 w-4" />
@@ -478,7 +477,7 @@ const ProcurarBicos = () => {
                         </div>
                       </div>
 
-                       {/* Botões de Editar/Excluir - apenas para o próprio usuário */}
+                      {/* Botões de Editar/Excluir - apenas para o próprio usuário */}
                       {user && isJobOwner(job) && (
                         <div className="flex gap-2 mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
                           <Button
@@ -504,7 +503,7 @@ const ProcurarBicos = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   {/* WhatsApp Contact Button */}
                   {job.user?.phone && user?.id !== job.user_id && (
                     <div className="px-4 pb-4 pt-2 border-t" onClick={(e) => e.stopPropagation()}>
@@ -525,7 +524,7 @@ const ProcurarBicos = () => {
       </main>
 
       <Footer />
-      
+
       {selectedJob && (
         <JobDetailsModal
           job={selectedJob}
@@ -535,7 +534,7 @@ const ProcurarBicos = () => {
           isOwner={isJobOwner(selectedJob)}
         />
       )}
-      
+
       <UpgradeModal
         open={showUpgradeModal}
         onOpenChange={setShowUpgradeModal}
