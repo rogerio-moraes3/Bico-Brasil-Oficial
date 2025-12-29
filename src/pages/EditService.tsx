@@ -93,7 +93,7 @@ export default function EditService() {
       .select('*')
       .eq('category_id', categoryId)
       .order('name');
-    
+
     setSubcategories(data || []);
   };
 
@@ -126,7 +126,7 @@ export default function EditService() {
       if (error) throw error;
 
       toast({
-        title: "✅ Serviço atualizado!",
+        title: "Serviço atualizado",
         description: "Seu serviço foi atualizado com sucesso"
       });
 
@@ -153,10 +153,10 @@ export default function EditService() {
   return (
     <div className="min-h-screen flex flex-col bg-background pb-20 md:pb-0">
       <Header />
-      
+
       <main className="flex-grow container mx-auto px-4 py-8">
         <Breadcrumbs />
-        
+
         <Button
           variant="ghost"
           size="sm"
@@ -166,7 +166,7 @@ export default function EditService() {
           <ArrowLeft className="h-4 w-4 mr-2" />
           Voltar
         </Button>
-        
+
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -174,7 +174,7 @@ export default function EditService() {
               Editar Serviço
             </CardTitle>
           </CardHeader>
-          
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
@@ -183,7 +183,7 @@ export default function EditService() {
                   id="title"
                   placeholder="Ex: Pintura residencial"
                   value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   required
                 />
               </div>
@@ -194,7 +194,7 @@ export default function EditService() {
                   id="description"
                   placeholder="Descreva seu serviço em detalhes..."
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
                   required
                 />
@@ -203,9 +203,9 @@ export default function EditService() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="category">Categoria</Label>
-                  <Select 
-                    value={formData.category_id} 
-                    onValueChange={(value) => setFormData({...formData, category_id: value, subcategory_id: ''})}
+                  <Select
+                    value={formData.category_id}
+                    onValueChange={(value) => setFormData({ ...formData, category_id: value, subcategory_id: '' })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione" />
@@ -222,9 +222,9 @@ export default function EditService() {
 
                 <div className="space-y-2">
                   <Label htmlFor="subcategory">Subcategoria</Label>
-                  <Select 
-                    value={formData.subcategory_id} 
-                    onValueChange={(value) => setFormData({...formData, subcategory_id: value})}
+                  <Select
+                    value={formData.subcategory_id}
+                    onValueChange={(value) => setFormData({ ...formData, subcategory_id: value })}
                     disabled={!formData.category_id || subcategories.length === 0}
                   >
                     <SelectTrigger>
@@ -251,15 +251,15 @@ export default function EditService() {
                     min="0"
                     placeholder="Ex: 150.00"
                     value={formData.price}
-                    onChange={(e) => setFormData({...formData, price: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="availability">Disponibilidade</Label>
-                  <Select 
-                    value={formData.availability} 
-                    onValueChange={(value) => setFormData({...formData, availability: value})}
+                  <Select
+                    value={formData.availability}
+                    onValueChange={(value) => setFormData({ ...formData, availability: value })}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -280,7 +280,7 @@ export default function EditService() {
                 <Switch
                   id="active"
                   checked={formData.active}
-                  onCheckedChange={(checked) => setFormData({...formData, active: checked})}
+                  onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
                 />
                 <Label htmlFor="active">Serviço Ativo</Label>
               </div>

@@ -61,10 +61,10 @@ export default function WorkerProfile() {
   const [loading, setLoading] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [isWorkerUnlocked, setIsWorkerUnlocked] = useState(false);
-  
-  const { 
-    isTester, 
-    canViewContacts, 
+
+  const {
+    isTester,
+    canViewContacts,
     recordProfileView,
     remainingFreeViews,
     remainingFreeUnlocks
@@ -73,7 +73,7 @@ export default function WorkerProfile() {
   useEffect(() => {
     if (id) {
       loadWorkerData();
-      
+
       // Registrar visualização (se não for tester ou premium)
       if (!isTester && user) {
         recordProfileView(id);
@@ -158,9 +158,9 @@ export default function WorkerProfile() {
       if ((canViewContacts || isWorkerUnlocked) && user) {
         const { data: contact, error: contactError } = await supabase
           .rpc('get_worker_contact', { worker_id: id });
-        
+
         console.log('📞 Tentativa de carregar contato:', { contact, contactError, canViewContacts, isWorkerUnlocked });
-        
+
         if (contact && contact.length > 0) {
           setContactInfo(contact[0]);
         } else if (contactError) {
@@ -217,10 +217,10 @@ export default function WorkerProfile() {
 
       setIsWorkerUnlocked(true);
       toast({
-        title: "✅ Contato desbloqueado!",
+        title: "Contato desbloqueado",
         description: `Você ainda tem ${remainingFreeUnlocks - 1} desbloqueios gratuitos.`,
       });
-      
+
       await loadWorkerData();
     } catch (err) {
       console.error('Erro ao desbloquear:', err);
@@ -324,8 +324,8 @@ export default function WorkerProfile() {
                 <div className="flex-shrink-0">
                   <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-primary/10">
                     {worker.profile_photo && (
-                      <AvatarImage 
-                        src={worker.profile_photo} 
+                      <AvatarImage
+                        src={worker.profile_photo}
                         alt={worker.name}
                         className="object-cover"
                       />
@@ -345,17 +345,17 @@ export default function WorkerProfile() {
                           <CheckCircle className="h-6 w-6 text-primary flex-shrink-0" />
                         )}
                       </div>
-                    <p className="text-lg text-muted-foreground font-medium">
-                      {worker.category}
-                    </p>
-                    {worker.subcategory && (
-                      <p className="text-sm text-muted-foreground">{worker.subcategory}</p>
-                    )}
+                      <p className="text-lg text-muted-foreground font-medium">
+                        {worker.category}
+                      </p>
+                      {worker.subcategory && (
+                        <p className="text-sm text-muted-foreground">{worker.subcategory}</p>
+                      )}
+                    </div>
+                    <FavoriteButton workerId={worker.id} />
                   </div>
-                  <FavoriteButton workerId={worker.id} />
-                </div>
 
-                <div className="flex flex-wrap gap-2 mb-2">
+                  <div className="flex flex-wrap gap-2 mb-2">
                     {worker.rating_avg > 0 && (
                       <Badge variant="outline" className="gap-1">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -378,7 +378,7 @@ export default function WorkerProfile() {
                         {worker.city}{worker.state ? ` - ${worker.state}` : ''}
                       </span>
                     </div>
-                    
+
                     {isWorkerUnlocked && contactInfo ? (
                       <>
                         {contactInfo.phone && (
@@ -404,14 +404,14 @@ export default function WorkerProfile() {
                             <p className="font-bold text-yellow-900 text-lg mb-2">
                               🔒 Contato Bloqueado
                             </p>
-                            
+
                             {remainingFreeUnlocks > 0 ? (
                               <>
                                 <p className="text-sm text-yellow-800 mb-3">
-                                  Você ainda possui <strong>{remainingFreeUnlocks} {remainingFreeUnlocks === 1 ? 'acesso gratuito' : 'acessos gratuitos'}</strong>. 
+                                  Você ainda possui <strong>{remainingFreeUnlocks} {remainingFreeUnlocks === 1 ? 'acesso gratuito' : 'acessos gratuitos'}</strong>.
                                   Desbloqueie agora para ver telefone e WhatsApp!
                                 </p>
-                                <Button 
+                                <Button
                                   onClick={handleFreeUnlock}
                                   className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold"
                                 >
@@ -421,10 +421,10 @@ export default function WorkerProfile() {
                             ) : (
                               <>
                                 <p className="text-sm text-yellow-800 mb-3">
-                                  Você esgotou seus 3 acessos gratuitos. Assine um plano Premium 
+                                  Você esgotou seus 3 acessos gratuitos. Assine um plano Premium
                                   para desbloquear contatos ilimitados!
                                 </p>
-                                <Button 
+                                <Button
                                   onClick={() => setShowUpgradeModal(true)}
                                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold"
                                 >
@@ -441,7 +441,7 @@ export default function WorkerProfile() {
 
                   <div className="flex flex-col sm:flex-row gap-3">
                     {isWorkerUnlocked && contactInfo?.phone ? (
-                      <Button 
+                      <Button
                         onClick={() => {
                           const cleanPhone = contactInfo.phone.replace(/\D/g, '');
                           const message = encodeURIComponent(
@@ -455,8 +455,8 @@ export default function WorkerProfile() {
                         Abrir WhatsApp
                       </Button>
                     ) : !isWorkerUnlocked && (
-                      <Button 
-                        onClick={remainingFreeUnlocks > 0 ? handleFreeUnlock : () => setShowUpgradeModal(true)} 
+                      <Button
+                        onClick={remainingFreeUnlocks > 0 ? handleFreeUnlock : () => setShowUpgradeModal(true)}
                         className="w-full md:w-auto"
                         variant="default"
                       >
@@ -512,11 +512,10 @@ export default function WorkerProfile() {
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`h-4 w-4 ${
-                              i < rating.rating
+                            className={`h-4 w-4 ${i < rating.rating
                                 ? 'fill-yellow-400 text-yellow-400'
                                 : 'text-muted-foreground'
-                            }`}
+                              }`}
                           />
                         ))}
                       </div>
@@ -534,13 +533,13 @@ export default function WorkerProfile() {
           )}
         </div>
       </div>
-      
-      <UpgradeModal 
+
+      <UpgradeModal
         open={showUpgradeModal}
         onOpenChange={setShowUpgradeModal}
         remainingViews={remainingFreeViews}
       />
-      
+
       <Footer />
     </>
   );

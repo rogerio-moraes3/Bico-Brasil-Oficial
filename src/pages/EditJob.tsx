@@ -101,7 +101,7 @@ export default function EditJob() {
       if (error) throw error;
 
       toast({
-        title: "✅ Trabalho atualizado!",
+        title: "Trabalho atualizado",
         description: "Seu anúncio foi atualizado com sucesso"
       });
 

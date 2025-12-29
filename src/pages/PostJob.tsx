@@ -144,13 +144,13 @@ export default function PostJob() {
         if (!updateError) {
           const remaining = userData.free_posts_remaining - 1;
           toast({
-            title: "Trabalho publicado! ✅",
+            title: "Trabalho publicado",
             description: `Profissionais poderão visualizar e entrar em contato. Você tem ${remaining} publicações grátis restantes.`
           });
         }
       } else {
         toast({
-          title: "Trabalho publicado! ✅",
+          title: "Trabalho publicado",
           description: "Profissionais poderão visualizar e entrar em contato."
         });
       }
