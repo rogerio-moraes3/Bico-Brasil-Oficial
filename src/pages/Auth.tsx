@@ -672,66 +672,65 @@ export default function Auth() {
                     </p>
                   </form>
                 ) : (
-                  <form onSubmit={handleSignup} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-foreground font-medium">Nome Completo *</Label>
-                      <Input id="name" name="name" required />
+                  <form onSubmit={handleSignup} className="space-y-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="name" className="text-xs font-semibold uppercase tracking-tight">Nome Completo</Label>
+                      <Input id="name" name="name" className="h-9 text-sm" required />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="cpf" className="text-foreground font-medium">CPF *</Label>
+                    <div className="space-y-1">
+                      <Label htmlFor="cpf" className="text-xs font-semibold uppercase tracking-tight">CPF (Obrigatório)</Label>
                       <Input
                         id="cpf"
                         name="cpf"
                         value={cpf}
                         onChange={(e) => handleCpfChange(e.target.value)}
                         placeholder="000.000.000-00"
+                        className="h-9 text-sm font-mono"
                         maxLength={14}
                         required
                       />
-                      <p className="text-xs text-muted-foreground">
-                        O CPF é usado para garantir apenas um cadastro por pessoa
-                      </p>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-foreground font-medium">E-mail *</Label>
-                      <Input id="email" name="email" type="email" required />
+                    <div className="space-y-1">
+                      <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-tight">E-mail</Label>
+                      <Input id="email" name="email" type="email" className="h-9 text-sm" required />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password" className="text-foreground font-medium">Senha *</Label>
+                    <div className="space-y-1">
+                      <Label htmlFor="password" className="text-xs font-semibold uppercase tracking-tight">Senha</Label>
                       <div className="relative">
                         <Input
                           id="password"
                           name="password"
                           type={showPassword ? "text" : "password"}
+                          className="h-9 text-sm"
                           required
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                          className="absolute right-0 top-0 h-full px-2 hover:bg-transparent"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">WhatsApp *</Label>
-                      <Input id="phone" name="phone" placeholder="(18) 99999-9999" required />
+                    <div className="space-y-1">
+                      <Label htmlFor="phone" className="text-xs font-semibold uppercase tracking-tight">WhatsApp</Label>
+                      <Input id="phone" name="phone" placeholder="(18) 99999-9999" className="h-9 text-sm" required />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="city">Cidade *</Label>
+                    <div className="space-y-1">
+                      <Label htmlFor="city" className="text-xs font-semibold uppercase tracking-tight">Cidade</Label>
                       <div className="flex gap-2">
                         <Select value={selectedCity} onValueChange={setSelectedCity} required>
-                          <SelectTrigger className="flex-1">
-                            <SelectValue placeholder="Selecione sua cidade" />
+                          <SelectTrigger className="flex-1 h-9 text-sm">
+                            <SelectValue placeholder="Selecione" />
                           </SelectTrigger>
                           <SelectContent className="max-h-[300px] overflow-y-auto">
                             {cities
                               .sort((a, b) => a.name.localeCompare(b.name))
                               .map((city) => (
-                                <SelectItem key={city.id} value={city.id}>
+                                <SelectItem key={city.id} value={city.id} className="text-sm">
                                   {city.name} - {city.state}
                                 </SelectItem>
                               ))}
@@ -742,9 +741,9 @@ export default function Auth() {
                           type="button"
                           variant="outline"
                           size="icon"
+                          className="h-9 w-9 shrink-0"
                           onClick={detectLocation}
                           disabled={detectingLocation}
-                          title="Detectar minha localização"
                         >
                           {detectingLocation ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -755,20 +754,20 @@ export default function Auth() {
                       </div>
                       {detectedCity && (
                         <p className="text-sm text-muted-foreground">
-                          📍 Localização detectada: {detectedCity}
+                          Localização detectada: {detectedCity}
                         </p>
                       )}
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="neighborhood">Bairro *</Label>
-                      <Input id="neighborhood" name="neighborhood" required />
+                    <div className="space-y-1">
+                      <Label htmlFor="neighborhood" className="text-xs font-semibold uppercase tracking-tight">Bairro</Label>
+                      <Input id="neighborhood" name="neighborhood" className="h-9 text-sm" required />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="type">Tipo de Usuário *</Label>
+                    <div className="space-y-1">
+                      <Label htmlFor="type" className="text-xs font-semibold uppercase tracking-tight">Tipo de Usuário</Label>
                       <Select name="type" required>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
                         <SelectContent>
@@ -777,25 +776,25 @@ export default function Auth() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="user_role">Você está oferecendo empregos/vagas?</Label>
+                    <div className="space-y-1">
+                      <Label htmlFor="user_role" className="text-xs font-semibold uppercase tracking-tight">Oferece Vagas?</Label>
                       <Select name="user_role" defaultValue="prestador">
-                        <SelectTrigger>
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="prestador">Não, procuro serviços</SelectItem>
-                          <SelectItem value="empregador">Sim, ofereço empregos</SelectItem>
+                          <SelectItem value="empregador">Sim, ofereço vagas</SelectItem>
                         </SelectContent>
                       </Select>
                       <p className="text-xs text-muted-foreground">
-                        Empregadores ganham 10 publicações grátis! ✨
+                        Empregadores ganham 10 publicações grátis!
                       </p>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="category">Categoria (prestador)</Label>
+                    <div className="space-y-1">
+                      <Label htmlFor="category" className="text-xs font-semibold uppercase tracking-tight">Categoria Principal</Label>
                       <Select name="category">
-                        <SelectTrigger>
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
                         <SelectContent>

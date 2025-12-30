@@ -50,11 +50,11 @@ export default function Index() {
         <ModeStats />
 
         {/* Title Section - Dinâmico baseado no modo */}
-        <div className="bg-background py-6 px-4 relative z-10">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground text-center">
+        <div className="bg-background py-4 px-4 relative z-10">
+          <h1 className="text-xl md:text-2xl font-bold text-foreground text-center">
             {mode === 'contractor' ? 'Encontre profissionais qualificados' : 'Encontre trabalhos perto de você'}
           </h1>
-          <p className="text-center text-muted-foreground mt-2">
+          <p className="text-center text-muted-foreground mt-1 text-sm">
             {mode === 'contractor'
               ? 'Contrate serviços rápidos e confiáveis'
               : 'Ganhe dinheiro fazendo bicos na sua região'}
@@ -75,10 +75,10 @@ export default function Index() {
             <div className="edge-fade" />
             <div className="noise-texture" />
 
-            <div className="relative z-10 flex flex-col items-center gap-4 transform hover:scale-105 transition-transform duration-300">
-              <Megaphone size={64} className="drop-shadow-lg" />
-              <h2 className="text-3xl md:text-4xl font-bold text-center drop-shadow-md">Anunciar um bico</h2>
-              <p className="text-base md:text-lg text-center max-w-md opacity-95">
+            <div className="relative z-10 flex flex-col items-center gap-3 transform hover:scale-105 transition-transform duration-300">
+              <Megaphone size={48} className="drop-shadow-lg" />
+              <h2 className="text-2xl md:text-2xl font-bold text-center drop-shadow-md">Anunciar um bico</h2>
+              <p className="text-sm md:text-base text-center max-w-md opacity-95">
                 Para sua casa ou seu negócio
               </p>
             </div>
@@ -99,10 +99,10 @@ export default function Index() {
             <div className="edge-fade" />
             <div className="noise-texture" />
 
-            <div className="relative z-10 flex flex-col items-center gap-4 transform hover:scale-105 transition-transform duration-300">
-              <Hammer size={64} className="drop-shadow-lg" />
-              <h2 className="text-3xl md:text-4xl font-bold text-center drop-shadow-md">Fazer um bico</h2>
-              <p className="text-base md:text-lg text-center max-w-md opacity-95">
+            <div className="relative z-10 flex flex-col items-center gap-3 transform hover:scale-105 transition-transform duration-300">
+              <Hammer size={48} className="drop-shadow-lg" />
+              <h2 className="text-2xl md:text-2xl font-bold text-center drop-shadow-md">Fazer um bico</h2>
+              <p className="text-sm md:text-base text-center max-w-md opacity-95">
                 Renda extra com seus serviços
               </p>
             </div>
@@ -121,7 +121,7 @@ export default function Index() {
             {/* Modo Trabalhador: Jobs Disponíveis */}
             <section className="py-16 bg-background relative z-10">
               <div className="container mx-auto px-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-foreground mb-6">
                   Bicos Disponíveis em Presidente Prudente
                 </h2>
                 <div className="text-center py-12 text-muted-foreground">

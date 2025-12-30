@@ -50,6 +50,10 @@ export const signupSchema = z.object({
     .min(6, "Senha deve ter pelo menos 6 caracteres")
     .max(72, "Senha muito longa"),
   phone: phoneSchema,
+  cpf: z.string()
+    .min(11, "CPF incompleto")
+    .max(14, "CPF muito longo")
+    .transform(val => val.replace(/\D/g, '')),
   neighborhood: z.string()
     .trim()
     .max(100, "Bairro muito longo")
@@ -93,11 +97,11 @@ export const validateWhatsAppUrl = (phone: string, name: string): { valid: boole
   try {
     const validatedPhone = phoneSchema.parse(phone);
     const validatedName = nameSchema.parse(name);
-    
+
     const url = `https://wa.me/55${validatedPhone}?text=${encodeURIComponent(
       `Olá ${validatedName}, vi seu perfil no Bico Brasil e gostaria de conversar sobre um trabalho.`
     )}`;
-    
+
     return { valid: true, url };
   } catch (error) {
     if (error instanceof z.ZodError) {

@@ -81,13 +81,13 @@ export const Header = () => {
               </Button>
             )}
 
-            <Link to="/" className="flex items-center gap-2 flex-shrink-0 z-50">
+            <Link to="/app" className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
               <img src={logo} alt="Bico Brasil" className="h-8 w-8 md:h-10 md:w-10 shrink-0" />
               <div className="flex flex-col justify-center">
-                <span className="text-base md:text-xl font-bold leading-tight whitespace-nowrap text-white">
+                <span className="text-base md:text-lg font-bold leading-tight whitespace-nowrap text-white">
                   Bico Brasil
                 </span>
-                <span className="text-[11px] sm:text-[13px] md:text-[15px] text-white/70 leading-tight font-medium whitespace-nowrap">
+                <span className="text-[10px] md:text-xs text-white/60 leading-tight font-medium whitespace-nowrap uppercase tracking-widest">
                   Trabalhou, Tá Pago.
                 </span>
               </div>
@@ -95,17 +95,21 @@ export const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6 z-40">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`text-sm font-medium transition-colors hover:text-white/80 whitespace-nowrap ${location.pathname === item.path ? 'text-white font-bold' : 'text-white/90'
-                  }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className="hidden md:flex items-center gap-4 z-40">
+            <Link
+              to="/app"
+              className={`text-xs font-bold uppercase tracking-wider transition-colors hover:text-white/80 whitespace-nowrap ${location.pathname === '/' || location.pathname === '/app' ? 'text-primary' : 'text-white/90'
+                }`}
+            >
+              Início
+            </Link>
+            <Link
+              to="/premium"
+              className={`text-xs font-bold uppercase tracking-wider transition-colors hover:text-white/80 whitespace-nowrap ${location.pathname === '/premium' ? 'text-primary' : 'text-white/90'
+                }`}
+            >
+              Planos
+            </Link>
             <Link
               to="/download"
               className="text-sm font-medium transition-colors hover:text-white/80 flex items-center gap-1 text-white/90"
