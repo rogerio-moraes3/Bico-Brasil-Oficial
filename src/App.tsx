@@ -55,7 +55,10 @@ import PublicStats from "./pages/PublicStats";
 import AuthCallback from "./pages/AuthCallback";
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => {
+    // Mostrar splash apenas se não foi exibido nesta sessão
+    return !sessionStorage.getItem('splashShown');
+  });
 
   useEffect(() => {
     // Limpar caches antigos na inicialização
@@ -70,9 +73,12 @@ function App() {
     }
   }, []);
 
-  // Mostrar splash screen na primeira carga
+  // Mostrar splash screen apenas uma vez por sessão
   if (showSplash) {
-    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+    return <SplashScreen onComplete={() => {
+      sessionStorage.setItem('splashShown', 'true');
+      setShowSplash(false);
+    }} />;
   }
 
   return (

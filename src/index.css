@@ -688,3 +688,75 @@ All colors MUST be HSL.
     visibility: hidden !important;
   }
 }
+
+/* ========================================
+   ADMIN DASHBOARD - ALTA DENSIDADE
+   ======================================== */
+
+/* Métricas Compactas */
+.admin-metric-card {
+  @apply p-2 border border-border rounded-md bg-card transition-all hover:border-primary/50;
+  min-height: 64px;
+}
+
+.admin-metric-value {
+  @apply text-xl font-black leading-none;
+}
+
+.admin-metric-label {
+  @apply text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1;
+}
+
+/* Tabela Ultra-Densa */
+.admin-table {
+  @apply w-full;
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+}
+
+.admin-table thead {
+  @apply bg-muted/50 sticky top-0 z-10;
+}
+
+.admin-table th {
+  @apply px-3 py-2 font-bold uppercase tracking-wider text-left;
+  font-size: 10px !important;
+}
+
+.admin-table td {
+  @apply px-3 py-1.5 border-b border-border;
+}
+
+.admin-table tbody tr {
+  @apply transition-colors hover:bg-muted/50 cursor-pointer;
+}
+
+/* Filtros Compactos */
+.admin-filter-input {
+  @apply h-8 text-xs;
+}
+
+.admin-filter-select {
+  @apply h-8 text-xs w-32;
+}
+
+/* Badges Compactos */
+.admin-badge {
+  @apply px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .admin-table {
+    font-size: 10px !important;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    @apply px-2 py-1;
+  }
+
+  .admin-metric-card {
+    min-height: 56px;
+  }
+}
