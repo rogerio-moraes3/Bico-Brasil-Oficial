@@ -110,12 +110,19 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-size: 13px !important;
+    /* FORÇA GLOBAL - Alta Densidade Superbet */
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 13px;
+    font-size: 13px !important;
+    /* FORÇA GLOBAL */
     /* Base reduzida para 13px - Alta densidade Superbet */
-    line-height: 1.4;
+    line-height: 1.4 !important;
+    /* FORÇA GLOBAL */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
