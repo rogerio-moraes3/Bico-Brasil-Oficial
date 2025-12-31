@@ -28,18 +28,18 @@ export function NotificationsPanel() {
 
   const handleDeleteNotification = async (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    
+
     try {
       const { error } = await supabase
         .from('notifications')
         .delete()
         .eq('id', id);
-      
+
       if (error) throw error;
-      
+
       // Remover do estado local imediatamente
       removeNotification(id);
-      
+
       toast({
         title: "Notificação removida",
         description: "A notificação foi excluída com sucesso."
@@ -82,15 +82,15 @@ export function NotificationsPanel() {
       case 'new_job':
         return '🆕';
       case 'new_candidate':
-        return '👋';
+        return '';
       case 'new_message':
-        return '💬';
+        return '';
       case 'job_update':
         return '✅';
       case 'rating':
         return '⭐';
       default:
-        return '🔔';
+        return '';
     }
   };
 
@@ -109,9 +109,9 @@ export function NotificationsPanel() {
           )}
         </CardTitle>
         {unreadNotifications.length > 0 && (
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={markAllAsRead}
             className="h-8"
           >
@@ -138,21 +138,19 @@ export function NotificationsPanel() {
                   onTouchEnd={handleTouchEnd}
                 >
                   {/* Botão de delete revelado pelo swipe */}
-                  <div 
-                    className={`absolute right-0 top-0 bottom-0 w-20 bg-destructive flex items-center justify-center transition-transform ${
-                      swipedId === notification.id ? 'translate-x-0' : 'translate-x-full'
-                    }`}
+                  <div
+                    className={`absolute right-0 top-0 bottom-0 w-20 bg-destructive flex items-center justify-center transition-transform ${swipedId === notification.id ? 'translate-x-0' : 'translate-x-full'
+                      }`}
                     onClick={(e) => handleDeleteNotification(notification.id, e)}
                   >
                     <Trash2 className="h-5 w-5 text-white" />
                   </div>
-                  
+
                   {/* Conteúdo da notificação com transform */}
                   <div
                     onClick={() => handleNotificationClick(notification)}
-                    className={`p-4 cursor-pointer transition-all hover:bg-muted/50 ${
-                      !notification.read ? 'bg-primary/5' : ''
-                    } ${swipedId === notification.id ? '-translate-x-20' : 'translate-x-0'}`}
+                    className={`p-4 cursor-pointer transition-all hover:bg-muted/50 ${!notification.read ? 'bg-primary/5' : ''
+                      } ${swipedId === notification.id ? '-translate-x-20' : 'translate-x-0'}`}
                     style={{ transition: 'transform 0.2s ease-out' }}
                   >
                     <div className="flex items-start gap-3">

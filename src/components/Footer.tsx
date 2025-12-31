@@ -10,7 +10,7 @@ export const Footer = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
-  
+
   useEffect(() => {
     const checkAdmin = async () => {
       try {
@@ -108,7 +108,7 @@ export const Footer = () => {
             <h3 className="font-semibold text-card-foreground mb-4">Atendimento</h3>
             <p className="text-sm text-card-foreground/80 mb-3">Segunda a sexta, 9h às 18h</p>
             <p className="text-sm text-card-foreground/80 mb-4">Ainda está com dúvidas?</p>
-            <Link 
+            <Link
               to="/faq"
               onClick={scrollToTop}
               className="inline-block px-6 py-2 border-2 border-card-foreground/50 text-card-foreground rounded-full hover:bg-card-foreground/10 transition-colors text-sm font-medium"
@@ -152,7 +152,7 @@ export const Footer = () => {
             <p className="text-card-foreground/80 mb-6 max-w-md mx-auto">
               Crie sua conta gratuitamente e comece a receber oportunidades de trabalho hoje mesmo.
             </p>
-            <Button 
+            <Button
               size="lg"
               onClick={() => {
                 navigate("/cadastro");
@@ -191,14 +191,14 @@ export const Footer = () => {
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-card-foreground/60">
           <p>© {new Date().getFullYear()} Bico Brasil. Todos os direitos reservados.</p>
           <p className="mt-2">Contato para LGPD: privacidade@bicobrasil.com.br</p>
-          
+
           {/* Link discreto para Admin - SEMPRE VISÍVEL */}
-          <Link 
-            to={isAdmin ? "/admin" : "/auth"} 
+          <Link
+            to={isAdmin ? "/admin" : "/auth"}
             className="mt-4 inline-flex items-center gap-2 text-card-foreground/40 hover:text-card-foreground/70 transition-colors"
           >
             <Settings size={14} />
-            <span>🔐 Área Admin</span>
+            <span>Área Admin</span>
           </Link>
         </div>
       </div>

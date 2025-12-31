@@ -33,26 +33,26 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   // Carregar cidade do usuário
   useEffect(() => {
     if (!user) return;
-    
+
     const loadUserCity = async () => {
       const { data } = await supabase
         .from('users')
         .select('city_id')
         .eq('auth_id', user.id)
         .single();
-      
+
       if (data?.city_id) {
         setUserCityId(data.city_id);
       }
     };
-    
+
     loadUserCity();
   }, [user]);
 
   // Carregar notificações do banco
   useEffect(() => {
     if (!user) return;
-    
+
     const loadNotifications = async () => {
       const { data } = await supabase
         .from('notifications')
@@ -60,12 +60,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(20);
-      
+
       if (data) {
         setNotifications(data as Notification[]);
       }
     };
-    
+
     loadNotifications();
   }, [user]);
 
@@ -89,7 +89,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           type: 'new_job',
           link: `/jobs/${newJob.id}`
         });
-        
+
         // Toast notification
         toast('🆕 Novo bico disponível!', {
           description: newJob.title
@@ -111,16 +111,16 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           .select('id, title, user_id')
           .eq('id', payload.new.job_id)
           .single();
-        
+
         if (job && job.user_id === user.id) {
           addNotification({
-            title: '👋 Novo interessado!',
+            title: 'Novo interessado!',
             message: `Alguém se interessou pelo seu bico: ${job.title}`,
             type: 'new_candidate',
             link: `/jobs/${job.id}`
           });
-          
-          toast('👋 Novo interessado!', {
+
+          toast('Novo interessado!', {
             description: job.title
           });
         }
@@ -137,23 +137,23 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       }, async (payload: any) => {
         // Verificar se a mensagem não foi enviada pelo próprio usuário
         if (payload.new.sender_id === user.id) return;
-        
+
         // Verificar se o usuário está na conversa
         const { data: conversation } = await supabase
           .from('conversations')
           .select('contractor_id, worker_id')
           .eq('id', payload.new.conversation_id)
           .single();
-        
+
         if (conversation && (conversation.contractor_id === user.id || conversation.worker_id === user.id)) {
           addNotification({
-            title: '💬 Nova mensagem',
+            title: 'Nova mensagem',
             message: payload.new.content.substring(0, 50) + '...',
             type: 'new_message',
             link: '/messages'
           });
-          
-          toast('💬 Nova mensagem', {
+
+          toast('Nova mensagem', {
             description: 'Você recebeu uma nova mensagem'
           });
         }
@@ -170,9 +170,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       }, async (payload: any) => {
         const oldStatus = payload.old.status;
         const newStatus = payload.new.status;
-        
+
         if (oldStatus === newStatus) return;
-        
+
         // Verificar se o usuário está envolvido no job
         if (payload.new.contractor_id === user.id || payload.new.worker_id === user.id) {
           const statusLabels: Record<string, string> = {
@@ -181,14 +181,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             'done': 'Concluído',
             'cancelled': 'Cancelado'
           };
-          
+
           addNotification({
             title: '✅ Status atualizado',
             message: `Job "${payload.new.title}" foi ${statusLabels[newStatus] || newStatus}`,
             type: 'job_update',
             link: `/jobs/${payload.new.id}`
           });
-          
+
           toast('✅ Status atualizado', {
             description: payload.new.title
           });
@@ -206,21 +206,21 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const addNotification = useCallback(async (notification: Omit<Notification, 'id' | 'read' | 'created_at'>) => {
     if (!user) return;
-    
+
     const newNotification = {
       ...notification,
       user_id: user.id,
       read: false,
       created_at: new Date().toISOString()
     };
-    
+
     // Salvar no banco
     const { data } = await supabase
       .from('notifications')
       .insert([newNotification])
       .select()
       .single();
-    
+
     if (data) {
       setNotifications(prev => [data as Notification, ...prev]);
     }
@@ -231,7 +231,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       .from('notifications')
       .update({ read: true })
       .eq('id', id);
-    
+
     setNotifications(prev =>
       prev.map(n => n.id === id ? { ...n, read: true } : n)
     );
@@ -239,13 +239,13 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const markAllAsRead = async () => {
     if (!user) return;
-    
+
     await supabase
       .from('notifications')
       .update({ read: true })
       .eq('user_id', user.id)
       .eq('read', false);
-    
+
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 

@@ -237,7 +237,7 @@ export default function CompleteProfile() {
                   required
                 />
                 <p className="text-xs text-muted-foreground">
-                  ⚠️ Este número será usado para contato direto. Certifique-se de que está correto e funcionando!
+                  IMPORTANTE: Este número será usado para contato direto. Certifique-se de que está correto e funcionando!
                 </p>
               </div>
 
@@ -252,9 +252,9 @@ export default function CompleteProfile() {
                     <SelectValue placeholder="Escolha o tipo de contato" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="whatsapp_only">📱 Somente WhatsApp</SelectItem>
-                    <SelectItem value="whatsapp_and_call">📞 WhatsApp e Ligação</SelectItem>
-                    <SelectItem value="call_only">☎️ Somente Ligação</SelectItem>
+                    <SelectItem value="whatsapp_only">Somente WhatsApp</SelectItem>
+                    <SelectItem value="whatsapp_and_call">WhatsApp e Ligação</SelectItem>
+                    <SelectItem value="call_only">Somente Ligação</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
