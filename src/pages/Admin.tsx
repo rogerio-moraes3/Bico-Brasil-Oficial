@@ -391,14 +391,14 @@ export default function Admin() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
               <Input
                 placeholder="BUSCAR POR NOME, EMAIL OU CPF..."
-                className="pl-10 h-10 bg-slate-900 border-slate-800 text-xs font-bold uppercase tracking-wider"
+                className="pl-10 admin-filter-input bg-slate-900 border-slate-800 text-xs font-bold uppercase tracking-wider"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex gap-2">
               <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="w-[140px] h-10 bg-slate-900 border-slate-800 text-[10px] font-black uppercase">
+                <SelectTrigger className="admin-filter-select bg-slate-900 border-slate-800 text-[10px] font-black uppercase">
                   <SelectValue placeholder="TIPO" />
                 </SelectTrigger>
                 <SelectContent className="bg-slate-900 border-slate-800 text-white">
@@ -409,7 +409,7 @@ export default function Admin() {
               </Select>
 
               <Select value={filterCity} onValueChange={setFilterCity}>
-                <SelectTrigger className="w-[160px] h-10 bg-slate-900 border-slate-800 text-[10px] font-black uppercase">
+                <SelectTrigger className="admin-filter-select bg-slate-900 border-slate-800 text-[10px] font-black uppercase">
                   <SelectValue placeholder="CIDADE" />
                 </SelectTrigger>
                 <SelectContent className="bg-slate-900 border-slate-800 text-white">
@@ -424,7 +424,7 @@ export default function Admin() {
 
           <Card className="bg-slate-950 border-slate-800 overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
-              <Table>
+              <Table className="admin-table">
                 <TableHeader className="bg-slate-900/50">
                   <TableRow className="border-slate-800 h-10 hover:bg-transparent">
                     <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Nome Completo</TableHead>
