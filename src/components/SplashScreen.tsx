@@ -30,14 +30,14 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
     return (
         <div
-            className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white transition-opacity duration-300 ${isFadingOut ? 'opacity-0' : 'opacity-100'
+            className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0A1A2F] transition-opacity duration-300 ${isFadingOut ? 'opacity-0' : 'opacity-100'
                 }`}
         >
             {/* Container centralizado */}
             <div className="flex flex-col items-center gap-8 animate-in fade-in duration-500">
 
                 {/* Título Superior - BICO BRASIL */}
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#004d08] tracking-wide">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-wide">
                     BICO BRASIL
                 </h1>
 
@@ -55,7 +55,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 </div>
 
                 {/* Slogan Inferior - TRABALHOU, TÁ PAGO! */}
-                <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#004d08] tracking-wide">
+                <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary tracking-wide">
                     TRABALHOU, TÁ PAGO!
                 </p>
             </div>
