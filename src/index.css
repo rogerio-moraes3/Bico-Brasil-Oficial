@@ -110,6 +110,14 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  /* ========================================
+     FORÇA BRUTA - ALTA DENSIDADE GLOBAL
+     ======================================== */
+  * {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+  }
+
   html {
     font-size: 13px !important;
     /* FORÇA GLOBAL - Alta Densidade Superbet */
