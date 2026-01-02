@@ -106,6 +106,26 @@
 
   <!-- Preload logo para splash sincronizada -->
   <link rel="preload" as="image" href="/worker-mascot.png" />
+
+  <!-- 🔥 CRITICAL: Force dark background IMMEDIATELY - inline CSS executes before ANY JS -->
+  <style>
+    /* Maximum specificity - executes FIRST, before any external CSS or JS */
+    html,
+    body {
+      background-color: #0A1A2F !important;
+      background: #0A1A2F !important;
+    }
+
+    /* Fallback with even higher specificity */
+    html body {
+      background-color: #0A1A2F !important;
+    }
+
+    /* Root level override */
+    :root {
+      background-color: #0A1A2F !important;
+    }
+  </style>
 </head>
 
 <body style="background-color: #0A1A2F; margin: 0;">
