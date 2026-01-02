@@ -11,7 +11,7 @@ export const ModeToggle = () => {
                 onClick={() => mode !== 'contractor' && toggleMode()}
                 disabled={isTransitioning}
                 className={`flex items-center justify-center px-3 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 ${mode === 'contractor'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                     }`}
             >
@@ -22,7 +22,7 @@ export const ModeToggle = () => {
                 onClick={() => mode !== 'professional' && toggleMode()}
                 disabled={isTransitioning}
                 className={`flex items-center justify-center px-3 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 ${mode === 'professional'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    ? 'bg-green-600 text-white shadow-sm'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                     }`}
             >
