@@ -84,10 +84,10 @@ export const Header = () => {
             <Link to="/app" className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
               <img src={logo} alt="Bico Brasil" className="h-8 w-8 md:h-10 md:w-10 shrink-0" />
               <div className="flex flex-col justify-center">
-                <span className="text-base md:text-lg font-bold leading-tight whitespace-nowrap text-white">
+                <span className="text-sm md:text-base font-bold leading-tight whitespace-nowrap text-white">
                   Bico Brasil
                 </span>
-                <span className="text-[10px] md:text-xs text-white/60 leading-tight font-medium whitespace-nowrap uppercase tracking-widest">
+                <span className="text-[8px] md:text-[9px] text-white/60 leading-tight font-medium whitespace-nowrap uppercase tracking-wider">
                   Trabalhou, Tá Pago.
                 </span>
               </div>
