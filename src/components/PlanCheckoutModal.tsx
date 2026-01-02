@@ -20,22 +20,22 @@ interface PlanCheckoutModalProps {
   planName: string;
 }
 
-export function PlanCheckoutModal({ 
-  open, 
-  onOpenChange, 
-  planType, 
+export function PlanCheckoutModal({
+  open,
+  onOpenChange,
+  planType,
   amount,
-  planName 
+  planName
 }: PlanCheckoutModalProps) {
   const [loading, setLoading] = useState(false);
   const [validatingMP, setValidatingMP] = useState(false);
   const [mpValidation, setMpValidation] = useState<MercadoPagoValidation | null>(null);
-  
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [cpf, setCpf] = useState("");
-  
+
   const [qrCodeData, setQrCodeData] = useState<{
     qr_code: string;
     qr_code_base64: string;
@@ -63,11 +63,11 @@ export function PlanCheckoutModal({
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      
+
       // Timeout de 5s
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
+
       const response = await fetch(`${supabaseUrl}/functions/v1/validate-mp-credentials`, {
         method: 'GET',
         headers: session ? { Authorization: `Bearer ${session.access_token}` } : {},
@@ -77,7 +77,7 @@ export function PlanCheckoutModal({
       clearTimeout(timeoutId);
       const validation = await response.json();
       setMpValidation(validation);
-      
+
       if (!validation.ok) {
         console.warn('⚠️ Mercado Pago:', validation.reason);
         setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success', icon: '✅' }); // Permite prosseguir
@@ -113,7 +113,9 @@ export function PlanCheckoutModal({
       toast.error("Por favor, preencha um telefone válido");
       return;
     }
-    if (!email.trim() || !email.includes("@")) {
+    // Email validation with proper regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim() || !emailRegex.test(email.trim())) {
       toast.error("Por favor, preencha um email válido");
       return;
     }
@@ -164,7 +166,7 @@ export function PlanCheckoutModal({
       }
 
       console.log("✅ QR Code gerado com sucesso:", data.payment_id);
-      
+
       setQrCodeData({
         qr_code: data.qr_code,
         qr_code_base64: data.qr_code_base64,
@@ -214,14 +216,14 @@ export function PlanCheckoutModal({
             )}
 
             {mpValidation && (
-              <Alert 
+              <Alert
                 variant={mpValidation.badge === 'error' ? 'destructive' : 'default'}
                 className={
-                  mpValidation.badge === 'success' 
-                    ? 'bg-green-50 dark:bg-green-950/20 border-green-500' 
+                  mpValidation.badge === 'success'
+                    ? 'bg-green-50 dark:bg-green-950/20 border-green-500'
                     : mpValidation.badge === 'warning'
-                    ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-500'
-                    : ''
+                      ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-500'
+                      : ''
                 }
               >
                 <div className="flex items-start gap-2">
@@ -235,19 +237,19 @@ export function PlanCheckoutModal({
                       </div>
                     )}
                     <AlertDescription className={
-                      mpValidation.badge === 'success' 
+                      mpValidation.badge === 'success'
                         ? 'text-green-800 dark:text-green-200'
                         : mpValidation.badge === 'warning'
-                        ? 'text-yellow-800 dark:text-yellow-200'
-                        : ''
+                          ? 'text-yellow-800 dark:text-yellow-200'
+                          : ''
                     }>
-                      {planType === 'basico' 
-                        ? "R$ 19,90 — invista pouco para aumentar suas chances de fechar trabalhos hoje." 
+                      {planType === 'basico'
+                        ? "R$ 19,90 — invista pouco para aumentar suas chances de fechar trabalhos hoje."
                         : planType === 'vip'
-                        ? "R$ 29,90 — apareça primeiro nas buscas e receba 3x mais contatos."
-                        : planType === 'anual'
-                        ? "Plano Anual — economia garantida para profissionais que querem crescer."
-                        : "Assine e aumente suas chances de ser contratado imediatamente."
+                          ? "R$ 29,90 — apareça primeiro nas buscas e receba 3x mais contatos."
+                          : planType === 'anual'
+                            ? "Plano Anual — economia garantida para profissionais que querem crescer."
+                            : "Assine e aumente suas chances de ser contratado imediatamente."
                       }
                     </AlertDescription>
                   </div>
