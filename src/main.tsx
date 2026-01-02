@@ -1,3 +1,7 @@
+// 🔥 CRITICAL: Eliminate white flash - set body background IMMEDIATELY
+document.body.style.backgroundColor = '#0A1A2F';
+document.documentElement.style.backgroundColor = '#0A1A2F';
+
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";
@@ -14,7 +18,7 @@ if ('serviceWorker' in navigator) {
     setInterval(() => {
       registration.update();
     }, 5 * 60 * 1000);
-    
+
     // Quando nova versão disponível, ativar imediatamente
     registration.addEventListener('updatefound', () => {
       const newWorker = registration.installing;
