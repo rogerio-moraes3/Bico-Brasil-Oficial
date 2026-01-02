@@ -47,7 +47,7 @@ export default function Premium() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      
+
       <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8 overflow-y-auto max-h-[calc(100vh-150px)]">
         <Button
           variant="ghost"
@@ -58,7 +58,7 @@ export default function Premium() {
           <ArrowLeft className="h-5 w-5 mr-2" />
           Voltar
         </Button>
-        
+
         <Breadcrumbs />
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 animate-fade-in">
@@ -78,9 +78,9 @@ export default function Premium() {
                   <Badge variant="secondary" className="text-xs">Popular</Badge>
                 </div>
                 <CardDescription className="text-base">Ideal para começar a receber trabalhos</CardDescription>
-                <div className="mt-6 mb-2">
-                  <span className="text-5xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">R$ 19,90</span>
-                  <span className="text-muted-foreground text-lg">/mês</span>
+                <div className="mt-6 mb-4">
+                  <span className="text-7xl md:text-8xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 19,90</span>
+                  <span className="text-muted-foreground text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
@@ -105,9 +105,9 @@ export default function Premium() {
                   <CardTitle className="text-2xl font-bold flex items-center gap-2">Plano VIP<Crown className="h-5 w-5 text-primary" /></CardTitle>
                 </div>
                 <CardDescription className="text-base">Destaque total e máxima visibilidade</CardDescription>
-                <div className="mt-6 mb-2">
-                  <span className="text-5xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">R$ 29,90</span>
-                  <span className="text-muted-foreground text-lg">/mês</span>
+                <div className="mt-6 mb-4">
+                  <span className="text-7xl md:text-8xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 29,90</span>
+                  <span className="text-muted-foreground text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
@@ -132,10 +132,10 @@ export default function Premium() {
                   <CardTitle className="text-2xl font-bold flex items-center gap-2">Plano Anual<Trophy className="h-5 w-5 text-amber-500" /></CardTitle>
                 </div>
                 <CardDescription className="text-base">12 meses de Premium com 30% de desconto</CardDescription>
-                <div className="mt-6 mb-2">
-                  <span className="text-5xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">R$ 249,90</span>
-                  <span className="text-muted-foreground text-lg">/ano</span>
-                  <p className="text-xs text-muted-foreground mt-1">Equivale a R$ 20,82/mês (economize R$ 108,90)</p>
+                <div className="mt-6 mb-4">
+                  <span className="text-7xl md:text-8xl font-extrabold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent drop-shadow-lg">R$ 249,90</span>
+                  <span className="text-muted-foreground text-xl font-medium">/ano</span>
+                  <p className="text-sm text-muted-foreground mt-2 font-medium">Equivale a R$ 20,82/mês (economize R$ 108,90)</p>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
