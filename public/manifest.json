@@ -4,11 +4,15 @@
   "description": "Conecte-se com os melhores profissionais da sua região. Rápido, fácil e seguro.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#FF7A00",
+  "background_color": "#0A1A2F",
+  "theme_color": "#0A1A2F",
   "orientation": "portrait-primary",
   "scope": "/",
-  "categories": ["business", "productivity", "social"],
+  "categories": [
+    "business",
+    "productivity",
+    "social"
+  ],
   "icons": [
     {
       "src": "/icons/icon-72x72.png",

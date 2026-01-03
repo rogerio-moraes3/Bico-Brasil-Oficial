@@ -125,11 +125,6 @@ export const Header = () => {
               <FreePostsBadge />
             )}
 
-            {/* Mode Toggle (Contratar/Trabalhar) */}
-            <div className="hidden lg:block ml-4">
-              <ModeToggle />
-            </div>
-
             <PWAInstallButton />
             <ThemeToggle />
 
