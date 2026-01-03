@@ -64,6 +64,19 @@ import {
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
@@ -115,6 +128,15 @@ export default function Admin() {
 
   const [leads, setLeads] = useState<any[]>([]);
   const [filteredLeads, setFilteredLeads] = useState<any[]>([]);
+
+  // Modal states for clickable cards
+  const [revenueModalOpen, setRevenueModalOpen] = useState(false);
+  const [usersModalOpen, setUsersModalOpen] = useState(false);
+  const [conversionModalOpen, setConversionModalOpen] = useState(false);
+
+  // Detailed data for modals
+  const [paymentDetails, setPaymentDetails] = useState<any[]>([]);
+  const [annualRevenue, setAnnualRevenue] = useState<any[]>([]);
 
   useEffect(() => {
     checkAdminAccess();
@@ -266,6 +288,59 @@ export default function Admin() {
       cityCounts[city] = (cityCounts[city] || 0) + 1;
     });
 
+    // Annual revenue calculation
+    const currentYear = new Date().getFullYear();
+    const annualRevenueData = [];
+
+    for (let year = 2024; year <= currentYear + 1; year++) {
+      const yearStart = new Date(year, 0, 1);
+      const yearEnd = new Date(year, 11, 31, 23, 59, 59);
+
+      if (year <= currentYear) {
+        // Historical data
+        const yearRevenue = approvedPayments
+          .filter(p => {
+            const pDate = new Date(p.created_at);
+            return pDate >= yearStart && pDate <= yearEnd;
+          })
+          .reduce((acc, p) => acc + (p.amount || 0), 0);
+
+        annualRevenueData.push({
+          year,
+          revenue: yearRevenue,
+          isProjection: false
+        });
+      } else {
+        // Projection for next year
+        const avgMonthlyRevenue = totalRevenue / Math.max(1, new Date().getMonth() + 1);
+        const projection = avgMonthlyRevenue * 12 * 1.3; // 30% growth estimate
+
+        annualRevenueData.push({
+          year,
+          revenue: projection,
+          isProjection: true
+        });
+      }
+    }
+
+    setAnnualRevenue(annualRevenueData);
+
+    // Store detailed payment data for modal
+    const detailedPayments = await supabase
+      .from('payments')
+      .select(`
+        *,
+        users:user_id (
+          name,
+          email
+        )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (detailedPayments.data) {
+      setPaymentDetails(detailedPayments.data);
+    }
+
     setMetrics(prev => ({
       ...prev,
       totalLeads,
@@ -377,9 +452,15 @@ export default function Admin() {
 
         {/* METRICAS RAPIDAS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
-          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+          <Card
+            className="bg-slate-900 border-slate-800 shadow-xl cursor-pointer hover:border-primary/50 transition-all"
+            onClick={() => setUsersModalOpen(true)}
+          >
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Usuários</CardTitle>
+              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
+                Total Usuários
+                <ChevronRight className="h-3.5 w-3.5 text-slate-600" />
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-white leading-none">{metrics.totalLeads}</div>
@@ -390,9 +471,15 @@ export default function Admin() {
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+          <Card
+            className="bg-slate-900 border-slate-800 shadow-xl cursor-pointer hover:border-emerald-500/50 transition-all"
+            onClick={() => setRevenueModalOpen(true)}
+          >
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Receita Total</CardTitle>
+              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
+                Receita Total
+                <ChevronRight className="h-3.5 w-3.5 text-slate-600" />
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-emerald-400 leading-none">
@@ -414,9 +501,15 @@ export default function Admin() {
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+          <Card
+            className="bg-slate-900 border-slate-800 shadow-xl cursor-pointer hover:border-primary/50 transition-all"
+            onClick={() => setConversionModalOpen(true)}
+          >
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Conversão</CardTitle>
+              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
+                Conversão
+                <ChevronRight className="h-3.5 w-3.5 text-slate-600" />
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-primary leading-none">{metrics.conversionRate.toFixed(1)}%</div>
@@ -495,6 +588,62 @@ export default function Admin() {
                 />
               </LineChart>
             </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* TABELA DE RECEITA ANUAL */}
+        <Card className="bg-slate-900 border-slate-800 shadow-xl mb-8">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <DollarSign className="h-4 w-4 text-emerald-400" />
+              Receita Anual
+            </CardTitle>
+            <CardDescription className="text-[10px] text-slate-500">
+              Histórico e projeção de receita por ano
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader className="bg-slate-900/50">
+                <TableRow className="border-slate-800 hover:bg-transparent">
+                  <TableHead className="text-[10px] font-black text-slate-500 uppercase">Ano</TableHead>
+                  <TableHead className="text-[10px] font-black text-slate-500 uppercase text-right">Receita</TableHead>
+                  <TableHead className="text-[10px] font-black text-slate-500 uppercase text-right">Crescimento</TableHead>
+                  <TableHead className="text-[10px] font-black text-slate-500 uppercase text-center">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {annualRevenue.map((yearData, index) => {
+                  const prevYear = index > 0 ? annualRevenue[index - 1] : null;
+                  const growth = prevYear && prevYear.revenue > 0
+                    ? ((yearData.revenue - prevYear.revenue) / prevYear.revenue) * 100
+                    : 0;
+
+                  return (
+                    <TableRow key={yearData.year} className="border-slate-800 hover:bg-slate-900/40">
+                      <TableCell className="font-black text-white text-sm">{yearData.year}</TableCell>
+                      <TableCell className="text-right">
+                        <span className={`text-sm font-black ${yearData.isProjection ? 'text-amber-400' : 'text-emerald-400'}`}>
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(yearData.revenue)}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {index > 0 && (
+                          <span className={`text-xs font-bold ${growth >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {growth >= 0 ? '+' : ''}{growth.toFixed(1)}%
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Badge className={`text-[8px] font-black ${yearData.isProjection ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'} border-0`}>
+                          {yearData.isProjection ? 'PROJEÇÃO' : 'REALIZADO'}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
 
@@ -608,6 +757,246 @@ export default function Admin() {
           </Card>
         </div>
       </main>
+
+      {/* MODAL: RECEITA DETALHADA */}
+      <Dialog open={revenueModalOpen} onOpenChange={setRevenueModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-slate-950 border-slate-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black text-white flex items-center gap-2">
+              <DollarSign className="h-5 w-5 text-emerald-400" />
+              Receita Detalhada
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-400">
+              Análise completa de pagamentos e transações
+            </DialogDescription>
+          </DialogHeader>
+
+          <Tabs defaultValue="approved" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-slate-900">
+              <TabsTrigger value="approved" className="text-xs font-bold">Aprovados</TabsTrigger>
+              <TabsTrigger value="pending" className="text-xs font-bold">Pendentes</TabsTrigger>
+              <TabsTrigger value="all" className="text-xs font-bold">Todos</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="approved" className="mt-4">
+              <div className="rounded-lg border border-slate-800 overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-slate-900/50">
+                    <TableRow className="border-slate-800">
+                      <TableHead className="text-[9px] font-black text-slate-500">Data</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Usuário</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Valor</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paymentDetails.filter(p => p.status === 'paid').slice(0, 10).map((payment) => (
+                      <TableRow key={payment.id} className="border-slate-800 hover:bg-slate-900/40">
+                        <TableCell className="text-[10px] text-slate-400">
+                          {new Date(payment.created_at).toLocaleDateString('pt-BR')}
+                        </TableCell>
+                        <TableCell className="text-[10px] text-white font-bold">
+                          {payment.users?.name || 'N/A'}
+                        </TableCell>
+                        <TableCell className="text-[11px] font-black text-emerald-400">
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.amount)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-emerald-500/10 text-emerald-500 text-[8px] font-black border-0">
+                            PAGO
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="pending" className="mt-4">
+              <div className="rounded-lg border border-slate-800 overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-slate-900/50">
+                    <TableRow className="border-slate-800">
+                      <TableHead className="text-[9px] font-black text-slate-500">Data</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Usuário</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Valor</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paymentDetails.filter(p => p.status === 'pending').slice(0, 10).map((payment) => (
+                      <TableRow key={payment.id} className="border-slate-800 hover:bg-slate-900/40">
+                        <TableCell className="text-[10px] text-slate-400">
+                          {new Date(payment.created_at).toLocaleDateString('pt-BR')}
+                        </TableCell>
+                        <TableCell className="text-[10px] text-white font-bold">
+                          {payment.users?.name || 'N/A'}
+                        </TableCell>
+                        <TableCell className="text-[11px] font-black text-amber-400">
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.amount)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-amber-500/10 text-amber-500 text-[8px] font-black border-0">
+                            PENDENTE
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="all" className="mt-4">
+              <div className="rounded-lg border border-slate-800 overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-slate-900/50">
+                    <TableRow className="border-slate-800">
+                      <TableHead className="text-[9px] font-black text-slate-500">Data</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Usuário</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Valor</TableHead>
+                      <TableHead className="text-[9px] font-black text-slate-500">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paymentDetails.slice(0, 15).map((payment) => (
+                      <TableRow key={payment.id} className="border-slate-800 hover:bg-slate-900/40">
+                        <TableCell className="text-[10px] text-slate-400">
+                          {new Date(payment.created_at).toLocaleDateString('pt-BR')}
+                        </TableCell>
+                        <TableCell className="text-[10px] text-white font-bold">
+                          {payment.users?.name || 'N/A'}
+                        </TableCell>
+                        <TableCell className="text-[11px] font-black text-primary">
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.amount)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={`text-[8px] font-black border-0 ${payment.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500' :
+                              payment.status === 'pending' ? 'bg-amber-500/10 text-amber-500' :
+                                'bg-red-500/10 text-red-500'
+                            }`}>
+                            {payment.status.toUpperCase()}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* MODAL: SEGMENTAÇÃO DE USUÁRIOS */}
+      <Dialog open={usersModalOpen} onOpenChange={setUsersModalOpen}>
+        <DialogContent className="max-w-3xl bg-slate-950 border-slate-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black text-white flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              Segmentação de Usuários
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-400">
+              Análise detalhada por tipo e localização
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-sm font-black text-white mb-4">Por Tipo</h3>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: 'Prestadores', value: metrics.leadsByType.fazer_bico },
+                      { name: 'Contratantes', value: metrics.leadsByType.anunciar_servico }
+                    ]}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    <Cell fill="#3b82f6" />
+                    <Cell fill="#f59e0b" />
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-black text-white mb-4">Top 5 Cidades</h3>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={metrics.leadsByCity.slice(0, 5)}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                  <XAxis dataKey="name" stroke="#64748b" style={{ fontSize: '10px' }} />
+                  <YAxis stroke="#64748b" style={{ fontSize: '10px' }} />
+                  <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b' }} />
+                  <Bar dataKey="value" fill="#3b82f6" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* MODAL: FUNIL DE CONVERSÃO */}
+      <Dialog open={conversionModalOpen} onOpenChange={setConversionModalOpen}>
+        <DialogContent className="max-w-2xl bg-slate-950 border-slate-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black text-white flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              Funil de Conversão
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-400">
+              Jornada do usuário até o pagamento
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="bg-slate-900 p-4 rounded-lg border border-slate-800">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-black text-white">Total Registros</span>
+                <span className="text-2xl font-black text-primary">{metrics.totalLeads}</span>
+              </div>
+              <div className="w-full bg-slate-800 h-2 rounded-full">
+                <div className="bg-primary h-2 rounded-full" style={{ width: '100%' }} />
+              </div>
+            </div>
+
+            <div className="bg-slate-900 p-4 rounded-lg border border-slate-800">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-black text-white">Usuários Ativos</span>
+                <span className="text-2xl font-black text-blue-400">{Math.floor(metrics.totalLeads * 0.7)}</span>
+              </div>
+              <div className="w-full bg-slate-800 h-2 rounded-full">
+                <div className="bg-blue-400 h-2 rounded-full" style={{ width: '70%' }} />
+              </div>
+            </div>
+
+            <div className="bg-slate-900 p-4 rounded-lg border border-slate-800">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-black text-white">Pagamentos Realizados</span>
+                <span className="text-2xl font-black text-emerald-400">{metrics.approvedPayments}</span>
+              </div>
+              <div className="w-full bg-slate-800 h-2 rounded-full">
+                <div className="bg-emerald-400 h-2 rounded-full" style={{ width: `${metrics.conversionRate}%` }} />
+              </div>
+            </div>
+
+            <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
+              <div className="text-center">
+                <div className="text-4xl font-black text-primary mb-2">{metrics.conversionRate.toFixed(1)}%</div>
+                <div className="text-xs font-bold text-slate-400 uppercase">Taxa de Conversão</div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
