@@ -94,7 +94,7 @@ function App() {
             <AdminIcon />
             <AccessGuard>
               <Routes>
-                <Route path="/" element={<Index />} />
+                <Route path="/" element={<SalesLandingPage />} />
                 <Route path="/app" element={<Index />} />
                 <Route path="/intro" element={<SalesLandingPage />} />
                 <Route path="/landing" element={<PreLaunchLanding />} />
