@@ -117,3 +117,5 @@ trigger: deploy critical login fix
 trigger: deploy login fix and badge standardization
 <!-- Deploy all fixes 19:20 -->
 trigger: deploy complete visual polish
+<!-- Deploy critical fixes 19:35 -->
+trigger: deploy header and premium fixes
