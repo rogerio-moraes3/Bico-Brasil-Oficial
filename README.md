@@ -83,6 +83,7 @@ trigger: deploy CSS custom classes fix
 trigger: deploy with CSS fixes
 <!-- Final deploy CSS 21:56 -->
 trigger: deploy CSS custom classes
-
+<!-- Deploy CSS UTF-8 fix 22:10 -->
+trigger: deploy CSS UTF-8 encoding fix
 
 
