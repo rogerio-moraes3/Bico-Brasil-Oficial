@@ -178,11 +178,7 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/install-app" element={<InstallApp />} />
-                <Route path="/premium" element={
-                  <ProtectedRoute>
-                    <Premium />
-                  </ProtectedRoute>
-                } />
+                <Route path="/premium" element={<Premium />} />
                 <Route path="/payment-history" element={
                   <ProtectedRoute>
                     <PaymentHistory />

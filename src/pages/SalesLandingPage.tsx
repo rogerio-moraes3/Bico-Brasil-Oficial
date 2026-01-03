@@ -13,6 +13,7 @@ import { ProviderSection } from "@/components/sales/ProviderSection";
 import { SecuritySection } from "@/components/sales/SecuritySection";
 import { SalesFAQ } from "@/components/sales/SalesFAQ";
 import { SalesFooter } from "@/components/sales/SalesFooter";
+import { Header } from "@/components/Header";
 
 const SalesLandingPage = () => {
   const { user, loading } = useAuth();
@@ -38,22 +39,22 @@ const SalesLandingPage = () => {
     <>
       <Helmet>
         <title>Bico Brasil - Serviços Rápidos e Renda Extra na Sua Cidade</title>
-        <meta 
-          name="description" 
-          content="Encontre profissionais confiáveis em segundos ou ofereça seus serviços sem comissões abusivas. Plataforma leve, segura e feita para o Brasil que trabalha." 
+        <meta
+          name="description"
+          content="Encontre profissionais confiáveis em segundos ou ofereça seus serviços sem comissões abusivas. Plataforma leve, segura e feita para o Brasil que trabalha."
         />
-        <meta 
-          name="keywords" 
-          content="bico, serviços, profissionais, renda extra, trabalho, freelancer, diarista, pedreiro, eletricista, pintor" 
+        <meta
+          name="keywords"
+          content="bico, serviços, profissionais, renda extra, trabalho, freelancer, diarista, pedreiro, eletricista, pintor"
         />
         <meta property="og:title" content="Bico Brasil - Conecte-se a Quem Resolve" />
-        <meta 
-          property="og:description" 
-          content="Serviços rápidos e renda extra na sua cidade. Sem intermediários, sem comissões abusivas." 
+        <meta
+          property="og:description"
+          content="Serviços rápidos e renda extra na sua cidade. Sem intermediários, sem comissões abusivas."
         />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://bicobrasil.com.br" />
-        
+
         {/* JSON-LD Schema */}
         <script type="application/ld+json">
           {JSON.stringify({
@@ -76,6 +77,7 @@ const SalesLandingPage = () => {
       </Helmet>
 
       <div className="min-h-screen bg-background">
+        <Header />
         <SalesAnnouncementBar />
         <SalesHeroSection />
         <InstitutionalBlock />
