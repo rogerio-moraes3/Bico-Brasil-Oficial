@@ -768,36 +768,3 @@ All colors MUST be HSL.
     min-height: 56px;
   }
 }
- 
- } 
- 
- 
- 
- @ m e d i a   ( m i n - w i d t h :   7 6 8 p x )   { 
- 
-         . m d \ : t e x t - p l a n - v a l u e   { 
- 
-                 f o n t - s i z e :   9 6 p x   ! i m p o r t a n t ; 
- 
-         } 
- 
- } 
- 
- 
-
-/* CUSTOM FONT SIZES - OVERRIDE GLOBAL 13px */
-.text-slogan-sm {
-  font-size: 9px !important;
-  line-height: 1.4 !important;
-}
-
-.text-plan-value {
-  font-size: 72px !important;
-  line-height: 1 !important;
-}
-
-@media (min-width: 768px) {
-  .md\:text-plan-value {
-    font-size: 96px !important;
-  }
-}
