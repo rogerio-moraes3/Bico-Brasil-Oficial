@@ -103,4 +103,5 @@ trigger: deploy surgical fixes 12:20
 trigger: deploy admin dashboard improvements
 <!-- Deploy dashboard + buttons 13:37 -->
 trigger: deploy admin dashboard and button standardization
-
+<!-- Deploy admin icon fix 13:45 -->
+trigger: deploy admin icon visibility fix
