@@ -12,33 +12,28 @@ export function AdminIcon() {
       setLoading(true);
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user?.email) {
+        if (!user?.id) {
           setIsAdmin(false);
           setLoading(false);
           return;
         }
 
         // Verificar se usuário tem role de admin na tabela user_roles
-        const { data: userProfile } = await supabase
-          .from("users")
-          .select("id")
-          .eq("auth_id", user.id)
-          .maybeSingle();
-
-        if (!userProfile) {
-          setIsAdmin(false);
-          setLoading(false);
-          return;
-        }
-
         const { data: roleData } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", userProfile.id)
-          .eq("role", "admin")
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
           .maybeSingle();
 
-        setIsAdmin(!!roleData);
+        // Verificar também na tabela colaboradores_autorizados
+        const { data: colaboradorData } = await supabase
+          .from('colaboradores_autorizados')
+          .select('email')
+          .ilike('email', user.email || '')
+          .maybeSingle();
+
+        setIsAdmin(!!roleData || !!colaboradorData);
       } catch (error) {
         console.error("Erro ao verificar admin:", error);
         setIsAdmin(false);
