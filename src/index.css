@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -767,26 +767,4 @@ All colors MUST be HSL.
   .admin-metric-card {
     min-height: 56px;
   }
-} 
- / *   = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =  
-       C U S T O M   F O N T   S I Z E S   -   O V E R R I D E   G L O B A L   1 3 p x  
-       = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =   * /  
-  
- / *   S l o g a n   p e q u e n o   n o   h e a d e r   * /  
- . t e x t - s l o g a n - s m   {  
-     f o n t - s i z e :   9 p x   ! i m p o r t a n t ;  
-     l i n e - h e i g h t :   1 . 4   ! i m p o r t a n t ;  
- }  
-  
- / *   V a l o r e s   d o s   p l a n o s   -   G I G A N T E S   * /  
- . t e x t - p l a n - v a l u e   {  
-     f o n t - s i z e :   7 2 p x   ! i m p o r t a n t ;  
-     l i n e - h e i g h t :   1   ! i m p o r t a n t ;  
- }  
-  
- @ m e d i a   ( m i n - w i d t h :   7 6 8 p x )   {  
-     . m d \ \ : t e x t - p l a n - v a l u e   {  
-         f o n t - s i z e :   9 6 p x   ! i m p o r t a n t ;  
-     }  
- }  
- 
+}
