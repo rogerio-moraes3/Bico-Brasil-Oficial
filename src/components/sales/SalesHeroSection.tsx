@@ -37,23 +37,14 @@ export const SalesHeroSection = () => {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
-            Encontre profissionais confiáveis em segundos ou ofereça seus serviços sem pagar comissões abusivas. 
+            Encontre profissionais confiáveis em segundos ou ofereça seus serviços sem pagar comissões abusivas.
             A plataforma leve, segura e feita para o Brasil que trabalha.
           </p>
 
-          {/* CTA Principal */}
-          <Button 
-            size="lg"
-            onClick={() => navigate("/app")}
-            className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xl px-10 py-7 rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 group"
-          >
-            ENTRAR NO BICO BRASIL
-            <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
-          </Button>
 
           {/* CTAs Secundários */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-6">
-            <Button 
+            <Button
               size="default"
               variant="ghost"
               onClick={() => navigate("/app")}
@@ -62,10 +53,10 @@ export const SalesHeroSection = () => {
               <Search className="w-4 h-4 mr-2" />
               Buscar Profissional
             </Button>
-            
+
             <span className="hidden sm:block text-slate-500">|</span>
-            
-            <Button 
+
+            <Button
               size="default"
               variant="ghost"
               onClick={() => navigate("/app")}
@@ -79,7 +70,7 @@ export const SalesHeroSection = () => {
           {/* Secondary CTA */}
           <p className="mt-6 text-slate-400">
             Já tem conta?{" "}
-            <button 
+            <button
               onClick={() => navigate("/auth")}
               className="text-blue-400 hover:text-blue-300 underline font-medium"
             >
@@ -92,7 +83,7 @@ export const SalesHeroSection = () => {
       {/* Wave decoration */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
-          <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="currentColor" className="text-background"/>
+          <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="currentColor" className="text-background" />
         </svg>
       </div>
     </section>
