@@ -93,3 +93,6 @@ trigger: deploy inline styles fix
 trigger: deploy final fix
 <!-- Deploy final CSS fix 23:31 -->
 trigger: deploy final CSS fix
+<!-- Deploy mobile-friendly sizes 23:43 -->
+<!-- Deploy mobile-friendly sizes 23:43 -->
+trigger: deploy mobile-friendly sizes
