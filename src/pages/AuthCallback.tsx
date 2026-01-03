@@ -12,14 +12,23 @@ export default function AuthCallback() {
             console.log('🔵 CALLBACK START')
 
             try {
-                // 1) Processar OAuth redirect (PKCE ou Implicit Flow)
-                // getSessionFromUrl() processa automaticamente ?code= ou #access_token
-                const { data, error: sessionError } = await supabase.auth.getSessionFromUrl()
+                // 1) Get code from URL params
+                const urlParams = new URLSearchParams(window.location.search)
+                const code = urlParams.get('code')
+
+                if (!code) {
+                    console.error('🔴 NO CODE IN URL')
+                    setError('Código de autenticação não encontrado.')
+                    return
+                }
+
+                // 2) Exchange code for session (modern method)
+                const { data, error: sessionError } = await supabase.auth.exchangeCodeForSession(code)
 
                 if (!mounted) return
 
                 if (sessionError) {
-                    console.error('🔴 getSessionFromUrl error:', sessionError)
+                    console.error('🔴 exchangeCodeForSession error:', sessionError)
                     setError('Erro ao processar login. Tente novamente.')
                     return
                 }

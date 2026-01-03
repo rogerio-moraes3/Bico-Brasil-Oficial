@@ -75,7 +75,7 @@ export default function Premium() {
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold text-foreground">Premium</CardTitle>
-                  <Badge variant="secondary" className="text-xs font-bold px-3 py-1">Popular</Badge>
+                  <Badge variant="secondary" className="text-[10px] font-black px-3 py-1.5 uppercase tracking-wider">Popular</Badge>
                 </div>
                 <CardDescription className="text-base text-slate-300">Ideal para começar a receber trabalhos</CardDescription>
                 <div className="mt-6 mb-4">
@@ -99,7 +99,7 @@ export default function Premium() {
             </Card>
 
             <Card className="relative border-2 border-[#FF6A00] hover:border-[#FF8A20] hover:shadow-[0_0_40px_rgba(255,106,0,0.4)] transition-all duration-300 flex flex-col overflow-hidden hover:-translate-y-1">
-              <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-xs font-bold rounded-bl-lg shadow-lg">RECOMENDADO</div>
+              <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1.5 text-[10px] font-black rounded-bl-lg shadow-lg uppercase tracking-wider">Recomendado</div>
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Plano VIP<Crown className="h-5 w-5 text-primary" /></CardTitle>
@@ -126,7 +126,7 @@ export default function Premium() {
             </Card>
 
             <Card className="relative border-2 border-[#FF6A00] hover:border-amber-500 hover:shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all duration-300 flex flex-col overflow-hidden hover:-translate-y-1">
-              <div className="absolute top-0 right-0 bg-amber-500 text-white px-4 py-1 text-xs font-bold rounded-bl-lg shadow-lg">⭐ MELHOR VALOR</div>
+              <div className="absolute top-0 right-0 bg-amber-500 text-white px-4 py-1.5 text-[10px] font-black rounded-bl-lg shadow-lg uppercase tracking-wider">⭐ Melhor Valor</div>
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Plano Anual<Trophy className="h-5 w-5 text-amber-500" /></CardTitle>
