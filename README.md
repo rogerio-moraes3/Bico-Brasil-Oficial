@@ -79,4 +79,6 @@ trigger: manual deploy
 trigger: force deploy with all fixes
 <!-- Deploy CSS fix 2026-01-02 21:15 -->
 trigger: deploy CSS custom classes fix
+<!-- Deploy final CSS fix 2026-01-02 21:40 -->
+trigger: deploy with CSS fixes
 
