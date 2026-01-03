@@ -111,3 +111,5 @@ trigger: deploy landing page route fix
 trigger: deploy premium visual effects
 <!-- Deploy login fix + badges 18:15 -->
 trigger: deploy critical login fix
+<!-- Deploy login fix + badges 18:15 -->
+trigger: deploy critical login fix
