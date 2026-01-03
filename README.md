@@ -107,3 +107,5 @@ trigger: deploy admin dashboard and button standardization
 trigger: deploy admin icon visibility fix
 <!-- Deploy landing page fix 17:45 -->
 trigger: deploy landing page route fix
+<!-- Deploy visual polish 18:00 -->
+trigger: deploy premium visual effects
