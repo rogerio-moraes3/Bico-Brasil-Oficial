@@ -79,7 +79,7 @@ export default function Premium() {
                 </div>
                 <CardDescription className="text-base">Ideal para começar a receber trabalhos</CardDescription>
                 <div className="mt-6 mb-4">
-                  <span className="text-7xl md:text-8xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 19,90</span>
+                  <span className="text-plan-value md:text-plan-value font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 19,90</span>
                   <span className="text-muted-foreground text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
@@ -106,7 +106,7 @@ export default function Premium() {
                 </div>
                 <CardDescription className="text-base">Destaque total e máxima visibilidade</CardDescription>
                 <div className="mt-6 mb-4">
-                  <span className="text-7xl md:text-8xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 29,90</span>
+                  <span className="text-plan-value md:text-plan-value font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 29,90</span>
                   <span className="text-muted-foreground text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
@@ -133,7 +133,7 @@ export default function Premium() {
                 </div>
                 <CardDescription className="text-base">12 meses de Premium com 30% de desconto</CardDescription>
                 <div className="mt-6 mb-4">
-                  <span className="text-7xl md:text-8xl font-extrabold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent drop-shadow-lg">R$ 249,90</span>
+                  <span className="text-plan-value md:text-plan-value font-extrabold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent drop-shadow-lg">R$ 249,90</span>
                   <span className="text-muted-foreground text-xl font-medium">/ano</span>
                   <p className="text-sm text-muted-foreground mt-2 font-medium">Equivale a R$ 20,82/mês (economize R$ 108,90)</p>
                 </div>

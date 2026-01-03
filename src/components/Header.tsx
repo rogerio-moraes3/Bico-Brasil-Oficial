@@ -87,7 +87,7 @@ export const Header = () => {
                 <span className="text-sm md:text-base font-bold leading-tight whitespace-nowrap text-white">
                   Bico Brasil
                 </span>
-                <span className="text-[8px] md:text-[9px] text-white/60 leading-tight font-medium whitespace-nowrap uppercase tracking-wider">
+                <span className="text-slogan-sm text-white/60 leading-tight font-medium whitespace-nowrap uppercase tracking-wider">
                   Trabalhou, Tá Pago.
                 </span>
               </div>
