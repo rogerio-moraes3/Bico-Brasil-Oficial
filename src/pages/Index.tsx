@@ -66,7 +66,7 @@ export default function Index() {
           {/* Left Side - Contractor (Anunciar) */}
           <div
             onClick={handleContractorClick}
-            className="relative flex-1 bg-gradient-to-br from-[#0838C7] to-[#062D9E] flex flex-col items-center justify-center text-white p-8 cursor-pointer hover:from-[#062D9E] hover:to-[#0838C7] transition-all duration-300 active:scale-95 min-h-[40vh] md:min-h-[70vh] overflow-hidden"
+            className="relative flex-1 bg-gradient-to-br from-[#0838C7] to-[#062D9E] flex flex-col items-center justify-center text-white p-8 cursor-pointer hover:from-[#062D9E] hover:to-[#0838C7] transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
           >
             {/* Efeitos visuais - aparecem SOMENTE no browser, não no PWA */}
             <div className="metallic-grid" />
@@ -90,7 +90,7 @@ export default function Index() {
           {/* Right Side - Professional (Fazer Bico) */}
           <div
             onClick={handleProfessionalClick}
-            className="relative flex-1 bg-gradient-to-br from-green-600 to-green-700 flex flex-col items-center justify-center text-white p-8 cursor-pointer hover:from-green-700 hover:to-green-600 transition-all duration-300 active:scale-95 min-h-[40vh] md:min-h-[70vh] overflow-hidden"
+            className="relative flex-1 bg-gradient-to-br from-green-600 to-green-700 flex flex-col items-center justify-center text-white p-8 cursor-pointer hover:from-green-700 hover:to-green-600 transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
           >
             {/* Efeitos visuais - aparecem SOMENTE no browser, não no PWA */}
             <div className="metallic-grid" />
