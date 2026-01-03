@@ -77,3 +77,6 @@ Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/c
 trigger: manual deploy
 <!-- Deploy trigger 2026-01-02 20:57 -->
 trigger: force deploy with all fixes
+<!-- Deploy CSS fix 2026-01-02 21:15 -->
+trigger: deploy CSS custom classes fix
+
