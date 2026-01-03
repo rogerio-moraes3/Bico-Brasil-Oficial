@@ -88,6 +88,7 @@ export default function Admin() {
     leadsToday: 0,
     leadsThisWeek: 0,
     leadsThisMonth: 0,
+    leadsLastMonth: 0,
     totalUsers: 0,
     activeUsers7Days: 0,
     prestadores: 0,
@@ -101,7 +102,13 @@ export default function Admin() {
     totalProfileViews: 0,
     totalContactUnlocks: 0,
     totalRevenue: 0,
+    pendingRevenue: 0,
+    approvedPayments: 0,
+    totalPayments: 0,
+    conversionRate: 0,
+    growthRate: 0,
     signupsByDay: [] as any[],
+    revenueTrend: [] as any[],
     jobsByCategory: [] as any[],
     servicesByCategory: [] as any[]
   });
@@ -204,23 +211,55 @@ export default function Admin() {
     const { data: usersData } = await supabase.from('users').select('*');
     const { count: totalJobs } = await supabase.from('job_postings').select('*', { count: 'exact', head: true });
     const { count: totalServices } = await supabase.from('worker_services').select('*', { count: 'exact', head: true });
-    const { data: paymentsData } = await supabase.from('payments').select('amount').eq('status', 'paid');
+    const { data: allPayments } = await supabase.from('payments').select('amount, status, created_at, user_id');
 
     if (!usersData) return;
 
     const { startDate, endDate } = getDateRange();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
 
-    const filteredUsers = usersData.filter(u => {
-      const d = new Date(u.created_at);
-      return d >= startDate && d <= endDate;
-    });
-
+    // User metrics
     const totalLeads = usersData.length;
     const leadsToday = usersData.filter(u => new Date(u.created_at) >= today).length;
-    const totalRevenue = paymentsData?.reduce((acc, p) => acc + (p.amount || 0), 0) || 0;
+    const leadsThisMonth = usersData.filter(u => new Date(u.created_at) >= thisMonthStart).length;
+    const leadsLastMonth = usersData.filter(u => {
+      const d = new Date(u.created_at);
+      return d >= lastMonthStart && d <= lastMonthEnd;
+    }).length;
 
+    // Payment metrics
+    const approvedPayments = allPayments?.filter(p => p.status === 'paid') || [];
+    const pendingPayments = allPayments?.filter(p => p.status === 'pending') || [];
+    const totalRevenue = approvedPayments.reduce((acc, p) => acc + (p.amount || 0), 0);
+    const pendingRevenue = pendingPayments.reduce((acc, p) => acc + (p.amount || 0), 0);
+
+    // Conversion rate: users with payments / total users
+    const paidUserIds = new Set(approvedPayments.map(p => p.user_id).filter(Boolean));
+    const conversionRate = totalLeads > 0 ? (paidUserIds.size / totalLeads) * 100 : 0;
+
+    // Growth rate: (this month - last month) / last month * 100
+    const growthRate = leadsLastMonth > 0 ? ((leadsThisMonth - leadsLastMonth) / leadsLastMonth) * 100 : 0;
+
+    // Revenue trend (last 30 days)
+    const revenueTrend: any[] = [];
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      const dayRevenue = approvedPayments
+        .filter(p => p.created_at?.startsWith(dateStr))
+        .reduce((acc, p) => acc + (p.amount || 0), 0);
+      revenueTrend.push({
+        date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+        revenue: dayRevenue
+      });
+    }
+
+    // City distribution
     const cityCounts: any = {};
     usersData.forEach(u => {
       const city = u.city || 'Outros';
@@ -231,7 +270,15 @@ export default function Admin() {
       ...prev,
       totalLeads,
       leadsToday,
+      leadsThisMonth,
+      leadsLastMonth,
       totalRevenue,
+      pendingRevenue,
+      approvedPayments: approvedPayments.length,
+      totalPayments: allPayments?.length || 0,
+      conversionRate,
+      growthRate,
+      revenueTrend,
       leadsByType: {
         fazer_bico: usersData.filter(u => u.user_role === 'prestador').length,
         anunciar_servico: usersData.filter(u => u.user_role === 'empregador').length
@@ -329,7 +376,7 @@ export default function Admin() {
         </header>
 
         {/* METRICAS RAPIDAS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
           <Card className="bg-slate-900 border-slate-800 shadow-xl">
             <CardHeader className="pb-2">
               <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Usuários</CardTitle>
@@ -351,7 +398,41 @@ export default function Admin() {
               <div className="text-3xl font-black text-emerald-400 leading-none">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(metrics.totalRevenue)}
               </div>
-              <p className="text-[10px] text-slate-500 mt-2">Pagamentos confirmados</p>
+              <p className="text-[10px] text-slate-500 mt-2">{metrics.approvedPayments} pagamentos</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Pendente</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-black text-amber-400 leading-none">
+                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(metrics.pendingRevenue)}
+              </div>
+              <p className="text-[10px] text-slate-500 mt-2">Aguardando confirmação</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Conversão</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-black text-primary leading-none">{metrics.conversionRate.toFixed(1)}%</div>
+              <p className="text-[10px] text-slate-500 mt-2">Usuários que pagaram</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Crescimento</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className={`text-3xl font-black leading-none ${metrics.growthRate >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                {metrics.growthRate >= 0 ? '+' : ''}{metrics.growthRate.toFixed(1)}%
+              </div>
+              <p className="text-[10px] text-slate-500 mt-2">vs mês anterior</p>
             </CardContent>
           </Card>
 
@@ -364,25 +445,58 @@ export default function Admin() {
               <p className="text-[10px] text-slate-500 mt-2">Novos registros em 24h</p>
             </CardContent>
           </Card>
-
-          <Card className="bg-slate-900 border-slate-800 shadow-xl">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Eco-Sistema</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-4">
-                <div>
-                  <div className="text-xl font-black text-white">{metrics.totalJobs}</div>
-                  <div className="text-[9px] text-slate-500 uppercase font-bold">Vagas</div>
-                </div>
-                <div>
-                  <div className="text-xl font-black text-white">{metrics.totalServices}</div>
-                  <div className="text-[9px] text-slate-500 uppercase font-bold">Serviços</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
+
+        {/* GRAFICO DE TENDENCIA DE RECEITA */}
+        <Card className="bg-slate-900 border-slate-800 shadow-xl mb-8">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-primary" />
+              Tendência de Receita (Últimos 30 Dias)
+            </CardTitle>
+            <CardDescription className="text-[10px] text-slate-500">
+              Receita diária de pagamentos aprovados
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={metrics.revenueTrend}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                <XAxis
+                  dataKey="date"
+                  stroke="#64748b"
+                  style={{ fontSize: '10px', fontWeight: 'bold' }}
+                  tick={{ fill: '#64748b' }}
+                />
+                <YAxis
+                  stroke="#64748b"
+                  style={{ fontSize: '10px', fontWeight: 'bold' }}
+                  tick={{ fill: '#64748b' }}
+                  tickFormatter={(value) => `R$ ${value}`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#0f172a',
+                    border: '1px solid #1e293b',
+                    borderRadius: '8px',
+                    fontSize: '11px',
+                    fontWeight: 'bold'
+                  }}
+                  formatter={(value: any) => [`R$ ${value.toFixed(2)}`, 'Receita']}
+                  labelStyle={{ color: '#94a3b8', fontSize: '10px' }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={{ fill: '#10b981', r: 3 }}
+                  activeDot={{ r: 5 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
         {/* GESTÃO DE USUÁRIOS */}
         <div className="space-y-4">

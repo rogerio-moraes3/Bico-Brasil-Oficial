@@ -155,7 +155,7 @@ export default function Premium() {
                     <span className="text-sm font-semibold text-amber-600">Pague 1 ano e economize 30%!</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-xl transition-all bg-amber-500 hover:bg-amber-600" onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-xl transition-all" onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
           </div>
