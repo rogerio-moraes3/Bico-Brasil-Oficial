@@ -109,3 +109,5 @@ trigger: deploy admin icon visibility fix
 trigger: deploy landing page route fix
 <!-- Deploy visual polish 18:00 -->
 trigger: deploy premium visual effects
+<!-- Deploy login fix + badges 18:15 -->
+trigger: deploy critical login fix
