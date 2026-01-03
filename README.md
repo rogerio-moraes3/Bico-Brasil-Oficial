@@ -87,4 +87,6 @@ trigger: deploy CSS custom classes
 trigger: deploy CSS UTF-8 encoding fix
 <!-- Deploy clean CSS 22:43 -->
 trigger: deploy clean UTF-8 CSS
+<!-- Deploy inline styles 23:04 -->
+trigger: deploy inline styles fix
 
