@@ -99,4 +99,6 @@ trigger: deploy mobile-friendly sizes
 <!-- Deploy surgical fixes 12:15 -->
 <!-- Deploy surgical fixes 12:20 -->
 trigger: deploy surgical fixes 12:20
+<!-- Deploy admin dashboard 12:30 -->
+trigger: deploy admin dashboard improvements
 
