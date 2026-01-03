@@ -81,7 +81,7 @@ export const Header = () => {
               </Button>
             )}
 
-            <Link to="/app" className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
+            <Link to={user ? "/app" : "/"} className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
               <img src={logo} alt="Bico Brasil" className="h-10 w-10 md:h-12 md:w-12 shrink-0" />
               <div className="flex flex-col justify-center">
                 <span className="text-base md:text-lg font-bold leading-tight whitespace-nowrap text-white">
@@ -127,6 +127,16 @@ export const Header = () => {
 
             <PWAInstallButton />
             <ThemeToggle />
+
+            {/* Login Button for non-logged users */}
+            {!user && (
+              <Button
+                onClick={() => navigate('/auth?mode=login')}
+                className="bg-primary hover:bg-primary/90 text-white font-bold px-4 py-2 rounded-lg transition-all hover:scale-105"
+              >
+                ENTRAR
+              </Button>
+            )}
 
             {/* Notification Bell */}
             {user && (
