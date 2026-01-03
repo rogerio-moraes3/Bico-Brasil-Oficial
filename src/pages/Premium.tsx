@@ -71,16 +71,16 @@ export default function Premium() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-16 max-w-7xl mx-auto">
-            <Card className="relative border-2 border-[#FF6A00] hover:border-[#FF6A00]/80 hover:shadow-2xl transition-all duration-300 flex flex-col">
+            <Card className="relative border-2 border-[#FF6A00] hover:border-[#FF8A20] hover:shadow-[0_0_30px_rgba(255,106,0,0.3)] transition-all duration-300 flex flex-col hover:-translate-y-1">
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl font-bold">Premium</CardTitle>
-                  <Badge variant="secondary" className="text-xs">Popular</Badge>
+                  <CardTitle className="text-2xl font-bold text-foreground">Premium</CardTitle>
+                  <Badge variant="secondary" className="text-xs font-bold px-3 py-1">Popular</Badge>
                 </div>
-                <CardDescription className="text-base">Ideal para começar a receber trabalhos</CardDescription>
+                <CardDescription className="text-base text-slate-300">Ideal para começar a receber trabalhos</CardDescription>
                 <div className="mt-6 mb-4">
                   <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 19,90</span>
-                  <span className="text-muted-foreground text-xl font-medium">/mês</span>
+                  <span className="text-slate-400 text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
@@ -90,24 +90,24 @@ export default function Premium() {
                       <div className="rounded-full bg-primary/10 p-1.5 mt-0.5 group-hover:bg-primary/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{feature.text}</span>
+                      <span className="text-sm text-slate-200 group-hover:text-white transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
-                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-xl transition-all" onClick={() => { if (user) { setSelectedPlan({ type: 'basico', amount: 19.90, name: 'Premium' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'basico', amount: 19.90, name: 'Premium' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
 
-            <Card className="relative border-2 border-[#FF6A00] hover:border-[#FF6A00]/80 hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden">
-              <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-xs font-bold rounded-bl-lg">RECOMENDADO</div>
+            <Card className="relative border-2 border-[#FF6A00] hover:border-[#FF8A20] hover:shadow-[0_0_40px_rgba(255,106,0,0.4)] transition-all duration-300 flex flex-col overflow-hidden hover:-translate-y-1">
+              <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-xs font-bold rounded-bl-lg shadow-lg">RECOMENDADO</div>
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl font-bold flex items-center gap-2">Plano VIP<Crown className="h-5 w-5 text-primary" /></CardTitle>
+                  <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Plano VIP<Crown className="h-5 w-5 text-primary" /></CardTitle>
                 </div>
-                <CardDescription className="text-base">Destaque total e máxima visibilidade</CardDescription>
+                <CardDescription className="text-base text-slate-300">Destaque total e máxima visibilidade</CardDescription>
                 <div className="mt-6 mb-4">
                   <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 29,90</span>
-                  <span className="text-muted-foreground text-xl font-medium">/mês</span>
+                  <span className="text-slate-400 text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
@@ -117,25 +117,25 @@ export default function Premium() {
                       <div className="rounded-full bg-primary/10 p-1.5 mt-0.5 group-hover:bg-primary/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{feature.text}</span>
+                      <span className="text-sm text-slate-200 group-hover:text-white transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
-                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-xl transition-all" onClick={() => { if (user) { setSelectedPlan({ type: 'vip', amount: 29.90, name: 'VIP' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'vip', amount: 29.90, name: 'VIP' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
 
-            <Card className="relative border-2 border-[#FF6A00] hover:border-[#FF6A00]/80 hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden">
-              <div className="absolute top-0 right-0 bg-amber-500 text-white px-4 py-1 text-xs font-bold rounded-bl-lg">⭐ MELHOR VALOR</div>
+            <Card className="relative border-2 border-[#FF6A00] hover:border-amber-500 hover:shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all duration-300 flex flex-col overflow-hidden hover:-translate-y-1">
+              <div className="absolute top-0 right-0 bg-amber-500 text-white px-4 py-1 text-xs font-bold rounded-bl-lg shadow-lg">⭐ MELHOR VALOR</div>
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl font-bold flex items-center gap-2">Plano Anual<Trophy className="h-5 w-5 text-amber-500" /></CardTitle>
+                  <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Plano Anual<Trophy className="h-5 w-5 text-amber-500" /></CardTitle>
                 </div>
-                <CardDescription className="text-base">12 meses de Premium com 30% de desconto</CardDescription>
+                <CardDescription className="text-base text-slate-300">12 meses de Premium com 30% de desconto</CardDescription>
                 <div className="mt-6 mb-4">
                   <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent drop-shadow-lg">R$ 249,90</span>
-                  <span className="text-muted-foreground text-xl font-medium">/ano</span>
-                  <p className="text-sm text-muted-foreground mt-2 font-medium">Equivale a R$ 20,82/mês (economize R$ 108,90)</p>
+                  <span className="text-slate-400 text-xl font-medium">/ano</span>
+                  <p className="text-sm text-slate-400 mt-2 font-medium">Equivale a R$ 20,82/mês (economize R$ 108,90)</p>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
@@ -145,17 +145,17 @@ export default function Premium() {
                       <div className="rounded-full bg-amber-500/10 p-1.5 mt-0.5 group-hover:bg-amber-500/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-amber-500" />
                       </div>
-                      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{feature.text}</span>
+                      <span className="text-sm text-slate-200 group-hover:text-white transition-colors">{feature.text}</span>
                     </li>
                   ))}
-                  <li className="flex items-start gap-3 group border-t pt-4 mt-4">
+                  <li className="flex items-start gap-3 group border-t border-slate-700 pt-4 mt-4">
                     <div className="rounded-full bg-amber-500/10 p-1.5 mt-0.5 group-hover:bg-amber-500/20 transition-colors">
                       <TrendingUp className="h-4 w-4 text-amber-500" />
                     </div>
-                    <span className="text-sm font-semibold text-amber-600">Pague 1 ano e economize 30%!</span>
+                    <span className="text-sm font-semibold text-amber-400">Pague 1 ano e economize 30%!</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-xl transition-all" onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
           </div>
