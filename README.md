@@ -113,3 +113,5 @@ trigger: deploy premium visual effects
 trigger: deploy critical login fix
 <!-- Deploy login fix + badges 18:15 -->
 trigger: deploy critical login fix
+<!-- Deploy critical fixes 18:50 -->
+trigger: deploy login fix and badge standardization
