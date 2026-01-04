@@ -127,3 +127,5 @@ trigger: deploy unified badges and remove duplicate button
 trigger: deploy badge uniformity and button fix
 <!-- Deploy final badge fix 22:20 -->
 trigger: deploy badge uniformity final fix
+<!-- Deploy cities and featured ad fixes 00:55 -->
+trigger: deploy cities list fix and featured ad payment
