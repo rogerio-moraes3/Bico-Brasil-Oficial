@@ -28,6 +28,9 @@ import {
   MapPin,
   Star,
   Briefcase,
+  Eye,
+  EyeOff,
+  KeyRound,
   Calendar,
   Edit2,
   LogOut,
@@ -43,6 +46,13 @@ export default function Profile() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -279,6 +289,58 @@ export default function Profile() {
     }
   };
 
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (newPassword !== confirmNewPassword) {
+      toast({
+        title: "Senhas não coincidem",
+        description: "A nova senha e a confirmação devem ser iguais",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast({
+        title: "Senha muito curta",
+        description: "A senha deve ter pelo menos 6 caracteres",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      setChangingPassword(true);
+
+      // Supabase Auth update password
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Senha alterada!",
+        description: "Sua senha foi alterada com sucesso"
+      });
+
+      // Limpar campos
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+    } catch (error: any) {
+      console.error('Erro ao alterar senha:', error);
+      toast({
+        title: "Erro ao alterar senha",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -406,6 +468,9 @@ export default function Profile() {
                 </TabsTrigger>
                 <TabsTrigger value="myads" className="flex-shrink-0 text-xs md:text-sm whitespace-nowrap">
                   Meus Anúncios
+                </TabsTrigger>
+                <TabsTrigger value="security" className="flex-shrink-0 text-xs md:text-sm whitespace-nowrap">
+                  Segurança
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -848,6 +913,84 @@ export default function Profile() {
                       </Button>
                     )}
                   </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Security Tab */}
+            <TabsContent value="security">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <KeyRound className="h-5 w-5" />
+                    Segurança da Conta
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
+                    <div className="space-y-2">
+                      <Label htmlFor="new-password">Nova Senha</Label>
+                      <div className="relative">
+                        <Input
+                          id="new-password"
+                          type={showNewPassword ? "text" : "password"}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="••••••"
+                          required
+                          minLength={6}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                        >
+                          {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Mínimo de 6 caracteres</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirm-new-password">Confirmar Nova Senha</Label>
+                      <div className="relative">
+                        <Input
+                          id="confirm-new-password"
+                          type={showConfirmNewPassword ? "text" : "password"}
+                          value={confirmNewPassword}
+                          onChange={(e) => setConfirmNewPassword(e.target.value)}
+                          placeholder="••••••"
+                          required
+                          minLength={6}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                          onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
+                        >
+                          {showConfirmNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </div>
+
+                    <Button type="submit" disabled={changingPassword} className="w-full">
+                      {changingPassword ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Alterando...
+                        </>
+                      ) : (
+                        <>
+                          <KeyRound className="h-4 w-4 mr-2" />
+                          Alterar Senha
+                        </>
+                      )}
+                    </Button>
+                  </form>
                 </CardContent>
               </Card>
             </TabsContent>

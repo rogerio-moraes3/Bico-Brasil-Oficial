@@ -39,6 +39,8 @@ export default function Auth() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [cpf, setCpf] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
 
   // Autofocus no primeiro campo
   useEffect(() => {
@@ -344,6 +346,17 @@ export default function Auth() {
       toast({
         title: "Consentimento Necessário",
         description: "Você precisa aceitar a Política de Privacidade e os Termos de Uso para continuar",
+        variant: "destructive"
+      });
+      setLoading(false);
+      return;
+    }
+
+    // Verificar se as senhas coincidem
+    if (signupPassword !== signupConfirmPassword) {
+      toast({
+        title: "Senhas não coincidem",
+        description: "A senha e a confirmação devem ser iguais",
         variant: "destructive"
       });
       setLoading(false);
@@ -702,7 +715,10 @@ export default function Auth() {
                           name="password"
                           type={showPassword ? "text" : "password"}
                           className="h-9 text-sm"
+                          value={signupPassword}
+                          onChange={(e) => setSignupPassword(e.target.value)}
                           required
+                          minLength={6}
                         />
                         <Button
                           type="button"
@@ -712,6 +728,30 @@ export default function Auth() {
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="confirm-password" className="text-xs font-semibold uppercase tracking-tight">Confirmar Senha</Label>
+                      <div className="relative">
+                        <Input
+                          id="confirm-password"
+                          name="confirm-password"
+                          type={showConfirmPassword ? "text" : "password"}
+                          className="h-9 text-sm"
+                          value={signupConfirmPassword}
+                          onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                          required
+                          minLength={6}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0 h-full px-2 hover:bg-transparent"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        >
+                          {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
                     </div>
