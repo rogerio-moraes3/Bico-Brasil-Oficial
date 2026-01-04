@@ -105,7 +105,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
         },
         body: JSON.stringify({
           paymentMethod: 'pix',
-          planType: 'destaque',
+          planType: 'basico', // Using 'basico' as base type for custom pricing
           amount: totalPrice,
           days,
           payer: {
