@@ -341,132 +341,168 @@ export default function Auth() {
     e.preventDefault();
     setLoading(true);
 
-    // Verificar consentimento LGPD
-    if (!lgpdConsent) {
+    // ⏱️ TIMEOUT DE SEGURANÇA: Se passar 30 segundos, para o loading
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
       toast({
-        title: "Consentimento Necessário",
-        description: "Você precisa aceitar a Política de Privacidade e os Termos de Uso para continuar",
+        title: "Tempo esgotado",
+        description: "O cadastro está demorando muito. Tente novamente ou entre em contato com o suporte.",
         variant: "destructive"
       });
-      setLoading(false);
-      return;
-    }
+    }, 30000); // 30 segundos
 
-    // Verificar se as senhas coincidem
-    if (signupPassword !== signupConfirmPassword) {
-      toast({
-        title: "Senhas não coincidem",
-        description: "A senha e a confirmação devem ser iguais",
-        variant: "destructive"
-      });
-      setLoading(false);
-      return;
-    }
-
-    // Validar CPF
-    const cleanCpf = cpf.replace(/\D/g, '');
-    if (!validateCPF(cleanCpf)) {
-      toast({
-        title: "CPF inválido",
-        description: "Digite um CPF válido",
-        variant: "destructive"
-      });
-      setLoading(false);
-      return;
-    }
-
-    // Verificar se CPF já existe
-    const { data: existingCpf } = await supabase
-      .from('users')
-      .select('id')
-      .eq('cpf', cleanCpf)
-      .maybeSingle();
-
-    if (existingCpf) {
-      toast({
-        title: "CPF já cadastrado",
-        description: "Este CPF já está cadastrado na plataforma. Tente recuperar sua conta.",
-        variant: "destructive"
-      });
-      setLoading(false);
-      return;
-    }
-
-    const formData = new FormData(e.currentTarget);
-    const categorySlug = formData.get('category') as string;
-    const selectedCat = categories.find(c => c.slug === categorySlug);
-    const neighborhood = (formData.get('neighborhood') as string || '').trim();
-
-    // Formatar bairro se preenchido (agora é opcional)
-    const formattedNeighborhood = neighborhood
-      ? neighborhood
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ')
-      : '';
-
-    const data = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      password: formData.get('password') as string,
-      phone: formData.get('phone') as string,
-      neighborhood: formattedNeighborhood,
-      type: formData.get('type') as string,
-      user_role: formData.get('user_role') as string || 'prestador',
-      category: selectedCat?.name || undefined,
-      subcategory: formData.get('subcategory') as string || undefined,
-      description: formData.get('description') as string || undefined,
-      price: formData.get('price') as string || undefined,
-      city_id: selectedCity || undefined,
-      primary_contact_method: formData.get('primary_contact_method') as string || 'whatsapp',
-      cpf: cleanCpf
-    };
-
-    const validation = signupSchema.safeParse(data);
-
-    if (!validation.success) {
-      toast({
-        title: "Erro de validação",
-        description: validation.error.errors[0].message,
-        variant: "destructive"
-      });
-      setLoading(false);
-      return;
-    }
-
-    console.log('[Auth] Iniciando cadastro para:', data.email);
-    const { error } = await signUp(data.email, data.password, data);
-
-    if (error) {
-      console.error('[Auth] Erro no cadastro:', error);
-
-      // Mensagens específicas para erros comuns
-      let errorMessage = error.message;
-      if (error.message?.includes('User already registered') || error.message?.includes('already been registered')) {
-        errorMessage = 'Este e-mail já está cadastrado. Tente fazer login ou recuperar sua senha.';
-      } else if (error.message?.includes('Password')) {
-        errorMessage = 'Senha inválida. Use no mínimo 6 caracteres.';
-      } else if (error.message?.includes('Email')) {
-        errorMessage = 'E-mail inválido. Verifique e tente novamente.';
-      } else if (error.message?.includes('network') || error.message?.includes('fetch')) {
-        errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+    try {
+      // Verificar consentimento LGPD
+      if (!lgpdConsent) {
+        clearTimeout(timeoutId);
+        toast({
+          title: "Consentimento Necessário",
+          description: "Você precisa aceitar a Política de Privacidade e os Termos de Uso para continuar",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
       }
 
+      // Verificar se as senhas coincidem
+      if (signupPassword !== signupConfirmPassword) {
+        clearTimeout(timeoutId);
+        toast({
+          title: "Senhas não coincidem",
+          description: "A senha e a confirmação devem ser iguais",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Validar CPF
+      const cleanCpf = cpf.replace(/\D/g, '');
+      if (!validateCPF(cleanCpf)) {
+        clearTimeout(timeoutId);
+        toast({
+          title: "CPF inválido",
+          description: "Digite um CPF válido",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Verificar se CPF já existe
+      const { data: existingCpf } = await supabase
+        .from('users')
+        .select('id')
+        .eq('cpf', cleanCpf)
+        .maybeSingle();
+
+      if (existingCpf) {
+        clearTimeout(timeoutId);
+        toast({
+          title: "CPF já cadastrado",
+          description: "Este CPF já está cadastrado na plataforma. Tente recuperar sua conta.",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+
+      const formData = new FormData(e.currentTarget);
+      const categorySlug = formData.get('category') as string;
+      const selectedCat = categories.find(c => c.slug === categorySlug);
+      const neighborhood = (formData.get('neighborhood') as string || '').trim();
+
+      // Formatar bairro se preenchido (agora é opcional)
+      const formattedNeighborhood = neighborhood
+        ? neighborhood
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ')
+        : '';
+
+      const data = {
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        password: signupPassword, // Usar a senha do estado
+        phone: formData.get('phone') as string,
+        neighborhood: formattedNeighborhood,
+        type: formData.get('type') as string,
+        user_role: formData.get('user_role') as string || 'prestador',
+        category: selectedCat?.name || undefined,
+        subcategory: formData.get('subcategory') as string || undefined,
+        description: formData.get('description') as string || undefined,
+        price: formData.get('price') as string || undefined,
+        city_id: selectedCity || undefined,
+        primary_contact_method: formData.get('primary_contact_method') as string || 'whatsapp',
+        cpf: cleanCpf
+      };
+
+      const validation = signupSchema.safeParse(data);
+
+      if (!validation.success) {
+        clearTimeout(timeoutId);
+        toast({
+          title: "Erro de validação",
+          description: validation.error.errors[0].message,
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+
+      console.log('[Auth] Iniciando cadastro para:', data.email);
+      const { error } = await signUp(data.email, data.password, data);
+
+      // Limpar timeout
+      clearTimeout(timeoutId);
+
+      if (error) {
+        console.error('[Auth] Erro no cadastro:', error);
+
+        // Mensagens específicas para erros comuns
+        let errorMessage = error.message;
+        if (error.message?.includes('User already registered') || error.message?.includes('already been registered')) {
+          errorMessage = 'Este e-mail já está cadastrado. Tente fazer login ou recuperar sua senha.';
+        } else if (error.message?.includes('Password')) {
+          errorMessage = 'Senha inválida. Use no mínimo 6 caracteres.';
+        } else if (error.message?.includes('Email')) {
+          errorMessage = 'E-mail inválido. Verifique e tente novamente.';
+        } else if (error.message?.includes('network') || error.message?.includes('fetch')) {
+          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+        }
+
+        toast({
+          title: "Erro ao cadastrar",
+          description: errorMessage,
+          variant: "destructive"
+        });
+        setLoading(false);
+      } else {
+        console.log('[Auth] Cadastro realizado com sucesso');
+
+        // Limpar loading ANTES de mostrar toast e navegar
+        setLoading(false);
+
+        toast({
+          title: "Cadastro realizado!",
+          description: "Bem-vindo ao Bico Brasil"
+        });
+
+        // Aguardar 1 segundo antes de navegar (dar tempo pro toast aparecer)
+        setTimeout(() => {
+          navigate('/app');
+        }, 1000);
+      }
+    } catch (err: any) {
+      clearTimeout(timeoutId);
+      console.error('[Auth] Erro inesperado:', err);
       toast({
-        title: "Erro ao cadastrar",
-        description: errorMessage,
+        title: "Erro inesperado",
+        description: "Ocorreu um erro ao processar seu cadastro. Tente novamente.",
         variant: "destructive"
       });
-    } else {
-      console.log('[Auth] Cadastro realizado com sucesso');
-      toast({
-        title: "Cadastro realizado!",
-        description: "Bem-vindo ao Bico Brasil"
-      });
-      navigate('/app');
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

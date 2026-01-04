@@ -30,20 +30,57 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
   const checkAdminStatus = async () => {
     if (!user) return;
     setCheckingAdmin(true);
-    
-    const { data } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'admin')
-      .maybeSingle();
 
-    if (!data) {
+    try {
+      // 1. Primeiro buscar o user_id da tabela public.users
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('auth_id', user.id)
+        .maybeSingle();
+
+      if (userError) {
+        console.error('[ProtectedRoute] Erro ao buscar usuário:', userError);
+        navigate('/');
+        setCheckingAdmin(false);
+        return;
+      }
+
+      if (!userData) {
+        console.warn('[ProtectedRoute] Usuário não encontrado na tabela users');
+        navigate('/');
+        setCheckingAdmin(false);
+        return;
+      }
+
+      // 2. Buscar role com o user_id correto
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userData.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+
+      if (roleError) {
+        console.error('[ProtectedRoute] Erro ao verificar role:', roleError);
+        navigate('/');
+        setCheckingAdmin(false);
+        return;
+      }
+
+      if (!roleData) {
+        console.warn('[ProtectedRoute] Usuário não é admin');
+        navigate('/');
+      } else {
+        console.log('[ProtectedRoute] Usuário é admin ✅');
+        setIsAdmin(true);
+      }
+    } catch (error) {
+      console.error('[ProtectedRoute] Erro inesperado:', error);
       navigate('/');
-    } else {
-      setIsAdmin(true);
+    } finally {
+      setCheckingAdmin(false);
     }
-    setCheckingAdmin(false);
   };
 
   if (loading || (requireAdmin && isAdmin === null)) {

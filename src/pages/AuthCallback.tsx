@@ -41,40 +41,16 @@ export default function AuthCallback() {
 
                 console.log('✅ SESSION OK:', data.session.user.id)
 
-                // 2) Chamar Edge Function para sincronizar usuário
-                try {
-                    console.log('🔵 Chamando Edge Function...')
-                    const syncResponse = await fetch(
-                        'https://pyelmqmhraczgptagvve.supabase.co/functions/v1/sync_user_profile',
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${data.session.access_token}`,
-                                'Content-Type': 'application/json'
-                            }
-                        }
-                    )
+                // Trigger handle_new_user() já criou o perfil automaticamente
+                // Não precisa chamar Edge Function
 
-                    console.log('🔵 SYNC RESPONSE:', syncResponse.status)
-
-                    if (syncResponse.ok) {
-                        const syncResult = await syncResponse.json()
-                        console.log('✅ USER SYNCED:', syncResult)
-                    } else {
-                        const syncError = await syncResponse.text()
-                        console.warn('⚠️ SYNC FAILED (continuing anyway):', syncError)
-                    }
-                } catch (syncError) {
-                    console.warn('⚠️ SYNC ERROR (continuing anyway):', syncError)
-                }
-
-                // 3) Limpar URL (agora seguro, pois já temos sessão)
+                // Limpar URL (agora seguro, pois já temos sessão)
                 console.log('🔵 Limpando URL...')
                 window.history.replaceState({}, '', window.location.pathname)
 
                 console.log('🔵 REDIRECTING TO /app')
 
-                // 4) Redirecionar para /app
+                // Redirecionar para /app
                 if (mounted) {
                     window.location.replace('/app')
                 }
