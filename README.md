@@ -135,3 +135,5 @@ trigger: fix featured ad payment validation
 trigger: fix featured ad payment planType
 <!-- Deploy favicon fix 11:03 -->
 trigger: deploy favicon update
+<!-- Deploy password features 11:49 -->
+trigger: deploy password features
