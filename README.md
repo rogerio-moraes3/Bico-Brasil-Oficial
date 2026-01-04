@@ -121,3 +121,5 @@ trigger: deploy complete visual polish
 trigger: deploy header and premium fixes
 <!-- Deploy all critical fixes 19:40 -->
 trigger: deploy header, premium, badges, hover effects
+<!-- Deploy badge fix 21:40 -->
+trigger: deploy unified badges and remove duplicate button
