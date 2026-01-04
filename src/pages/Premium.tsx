@@ -76,10 +76,8 @@ export default function Premium() {
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold text-foreground">Premium</CardTitle>
-                  <div className="relative">
-                    <div className="bg-slate-700 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg">
-                      POPULAR
-                    </div>
+                  <div className="absolute top-0 right-0 bg-slate-700 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
+                    POPULAR
                   </div>
                 </div>
                 <CardDescription className="text-base text-slate-300">Ideal para começar a receber trabalhos</CardDescription>

@@ -190,11 +190,7 @@ export const Header = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <Button asChild size="sm" variant="default" className="hidden md:flex">
-                <Link to="/auth?mode=login">Entrar</Link>
-              </Button>
-            )}
+            ) : null}
 
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
@@ -208,11 +204,9 @@ export const Header = () => {
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 mt-6">
-                  <div className="px-2 mb-4">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">Modo de Uso</p>
-                    <ModeToggle />
-                  </div>
-                  {user && (
+                  <div className="absolute top-0 right-0 bg-slate-700 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
+                    POPULAR
+                  </div>{user && (
                     <div className="flex items-center gap-3 p-3 border rounded-lg mb-2">
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={user.user_metadata?.avatar_url} />
