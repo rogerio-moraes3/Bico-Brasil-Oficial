@@ -137,3 +137,5 @@ trigger: fix featured ad payment planType
 trigger: deploy favicon update
 <!-- Deploy password features 11:49 -->
 trigger: deploy password features
+<!-- Fix signup timeout 13:35 -->
+trigger: fix signup timeout
