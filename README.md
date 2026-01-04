@@ -125,3 +125,5 @@ trigger: deploy header, premium, badges, hover effects
 trigger: deploy unified badges and remove duplicate button
 <!-- Deploy final fixes 22:05 -->
 trigger: deploy badge uniformity and button fix
+<!-- Deploy final badge fix 22:20 -->
+trigger: deploy badge uniformity final fix
