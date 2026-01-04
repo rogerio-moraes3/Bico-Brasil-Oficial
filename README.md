@@ -133,3 +133,5 @@ trigger: deploy cities list fix and featured ad payment
 trigger: fix featured ad payment validation
 <!-- Deploy featured ad planType fix 02:15 -->
 trigger: fix featured ad payment planType
+<!-- Deploy favicon fix 11:03 -->
+trigger: deploy favicon update
