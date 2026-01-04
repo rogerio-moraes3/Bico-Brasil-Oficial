@@ -131,3 +131,5 @@ trigger: deploy badge uniformity final fix
 trigger: deploy cities list fix and featured ad payment
 <!-- Deploy featured ad pricing fix 01:20 -->
 trigger: fix featured ad payment validation
+<!-- Deploy featured ad planType fix 02:15 -->
+trigger: fix featured ad payment planType
