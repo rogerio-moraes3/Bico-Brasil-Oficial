@@ -9,10 +9,10 @@ const corsHeaders = {
 // Função de validação de CPF
 function validateCPF(cpf: string): boolean {
   cpf = cpf.replace(/\D/g, '');
-  
+
   if (cpf.length !== 11) return false;
   if (/^(\d)\1{10}$/.test(cpf)) return false;
-  
+
   let sum = 0;
   for (let i = 0; i < 9; i++) {
     sum += parseInt(cpf.charAt(i)) * (10 - i);
@@ -20,7 +20,7 @@ function validateCPF(cpf: string): boolean {
   let digit = 11 - (sum % 11);
   if (digit >= 10) digit = 0;
   if (digit !== parseInt(cpf.charAt(9))) return false;
-  
+
   sum = 0;
   for (let i = 0; i < 10; i++) {
     sum += parseInt(cpf.charAt(i)) * (11 - i);
@@ -28,7 +28,7 @@ function validateCPF(cpf: string): boolean {
   digit = 11 - (sum % 11);
   if (digit >= 10) digit = 0;
   if (digit !== parseInt(cpf.charAt(10))) return false;
-  
+
   return true;
 }
 
@@ -110,14 +110,14 @@ serve(async (req) => {
     // Verificar tipo de token (informativo)
     const isProductionToken = accessToken.startsWith("APP_USR-");
     const isTestToken = accessToken.startsWith("TEST-");
-    
+
     console.log(`🔐 Token tipo: ${isProductionToken ? "PRODUÇÃO" : isTestToken ? "TESTE" : "DESCONHECIDO"}`);
-    
+
     // ⚠️ Avisar se for teste, mas NÃO bloquear
     if (isTestToken) {
       console.warn("⚠️ Usando credenciais de TESTE - Pagamentos em sandbox (não são reais)");
     }
-    
+
     // ℹ️ Informativo (não bloqueia mais)
     if (isProductionToken) {
       console.log("✅ Usando credenciais de PRODUÇÃO - Pagamentos reais");
@@ -138,7 +138,7 @@ serve(async (req) => {
 
     // Cancelar cada pagamento pendente automaticamente
     if (userPendingPayments && userPendingPayments.length > 0) {
-      
+
       for (const oldPayment of userPendingPayments) {
         try {
           const cancelResponse = await fetchWithRetry(
@@ -173,7 +173,7 @@ serve(async (req) => {
           // Continua mesmo com erro
         }
       }
-      
+
       console.log('✅ Cancelamento automático concluído');
     }
 
@@ -186,7 +186,7 @@ serve(async (req) => {
     const payer = body.payer;
     const email = body.email ?? profile.email;
 
-    const validAmounts = [19.9, 29.9, 249.9];
+    const validAmounts = [19.9, 29.9, 249.9, 9.90, 24.90, 39.90, 69.90, 99.90];
     if (!validAmounts.includes(amount)) throw new Error("Valor de plano inválido");
 
     // cria o registro de pagamento
@@ -206,10 +206,10 @@ serve(async (req) => {
     console.log('🔐 Token MP existe:', !!accessToken);
     if (!accessToken) throw new Error("Token Mercado Pago não configurado");
 
-    const planName = planType === "vip" 
-      ? "VIP (R$ 29,90)" 
+    const planName = planType === "vip"
+      ? "VIP (R$ 29,90)"
       : planType === "anual"
-        ? "Anual (R$ 249,90)" 
+        ? "Anual (R$ 249,90)"
         : "Premium (R$ 19,90)";
     console.log('💰 Criando NOVO pagamento PIX para user:', profile.id);
     console.log('📊 Valor:', amount, 'Plano:', planName);
@@ -233,7 +233,7 @@ serve(async (req) => {
       console.log("   CPF:", payerCPF);
 
       console.log('📤 Enviando pagamento PIX para Mercado Pago...');
-      
+
       // Corpo da requisição conforme documentação oficial do Mercado Pago
       // 📚 Documentação: https://www.mercadopago.com.br/developers/en/reference/payments/_payments/post
       const pixPaymentBody = {
@@ -263,7 +263,7 @@ serve(async (req) => {
             {
               id: planType === 'vip' ? 'PLAN_VIP' : planType === 'anual' ? 'PLAN_ANUAL' : 'PLAN_BASICO',
               title: planType === 'vip' ? 'Plano VIP' : planType === 'anual' ? 'Plano Anual (12 meses)' : 'Plano Premium',
-              description: planType === 'vip' 
+              description: planType === 'vip'
                 ? 'Acesso completo com destaque e prioridade'
                 : planType === 'anual'
                   ? 'Acesso Premium por 12 meses com 30% de desconto'
@@ -289,7 +289,7 @@ serve(async (req) => {
       console.log("🔑 Token tipo:", isProductionToken ? "PRODUÇÃO" : "TESTE");
       console.log("💰 Valor:", amount);
       console.log("👤 CPF:", payerCPF);
-      
+
       // FASE 1: Requisição com retry e Idempotency Key
       const mpRes = await fetchWithRetry(
         "https://api.mercadopago.com/v1/payments",
@@ -313,7 +313,7 @@ serve(async (req) => {
       } catch {
         pixData = { raw: text };
       }
-      
+
       console.log('✅ PIX criado com sucesso!');
       console.log('📋 ID Pagamento MP:', pixData.id);
       console.log('💳 Status:', pixData.status);
@@ -322,15 +322,15 @@ serve(async (req) => {
       // FASE 1: Tratamento de erros específicos
       if (!mpRes.ok) {
         console.error("❌ Mercado Pago PIX error:", text);
-        
+
         // Mensagens de erro específicas
         if (mpRes.status === 401) {
           let errorMessage = "Token Mercado Pago inválido. Verifique MERCADOPAGO_ACCESS_TOKEN nas configurações.";
-          
+
           try {
             const errorJson = JSON.parse(text);
             console.error("📄 Detalhes do erro 401:", errorJson);
-            
+
             if (errorJson.message?.includes("Unauthorized use of live credentials")) {
               errorMessage = "Suas credenciais de PRODUÇÃO do Mercado Pago ainda não foram ativadas. Acesse o painel do Mercado Pago e complete a verificação da conta ou use credenciais de TESTE temporariamente.";
             } else if (errorJson.message?.includes("invalid") || errorJson.message?.includes("malformed")) {
@@ -339,8 +339,8 @@ serve(async (req) => {
           } catch (parseError) {
             console.warn("⚠️ Não foi possível parsear erro JSON");
           }
-          
-          return new Response(JSON.stringify({ 
+
+          return new Response(JSON.stringify({
             error: errorMessage,
             mercadopago_error: text
           }), {
@@ -348,19 +348,19 @@ serve(async (req) => {
             status: 401,
           });
         }
-        
+
         if (mpRes.status === 429) {
-          return new Response(JSON.stringify({ 
-            error: "Limite de requisições atingido. Aguarde alguns minutos e tente novamente." 
+          return new Response(JSON.stringify({
+            error: "Limite de requisições atingido. Aguarde alguns minutos e tente novamente."
           }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
             status: 429,
           });
         }
-        
-        return new Response(JSON.stringify({ 
-          error: "Erro ao criar pagamento PIX no Mercado Pago", 
-          details: pixData 
+
+        return new Response(JSON.stringify({
+          error: "Erro ao criar pagamento PIX no Mercado Pago",
+          details: pixData
         }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
           status: mpRes.status,
@@ -391,7 +391,7 @@ serve(async (req) => {
             },
           }),
         });
-        
+
         if (emailResponse.ok) {
           console.log("✅ Email PIX enviado com sucesso para:", email || profile.email);
         } else {
