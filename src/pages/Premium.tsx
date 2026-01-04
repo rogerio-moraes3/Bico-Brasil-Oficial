@@ -164,13 +164,15 @@ export default function Premium() {
           </div>
 
           <div className="max-w-7xl mx-auto">
-            <Card className="relative border-2 border-[#FF6A00] hover:border-[#FF6A00]/80 hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden">
+            <Card className="relative border-2 border-[#FF6A00] hover:border-amber-500 hover:shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all duration-300 flex flex-col overflow-hidden hover:-translate-y-1">
+              <div className="absolute top-0 right-0 bg-amber-500 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
+                ⭐ DESTAQUE
+              </div>
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl font-bold flex items-center gap-2">Anúncio Destaque<Star className="h-5 w-5 text-amber-500" /></CardTitle>
-                  <Badge variant="default" className="bg-amber-500 text-xs"><Star className="h-3 w-3 mr-1" />Destaque</Badge>
+                  <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Anúncio Destaque<Star className="h-5 w-5 text-amber-500" /></CardTitle>
                 </div>
-                <CardDescription className="text-base">Apareça no topo da página inicial e aumente suas contratações</CardDescription>
+                <CardDescription className="text-base text-slate-300">Apareça no topo da página inicial e aumente suas contratações</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
                 <ul className="space-y-4 mb-8 flex-grow">
@@ -179,7 +181,7 @@ export default function Premium() {
                       <div className="rounded-full bg-amber-500/10 p-1.5 mt-0.5 group-hover:bg-amber-500/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-amber-500" />
                       </div>
-                      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{feature.text}</span>
+                      <span className="text-sm text-slate-200 group-hover:text-white transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
