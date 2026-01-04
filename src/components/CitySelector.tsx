@@ -27,15 +27,6 @@ export const CitySelector = () => {
 
   const loadCities = async () => {
     setLoading(true);
-    // Aguardar sessão estar pronta antes de fazer query
-    const { data: { session } } = await supabase.auth.getSession();
-
-    // Se não tem sessão, não faz query (evita 401)
-    if (!session) {
-      console.log('[CitySelector] Sem sessão, pulando load de cities');
-      setLoading(false);
-      return;
-    }
 
     const { data, error } = await supabase
       .from("cities")

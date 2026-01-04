@@ -18,6 +18,9 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [days, setDays] = useState(initialDays);
+  const [payerName, setPayerName] = useState("");
+  const [payerPhone, setPayerPhone] = useState("");
+  const [payerEmail, setPayerEmail] = useState("");
   const [payerCPF, setPayerCPF] = useState("");
   const [qrCode, setQrCode] = useState("");
   const [qrCodeBase64, setQrCodeBase64] = useState("");
@@ -44,6 +47,35 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
       return;
     }
 
+    // Validações
+    if (!payerName.trim()) {
+      toast({
+        title: "Nome obrigatório",
+        description: "Por favor, preencha seu nome completo",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!payerPhone.trim() || payerPhone.length < 10) {
+      toast({
+        title: "Telefone inválido",
+        description: "Por favor, preencha um telefone válido",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!payerEmail.trim() || !emailRegex.test(payerEmail.trim())) {
+      toast({
+        title: "Email inválido",
+        description: "Por favor, preencha um email válido",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const cpfNumbers = payerCPF.replace(/\D/g, "");
     if (cpfNumbers.length !== 11) {
       toast({
@@ -56,35 +88,48 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
 
     try {
       setLoading(true);
-      
+
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         throw new Error('Não autenticado');
       }
 
-      const { data, error } = await supabase.functions.invoke('create-destaque-payment', {
-        body: { 
-          days,
-          paymentMethod: 'pix',
-          payer: {
-            cpf: cpfNumbers,
-            name: user.email?.split('@')[0] || 'Cliente'
-          }
-        },
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const url = `${supabaseUrl}/functions/v1/create-pix-payment`;
+
+      const response = await fetch(url, {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`
-        }
+        },
+        body: JSON.stringify({
+          paymentMethod: 'pix',
+          planType: 'destaque',
+          amount: totalPrice,
+          days,
+          payer: {
+            name: payerName.trim(),
+            cpf: cpfNumbers,
+            email: payerEmail.trim(),
+            phone: payerPhone.trim()
+          }
+        })
       });
 
-      if (error) throw error;
+      const data = await response.json();
 
-      if (data?.qr_code) {
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao gerar QR Code PIX');
+      }
+
+      if (data.qr_code) {
         setQrCode(data.qr_code);
         setQrCodeBase64(data.qr_code_base64);
         setPaymentId(data.payment_id);
         setShowQrModal(true);
         setOpen(false);
-        
+
         toast({
           title: "QR Code gerado!",
           description: "Escaneie o código para pagar"
@@ -110,7 +155,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
     15: 69.90,
     30: 99.90
   };
-  
+
   const totalPrice = priceTable[days] || 0;
 
   // Opções de planos
@@ -126,8 +171,8 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="w-full text-base font-semibold shadow-lg hover:shadow-xl transition-all"
           >
             Assinar
@@ -172,9 +217,8 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
                     variant={days === option.days ? "default" : "outline"}
                     size="sm"
                     onClick={() => setDays(option.days)}
-                    className={`relative transition-all ${
-                      days === option.days ? 'ring-2 ring-primary ring-offset-2' : ''
-                    }`}
+                    className={`relative transition-all ${days === option.days ? 'ring-2 ring-primary ring-offset-2' : ''
+                      }`}
                   >
                     <div className="flex flex-col items-center">
                       <span className="font-semibold">{option.label}</span>
@@ -183,6 +227,42 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
                   </Button>
                 ))}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="name">Nome Completo</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Seu nome completo"
+                value={payerName}
+                onChange={(e) => setPayerName(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Telefone</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="(11) 99999-9999"
+                value={payerPhone}
+                onChange={(e) => setPayerPhone(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="seu@email.com"
+                value={payerEmail}
+                onChange={(e) => setPayerEmail(e.target.value)}
+                disabled={loading}
+              />
             </div>
 
             <div className="space-y-2">
@@ -204,9 +284,9 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
               </p>
             </div>
 
-            <Button 
-              onClick={handleActivateDestaque} 
-              className="w-full gap-2" 
+            <Button
+              onClick={handleActivateDestaque}
+              className="w-full gap-2"
               size="lg"
               disabled={loading}
             >
