@@ -2,6 +2,9 @@
 document.body.style.backgroundColor = '#0A1A2F';
 document.documentElement.style.backgroundColor = '#0A1A2F';
 
+// 🔍 Sentry - Error tracking (deve ser importado ANTES de tudo)
+import './lib/sentry';
+
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";
