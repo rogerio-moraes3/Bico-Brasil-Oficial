@@ -339,25 +339,25 @@ export default function Auth() {
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
-    // ⏱️ TIMEOUT DE SEGURANÇA: Se passar 30 segundos, para o loading
-    const timeoutId = setTimeout(() => {
-      setLoading(false);
-      toast({
-        title: "Tempo esgotado",
-        description: "O cadastro está demorando muito. Tente novamente ou entre em contato com o suporte.",
-        variant: "destructive"
-      });
-    }, 30000); // 30 segundos
+    // Prevenir duplo disparo
+    if (loading) return;
+
+    // Validar que é um form
+    if (!(e.currentTarget instanceof HTMLFormElement)) {
+      console.error('[Auth] Erro: evento não é de um form');
+      return;
+    }
+
+    setLoading(true);
+    console.log('[Auth] Iniciando cadastro');
 
     try {
       // Verificar consentimento LGPD
       if (!lgpdConsent) {
-        clearTimeout(timeoutId);
         toast({
           title: "Consentimento Necessário",
-          description: "Você precisa aceitar a Política de Privacidade e os Termos de Uso para continuar",
+          description: "Você precisa aceitar a Política de Privacidade e os Termos de Uso",
           variant: "destructive"
         });
         setLoading(false);
@@ -366,7 +366,6 @@ export default function Auth() {
 
       // Verificar se as senhas coincidem
       if (signupPassword !== signupConfirmPassword) {
-        clearTimeout(timeoutId);
         toast({
           title: "Senhas não coincidem",
           description: "A senha e a confirmação devem ser iguais",
@@ -376,105 +375,53 @@ export default function Auth() {
         return;
       }
 
-      // Validar CPF
-      const cleanCpf = cpf.replace(/\D/g, '');
-      if (!validateCPF(cleanCpf)) {
-        clearTimeout(timeoutId);
+      // Validar senha mínima
+      if (signupPassword.length < 6) {
         toast({
-          title: "CPF inválido",
-          description: "Digite um CPF válido",
+          title: "Senha muito curta",
+          description: "A senha deve ter pelo menos 6 caracteres",
           variant: "destructive"
         });
         setLoading(false);
         return;
       }
 
-      // Verificar se CPF já existe
-      const { data: existingCpf } = await supabase
-        .from('users')
-        .select('id')
-        .eq('cpf', cleanCpf)
-        .maybeSingle();
+      // Obter dados do formulário
+      const formData = new FormData(e.currentTarget);
+      const name = (formData.get('name') as string || '').trim();
+      const email = (formData.get('email') as string || '').trim();
 
-      if (existingCpf) {
-        clearTimeout(timeoutId);
+      // Validar campos obrigatórios
+      if (!name || !email) {
         toast({
-          title: "CPF já cadastrado",
-          description: "Este CPF já está cadastrado na plataforma. Tente recuperar sua conta.",
+          title: "Campos obrigatórios",
+          description: "Preencha nome e e-mail",
           variant: "destructive"
         });
         setLoading(false);
         return;
       }
 
-      // ✅ FIX: Usar e.target ao invés de e.currentTarget
-      const form = e.target as HTMLFormElement;
-      const formData = new FormData(form);
-      const neighborhood = (formData.get('neighborhood') as string || '').trim();
-
-      // Formatar bairro se preenchido
-      const formattedNeighborhood = neighborhood
-        ? neighborhood
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(' ')
-        : '';
-
-      // ✅ VALIDAÇÃO: Cidade obrigatória
-      if (!selectedCity || selectedCity.trim() === '') {
-        clearTimeout(timeoutId);
-        toast({
-          title: "Cidade obrigatória",
-          description: "Por favor, selecione sua cidade antes de continuar",
-          variant: "destructive"
-        });
-        setLoading(false);
-        return;
-      }
-
-      // ✅ SIMPLIFICADO: Apenas campos essenciais
-      const data = {
-        name: formData.get('name') as string,
-        email: formData.get('email') as string,
-        password: signupPassword,
-        phone: formData.get('phone') as string,
-        neighborhood: formattedNeighborhood,
-        city_id: selectedCity,
-        cpf: cleanCpf
+      // Payload mínimo para o Supabase
+      const signupData = {
+        name,
+        email,
+        password: signupPassword
       };
 
-      const validation = signupSchema.safeParse(data);
-
-      if (!validation.success) {
-        clearTimeout(timeoutId);
-        toast({
-          title: "Erro de validação",
-          description: validation.error.errors[0].message,
-          variant: "destructive"
-        });
-        setLoading(false);
-        return;
-      }
-
-      console.log('[Auth] Iniciando cadastro para:', data.email);
-      const { error } = await signUp(data.email, data.password, data);
-
-      // Limpar timeout
-      clearTimeout(timeoutId);
+      console.log('[Auth] Enviando cadastro para:', email);
+      const { error } = await signUp(email, signupPassword, signupData);
 
       if (error) {
         console.error('[Auth] Erro no cadastro:', error);
 
-        // Mensagens específicas para erros comuns
         let errorMessage = error.message;
         if (error.message?.includes('User already registered') || error.message?.includes('already been registered')) {
-          errorMessage = 'Este e-mail já está cadastrado. Tente fazer login ou recuperar sua senha.';
+          errorMessage = 'Este e-mail já está cadastrado. Tente fazer login.';
         } else if (error.message?.includes('Password')) {
           errorMessage = 'Senha inválida. Use no mínimo 6 caracteres.';
         } else if (error.message?.includes('Email')) {
-          errorMessage = 'E-mail inválido. Verifique e tente novamente.';
-        } else if (error.message?.includes('network') || error.message?.includes('fetch')) {
-          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+          errorMessage = 'E-mail inválido.';
         }
 
         toast({
@@ -485,8 +432,6 @@ export default function Auth() {
         setLoading(false);
       } else {
         console.log('[Auth] Cadastro realizado com sucesso');
-
-        // Limpar loading ANTES de mostrar toast e navegar
         setLoading(false);
 
         toast({
@@ -494,13 +439,11 @@ export default function Auth() {
           description: "Bem-vindo ao Bico Brasil"
         });
 
-        // Aguardar 1 segundo antes de navegar (dar tempo pro toast aparecer)
         setTimeout(() => {
           navigate('/app');
         }, 1000);
       }
     } catch (err: any) {
-      clearTimeout(timeoutId);
       console.error('[Auth] Erro inesperado:', err);
       toast({
         title: "Erro inesperado",
@@ -733,19 +676,6 @@ export default function Auth() {
                       <Input id="name" name="name" className="h-9 text-sm" required />
                     </div>
                     <div className="space-y-1">
-                      <Label htmlFor="cpf" className="text-xs font-semibold uppercase tracking-tight">CPF (Obrigatório)</Label>
-                      <Input
-                        id="cpf"
-                        name="cpf"
-                        value={cpf}
-                        onChange={(e) => handleCpfChange(e.target.value)}
-                        placeholder="000.000.000-00"
-                        className="h-9 text-sm font-mono"
-                        maxLength={14}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-1">
                       <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-tight">E-mail</Label>
                       <Input id="email" name="email" type="email" className="h-9 text-sm" required />
                     </div>
@@ -796,54 +726,6 @@ export default function Auth() {
                           {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
-                    </div>
-                    <div className="space-y-1">
-                      <Label htmlFor="phone" className="text-xs font-semibold uppercase tracking-tight">WhatsApp</Label>
-                      <Input id="phone" name="phone" placeholder="(18) 99999-9999" className="h-9 text-sm" required />
-                    </div>
-                    <div className="space-y-1">
-                      <Label htmlFor="city" className="text-xs font-semibold uppercase tracking-tight">Cidade</Label>
-                      <div className="flex gap-2">
-                        <Select value={selectedCity} onValueChange={setSelectedCity} required>
-                          <SelectTrigger className="flex-1 h-9 text-sm">
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent className="max-h-[300px] overflow-y-auto">
-                            {cities
-                              .sort((a, b) => a.name.localeCompare(b.name))
-                              .map((city) => (
-                                <SelectItem key={city.id} value={city.id} className="text-sm">
-                                  {city.name} - {city.state}
-                                </SelectItem>
-                              ))}
-                          </SelectContent>
-                        </Select>
-
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          className="h-9 w-9 shrink-0"
-                          onClick={detectLocation}
-                          disabled={detectingLocation}
-                        >
-                          {detectingLocation ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Navigation className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                      {detectedCity && (
-                        <p className="text-sm text-muted-foreground">
-                          Localização detectada: {detectedCity}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="space-y-1">
-                      <Label htmlFor="neighborhood" className="text-xs font-semibold uppercase tracking-tight">Bairro</Label>
-                      <Input id="neighborhood" name="neighborhood" className="h-9 text-sm" required />
                     </div>
 
                     <div className="flex items-center space-x-2">
