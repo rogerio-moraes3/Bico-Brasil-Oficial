@@ -101,13 +101,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             phone: userData.phone || '',
             city_id: userData.city_id || null,
             neighborhood: userData.neighborhood || '',
-            type: userData.type || 'contractor',
-            category: userData.category || null,
-            subcategory: userData.subcategory || null,
-            description: userData.description || null,
-            price: userData.price || null,
             cpf: userData.cpf || null,
-            avatar_url: userData.profile_photo || null
+            // Valores padrão para campos opcionais
+            type: 'contractor',
+            user_role: 'prestador',
+            primary_contact_method: 'whatsapp'
           }
         }
       });
