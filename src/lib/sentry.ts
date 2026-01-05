@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/react";
 // Inicializar Sentry apenas em produção
 if (import.meta.env.PROD) {
     Sentry.init({
-        dsn: "https://YOUR_SENTRY_DSN@sentry.io/YOUR_PROJECT_ID",
+        dsn: import.meta.env.VITE_SENTRY_DSN,
         environment: import.meta.env.MODE,
 
         // Performance Monitoring
