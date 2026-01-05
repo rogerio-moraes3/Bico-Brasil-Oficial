@@ -420,6 +420,18 @@ export default function Auth() {
           .join(' ')
         : '';
 
+      // ✅ VALIDAÇÃO: Cidade obrigatória
+      if (!selectedCity || selectedCity.trim() === '') {
+        clearTimeout(timeoutId);
+        toast({
+          title: "Cidade obrigatória",
+          description: "Por favor, selecione sua cidade antes de continuar",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+
       // ✅ SIMPLIFICADO: Apenas campos essenciais
       const data = {
         name: formData.get('name') as string,
