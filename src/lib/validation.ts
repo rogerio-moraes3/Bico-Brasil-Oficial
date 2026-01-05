@@ -59,17 +59,19 @@ export const signupSchema = z.object({
     .max(100, "Bairro muito longo")
     .optional()
     .or(z.literal('')),
-  type: z.enum(['worker', 'contractor'], {
-    errorMap: () => ({ message: "Selecione o tipo de usuário" })
-  }),
+  type: z.enum(['worker', 'contractor']).optional(),
+  user_role: z.enum(['prestador', 'empregador']).optional(),
   category: z.string().optional(),
+  category_id: z.string().optional(),
+  city_id: z.string().optional(),
   subcategory: z.string().optional(),
   description: z.string()
     .max(500, "Descrição muito longa")
     .optional(),
   price: z.string()
     .max(50, "Preço muito longo")
-    .optional()
+    .optional(),
+  primary_contact_method: z.string().optional()
 });
 
 // WhatsApp URL validation
