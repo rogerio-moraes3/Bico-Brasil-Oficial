@@ -407,12 +407,12 @@ export default function Auth() {
         return;
       }
 
-      const formData = new FormData(e.currentTarget);
-      const categorySlug = formData.get('category') as string;
-      const selectedCat = categories.find(c => c.slug === categorySlug);
+      // ✅ FIX: Usar e.target ao invés de e.currentTarget
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
       const neighborhood = (formData.get('neighborhood') as string || '').trim();
 
-      // Formatar bairro se preenchido (agora é opcional)
+      // Formatar bairro se preenchido
       const formattedNeighborhood = neighborhood
         ? neighborhood
           .split(' ')
@@ -420,20 +420,14 @@ export default function Auth() {
           .join(' ')
         : '';
 
+      // ✅ SIMPLIFICADO: Apenas campos essenciais
       const data = {
         name: formData.get('name') as string,
         email: formData.get('email') as string,
-        password: signupPassword, // Usar a senha do estado
+        password: signupPassword,
         phone: formData.get('phone') as string,
         neighborhood: formattedNeighborhood,
-        type: formData.get('type') as string,
-        user_role: formData.get('user_role') as string || 'prestador',
-        category: selectedCat?.name || undefined,
-        subcategory: formData.get('subcategory') as string || undefined,
-        description: formData.get('description') as string || undefined,
-        price: formData.get('price') as string || undefined,
-        city_id: selectedCity || undefined,
-        primary_contact_method: formData.get('primary_contact_method') as string || 'whatsapp',
+        city_id: selectedCity,
         cpf: cleanCpf
       };
 
@@ -840,93 +834,40 @@ export default function Auth() {
                       <Input id="neighborhood" name="neighborhood" className="h-9 text-sm" required />
                     </div>
 
-                    <div className="space-y-1">
-                      <Label htmlFor="type" className="text-xs font-semibold uppercase tracking-tight">Tipo de Usuário</Label>
-                      <Select name="type" required>
-                        <SelectTrigger className="h-9 text-sm">
-                          <SelectValue placeholder="Selecione" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="contractor">Contratante</SelectItem>
-                          <SelectItem value="worker">Prestador</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-1">
-                      <Label htmlFor="user_role" className="text-xs font-semibold uppercase tracking-tight">Oferece Vagas?</Label>
-                      <Select name="user_role" defaultValue="prestador">
-                        <SelectTrigger className="h-9 text-sm">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="prestador">Não, procuro serviços</SelectItem>
-                          <SelectItem value="empregador">Sim, ofereço vagas</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-xs text-muted-foreground">
-                        Empregadores ganham 10 publicações grátis!
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <Label htmlFor="category" className="text-xs font-semibold uppercase tracking-tight">Categoria Principal</Label>
-                      <Select name="category">
-                        <SelectTrigger className="h-9 text-sm">
-                          <SelectValue placeholder="Selecione" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map(cat => (
-                            <SelectItem key={cat.id} value={cat.slug}>{cat.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="description">Descrição</Label>
-                      <Textarea id="description" name="description" rows={3} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="price">Preço Sugerido</Label>
-                      <Input id="price" name="price" placeholder="R$ 150/dia" />
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="lgpd"
+                        checked={lgpdConsent}
+                        onCheckedChange={(checked) => setLgpdConsent(checked as boolean)}
+                      />
+                      <label
+                        htmlFor="lgpd"
+                        className="text-xs leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        Aceito a{' '}
+                        <Link to="/privacy" className="text-primary hover:underline">
+                          Política de Privacidade
+                        </Link>{' '}
+                        e os{' '}
+                        <Link to="/terms" className="text-primary hover:underline">
+                          Termos de Uso
+                        </Link>
+                      </label>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label>Melhor forma de contato *</Label>
-                      <Select name="primary_contact_method" defaultValue="whatsapp" required>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="ligacao">Ligação</SelectItem>
-                          <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                          <SelectItem value="ambos">Ambos</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-3 p-4 bg-muted rounded-lg">
-                      <div className="flex items-start space-x-2">
-                        <input
-                          type="checkbox"
-                          id="lgpd-consent"
-                          checked={lgpdConsent}
-                          onChange={(e) => setLgpdConsent(e.target.checked)}
-                          className="mt-1"
-                        />
-                        <Label htmlFor="lgpd-consent" className="text-sm leading-relaxed cursor-pointer">
-                          <strong>Consentimento LGPD:</strong> Autorizo o Bico Brasil a coletar, armazenar e tratar meus dados pessoais (nome, telefone, e-mail, CPF, documentos, imagens) para fins de autenticação, publicação de serviços, comunicação entre contratante e prestador, processamento de pagamentos e cumprimento de obrigações legais, conforme a Lei nº 13.709/2018 (LGPD).{' '}
-                          <a href="/privacy" target="_blank" className="text-primary underline">
-                            Li e aceito a Política de Privacidade
-                          </a>{' '}
-                          e{' '}
-                          <a href="/terms" target="_blank" className="text-primary underline">
-                            os Termos de Uso
-                          </a>.
-                        </Label>
-                      </div>
-                    </div>
-
-                    <Button type="submit" className="w-full" disabled={loading || !lgpdConsent}>
-                      {loading ? 'Cadastrando...' : 'Cadastrar'}
+                    <Button
+                      type="submit"
+                      className="w-full bg-primary hover:bg-primary/90"
+                      disabled={loading || !lgpdConsent}
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Cadastrando...
+                        </>
+                      ) : (
+                        'Cadastrar'
+                      )}
                     </Button>
 
                     <div className="relative">
