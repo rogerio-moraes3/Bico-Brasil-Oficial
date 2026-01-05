@@ -40,6 +40,19 @@
   <!-- Canonical URL -->
   <link rel="canonical" href="https://bicobrasil.com.br" />
 
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', {
+      'send_page_view': false, // Controlar manualmente
+      'anonymize_ip': true,     // LGPD compliance
+      'cookie_flags': 'SameSite=None;Secure'
+    });
+  </script>
+
   <!-- Open Graph / Facebook / WhatsApp / Instagram -->
   <meta property="og:title" content="Bico Brasil - Trabalhos de bicos e serviços rápidos na sua cidade" />
   <meta property="og:description"
