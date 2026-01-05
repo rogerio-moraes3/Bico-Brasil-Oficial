@@ -159,3 +159,5 @@ trigger: deploy fix 500
 trigger: deploy fix cadastro e banco
 <!-- Deploy City Validation 16:34 -->
 trigger: deploy city validation
+<!-- Deploy Signup Fix 18:31 -->
+trigger: deploy signup fix
