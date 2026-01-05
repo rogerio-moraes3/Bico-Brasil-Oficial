@@ -139,3 +139,5 @@ trigger: deploy favicon update
 trigger: deploy password features
 <!-- Fix signup timeout 13:35 -->
 trigger: fix signup timeout
+<!-- Deploy audit fixes 21:05 -->
+trigger: deploy critical auth fixes
