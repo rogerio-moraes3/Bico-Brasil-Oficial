@@ -141,3 +141,5 @@ trigger: deploy password features
 trigger: fix signup timeout
 <!-- Deploy audit fixes 21:05 -->
 trigger: deploy critical auth fixes
+<!-- Deploy Sentry 22:00 -->
+trigger: deploy with Sentry env var
