@@ -145,3 +145,5 @@ trigger: deploy critical auth fixes
 trigger: deploy with Sentry env var
 <!-- Deploy Sentry Fix 22:20 -->
 trigger: deploy Sentry fix
+<!-- Deploy Cadastro Simplificado 12:15 -->
+trigger: deploy simplified signup
