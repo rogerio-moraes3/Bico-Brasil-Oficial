@@ -155,3 +155,5 @@ trigger: deploy validation fix
 trigger: deploy fix 500
 <!-- Deploy Fix 500 14:30 -->
 trigger: deploy fix 500
+<!-- Deploy Supabase Update 16:00 -->
+trigger: deploy fix cadastro e banco
