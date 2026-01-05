@@ -157,3 +157,5 @@ trigger: deploy fix 500
 trigger: deploy fix 500
 <!-- Deploy Supabase Update 16:00 -->
 trigger: deploy fix cadastro e banco
+<!-- Deploy City Validation 16:34 -->
+trigger: deploy city validation
