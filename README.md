@@ -147,3 +147,5 @@ trigger: deploy with Sentry env var
 trigger: deploy Sentry fix
 <!-- Deploy Cadastro Simplificado 12:15 -->
 trigger: deploy simplified signup
+<!-- Deploy Validation Fix 12:48 -->
+trigger: deploy validation fix
