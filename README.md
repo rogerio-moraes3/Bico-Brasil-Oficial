@@ -151,3 +151,5 @@ trigger: deploy simplified signup
 trigger: deploy validation fix
 <!-- Deploy Validation Fix 12:48 -->
 trigger: deploy validation fix
+<!-- Deploy Fix 500 13:15 -->
+trigger: deploy fix 500
