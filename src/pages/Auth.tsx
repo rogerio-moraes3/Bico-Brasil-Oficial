@@ -425,22 +425,14 @@ export default function Auth() {
         city_id: selectedCity
       };
 
-      console.log('[Auth] Enviando cadastro para:', email);
-      console.log('[Auth] Payload:', signupData);
-
       const { error } = await signUp(email, signupPassword, signupData);
 
       if (error) {
-        console.error('[Auth] Erro no cadastro:', error);
-
         // Se erro 500, tentar login automático (usuário pode ter sido criado)
         if (error.message?.includes('500') || error.message?.includes('Database error')) {
-          console.log('[Auth] Erro 500 detectado. Tentando login automático...');
-
           const { error: loginError } = await signIn(email, signupPassword);
 
           if (!loginError) {
-            console.log('[Auth] Login automático bem-sucedido! Usuário foi criado apesar do erro.');
             setLoading(false);
             toast({
               title: "Cadastro realizado!",
@@ -450,8 +442,6 @@ export default function Auth() {
               navigate('/app');
             }, 1000);
             return;
-          } else {
-            console.error('[Auth] Login automático falhou:', loginError);
           }
         }
 
@@ -471,7 +461,6 @@ export default function Auth() {
         });
         setLoading(false);
       } else {
-        console.log('[Auth] Cadastro realizado com sucesso');
         setLoading(false);
 
         toast({
