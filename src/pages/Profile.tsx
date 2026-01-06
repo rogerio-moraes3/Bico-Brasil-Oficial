@@ -209,7 +209,10 @@ export default function Profile() {
       if (updateError) throw updateError;
 
       // Atualizar state local
-      setProfile({ ...profile, profile_photo: publicUrl });
+      setProfile({ ...profile, profile_photo: publicUrl, avatar_url: publicUrl });
+
+      // Forçar refresh da sessão para atualizar Header
+      await supabase.auth.refreshSession();
 
       toast({
         title: "Foto atualizada!",
