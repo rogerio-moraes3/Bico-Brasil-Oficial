@@ -183,11 +183,11 @@ export default function Profile() {
 
       // Upload para Supabase Storage
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user!.id}-${Date.now()}.${fileExt}`;
-      const filePath = `profile-photos/${fileName}`;
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${user!.id}/${fileName}`; // Estrutura: {user_id}/nome-da-foto.jpg
 
       const { error: uploadError } = await supabase.storage
-        .from('avatars')
+        .from('profiles') // Bucket atualizado para 'profiles'
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: true
@@ -197,7 +197,7 @@ export default function Profile() {
 
       // Obter URL pública
       const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
+        .from('profiles') // Bucket atualizado para 'profiles'
         .getPublicUrl(filePath);
 
       // Atualizar banco

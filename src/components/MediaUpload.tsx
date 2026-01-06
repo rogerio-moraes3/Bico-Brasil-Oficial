@@ -7,7 +7,7 @@ import { Upload, Image, FileText, X } from 'lucide-react';
 
 interface MediaUploadProps {
   onUpload: (url: string, type: string) => void;
-  bucket: 'chat-media' | 'verification-docs' | 'avatars';
+  bucket: 'chat-media' | 'verification-docs' | 'avatars' | 'profiles';
 }
 
 export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
@@ -26,27 +26,27 @@ export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
     const filePath = `${user.id}/${fileName}`;
 
     // Validate file type
-    const allowedTypes = bucket === 'avatars'
+    const allowedTypes = (bucket === 'avatars' || bucket === 'profiles')
       ? ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
-      : bucket === 'chat-media' 
-      ? ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4']
-      : ['image/jpeg', 'image/png', 'application/pdf'];
+      : bucket === 'chat-media'
+        ? ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4']
+        : ['image/jpeg', 'image/png', 'application/pdf'];
 
     if (!allowedTypes.includes(file.type)) {
       toast({
         title: "Tipo de arquivo não suportado",
-        description: bucket === 'avatars'
+        description: (bucket === 'avatars' || bucket === 'profiles')
           ? "Apenas imagens são permitidas"
-          : bucket === 'chat-media' 
-          ? "Apenas imagens e vídeos são permitidos" 
-          : "Apenas imagens e PDFs são permitidos",
+          : bucket === 'chat-media'
+            ? "Apenas imagens e vídeos são permitidos"
+            : "Apenas imagens e PDFs são permitidos",
         variant: "destructive"
       });
       return;
     }
 
-    // Validate file size (5MB for avatars/chat, 10MB for docs)
-    const maxSize = (bucket === 'avatars' || bucket === 'chat-media') ? 5 * 1024 * 1024 : 10 * 1024 * 1024;
+    // Validate file size (5MB for avatars/profiles/chat, 10MB for docs)
+    const maxSize = (bucket === 'avatars' || bucket === 'profiles' || bucket === 'chat-media') ? 5 * 1024 * 1024 : 10 * 1024 * 1024;
     if (file.size > maxSize) {
       toast({
         title: "Arquivo muito grande",
@@ -76,7 +76,7 @@ export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
         .getPublicUrl(filePath);
 
       onUpload(publicUrl, file.type);
-      
+
       if (file.type.startsWith('image/')) {
         setPreview(publicUrl);
       }
@@ -111,14 +111,14 @@ export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
           </Button>
         </div>
       )}
-      
+
       <div>
         <input
           type="file"
           id="media-upload"
           className="hidden"
           onChange={handleFileSelect}
-          accept={bucket === 'avatars' ? 'image/*' : bucket === 'chat-media' ? 'image/*,video/mp4' : 'image/*,application/pdf'}
+          accept={(bucket === 'avatars' || bucket === 'profiles') ? 'image/*' : bucket === 'chat-media' ? 'image/*,video/mp4' : 'image/*,application/pdf'}
           disabled={uploading}
         />
         <label htmlFor="media-upload">
@@ -134,7 +134,7 @@ export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
             ) : (
               <>
                 <Upload className="h-4 w-4 mr-2" />
-                {bucket === 'avatars' ? 'Escolher foto' : bucket === 'chat-media' ? 'Anexar mídia' : 'Enviar documento'}
+                {(bucket === 'avatars' || bucket === 'profiles') ? 'Escolher foto' : bucket === 'chat-media' ? 'Anexar mídia' : 'Enviar documento'}
               </>
             )}
           </Button>
