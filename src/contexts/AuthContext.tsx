@@ -130,13 +130,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      // Limpar estado local PRIMEIRO para evitar tela preta
+      console.log('[AuthContext] Iniciando logout...');
+      // Limpar estado local PRIMEIRO
       setUser(null);
       setSession(null);
-      // Depois limpar no Supabase
+      // Limpar no Supabase
       await supabase.auth.signOut();
+      console.log('[AuthContext] Logout concluído, redirecionando...');
+      // Forçar redirecionamento e limpar cache
+      window.location.href = '/';
     } catch (error: any) {
-      console.error('Error signing out:', error);
+      console.error('[AuthContext] Error signing out:', error);
+      // Mesmo com erro, forçar redirecionamento
+      window.location.href = '/';
     }
   };
 

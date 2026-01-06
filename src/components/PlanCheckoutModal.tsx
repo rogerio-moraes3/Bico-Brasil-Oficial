@@ -48,6 +48,7 @@ export function PlanCheckoutModal({
   // Auto-preencher dados do usuário ao abrir modal
   useEffect(() => {
     if (open && user) {
+      console.log('UI_VERDE_APLICADA_V3'); // Verificação de deploy
       const fetchUserData = async () => {
         const { data } = await supabase
           .from('users')
@@ -222,9 +223,9 @@ export function PlanCheckoutModal({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-lg border-2 border-slate-200 dark:border-slate-800">
+        <DialogContent className="sm:max-w-md bg-emerald-50 dark:bg-emerald-950/20 backdrop-blur-lg border-2 border-emerald-500 dark:border-emerald-600">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white">
+            <DialogTitle className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">
               Assinar Plano {planName}
             </DialogTitle>
           </DialogHeader>
@@ -282,13 +283,13 @@ export function PlanCheckoutModal({
               </Alert>
             )}
 
-            <div className="text-center mb-4 p-4 bg-orange-50/50 dark:bg-orange-950/20 rounded-lg border border-orange-200 dark:border-orange-800 shadow-sm">
-              <p className="text-3xl font-bold text-primary">R$ {amount.toFixed(2)}</p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Pagamento via PIX</p>
+            <div className="text-center mb-4 p-4 bg-emerald-100 dark:bg-emerald-950/30 rounded-lg border-2 border-emerald-500 dark:border-emerald-600 shadow-sm">
+              <p className="text-3xl font-bold text-emerald-900 dark:text-emerald-100">R$ {amount.toFixed(2)}</p>
+              <p className="text-sm text-emerald-800 dark:text-emerald-200">Pagamento via PIX</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-slate-900 dark:text-white">Nome Completo</Label>
+              <Label htmlFor="name" className="text-emerald-900 dark:text-emerald-100 font-semibold">Nome Completo</Label>
               <Input
                 id="name"
                 placeholder="Seu nome completo"
@@ -300,7 +301,7 @@ export function PlanCheckoutModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-slate-900 dark:text-white">Telefone</Label>
+              <Label htmlFor="phone" className="text-emerald-900 dark:text-emerald-100 font-semibold">Telefone</Label>
               <Input
                 id="phone"
                 placeholder="(11) 99999-9999"
@@ -312,7 +313,7 @@ export function PlanCheckoutModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-900 dark:text-white">Email</Label>
+              <Label htmlFor="email" className="text-emerald-900 dark:text-emerald-100 font-semibold">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -325,7 +326,7 @@ export function PlanCheckoutModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="cpf" className="text-slate-900 dark:text-white">CPF</Label>
+              <Label htmlFor="cpf" className="text-emerald-900 dark:text-emerald-100 font-semibold">CPF</Label>
               <Input
                 id="cpf"
                 placeholder="000.000.000-00"
