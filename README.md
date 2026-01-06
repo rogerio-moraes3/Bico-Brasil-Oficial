@@ -163,3 +163,5 @@ trigger: deploy city validation
 trigger: deploy signup fix
 <!-- Deploy Fix 500 00:43 -->
 trigger: deploy fix 500
+<!-- Deploy Fallback 500 -->
+trigger: deploy fallback 500
