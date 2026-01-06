@@ -179,3 +179,5 @@ trigger: deploy green pix modal
 trigger: deploy marreta logout
 <!-- Deploy Light Mode 14:09 -->
 trigger: deploy light mode
+<!-- Deploy Avatar URL 17:21 -->
+trigger: deploy avatar url
