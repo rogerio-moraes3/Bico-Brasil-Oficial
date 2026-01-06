@@ -185,3 +185,5 @@ trigger: deploy avatar url
 trigger: deploy photo fix
 <!-- Deploy UI Improvements 18:32 -->
 trigger: deploy ui improvements
+<!-- Deploy Final UI 19:08 -->
+trigger: deploy final ui
