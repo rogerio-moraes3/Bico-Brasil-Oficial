@@ -11,6 +11,7 @@ import { PixQRCodeModal } from "./PixQRCodeModal";
 import { validateMercadoPagoToken, type MercadoPagoValidation } from "@/lib/validateMercadoPago";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface PlanCheckoutModalProps {
   open: boolean;
@@ -27,6 +28,7 @@ export function PlanCheckoutModal({
   amount,
   planName
 }: PlanCheckoutModalProps) {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [validatingMP, setValidatingMP] = useState(false);
   const [mpValidation, setMpValidation] = useState<MercadoPagoValidation | null>(null);
@@ -42,6 +44,29 @@ export function PlanCheckoutModal({
     payment_id: string;
   } | null>(null);
   const [showQRModal, setShowQRModal] = useState(false);
+
+  // Auto-preencher dados do usuário ao abrir modal
+  useEffect(() => {
+    if (open && user) {
+      const fetchUserData = async () => {
+        const { data } = await supabase
+          .from('users')
+          .select('name, cpf, phone, email')
+          .eq('auth_id', user.id)
+          .single();
+
+        if (data) {
+          setName(data.name || "");
+          setCpf(data.cpf ? formatCPF(data.cpf) : "");
+          setPhone(data.phone || "");
+          setEmail(data.email || user.email || "");
+        } else {
+          setEmail(user.email || "");
+        }
+      };
+      fetchUserData();
+    }
+  }, [open, user]);
 
   // Validar credenciais Mercado Pago ao abrir modal (não bloqueante)
   useEffect(() => {
@@ -197,9 +222,9 @@ export function PlanCheckoutModal({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-lg border-2">
+        <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-lg border-2 border-slate-200 dark:border-slate-800">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">
+            <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white">
               Assinar Plano {planName}
             </DialogTitle>
           </DialogHeader>
@@ -257,35 +282,37 @@ export function PlanCheckoutModal({
               </Alert>
             )}
 
-            <div className="text-center mb-4">
+            <div className="text-center mb-4 p-4 bg-orange-50/50 dark:bg-orange-950/20 rounded-lg border border-orange-200 dark:border-orange-800 shadow-sm">
               <p className="text-3xl font-bold text-primary">R$ {amount.toFixed(2)}</p>
-              <p className="text-sm text-muted-foreground">Pagamento via PIX</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Pagamento via PIX</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name">Nome Completo</Label>
+              <Label htmlFor="name" className="text-slate-900 dark:text-white">Nome Completo</Label>
               <Input
                 id="name"
                 placeholder="Seu nome completo"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={loading}
+                className="border-slate-300 dark:border-slate-700"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Telefone</Label>
+              <Label htmlFor="phone" className="text-slate-900 dark:text-white">Telefone</Label>
               <Input
                 id="phone"
                 placeholder="(11) 99999-9999"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 disabled={loading}
+                className="border-slate-300 dark:border-slate-700"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-slate-900 dark:text-white">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -293,11 +320,12 @@ export function PlanCheckoutModal({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                className="border-slate-300 dark:border-slate-700"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="cpf">CPF</Label>
+              <Label htmlFor="cpf" className="text-slate-900 dark:text-white">CPF</Label>
               <Input
                 id="cpf"
                 placeholder="000.000.000-00"
@@ -305,6 +333,7 @@ export function PlanCheckoutModal({
                 onChange={handleCPFChange}
                 disabled={loading}
                 maxLength={14}
+                className="border-slate-300 dark:border-slate-700"
               />
             </div>
 
