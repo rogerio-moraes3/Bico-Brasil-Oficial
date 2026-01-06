@@ -88,31 +88,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('[AuthContext] Iniciando signup para:', email);
 
-      // O trigger handle_new_user() no banco de dados criará o perfil automaticamente
-      // Passamos os dados via user_metadata para o trigger usar
+      // Payload mínimo - apenas email e password
+      // Qualquer dado adicional será preenchido APÓS login confirmado
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            full_name: userData.name,
-            name: userData.name,
-            phone: userData.phone || '',
-            city_id: userData.city_id || null,
-            neighborhood: userData.neighborhood || '',
-            cpf: userData.cpf || null,
-            // Valores padrão para campos opcionais
-            type: 'contractor',
-            user_role: 'prestador',
-            primary_contact_method: 'whatsapp'
-          }
+          emailRedirectTo: `${window.location.origin}/`
         }
       });
 
       if (error) throw error;
 
-      console.log('[AuthContext] Signup realizado com sucesso. Trigger criará o perfil.');
+      console.log('[AuthContext] Signup realizado com sucesso');
       return { error: null };
     } catch (error: any) {
       console.error('[AuthContext] SignUp error:', error);
