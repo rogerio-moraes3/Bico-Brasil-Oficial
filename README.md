@@ -177,3 +177,5 @@ trigger: deploy ux improvements
 trigger: deploy green pix modal
 <!-- Deploy Marreta Logout 13:38 -->
 trigger: deploy marreta logout
+<!-- Deploy Light Mode 14:09 -->
+trigger: deploy light mode
