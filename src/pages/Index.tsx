@@ -66,7 +66,7 @@ export default function Index() {
           {/* Left Side - Contractor (Anunciar) */}
           <div
             onClick={handleContractorClick}
-            className="relative flex-1 bg-gradient-to-br from-[#0838C7] to-[#062D9E] flex flex-col items-center justify-center text-white p-8 cursor-pointer hover:from-[#062D9E] hover:to-[#0838C7] transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
+            className="relative flex-1 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-[#0838C7] dark:to-[#062D9E] flex flex-col items-center justify-center text-slate-900 dark:text-white p-8 cursor-pointer hover:from-blue-100 hover:to-blue-50 dark:hover:from-[#062D9E] dark:hover:to-[#0838C7] transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
           >
             {/* Efeitos visuais - aparecem SOMENTE no browser, não no PWA */}
             <div className="metallic-grid" />
@@ -76,9 +76,9 @@ export default function Index() {
             <div className="noise-texture" />
 
             <div className="relative z-10 flex flex-col items-center gap-3 transform hover:scale-105 transition-transform duration-300">
-              <Megaphone size={48} className="drop-shadow-lg" />
-              <h2 className="text-2xl md:text-2xl font-bold text-center drop-shadow-md">Anunciar um bico</h2>
-              <p className="text-sm md:text-base text-center max-w-md opacity-95">
+              <Megaphone size={48} className="drop-shadow-lg text-blue-600 dark:text-white" />
+              <h2 className="text-2xl md:text-2xl font-bold text-center drop-shadow-md text-blue-900 dark:text-white">Anunciar um bico</h2>
+              <p className="text-sm md:text-base text-center max-w-md opacity-95 text-blue-800 dark:text-white">
                 Para sua casa ou seu negócio
               </p>
             </div>
@@ -90,7 +90,7 @@ export default function Index() {
           {/* Right Side - Professional (Fazer Bico) */}
           <div
             onClick={handleProfessionalClick}
-            className="relative flex-1 bg-gradient-to-br from-green-600 to-green-700 flex flex-col items-center justify-center text-white p-8 cursor-pointer hover:from-green-700 hover:to-green-600 transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
+            className="relative flex-1 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-600 dark:to-green-700 flex flex-col items-center justify-center text-slate-900 dark:text-white p-8 cursor-pointer hover:from-green-100 hover:to-green-50 dark:hover:from-green-700 dark:hover:to-green-600 transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
           >
             {/* Efeitos visuais - aparecem SOMENTE no browser, não no PWA */}
             <div className="metallic-grid" />
@@ -100,9 +100,9 @@ export default function Index() {
             <div className="noise-texture" />
 
             <div className="relative z-10 flex flex-col items-center gap-3 transform hover:scale-105 transition-transform duration-300">
-              <Hammer size={48} className="drop-shadow-lg" />
-              <h2 className="text-2xl md:text-2xl font-bold text-center drop-shadow-md">Fazer um bico</h2>
-              <p className="text-sm md:text-base text-center max-w-md opacity-95">
+              <Hammer size={48} className="drop-shadow-lg text-green-600 dark:text-white" />
+              <h2 className="text-2xl md:text-2xl font-bold text-center drop-shadow-md text-green-900 dark:text-white">Fazer um bico</h2>
+              <p className="text-sm md:text-base text-center max-w-md opacity-95 text-green-800 dark:text-white">
                 Renda extra com seus serviços
               </p>
             </div>

@@ -167,9 +167,9 @@ export const Header = () => {
                   <Button variant="ghost" size="sm" className="gap-2 hidden md:flex">
                     <Avatar className="h-6 w-6">
                       <AvatarImage src={
+                        user.user_metadata?.avatar_url ||
                         user.user_metadata?.profile_photo ||
-                        user.user_metadata?.picture ||
-                        user.user_metadata?.avatar_url
+                        user.user_metadata?.picture
                       } />
                       <AvatarFallback>{getUserInitials()}</AvatarFallback>
                     </Avatar>
