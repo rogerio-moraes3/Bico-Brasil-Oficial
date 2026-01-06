@@ -181,3 +181,5 @@ trigger: deploy marreta logout
 trigger: deploy light mode
 <!-- Deploy Avatar URL 17:21 -->
 trigger: deploy avatar url
+<!-- Deploy Photo Fix 18:03 -->
+trigger: deploy photo fix
