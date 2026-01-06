@@ -183,3 +183,5 @@ trigger: deploy light mode
 trigger: deploy avatar url
 <!-- Deploy Photo Fix 18:03 -->
 trigger: deploy photo fix
+<!-- Deploy UI Improvements 18:32 -->
+trigger: deploy ui improvements
