@@ -478,9 +478,8 @@ export default function Profile() {
               </TabsList>
             </div>
 
-            {/* Information Tab */}
             <TabsContent value="info">
-              <Card>
+              <Card className="border border-slate-200 dark:border-transparent shadow-sm">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Dados Pessoais</CardTitle>
