@@ -80,7 +80,7 @@ export default function Premium() {
                     POPULAR
                   </div>
                 </div>
-                <CardDescription className="text-base text-slate-300">Ideal para começar a receber trabalhos</CardDescription>
+                <CardDescription className="text-base text-slate-700 dark:text-slate-300">Ideal para começar a receber trabalhos</CardDescription>
                 <div className="mt-6 mb-4">
                   <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 19,90</span>
                   <span className="text-slate-400 text-xl font-medium">/mês</span>
@@ -93,7 +93,7 @@ export default function Premium() {
                       <div className="rounded-full bg-primary/10 p-1.5 mt-0.5 group-hover:bg-primary/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-sm text-slate-200 group-hover:text-white transition-colors">{feature.text}</span>
+                      <span className="text-sm text-slate-900 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -107,7 +107,7 @@ export default function Premium() {
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Plano VIP<Crown className="h-5 w-5 text-primary" /></CardTitle>
                 </div>
-                <CardDescription className="text-base text-slate-300">Destaque total e máxima visibilidade</CardDescription>
+                <CardDescription className="text-base text-slate-700 dark:text-slate-300">Destaque total e máxima visibilidade</CardDescription>
                 <div className="mt-6 mb-4">
                   <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 29,90</span>
                   <span className="text-slate-400 text-xl font-medium">/mês</span>
@@ -120,7 +120,7 @@ export default function Premium() {
                       <div className="rounded-full bg-primary/10 p-1.5 mt-0.5 group-hover:bg-primary/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-sm text-slate-200 group-hover:text-white transition-colors">{feature.text}</span>
+                      <span className="text-sm text-slate-900 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -134,7 +134,7 @@ export default function Premium() {
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Plano Anual<Trophy className="h-5 w-5 text-amber-500" /></CardTitle>
                 </div>
-                <CardDescription className="text-base text-slate-300">12 meses de Premium com 30% de desconto</CardDescription>
+                <CardDescription className="text-base text-slate-700 dark:text-slate-300">12 meses de Premium com 30% de desconto</CardDescription>
                 <div className="mt-6 mb-4">
                   <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent drop-shadow-lg">R$ 249,90</span>
                   <span className="text-slate-400 text-xl font-medium">/ano</span>
@@ -148,7 +148,7 @@ export default function Premium() {
                       <div className="rounded-full bg-amber-500/10 p-1.5 mt-0.5 group-hover:bg-amber-500/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-amber-500" />
                       </div>
-                      <span className="text-sm text-slate-200 group-hover:text-white transition-colors">{feature.text}</span>
+                      <span className="text-sm text-slate-900 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{feature.text}</span>
                     </li>
                   ))}
                   <li className="flex items-start gap-3 group border-t border-slate-700 pt-4 mt-4">
@@ -172,7 +172,7 @@ export default function Premium() {
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Anúncio Destaque<Star className="h-5 w-5 text-amber-500" /></CardTitle>
                 </div>
-                <CardDescription className="text-base text-slate-300">Apareça no topo da página inicial e aumente suas contratações</CardDescription>
+                <CardDescription className="text-base text-slate-700 dark:text-slate-300">Apareça no topo da página inicial e aumente suas contratações</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
                 <ul className="space-y-4 mb-8 flex-grow">
@@ -181,7 +181,7 @@ export default function Premium() {
                       <div className="rounded-full bg-amber-500/10 p-1.5 mt-0.5 group-hover:bg-amber-500/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-amber-500" />
                       </div>
-                      <span className="text-sm text-slate-200 group-hover:text-white transition-colors">{feature.text}</span>
+                      <span className="text-sm text-slate-900 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
