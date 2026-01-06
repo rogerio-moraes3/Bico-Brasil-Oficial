@@ -34,7 +34,7 @@ export default function Index() {
         <meta name="description" content="Encontre serviços rápidos, bicos e trabalhadores disponíveis na sua cidade. Contrate ou ofereça seus serviços com segurança e rapidez." />
       </Helmet>
 
-      <div className="min-h-screen flex flex-col bg-background relative">
+      <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 relative">
         <FuturisticBackground />
         <Header />
 
@@ -42,7 +42,7 @@ export default function Index() {
         <SearchBar />
 
         {/* Mode Toggle */}
-        <div className="bg-background py-4 px-4 relative z-10 flex justify-center">
+        <div className="bg-white dark:bg-slate-950 py-4 px-4 relative z-10 flex justify-center">
           <ModeToggle />
         </div>
 
@@ -50,11 +50,11 @@ export default function Index() {
         <ModeStats />
 
         {/* Title Section - Dinâmico baseado no modo */}
-        <div className="bg-background py-4 px-4 relative z-10">
-          <h1 className="text-xl md:text-2xl font-bold text-foreground text-center">
+        <div className="bg-white dark:bg-slate-950 py-4 px-4 relative z-10">
+          <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white text-center">
             {mode === 'contractor' ? 'Encontre profissionais qualificados' : 'Encontre trabalhos perto de você'}
           </h1>
-          <p className="text-center text-muted-foreground mt-1 text-sm">
+          <p className="text-center text-slate-700 dark:text-slate-300 mt-1 text-sm">
             {mode === 'contractor'
               ? 'Contrate serviços rápidos e confiáveis'
               : 'Ganhe dinheiro fazendo bicos na sua região'}

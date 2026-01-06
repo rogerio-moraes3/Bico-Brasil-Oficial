@@ -203,7 +203,7 @@ export default function Profile() {
       // Atualizar banco
       const { error: updateError } = await supabase
         .from('users')
-        .update({ profile_photo: publicUrl })
+        .update({ avatar_url: publicUrl }) // Campo correto: avatar_url
         .eq('auth_id', user!.id);
 
       if (updateError) throw updateError;
