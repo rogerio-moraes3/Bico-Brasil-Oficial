@@ -13,10 +13,7 @@ export const FeaturedServicesSection = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('users')
-        .select(`
-          *,
-          user_roles!left(role)
-        `)
+        .select('*')
         .eq('type', 'worker')
         .eq('plan_active', true)
         .not('profile_photo', 'is', null)
@@ -25,19 +22,10 @@ export const FeaturedServicesSection = () => {
 
       if (error) {
         console.error('Error fetching featured workers:', error);
-        throw error; // Re-throw to let react-query handle error state
+        throw error;
       }
 
-      // Filtrar admins da lista pública
-      const filteredWorkers = (data || []).filter((worker: any) => {
-        // Se tem user_roles e é admin, não mostrar
-        if (worker.user_roles && worker.user_roles.role === 'admin') {
-          return false;
-        }
-        return true;
-      });
-
-      return filteredWorkers;
+      return data || [];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes cache
   });

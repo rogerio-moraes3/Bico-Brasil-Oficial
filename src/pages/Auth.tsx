@@ -217,11 +217,19 @@ export default function Auth() {
       const { error } = await signIn(email, password);
 
       if (error) {
+        let errorTitle = "Erro ao entrar";
+        let errorDescription = error.message;
+
+        if (error.message === "Invalid login credentials") {
+          errorDescription = "E-mail ou senha incorretos";
+        } else if (error.message?.includes('Email not confirmed') || error.message?.includes('email_not_confirmed')) {
+          errorTitle = "E-mail não confirmado";
+          errorDescription = "Por favor, verifique seu e-mail ou aguarde um momento";
+        }
+
         toast({
-          title: "Erro ao entrar",
-          description: error.message === "Invalid login credentials"
-            ? "E-mail ou senha incorretos"
-            : error.message,
+          title: errorTitle,
+          description: errorDescription,
           variant: "destructive"
         });
         setLoading(false);
