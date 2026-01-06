@@ -169,3 +169,5 @@ trigger: deploy fallback 500
 trigger: deploy with fixed database
 <!-- Deploy Production 02:33 -->
 trigger: deploy production
+<!-- Deploy Final 11:33 -->
+trigger: deploy final
