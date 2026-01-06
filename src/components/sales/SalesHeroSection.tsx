@@ -6,7 +6,7 @@ export const SalesHeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
+    <section className="relative bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-slate-900 dark:text-white overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
@@ -36,7 +36,7 @@ export const SalesHeroSection = () => {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto">
             Encontre profissionais confiáveis em segundos ou ofereça seus serviços sem pagar comissões abusivas.
             A plataforma leve, segura e feita para o Brasil que trabalha.
           </p>
@@ -48,7 +48,7 @@ export const SalesHeroSection = () => {
               size="default"
               variant="ghost"
               onClick={() => navigate("/app")}
-              className="text-slate-300 hover:text-white hover:bg-white/10 font-medium"
+              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium"
             >
               <Search className="w-4 h-4 mr-2" />
               Buscar Profissional
@@ -60,7 +60,7 @@ export const SalesHeroSection = () => {
               size="default"
               variant="ghost"
               onClick={() => navigate("/app")}
-              className="text-slate-300 hover:text-white hover:bg-white/10 font-medium"
+              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium"
             >
               <Briefcase className="w-4 h-4 mr-2" />
               Oferecer Serviços
@@ -68,7 +68,7 @@ export const SalesHeroSection = () => {
           </div>
 
           {/* Secondary CTA */}
-          <p className="mt-6 text-slate-400">
+          <p className="mt-6 text-slate-500 dark:text-slate-400">
             Já tem conta?{" "}
             <button
               onClick={() => navigate("/auth")}

@@ -450,7 +450,7 @@ export default function Profile() {
 
           <Tabs defaultValue="info" className="animate-slide-up">
             <div className="w-full overflow-x-auto">
-              <TabsList className="inline-flex w-auto min-w-full gap-2 bg-muted/50 p-2 rounded-lg">
+              <TabsList className="inline-flex w-auto min-w-full gap-2 bg-slate-100 dark:bg-muted/50 p-2 rounded-lg border border-slate-200 dark:border-transparent shadow-sm">
                 <TabsTrigger value="info" className="flex-shrink-0 text-xs md:text-sm whitespace-nowrap">
                   Info
                 </TabsTrigger>

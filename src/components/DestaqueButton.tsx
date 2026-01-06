@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Input } from './ui/input';
@@ -36,6 +36,27 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
       .replace(/(\d{3})(\d)/, "$1.$2")
       .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
   };
+
+  // Auto-fill user data when modal opens
+  useEffect(() => {
+    if (open && user) {
+      const fetchUserData = async () => {
+        const { data } = await supabase
+          .from('users')
+          .select('name, phone, email, cpf')
+          .eq('auth_id', user.id)
+          .single();
+
+        if (data) {
+          setPayerName(data.name || '');
+          setPayerPhone(data.phone || '');
+          setPayerEmail(data.email || user.email || '');
+          setPayerCPF(data.cpf ? formatCPF(data.cpf) : '');
+        }
+      };
+      fetchUserData();
+    }
+  }, [open, user]);
 
   const handleActivateDestaque = async () => {
     if (!user) {
