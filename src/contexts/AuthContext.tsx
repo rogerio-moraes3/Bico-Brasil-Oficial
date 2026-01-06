@@ -88,13 +88,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('[AuthContext] Iniciando signup para:', email);
 
-      // Payload mínimo - apenas email e password
-      // Qualquer dado adicional será preenchido APÓS login confirmado
+      // Enviar dados do usuário via options.data
+      // Dados já vêm sanitizados do Auth.tsx
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            name: userData.name,
+            cpf: userData.cpf,
+            phone: userData.phone,
+            city_id: userData.city_id
+          }
         }
       });
 

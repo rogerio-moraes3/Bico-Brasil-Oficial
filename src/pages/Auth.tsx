@@ -390,23 +390,31 @@ export default function Auth() {
       const formData = new FormData(e.currentTarget);
       const name = (formData.get('name') as string || '').trim();
       const email = (formData.get('email') as string || '').trim();
+      const phone = (formData.get('phone') as string || '').trim();
+
+      // Sanitizar CPF e WhatsApp (apenas números)
+      const cleanCpf = cpf.replace(/\D/g, '');
+      const cleanPhone = phone.replace(/\D/g, '');
 
       // Validar campos obrigatórios
-      if (!name || !email) {
+      if (!name || !email || !cleanCpf || !cleanPhone || !selectedCity) {
         toast({
           title: "Campos obrigatórios",
-          description: "Preencha nome e e-mail",
+          description: "Preencha todos os campos",
           variant: "destructive"
         });
         setLoading(false);
         return;
       }
 
-      // Payload mínimo para o Supabase
+      // Payload completo com dados sanitizados
       const signupData = {
         name,
         email,
-        password: signupPassword
+        password: signupPassword,
+        cpf: cleanCpf,
+        phone: cleanPhone,
+        city_id: selectedCity
       };
 
       console.log('[Auth] Enviando cadastro para:', email);
@@ -678,6 +686,46 @@ export default function Auth() {
                     <div className="space-y-1">
                       <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-tight">E-mail</Label>
                       <Input id="email" name="email" type="email" className="h-9 text-sm" required />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="cpf" className="text-xs font-semibold uppercase tracking-tight">CPF</Label>
+                      <Input
+                        id="cpf"
+                        name="cpf"
+                        value={cpf}
+                        onChange={(e) => handleCpfChange(e.target.value)}
+                        placeholder="000.000.000-00"
+                        className="h-9 text-sm font-mono"
+                        maxLength={14}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="phone" className="text-xs font-semibold uppercase tracking-tight">WhatsApp</Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        placeholder="(18) 99999-9999"
+                        className="h-9 text-sm"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="city" className="text-xs font-semibold uppercase tracking-tight">Cidade</Label>
+                      <Select value={selectedCity} onValueChange={setSelectedCity} required>
+                        <SelectTrigger className="h-9 text-sm">
+                          <SelectValue placeholder="Selecione sua cidade" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[300px] overflow-y-auto">
+                          {cities
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map((city) => (
+                              <SelectItem key={city.id} value={city.id} className="text-sm">
+                                {city.name} - {city.state}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="password" className="text-xs font-semibold uppercase tracking-tight">Senha</Label>
