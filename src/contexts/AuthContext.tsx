@@ -136,12 +136,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(null);
       // Limpar no Supabase
       await supabase.auth.signOut();
-      console.log('[AuthContext] Logout concluído, redirecionando...');
+      console.log('[AuthContext] Logout concluído, limpando cache...');
+      // MARRETA: Limpar TUDO
+      localStorage.clear();
+      sessionStorage.clear();
       // Forçar redirecionamento e limpar cache
       window.location.href = '/';
     } catch (error: any) {
       console.error('[AuthContext] Error signing out:', error);
-      // Mesmo com erro, forçar redirecionamento
+      // Mesmo com erro, MARRETA: limpar tudo e redirecionar
+      localStorage.clear();
+      sessionStorage.clear();
       window.location.href = '/';
     }
   };

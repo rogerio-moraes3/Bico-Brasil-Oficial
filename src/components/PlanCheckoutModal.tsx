@@ -223,9 +223,9 @@ export function PlanCheckoutModal({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md bg-emerald-50 dark:bg-emerald-950/20 backdrop-blur-lg border-2 border-emerald-500 dark:border-emerald-600">
+        <DialogContent className="sm:max-w-md bg-emerald-50 dark:bg-emerald-950/20 backdrop-blur-lg border-2 border-emerald-500 dark:border-emerald-600 shadow-lg">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">
+            <DialogTitle className="text-2xl font-bold text-emerald-950 dark:text-emerald-100">
               Assinar Plano {planName}
             </DialogTitle>
           </DialogHeader>
@@ -283,13 +283,13 @@ export function PlanCheckoutModal({
               </Alert>
             )}
 
-            <div className="text-center mb-4 p-4 bg-emerald-100 dark:bg-emerald-950/30 rounded-lg border-2 border-emerald-500 dark:border-emerald-600 shadow-sm">
-              <p className="text-3xl font-bold text-emerald-900 dark:text-emerald-100">R$ {amount.toFixed(2)}</p>
-              <p className="text-sm text-emerald-800 dark:text-emerald-200">Pagamento via PIX</p>
+            <div className="text-center mb-4 p-4 bg-emerald-100 dark:bg-emerald-950/30 rounded-lg border-2 border-emerald-500 dark:border-emerald-600 shadow-lg">
+              <p className="text-3xl font-bold text-emerald-950 dark:text-emerald-100">R$ {amount.toFixed(2)}</p>
+              <p className="text-sm text-emerald-900 dark:text-emerald-200 font-semibold">Pagamento via PIX</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-emerald-900 dark:text-emerald-100 font-semibold">Nome Completo</Label>
+              <Label htmlFor="name" className="text-emerald-950 dark:text-emerald-100 font-semibold">Nome Completo</Label>
               <Input
                 id="name"
                 placeholder="Seu nome completo"
@@ -301,7 +301,7 @@ export function PlanCheckoutModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-emerald-900 dark:text-emerald-100 font-semibold">Telefone</Label>
+              <Label htmlFor="phone" className="text-emerald-950 dark:text-emerald-100 font-semibold">Telefone</Label>
               <Input
                 id="phone"
                 placeholder="(11) 99999-9999"
@@ -313,7 +313,7 @@ export function PlanCheckoutModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-emerald-900 dark:text-emerald-100 font-semibold">Email</Label>
+              <Label htmlFor="email" className="text-emerald-950 dark:text-emerald-100 font-semibold">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -326,7 +326,7 @@ export function PlanCheckoutModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="cpf" className="text-emerald-900 dark:text-emerald-100 font-semibold">CPF</Label>
+              <Label htmlFor="cpf" className="text-emerald-950 dark:text-emerald-100 font-semibold">CPF</Label>
               <Input
                 id="cpf"
                 placeholder="000.000.000-00"
@@ -341,7 +341,7 @@ export function PlanCheckoutModal({
             <Button
               onClick={handleGenerateQRCode}
               disabled={loading || validatingMP || !mpValidation?.ok}
-              className="w-full"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
               size="lg"
             >
               {loading ? (
