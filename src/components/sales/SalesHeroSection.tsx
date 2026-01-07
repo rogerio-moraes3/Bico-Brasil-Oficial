@@ -48,7 +48,7 @@ export const SalesHeroSection = () => {
               size="default"
               variant="ghost"
               onClick={() => navigate("/app")}
-              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium"
+              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 font-medium border border-slate-300 dark:border-transparent"
             >
               <Search className="w-4 h-4 mr-2" />
               Buscar Profissional
@@ -60,7 +60,7 @@ export const SalesHeroSection = () => {
               size="default"
               variant="ghost"
               onClick={() => navigate("/app")}
-              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium"
+              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 font-medium border border-slate-300 dark:border-transparent"
             >
               <Briefcase className="w-4 h-4 mr-2" />
               Oferecer Serviços
