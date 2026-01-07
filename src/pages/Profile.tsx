@@ -479,7 +479,7 @@ export default function Profile() {
             </div>
 
             <TabsContent value="info">
-              <Card className="border border-slate-200 dark:border-transparent shadow-sm">
+              <Card className="border-2 border-slate-200 dark:border-transparent shadow-md bg-white dark:bg-card">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Dados Pessoais</CardTitle>
