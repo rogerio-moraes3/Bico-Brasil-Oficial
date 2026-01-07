@@ -63,17 +63,12 @@ export default function Index() {
 
         {/* Split Screen Container */}
         <div className="flex-1 flex flex-col md:flex-row relative z-10">
-          {/* Left Side - Contractor (Anunciar) */}
           <div
             onClick={handleContractorClick}
-            className="relative flex-1 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-[#0838C7] dark:to-[#062D9E] flex flex-col items-center justify-center text-slate-900 dark:text-white p-8 cursor-pointer hover:from-blue-100 hover:to-blue-50 dark:hover:from-[#062D9E] dark:hover:to-[#0838C7] transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
+            className="relative flex-1 bg-[#87c9ff] dark:from-[#0838C7] dark:to-[#062D9E] flex flex-col items-center justify-center text-slate-900 dark:text-white p-8 cursor-pointer hover:brightness-110 dark:hover:from-[#062D9E] dark:hover:to-[#0838C7] transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
+            style={{ backgroundColor: '#87c9ff' }}
           >
-            {/* Efeitos visuais - aparecem SOMENTE no browser, não no PWA */}
-            <div className="metallic-grid" />
-            <div className="shine-overlay" />
-            <div className="inner-glow" />
-            <div className="edge-fade" />
-            <div className="noise-texture" />
+            {/* Removed texture effects for clean solid color */}
 
             <div className="relative z-10 flex flex-col items-center gap-3 transform hover:scale-105 transition-transform duration-300">
               <Megaphone size={48} className="drop-shadow-lg text-blue-600 dark:text-white" />
@@ -87,17 +82,12 @@ export default function Index() {
           {/* Linha divisória central - apenas browser */}
           <div className="hidden md:block center-divider left-1/2" />
 
-          {/* Right Side - Professional (Fazer Bico) */}
           <div
             onClick={handleProfessionalClick}
-            className="relative flex-1 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-600 dark:to-green-700 flex flex-col items-center justify-center text-slate-900 dark:text-white p-8 cursor-pointer hover:from-green-100 hover:to-green-50 dark:hover:from-green-700 dark:hover:to-green-600 transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
+            className="relative flex-1 bg-[#82ffa3] dark:from-green-600 dark:to-green-700 flex flex-col items-center justify-center text-slate-900 dark:text-white p-8 cursor-pointer hover:brightness-110 dark:hover:from-green-700 dark:hover:to-green-600 transition-all duration-300 active:scale-95 min-h-[45vh] md:min-h-[70vh] overflow-hidden"
+            style={{ backgroundColor: '#82ffa3' }}
           >
-            {/* Efeitos visuais - aparecem SOMENTE no browser, não no PWA */}
-            <div className="metallic-grid" />
-            <div className="shine-overlay" style={{ animationDelay: '2s' }} />
-            <div className="inner-glow" />
-            <div className="edge-fade" />
-            <div className="noise-texture" />
+            {/* Removed texture effects for clean solid color */}
 
             <div className="relative z-10 flex flex-col items-center gap-3 transform hover:scale-105 transition-transform duration-300">
               <Hammer size={48} className="drop-shadow-lg text-green-600 dark:text-white" />

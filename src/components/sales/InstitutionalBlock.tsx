@@ -1,6 +1,6 @@
 export const InstitutionalBlock = () => {
   return (
-    <section className="bg-slate-50 dark:bg-blue-900 py-20 px-6 md:px-12">
+    <section className="bg-[#d4fddf] dark:bg-blue-900 py-20 px-6 md:px-12" style={{ backgroundColor: '#d4fddf' }}>
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
           Renda Rápida Local, Sem Leilão de Preços e com Perfis Verificados
