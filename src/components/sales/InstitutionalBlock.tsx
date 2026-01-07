@@ -1,6 +1,6 @@
 export const InstitutionalBlock = () => {
   return (
-    <section className="bg-white dark:bg-blue-900 py-20 px-6 md:px-12">
+    <section className="bg-slate-50 dark:bg-blue-900 py-20 px-6 md:px-12">
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
           Renda Rápida Local, Sem Leilão de Preços e com Perfis Verificados
@@ -13,7 +13,7 @@ export const InstitutionalBlock = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-          <div className="bg-slate-50 dark:bg-blue-800 border border-slate-200 dark:border-blue-700 rounded-xl p-8">
+          <div className="bg-white dark:bg-blue-800 border-2 border-slate-200 dark:border-blue-700 rounded-xl p-8 shadow-md">
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">
               Renda Local e Imediata
             </h3>
