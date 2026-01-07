@@ -187,3 +187,5 @@ trigger: deploy photo fix
 trigger: deploy ui improvements
 <!-- Deploy Final UI 19:08 -->
 trigger: deploy final ui
+<!-- Deploy Structural Fixes 22:53 -->
+trigger: deploy structural fixes
