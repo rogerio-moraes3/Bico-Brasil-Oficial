@@ -199,4 +199,6 @@ trigger: deploy professional colors
 trigger: deploy button fix
 <!-- Deploy Button Fix 13:27 -->
 trigger: deploy button fix
+<!-- Deploy Color Revert 18:58 -->
+trigger: deploy color revert
 
