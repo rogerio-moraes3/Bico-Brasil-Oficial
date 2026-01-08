@@ -46,9 +46,8 @@ export const SalesHeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-6">
             <Button
               size="default"
-              variant="ghost"
               onClick={() => navigate("/app")}
-              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 font-medium border border-slate-300 dark:border-transparent"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition-all"
             >
               <Search className="w-4 h-4 mr-2" />
               Buscar Profissional
@@ -58,9 +57,8 @@ export const SalesHeroSection = () => {
 
             <Button
               size="default"
-              variant="ghost"
               onClick={() => navigate("/app")}
-              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 font-medium border border-slate-300 dark:border-transparent"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition-all"
             >
               <Briefcase className="w-4 h-4 mr-2" />
               Oferecer Serviços
