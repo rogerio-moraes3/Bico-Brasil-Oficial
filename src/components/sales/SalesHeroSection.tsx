@@ -58,7 +58,7 @@ export const SalesHeroSection = () => {
             <Button
               size="default"
               onClick={() => navigate("/app")}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition-all"
+              className="bg-white hover:bg-gray-50 text-slate-900 font-semibold px-6 py-3 rounded-lg shadow-lg transition-all border border-slate-200"
             >
               <Briefcase className="w-4 h-4 mr-2" />
               Oferecer Serviços
