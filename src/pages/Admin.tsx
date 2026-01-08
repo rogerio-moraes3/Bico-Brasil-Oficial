@@ -369,16 +369,19 @@ export default function Admin() {
   };
 
   const loadLeads = async () => {
-    const { data, error } = await supabase.rpc('get_admin_users');
+    const { data, error } = await supabase
+      .from('admin_user_list')
+      .select('*')
+      .order('created_at', { ascending: false });
+
     if (error) {
+      console.error('Erro ao buscar usuários:', error);
       toast.error('Erro ao buscar usuários');
       return;
     }
-    const sorted = (data || []).sort((a: any, b: any) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-    setLeads(sorted);
-    setFilteredLeads(sorted);
+
+    setLeads(data || []);
+    setFilteredLeads(data || []);
   };
 
   useEffect(() => {
@@ -873,8 +876,8 @@ export default function Admin() {
                         </TableCell>
                         <TableCell>
                           <Badge className={`text-[8px] font-black border-0 ${payment.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500' :
-                              payment.status === 'pending' ? 'bg-amber-500/10 text-amber-500' :
-                                'bg-red-500/10 text-red-500'
+                            payment.status === 'pending' ? 'bg-amber-500/10 text-amber-500' :
+                              'bg-red-500/10 text-red-500'
                             }`}>
                             {payment.status.toUpperCase()}
                           </Badge>

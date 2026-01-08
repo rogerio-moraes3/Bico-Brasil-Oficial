@@ -6,7 +6,7 @@ export const SalesHeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative bg-[#d4fddf] dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 text-slate-900 dark:text-white overflow-hidden">
+    <section className="bg-[#d4fddf] dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 text-slate-900 dark:text-white overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
