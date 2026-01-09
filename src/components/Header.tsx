@@ -197,6 +197,7 @@ export const Header = () => {
                   variant="outline"
                   size="sm"
                   className="hidden md:flex text-xs font-bold uppercase tracking-wider"
+                  style={{ color: '#1E2A5A' }}
                 >
                   Cadastre-se
                 </Button>
@@ -205,6 +206,7 @@ export const Header = () => {
                   variant="default"
                   size="sm"
                   className="hidden md:flex text-xs font-bold uppercase tracking-wider"
+                  style={{ color: '#1E2A5A' }}
                 >
                   Entrar
                 </Button>
