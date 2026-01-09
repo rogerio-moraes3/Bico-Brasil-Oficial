@@ -95,7 +95,7 @@ function App() {
             <AccessGuard>
               <Routes>
                 <Route path="/" element={<SalesLandingPage />} />
-                <Route path="/app" element={<Index />} />
+                <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/intro" element={<SalesLandingPage />} />
                 <Route path="/landing" element={<PreLaunchLanding />} />
                 <Route path="/jobs" element={
@@ -145,67 +145,64 @@ function App() {
                     </ProfileCompletionGuard>
                   </ProtectedRoute>
                 } />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin/jobs" element={<AdminJobs />} />
+                <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+                <Route path="/admin/jobs" element={<ProtectedRoute><AdminJobs /></ProtectedRoute>} />
                 <Route path="/admin/services" element={<AdminServices />} />
-                <Route path="/admin/payments" element={<AdminPayments />} />
+                <Route path="/admin/payments" element={<ProtectedRoute><AdminPayments /></ProtectedRoute>} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/payment-failed" element={<PaymentFailed />} />
                 <Route path="/payment-pending" element={<PaymentPending />} />
-                <Route path="/messages" element={
-                  <ProtectedRoute>
-                    <Messages />
-                  </ProtectedRoute>
+              </ProtectedRoute>
                 } />
-                <Route path="/analytics" element={
-                  <ProtectedRoute>
-                    <ProfileCompletionGuard>
-                      <Analytics />
-                    </ProfileCompletionGuard>
-                  </ProtectedRoute>
-                } />
-                <Route path="/worker/:id" element={<WorkerProfile />} />
-                <Route path="/user/:id" element={<WorkerProfile />} />
-                <Route path="/profile/:id" element={<WorkerProfile />} />
-                <Route path="/appointments" element={
-                  <ProtectedRoute>
-                    <ProfileCompletionGuard>
-                      <Appointments />
-                    </ProfileCompletionGuard>
-                  </ProtectedRoute>
-                } />
-                <Route path="/install-app" element={<InstallApp />} />
-                <Route path="/premium" element={<Premium />} />
-                <Route path="/payment-history" element={
-                  <ProtectedRoute>
-                    <PaymentHistory />
-                  </ProtectedRoute>
-                } />
-                <Route path="/about" element={<About />} />
-                <Route path="/faq" element={<FAQPage />} />
-                <Route path="/search-workers" element={<SearchWorkers />} />
-                <Route path="/offer-services" element={
-                  <ProtectedRoute>
-                    <ProfileCompletionGuard>
-                      <OfferServices />
-                    </ProfileCompletionGuard>
-                  </ProtectedRoute>
-                } />
-                <Route path="/ranking" element={<Ranking />} />
-                <Route path="/procurar-bicos" element={<ProcurarBicos />} />
-                <Route path="/download" element={<DownloadPage />} />
-                <Route path="/relacao-usuarios" element={<PublicStats />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AccessGuard>
-            <BottomNav />
-          </NotificationProvider>
-        </AuthProvider>
-      </UserModeProvider>
-    </BrowserRouter>
+              <Route path="/analytics" element={
+                <ProtectedRoute>
+                  <ProfileCompletionGuard>
+                    <Analytics />
+                  </ProfileCompletionGuard>
+                </ProtectedRoute>
+              } />
+              <Route path="/worker/:id" element={<WorkerProfile />} />
+              <Route path="/user/:id" element={<WorkerProfile />} />
+              <Route path="/profile/:id" element={<WorkerProfile />} />
+              <Route path="/appointments" element={
+                <ProtectedRoute>
+                  <ProfileCompletionGuard>
+                    <Appointments />
+                  </ProfileCompletionGuard>
+                </ProtectedRoute>
+              } />
+              <Route path="/install-app" element={<InstallApp />} />
+              <Route path="/premium" element={<Premium />} />
+              <Route path="/payment-history" element={
+                <ProtectedRoute>
+                  <PaymentHistory />
+                </ProtectedRoute>
+              } />
+              <Route path="/about" element={<About />} />
+              <Route path="/faq" element={<FAQPage />} />
+              <Route path="/search-workers" element={<ProtectedRoute><SearchWorkers /></ProtectedRoute>} />
+              <Route path="/offer-services" element={
+                <ProtectedRoute>
+                  <ProfileCompletionGuard>
+                    <OfferServices />
+                  </ProfileCompletionGuard>
+                </ProtectedRoute>
+              } />
+              <Route path="/ranking" element={<Ranking />} />
+              <Route path="/procurar-bicos" element={<ProcurarBicos />} />
+              <Route path="/download" element={<DownloadPage />} />
+              <Route path="/relacao-usuarios" element={<PublicStats />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AccessGuard>
+          <BottomNav />
+        </NotificationProvider>
+      </AuthProvider>
+    </UserModeProvider>
+    </BrowserRouter >
   );
 }
 

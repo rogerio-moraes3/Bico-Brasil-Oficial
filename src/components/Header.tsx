@@ -190,7 +190,26 @@ export const Header = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : null}
+            ) : (
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => navigate('/auth?mode=signup')}
+                  variant="outline"
+                  size="sm"
+                  className="hidden md:flex text-xs font-bold uppercase tracking-wider"
+                >
+                  Cadastre-se
+                </Button>
+                <Button
+                  onClick={() => navigate('/auth')}
+                  variant="default"
+                  size="sm"
+                  className="hidden md:flex text-xs font-bold uppercase tracking-wider"
+                >
+                  Entrar
+                </Button>
+              </div>
+            )}
 
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>

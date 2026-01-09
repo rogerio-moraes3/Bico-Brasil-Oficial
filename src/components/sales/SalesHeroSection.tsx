@@ -70,6 +70,15 @@ export const SalesHeroSection = () => {
               Fazer login
             </button>
           </p>
+          <p className="mt-2 text-slate-500 dark:text-slate-400">
+            Não tem uma conta?{" "}
+            <button
+              onClick={() => navigate("/auth?mode=signup")}
+              className="text-green-400 hover:text-green-300 underline font-medium"
+            >
+              Cadastre-se aqui
+            </button>
+          </p>
         </div>
       </div>
 
