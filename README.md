@@ -207,6 +207,7 @@ trigger: deploy orange buttons
 trigger: deploy revert
 <!-- Deploy All Fixes 23:40 -->
 trigger: deploy all fixes
-
+<!-- Deploy 100% Fixed 23:49 -->
+trigger: deploy 100% fixed
 
 
