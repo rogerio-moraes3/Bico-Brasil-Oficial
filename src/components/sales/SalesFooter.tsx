@@ -19,17 +19,16 @@ export const SalesFooter = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              onClick={() => navigate("/search-workers")}
-              className="bg-white text-primary hover:bg-white/90 font-bold text-lg px-8 py-6 rounded-xl group"
+              onClick={() => navigate("/app")}
+              className="bg-white hover:bg-gray-50 text-green-800 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200"
             >
               Buscar Profissional
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 h-5 w-5 text-green-800" />
             </Button>
             <Button
               size="lg"
-              variant="outline"
-              onClick={() => navigate("/offer-services")}
-              className="border-2 border-white text-white hover:bg-white hover:text-primary font-bold text-lg px-8 py-6 rounded-xl"
+              onClick={() => navigate("/app")}
+              className="bg-white hover:bg-gray-50 text-green-800 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200"
             >
               Oferecer Serviços
             </Button>
@@ -44,9 +43,9 @@ export const SalesFooter = () => {
             {/* Logo & Description */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <img 
-                  src="/logo.png" 
-                  alt="Bico Brasil" 
+                <img
+                  src="/logo.png"
+                  alt="Bico Brasil"
                   className="h-10 w-auto"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
@@ -55,7 +54,7 @@ export const SalesFooter = () => {
                 <span className="text-2xl font-bold">Bico Brasil</span>
               </div>
               <p className="text-slate-400 mb-4 max-w-md">
-                A plataforma que conecta quem precisa de serviços a profissionais qualificados. 
+                A plataforma que conecta quem precisa de serviços a profissionais qualificados.
                 Sem intermediários, sem comissões abusivas.
               </p>
               <p className="text-slate-500 text-sm">
@@ -105,26 +104,26 @@ export const SalesFooter = () => {
                   </Link>
                 </li>
               </ul>
-              
+
               <h4 className="font-semibold mt-6 mb-4">Redes Sociais</h4>
               <div className="flex gap-4">
-                <a 
-                  href="https://instagram.com/bicobrasil" 
-                  target="_blank" 
+                <a
+                  href="https://instagram.com/bicobrasil"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors"
                 >
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a 
-                  href="https://facebook.com/bicobrasil" 
-                  target="_blank" 
+                <a
+                  href="https://facebook.com/bicobrasil"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors"
                 >
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a 
+                <a
                   href="mailto:contato@bicobrasil.com.br"
                   className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors"
                 >
