@@ -221,5 +221,7 @@ trigger: deploy avatar sync
 trigger: deploy dashboard rpc
 <!-- Deploy Auth Guard 01:33 -->
 trigger: deploy auth guard
+<!-- Deploy Header Fix 01:43 -->
+trigger: deploy header fix
 
 
