@@ -119,23 +119,14 @@ export const Header = () => {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Right Section */}
+          <div className="flex items-center gap-2 md:gap-3">
+            <ThemeToggle />
+            <CitySelector />
+            <PWAInstallButton />
             {/* Badge de Publicações Grátis */}
             {user && (
               <FreePostsBadge />
-            )}
-
-            <PWAInstallButton />
-            <ThemeToggle />
-
-            {/* Login Button for non-logged users */}
-            {!user && (
-              <Button
-                onClick={() => navigate('/auth?mode=login')}
-                className="bg-primary hover:bg-primary/90 text-white font-bold px-4 py-2 rounded-lg transition-all hover:scale-105"
-              >
-                ENTRAR
-              </Button>
             )}
 
             {/* Notification Bell */}
