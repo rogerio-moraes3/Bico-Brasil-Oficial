@@ -13,7 +13,7 @@ export const InstitutionalBlock = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-          <div className="bg-white dark:bg-blue-800 border-2 border-slate-200 dark:border-blue-700 rounded-xl p-8 shadow-md">
+          <div className="bg-blue-900 dark:bg-blue-800 border-2 border-blue-700 dark:border-blue-700 rounded-xl p-8 shadow-md">
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">
               Renda Local e Imediata
             </h3>

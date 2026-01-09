@@ -391,9 +391,9 @@ export default function Profile() {
                   <div className="relative">
                     <Avatar className="h-20 w-20">
                       <AvatarImage src={
-                        profile.profile_photo ||
-                        user?.user_metadata?.picture ||
-                        user?.user_metadata?.avatar_url
+                        profile.avatar_url ||
+                        user?.user_metadata?.avatar_url ||
+                        user?.user_metadata?.picture
                       } />
                       <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
                     </Avatar>
