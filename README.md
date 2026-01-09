@@ -229,4 +229,5 @@ trigger: deploy remove duplicate
 trigger: deploy remove cityselector
 <!-- Deploy Identical Buttons 02:03 -->
 trigger: deploy identical buttons
-
+<!-- Deploy Force Color 02:08 -->
+trigger: deploy force color
