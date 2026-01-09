@@ -20,11 +20,11 @@ export const SalesHeroSection = () => {
           {/* Headline */}
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
             Conecte-se a Quem Resolve:{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
+            <span className="text-3xl md:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
               Serviços Rápidos
             </span>{" "}
             e{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+            <span className="text-3xl md:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
               Renda Extra
             </span>{" "}
             na Sua Cidade.

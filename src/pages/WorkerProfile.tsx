@@ -389,17 +389,17 @@ export default function WorkerProfile() {
                         )}
                       </>
                     ) : !isWorkerUnlocked && (
-                      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-xl p-5 my-4 shadow-sm">
+                      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-300 dark:border-yellow-700 rounded-xl p-5 my-4 shadow-sm">
                         <div className="flex items-start gap-3">
-                          <Lock className="h-6 w-6 text-yellow-600 mt-1 flex-shrink-0" />
+                          <Lock className="h-6 w-6 text-yellow-600 dark:text-yellow-400 mt-1 flex-shrink-0" />
                           <div className="flex-1">
-                            <p className="font-bold text-yellow-900 text-lg mb-2">
+                            <p className="font-bold text-yellow-900 dark:text-yellow-100 text-lg mb-2">
                               🔒 Contato Bloqueado
                             </p>
 
                             {remainingFreeUnlocks > 0 ? (
                               <>
-                                <p className="text-sm text-yellow-800 mb-3">
+                                <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-3">
                                   Você ainda possui <strong>{remainingFreeUnlocks} {remainingFreeUnlocks === 1 ? 'acesso gratuito' : 'acessos gratuitos'}</strong>.
                                   Desbloqueie agora para ver telefone e WhatsApp!
                                 </p>
@@ -412,7 +412,7 @@ export default function WorkerProfile() {
                               </>
                             ) : (
                               <>
-                                <p className="text-sm text-yellow-800 mb-3">
+                                <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-3">
                                   Você esgotou seus 3 acessos gratuitos. Assine um plano Premium
                                   para desbloquear contatos ilimitados!
                                 </p>
