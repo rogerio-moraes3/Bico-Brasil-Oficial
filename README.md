@@ -217,5 +217,7 @@ trigger: deploy footer fix
 trigger: deploy final fix
 <!-- Deploy Avatar Sync 00:47 -->
 trigger: deploy avatar sync
+<!-- Deploy Dashboard RPC 01:06 -->
+trigger: deploy dashboard rpc
 
 
