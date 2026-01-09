@@ -203,5 +203,7 @@ trigger: deploy button fix
 trigger: deploy color revert
 <!-- Deploy Orange Buttons 23:20 -->
 trigger: deploy orange buttons
+<!-- Deploy Revert 23:24 -->
+trigger: deploy revert
 
 
