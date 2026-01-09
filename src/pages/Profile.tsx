@@ -208,8 +208,18 @@ export default function Profile() {
 
       if (updateError) throw updateError;
 
+      // CRÍTICO: Atualizar user_metadata para persistência após logout
+      const { error: metadataError } = await supabase.auth.updateUser({
+        data: {
+          avatar_url: publicUrl,
+          profile_photo: publicUrl // Fallback
+        }
+      });
+
+      if (metadataError) throw metadataError;
+
       // Atualizar state local
-      setProfile({ ...profile, profile_photo: publicUrl, avatar_url: publicUrl });
+      setProfile({ ...profile, avatar_url: publicUrl });
 
       // Forçar refresh da sessão para atualizar Header
       await supabase.auth.refreshSession();
