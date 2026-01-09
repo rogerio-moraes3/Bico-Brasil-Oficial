@@ -231,3 +231,5 @@ trigger: deploy remove cityselector
 trigger: deploy identical buttons
 <!-- Deploy Force Color 02:08 -->
 trigger: deploy force color
+<!-- Deploy Proper Colors 02:14 -->
+trigger: deploy proper colors
