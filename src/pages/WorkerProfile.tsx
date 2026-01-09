@@ -100,17 +100,9 @@ export default function WorkerProfile() {
     console.log('🔍 Carregando perfil do profissional ID:', id);
 
     try {
-      // Fetch worker data 
+      // Fetch worker data using RPC to avoid permission errors
       const { data: workerData, error: workerError } = await supabase
-        .from('users')
-        .select(`
-          id, auth_id, name, city, neighborhood, state,
-          description, availability, price, profile_photo,
-          verified, rating_avg, rating_count, jobs_done, created_at
-        `)
-        .eq('id', id)
-        .eq('type', 'worker')
-        .single();
+        .rpc('get_user_details_by_id', { target_user_id: id });
 
       if (workerError) {
         console.error('❌ Erro ao carregar profissional:', workerError);
@@ -513,8 +505,8 @@ export default function WorkerProfile() {
                           <Star
                             key={i}
                             className={`h-4 w-4 ${i < rating.rating
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-muted-foreground'
+                              ? 'fill-yellow-400 text-yellow-400'
+                              : 'text-muted-foreground'
                               }`}
                           />
                         ))}
