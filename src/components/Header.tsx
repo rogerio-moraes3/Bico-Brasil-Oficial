@@ -184,18 +184,16 @@ export const Header = () => {
               <div className="flex gap-2">
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
-                  variant="outline"
                   size="sm"
-                  className="hidden md:flex text-xs font-bold uppercase tracking-wider"
+                  className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-white hover:bg-gray-100 border border-gray-300"
                   style={{ color: '#1E2A5A' }}
                 >
                   Cadastre-se
                 </Button>
                 <Button
                   onClick={() => navigate('/auth')}
-                  variant="default"
                   size="sm"
-                  className="hidden md:flex text-xs font-bold uppercase tracking-wider"
+                  className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-white hover:bg-gray-100 border border-gray-300"
                   style={{ color: '#1E2A5A' }}
                 >
                   Entrar
