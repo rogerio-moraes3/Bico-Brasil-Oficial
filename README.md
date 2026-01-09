@@ -233,3 +233,5 @@ trigger: deploy identical buttons
 trigger: deploy force color
 <!-- Deploy Proper Colors 02:14 -->
 trigger: deploy proper colors
+<!-- Deploy UI Fixes 12:13 -->
+trigger: deploy ui fixes
