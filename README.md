@@ -227,5 +227,6 @@ trigger: deploy header fix
 trigger: deploy remove duplicate
 <!-- Deploy Remove CitySelector 01:55 -->
 trigger: deploy remove cityselector
-
+<!-- Deploy Identical Buttons 02:03 -->
+trigger: deploy identical buttons
 
