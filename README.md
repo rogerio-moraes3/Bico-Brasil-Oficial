@@ -225,5 +225,7 @@ trigger: deploy auth guard
 trigger: deploy header fix
 <!-- Deploy Remove Duplicate 01:47 -->
 trigger: deploy remove duplicate
+<!-- Deploy Remove CitySelector 01:55 -->
+trigger: deploy remove cityselector
 
 
