@@ -116,7 +116,7 @@ const ProcurarBicos = () => {
           *,
           category:categories(name),
           city:cities(name, state),
-          user:users!user_id(name, profile_photo, plan_active, is_tester, auth_id, phone)
+          user:users!user_id(name, avatar_url, plan_active, is_tester, auth_id, phone)
         `)
         .eq('status', 'open')
         .order('created_at', { ascending: false });
@@ -429,7 +429,7 @@ const ProcurarBicos = () => {
                 <CardContent className="p-4">
                   <div className="flex gap-4">
                     <Avatar className="h-16 w-16 flex-shrink-0">
-                      <AvatarImage src={job.user?.profile_photo} />
+                      <AvatarImage src={job.user?.avatar_url} />
                       <AvatarFallback>{job.user?.name?.[0] || '?'}</AvatarFallback>
                     </Avatar>
 
