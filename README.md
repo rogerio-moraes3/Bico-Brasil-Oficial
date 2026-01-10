@@ -237,3 +237,5 @@ trigger: deploy proper colors
 trigger: deploy ui fixes
 <!-- Deploy Avatar Sync 13:16 -->
 trigger: deploy avatar sync
+<!-- Deploy Form Sync 17:25 -->
+trigger: deploy form sync
