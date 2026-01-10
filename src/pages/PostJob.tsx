@@ -29,6 +29,7 @@ export default function PostJob() {
     neighborhood: '',
     urgent: false,
     date_time: '',
+    availability: 'todos_os_dias',
     customCategory: '',
     isCustomCategory: false
   });
@@ -123,6 +124,7 @@ export default function PostJob() {
           neighborhood: formData.neighborhood,
           urgent: formData.urgent,
           date_time: formData.date_time ? new Date(formData.date_time).toISOString() : null,
+          availability: formData.availability,
           status: 'open'
         })
         .select();
@@ -292,6 +294,21 @@ export default function PostJob() {
                   value={formData.date_time}
                   onChange={(e) => setFormData({ ...formData, date_time: e.target.value })}
                 />
+              </div>
+
+              <div>
+                <Label>Disponibilidade *</Label>
+                <Select value={formData.availability} onValueChange={(val) => setFormData({ ...formData, availability: val })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="todos_os_dias">Todos os dias</SelectItem>
+                    <SelectItem value="seg_sex">Segunda a Sexta</SelectItem>
+                    <SelectItem value="finais_semana">Finais de semana</SelectItem>
+                    <SelectItem value="agendamento">Somente por agendamento</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="flex items-center space-x-2">
