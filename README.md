@@ -247,3 +247,6 @@ trigger: deploy search fix
 trigger: deploy header fix
 <!-- Deploy Dark Mode Fix 20:08 -->
 trigger: deploy dark mode fix
+<!-- Deploy Button Fix 20:14 -->
+trigger: deploy button fix
+
