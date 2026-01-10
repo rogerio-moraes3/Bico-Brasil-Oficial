@@ -241,3 +241,5 @@ trigger: deploy avatar sync
 trigger: deploy form sync
 <!-- Deploy UI Fixes 17:33 -->
 trigger: deploy ui fixes
+<!-- Deploy Search Fix 18:22 -->
+trigger: deploy search fix
