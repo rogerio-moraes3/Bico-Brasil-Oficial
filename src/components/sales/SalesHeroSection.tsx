@@ -54,8 +54,9 @@ export const SalesHeroSection = () => {
               size="default"
               onClick={() => navigate("/app")}
               className="bg-white hover:bg-gray-50 text-green-800 font-bold px-6 py-3 rounded-lg shadow-lg transition-all border border-slate-200"
+              style={{ color: '#1E2A5A' }}
             >
-              <Briefcase className="w-4 h-4 mr-2 text-green-800" />
+              <Briefcase className="w-4 h-4 mr-2" style={{ color: '#1E2A5A' }} />
               Oferecer Serviços
             </Button>
           </div>

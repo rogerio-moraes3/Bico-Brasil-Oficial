@@ -21,14 +21,16 @@ export const SalesFooter = () => {
               size="lg"
               onClick={() => navigate("/app")}
               className="bg-white hover:bg-gray-50 text-green-800 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200"
+              style={{ color: '#1E2A5A' }}
             >
               Buscar Profissional
-              <ArrowRight className="ml-2 h-5 w-5 text-green-800" />
+              <ArrowRight className="ml-2 h-5 w-5" style={{ color: '#1E2A5A' }} />
             </Button>
             <Button
               size="lg"
               onClick={() => navigate("/app")}
               className="bg-white hover:bg-gray-50 text-green-800 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200"
+              style={{ color: '#1E2A5A' }}
             >
               Oferecer Serviços
             </Button>
