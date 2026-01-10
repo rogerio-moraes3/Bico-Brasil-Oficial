@@ -20,17 +20,15 @@ export const SalesFooter = () => {
             <Button
               size="lg"
               onClick={() => navigate("/app")}
-              className="bg-white hover:bg-gray-50 text-green-800 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200"
-              style={{ color: '#1E2A5A' }}
+              className="bg-white hover:bg-gray-50 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200 text-gray-900 dark:text-white"
             >
               Buscar Profissional
-              <ArrowRight className="ml-2 h-5 w-5" style={{ color: '#1E2A5A' }} />
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button
               size="lg"
               onClick={() => navigate("/app")}
-              className="bg-white hover:bg-gray-50 text-green-800 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200"
-              style={{ color: '#1E2A5A' }}
+              className="bg-white hover:bg-gray-50 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200 text-gray-900 dark:text-white"
             >
               Oferecer Serviços
             </Button>

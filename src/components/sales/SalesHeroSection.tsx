@@ -40,11 +40,11 @@ export const SalesHeroSection = () => {
           {/* CTAs Secundários */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-6">
             <Button
-              size="default"
+              size="lg"
               onClick={() => navigate("/app")}
-              className="bg-white hover:bg-gray-50 text-green-800 font-bold px-6 py-3 rounded-lg shadow-lg transition-all border border-slate-200"
+              className="bg-white hover:bg-gray-50 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200 text-gray-900 dark:text-white"
             >
-              <Search className="w-4 h-4 mr-2 text-green-800" />
+              <Search className="w-5 h-5 mr-2" />
               Buscar Profissional
             </Button>
 
@@ -53,10 +53,9 @@ export const SalesHeroSection = () => {
             <Button
               size="default"
               onClick={() => navigate("/app")}
-              className="bg-white hover:bg-gray-50 text-green-800 font-bold px-6 py-3 rounded-lg shadow-lg transition-all border border-slate-200"
-              style={{ color: '#FFFFFF' }}
+              className="bg-white hover:bg-gray-50 font-bold px-6 py-3 rounded-lg shadow-lg transition-all border border-slate-200 text-gray-900 dark:text-white"
             >
-              <Briefcase className="w-4 h-4 mr-2" style={{ color: '#FFFFFF' }} />
+              <Briefcase className="w-4 h-4 mr-2" />
               Oferecer Serviços
             </Button>
           </div>
