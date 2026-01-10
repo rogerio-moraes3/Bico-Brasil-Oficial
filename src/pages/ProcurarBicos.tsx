@@ -115,8 +115,7 @@ const ProcurarBicos = () => {
         .select(`
           *,
           category:categories(name),
-          city:cities(name, state),
-          user:users!user_id(name, avatar_url, plan_active, is_tester, auth_id, phone)
+          city:cities(name, state)
         `)
         .eq('status', 'open')
         .order('created_at', { ascending: false });
