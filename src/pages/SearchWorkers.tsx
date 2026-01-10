@@ -98,11 +98,10 @@ export default function SearchWorkers() {
       console.log('📊 Filtros aplicados:', filters);
 
       // FASE 2: Buscar serviços com busca inteligente
-      console.log('🔍 FASE 2: Buscando serviços ativos...');
+      console.log('🔍 FASE 2: Buscando serviços...');
       let servicesQuery = supabase
         .from('worker_services')
-        .select('*, category:categories(name), subcategory:subcategories(name)')
-        .eq('active', true);
+        .select('*, category:categories(name), subcategory:subcategories(name)');
 
       if (filters.category !== 'all') {
         console.log('📌 Filtro categoria aplicado:', filters.category);
