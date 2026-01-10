@@ -245,3 +245,5 @@ trigger: deploy ui fixes
 trigger: deploy search fix
 <!-- Deploy Header Fix 19:58 -->
 trigger: deploy header fix
+<!-- Deploy Dark Mode Fix 20:08 -->
+trigger: deploy dark mode fix
