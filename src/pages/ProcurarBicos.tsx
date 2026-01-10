@@ -398,7 +398,7 @@ const ProcurarBicos = () => {
                 Cadastre-se como profissional e apareça nas buscas para receber propostas de trabalho!
               </p>
             </div>
-            <Button onClick={() => navigate('/offer-services')} size="lg" className="whitespace-nowrap bg-white text-black border border-black rounded-xl hover:bg-gray-50">
+            <Button onClick={() => navigate('/offer-services')} size="lg" className="whitespace-nowrap bg-white text-black border border-black rounded-xl hover:bg-gray-50" style={{ color: '#1E2A5A' }}>
               <Briefcase className="mr-2 h-4 w-4" />
               Oferecer Serviços
             </Button>
