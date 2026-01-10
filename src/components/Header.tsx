@@ -186,7 +186,7 @@ export const Header = () => {
                   onClick={() => navigate('/auth?mode=signup')}
                   size="sm"
                   className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-white hover:bg-gray-100 border border-gray-300"
-                  style={{ color: '#1E2A5A' }}
+                  style={{ color: '#FFFFFF' }}
                 >
                   Cadastre-se
                 </Button>
@@ -194,7 +194,7 @@ export const Header = () => {
                   onClick={() => navigate('/auth')}
                   size="sm"
                   className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-white hover:bg-gray-100 border border-gray-300"
-                  style={{ color: '#1E2A5A' }}
+                  style={{ color: '#FFFFFF' }}
                 >
                   Entrar
                 </Button>
