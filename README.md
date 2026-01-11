@@ -303,3 +303,5 @@ trigger: remove text-slate-900 override
 <!-- Deploy Text Color Fix 14:35 -->
 trigger: fix footer buttons visibility
 <!-- Deploy Footer Buttons 14:46 -->
+trigger: force button text visibility
+<!-- Deploy Button Visibility 15:51 -->
