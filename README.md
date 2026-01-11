@@ -259,4 +259,6 @@ trigger: deploy css global fix
 trigger: deploy button force colors
 trigger: deploy green buttons
 trigger: deploy button color fix
+trigger: deploy green buttons fix
+trigger: deploy button visibility
 
