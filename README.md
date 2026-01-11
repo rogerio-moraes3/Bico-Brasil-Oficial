@@ -285,4 +285,6 @@ trigger: force navy button inline only
 <!-- Deploy Inline Navy 00:04 -->
 trigger: force button navy hardcoded
 <!-- Deploy Hardcoded Navy 00:15 -->
+trigger: fix offer button text visibility
+<!-- Deploy Text Fix 00:24 -->
 
