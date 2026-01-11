@@ -305,3 +305,5 @@ trigger: fix footer buttons visibility
 <!-- Deploy Footer Buttons 14:46 -->
 trigger: force button text visibility
 <!-- Deploy Button Visibility 15:51 -->
+trigger: force color with javascript
+<!-- Deploy JS Color Force 15:58 -->
