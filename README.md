@@ -269,4 +269,6 @@ trigger: deploy white buttons navy text
 trigger: deploy button final fix
 trigger: deploy white buttons navy text
 <!-- Deploy Button Fix 22:54 -->
+trigger: force rebuild white buttons
+<!-- Deploy Force 22:58 -->
 
