@@ -299,4 +299,6 @@ trigger: remove global css override
 <!-- Deploy CSS Fix 13:27 -->
 trigger: remove root cause css override
 <!-- Deploy Root Fix 13:41 -->
+trigger: remove text-slate-900 override
+<!-- Deploy Text Color Fix 14:35 -->
 
