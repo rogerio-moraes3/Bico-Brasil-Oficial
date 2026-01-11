@@ -281,4 +281,6 @@ trigger: fix hero buttons style
 <!-- Deploy Hero Buttons 23:38 -->
 trigger: force navy buttons final
 <!-- Deploy Navy Buttons 23:46 -->
+trigger: force navy button inline only
+<!-- Deploy Inline Navy 00:04 -->
 
