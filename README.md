@@ -271,4 +271,6 @@ trigger: deploy white buttons navy text
 <!-- Deploy Button Fix 22:54 -->
 trigger: force rebuild white buttons
 <!-- Deploy Force 22:58 -->
+trigger: fix supabase queries
+<!-- Deploy Supabase Fix 23:04 -->
 
