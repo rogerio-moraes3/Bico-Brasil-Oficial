@@ -257,4 +257,6 @@ trigger: deploy inline styles fix
 trigger: deploy button guaranteed visibility
 trigger: deploy css global fix
 trigger: deploy button force colors
+trigger: deploy green buttons
+trigger: deploy button color fix
 
