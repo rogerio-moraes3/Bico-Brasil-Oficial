@@ -279,4 +279,6 @@ trigger: sync database columns
 <!-- Deploy Column Sync 23:28 -->
 trigger: fix hero buttons style
 <!-- Deploy Hero Buttons 23:38 -->
+trigger: force navy buttons final
+<!-- Deploy Navy Buttons 23:46 -->
 
