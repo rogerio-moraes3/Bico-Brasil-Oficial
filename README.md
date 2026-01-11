@@ -249,4 +249,6 @@ trigger: deploy header fix
 trigger: deploy dark mode fix
 <!-- Deploy Button Fix 20:14 -->
 trigger: deploy button fix
+trigger: deploy light mode fix
+trigger: deploy button visibility
 
