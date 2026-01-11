@@ -277,4 +277,6 @@ trigger: fix schema mismatch
 <!-- Deploy Schema Fix 23:16 -->
 trigger: sync database columns
 <!-- Deploy Column Sync 23:28 -->
+trigger: fix hero buttons style
+<!-- Deploy Hero Buttons 23:38 -->
 
