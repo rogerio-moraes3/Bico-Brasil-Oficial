@@ -251,4 +251,6 @@ trigger: deploy dark mode fix
 trigger: deploy button fix
 trigger: deploy light mode fix
 trigger: deploy button visibility
+trigger: deploy light mode fix
+trigger: deploy button visibility
 
