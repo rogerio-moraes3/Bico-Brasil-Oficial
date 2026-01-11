@@ -301,4 +301,5 @@ trigger: remove root cause css override
 <!-- Deploy Root Fix 13:41 -->
 trigger: remove text-slate-900 override
 <!-- Deploy Text Color Fix 14:35 -->
-
+trigger: fix footer buttons visibility
+<!-- Deploy Footer Buttons 14:46 -->
