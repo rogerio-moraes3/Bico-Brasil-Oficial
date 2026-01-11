@@ -275,4 +275,6 @@ trigger: fix supabase queries
 <!-- Deploy Supabase Fix 23:04 -->
 trigger: fix schema mismatch
 <!-- Deploy Schema Fix 23:16 -->
+trigger: sync database columns
+<!-- Deploy Column Sync 23:28 -->
 
