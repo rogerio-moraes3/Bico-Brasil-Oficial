@@ -273,4 +273,6 @@ trigger: force rebuild white buttons
 <!-- Deploy Force 22:58 -->
 trigger: fix supabase queries
 <!-- Deploy Supabase Fix 23:04 -->
+trigger: fix schema mismatch
+<!-- Deploy Schema Fix 23:16 -->
 
