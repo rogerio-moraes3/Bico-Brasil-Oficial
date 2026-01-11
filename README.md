@@ -291,4 +291,6 @@ trigger: force global button visibility
 <!-- Deploy Global CSS Fix 00:30 -->
 trigger: force white text on offer button
 <!-- Deploy White Text 00:38 -->
+trigger: rebuild hero buttons light mode
+<!-- Deploy Light Buttons 11:36 -->
 
