@@ -283,4 +283,6 @@ trigger: force navy buttons final
 <!-- Deploy Navy Buttons 23:46 -->
 trigger: force navy button inline only
 <!-- Deploy Inline Navy 00:04 -->
+trigger: force button navy hardcoded
+<!-- Deploy Hardcoded Navy 00:15 -->
 
