@@ -289,4 +289,6 @@ trigger: fix offer button text visibility
 <!-- Deploy Text Fix 00:24 -->
 trigger: force global button visibility
 <!-- Deploy Global CSS Fix 00:30 -->
+trigger: force white text on offer button
+<!-- Deploy White Text 00:38 -->
 
