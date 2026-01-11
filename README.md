@@ -253,4 +253,6 @@ trigger: deploy light mode fix
 trigger: deploy button visibility
 trigger: deploy light mode fix
 trigger: deploy button visibility
+trigger: deploy inline styles fix
+trigger: deploy button guaranteed visibility
 
