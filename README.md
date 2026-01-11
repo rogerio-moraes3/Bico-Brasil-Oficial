@@ -263,4 +263,6 @@ trigger: deploy green buttons fix
 trigger: deploy button visibility
 trigger: deploy dark green buttons
 trigger: deploy button dark green fix
+trigger: deploy white buttons navy text
+trigger: deploy button final fix
 
