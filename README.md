@@ -307,3 +307,5 @@ trigger: force button text visibility
 <!-- Deploy Button Visibility 15:51 -->
 trigger: force color with javascript
 <!-- Deploy JS Color Force 15:58 -->
+trigger: finalize visibility and search
+<!-- Deploy Final 22:11 -->
