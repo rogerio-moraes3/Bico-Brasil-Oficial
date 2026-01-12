@@ -247,3 +247,75 @@ trigger: deploy search fix
 trigger: deploy header fix
 <!-- Deploy Dark Mode Fix 20:08 -->
 trigger: deploy dark mode fix
+<!-- Deploy Button Fix 20:14 -->
+trigger: deploy button fix
+trigger: deploy light mode fix
+trigger: deploy button visibility
+trigger: deploy light mode fix
+trigger: deploy button visibility
+trigger: deploy inline styles fix
+trigger: deploy button guaranteed visibility
+trigger: deploy css global fix
+trigger: deploy button force colors
+trigger: deploy green buttons
+trigger: deploy button color fix
+trigger: deploy green buttons fix
+trigger: deploy button visibility
+trigger: deploy dark green buttons
+trigger: deploy button dark green fix
+trigger: deploy white buttons navy text
+trigger: deploy button final fix
+trigger: deploy white buttons navy text
+trigger: deploy button final fix
+trigger: deploy white buttons navy text
+<!-- Deploy Button Fix 22:54 -->
+trigger: force rebuild white buttons
+<!-- Deploy Force 22:58 -->
+trigger: fix supabase queries
+<!-- Deploy Supabase Fix 23:04 -->
+trigger: fix schema mismatch
+<!-- Deploy Schema Fix 23:16 -->
+trigger: sync database columns
+<!-- Deploy Column Sync 23:28 -->
+trigger: fix hero buttons style
+<!-- Deploy Hero Buttons 23:38 -->
+trigger: force navy buttons final
+<!-- Deploy Navy Buttons 23:46 -->
+trigger: force navy button inline only
+<!-- Deploy Inline Navy 00:04 -->
+trigger: force button navy hardcoded
+<!-- Deploy Hardcoded Navy 00:15 -->
+trigger: fix offer button text visibility
+<!-- Deploy Text Fix 00:24 -->
+trigger: force global button visibility
+<!-- Deploy Global CSS Fix 00:30 -->
+trigger: force white text on offer button
+<!-- Deploy White Text 00:38 -->
+trigger: rebuild hero buttons light mode
+<!-- Deploy Light Buttons 11:36 -->
+trigger: rebuild hero buttons light mode
+<!-- Deploy Light Buttons 13:16 -->
+trigger: remove global css override
+<!-- Deploy CSS Fix 13:27 -->
+trigger: remove root cause css override
+<!-- Deploy Root Fix 13:41 -->
+trigger: remove text-slate-900 override
+<!-- Deploy Text Color Fix 14:35 -->
+trigger: fix footer buttons visibility
+<!-- Deploy Footer Buttons 14:46 -->
+trigger: force button text visibility
+<!-- Deploy Button Visibility 15:51 -->
+trigger: force color with javascript
+<!-- Deploy JS Color Force 15:58 -->
+trigger: finalize visibility and search
+<!-- Deploy Final 22:11 -->
+trigger: force button colors important
+<!-- Deploy Important Colors 22:22 -->
+trigger: force button colors important
+<!-- Deploy Important Colors 22:26 -->
+trigger: force visibility opacity important
+<!-- Deploy Visibility Fix 23:23 -->
+trigger: raw inline css maximum priority
+<!-- Deploy Raw CSS 23:51 -->
+trigger: visual test red text
+<!-- Deploy Visual Test 00:53 -->
