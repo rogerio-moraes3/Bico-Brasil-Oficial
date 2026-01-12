@@ -45,7 +45,7 @@ import About from "./pages/About";
 import FAQPage from "./pages/FAQ";
 import SearchWorkers from "./pages/SearchWorkers";
 import OfferServices from "./pages/OfferServices";
-import Ranking from "./pages/Ranking";
+import Ranking from "./ranking";
 import ProcurarBicos from "./pages/ProcurarBicos";
 import DownloadPage from "./pages/Download";
 import EditJob from "./pages/EditJob";
@@ -53,6 +53,8 @@ import EditService from "./pages/EditService";
 import JobDetails from "./pages/JobDetails";
 import PublicStats from "./pages/PublicStats";
 import AuthCallback from "./pages/AuthCallback";
+// 1. Importação correta aqui
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   const [showSplash, setShowSplash] = useState(() => {
@@ -202,6 +204,8 @@ function App() {
               </Routes>
             </AccessGuard>
             <BottomNav />
+            {/* 2. Ativação global correta aqui */}
+            <SpeedInsights />
           </NotificationProvider>
         </AuthProvider>
       </UserModeProvider>
