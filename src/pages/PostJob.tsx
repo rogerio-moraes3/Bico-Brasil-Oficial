@@ -24,6 +24,8 @@ export default function PostJob() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    price: '',
+    location: '',
     category: '',
     city_id: '',
     neighborhood: '',
@@ -118,6 +120,8 @@ export default function PostJob() {
           user_id: userData.id,
           title: formData.title,
           description: formData.description,
+          price: formData.price ? parseFloat(formData.price) : null,
+          location: formData.location || null,
           category_id: formData.isCustomCategory ? null : formData.category,
           custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
           city_id: formData.city_id,
@@ -211,6 +215,27 @@ export default function PostJob() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={6}
                   required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="price">Preço Oferecido (opcional)</Label>
+                <Input
+                  id="price"
+                  type="number"
+                  placeholder="Ex: 150"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="location">Endereço/Local (opcional)</Label>
+                <Input
+                  id="location"
+                  placeholder="Ex: Rua das Flores, 123"
+                  value={formData.location}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 />
               </div>
 

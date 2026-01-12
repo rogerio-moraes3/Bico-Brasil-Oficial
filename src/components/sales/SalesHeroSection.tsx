@@ -1,12 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search, Briefcase, ArrowRight } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 export const SalesHeroSection = () => {
   const navigate = useNavigate();
+  const offerButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    // Força a cor do botão após montagem
+    if (offerButtonRef.current) {
+      offerButtonRef.current.style.setProperty('color', '#1E2A5A', 'important');
+    }
+  }, []);
 
   return (
-    <section className="bg-[#d4fddf] dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 text-slate-900 dark:text-white overflow-hidden">
+    <section className="bg-[#d4fddf] text-[#1E2A5A] dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 dark:text-white overflow-hidden">
       {/* Background pattern removed to prevent text overlap */}
 
       <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
@@ -39,25 +48,52 @@ export const SalesHeroSection = () => {
 
           {/* CTAs Secundários */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-6">
-            <Button
-              size="lg"
+            <button
               onClick={() => navigate("/app")}
-              className="bg-white hover:bg-gray-50 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200 text-gray-900 dark:text-white"
+              style={{
+                backgroundColor: '#FFFFFF',
+                color: '#1E2A5A',
+                border: '2px solid #1E2A5A',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                fontWeight: '600',
+                fontSize: '16px',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
             >
-              <Search className="w-5 h-5 mr-2" />
+              <Search className="w-5 h-5" style={{ color: '#1E2A5A' }} />
               Buscar Profissional
-            </Button>
+            </button>
 
-            <span className="hidden sm:block text-slate-500">|</span>
+            <span className="hidden sm:block text-slate-500 dark:text-slate-400">|</span>
 
-            <Button
-              size="default"
+            <button
+              ref={offerButtonRef}
               onClick={() => navigate("/app")}
-              className="bg-white hover:bg-gray-50 font-bold px-6 py-3 rounded-lg shadow-lg transition-all border border-slate-200 text-gray-900 dark:text-white"
+              style={{
+                color: 'red !important',
+                fontSize: '30px !important',
+                border: '1px solid #1E2A5A !important',
+                background: '#FFFFFF !important',
+                display: 'flex !important',
+                opacity: '1 !important',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                zIndex: 10
+              }}
             >
-              <Briefcase className="w-4 h-4 mr-2" />
-              Oferecer Serviços
-            </Button>
+              <Briefcase style={{ color: 'red !important' }} />
+              TESTE AZUL 123
+            </button>
           </div>
 
           {/* Secondary CTA */}

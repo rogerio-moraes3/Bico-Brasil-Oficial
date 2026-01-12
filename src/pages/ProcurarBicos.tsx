@@ -113,7 +113,17 @@ const ProcurarBicos = () => {
       let query = supabase
         .from('job_postings')
         .select(`
-          *,
+          id,
+          title,
+          description,
+          price,
+          location,
+          city_id,
+          category_id,
+          urgent,
+          created_at,
+          status,
+          user_id,
           category:categories(name),
           city:cities(name, state),
           user:users!user_id(name, profile_photo, plan_active, is_tester, auth_id, phone)

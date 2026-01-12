@@ -101,7 +101,7 @@ export default function SearchWorkers() {
       console.log('🔍 FASE 2: Buscando serviços...');
       let servicesQuery = supabase
         .from('worker_services')
-        .select('*, category:categories(name), subcategory:subcategories(name)');
+        .select('id, user_id, title, description, price, location, custom_category, availability, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
 
       if (filters.category !== 'all') {
         console.log('📌 Filtro categoria aplicado:', filters.category);

@@ -17,21 +17,45 @@ export const SalesFooter = () => {
             Junte-se a milhares de brasileiros que já usam o Bico Brasil para resolver e faturar.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
+            <button
               onClick={() => navigate("/app")}
-              className="bg-white hover:bg-gray-50 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200 text-gray-900 dark:text-white"
+              style={{
+                color: 'red !important',
+                fontSize: '30px !important',
+                border: '1px solid #FFFFFF !important',
+                background: 'transparent !important',
+                display: 'flex !important',
+                opacity: '1 !important',
+                padding: '1rem 2rem',
+                borderRadius: '0.5rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
             >
-              Buscar Profissional
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button
-              size="lg"
+              TESTE BRANCO 123
+              <ArrowRight style={{ color: 'red !important' }} />
+            </button>
+            <button
               onClick={() => navigate("/app")}
-              className="bg-white hover:bg-gray-50 font-bold px-8 py-4 rounded-lg shadow-lg transition-all border border-slate-200 text-gray-900 dark:text-white"
+              style={{
+                color: 'red !important',
+                fontSize: '30px !important',
+                border: '1px solid #FFFFFF !important',
+                background: 'transparent !important',
+                display: 'flex !important',
+                opacity: '1 !important',
+                padding: '1rem 2rem',
+                borderRadius: '0.5rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
             >
-              Oferecer Serviços
-            </Button>
+              TESTE BRANCO 123
+            </button>
           </div>
         </div>
       </section>

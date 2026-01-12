@@ -26,6 +26,7 @@ export default function OfferServices() {
     subcategory: '',
     description: '',
     price: '',
+    location: '',
     city_id: '',
     neighborhood: '',
     address: '',
@@ -153,6 +154,7 @@ export default function OfferServices() {
           custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
           subcategory_id: formData.subcategory || null,
           price: formData.price ? parseFloat(formData.price) : null,
+          location: formData.location || null,
           availability: formData.availability,
           active: true
         });
