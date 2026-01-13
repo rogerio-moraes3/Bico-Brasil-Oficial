@@ -8,15 +8,15 @@ export const SalesFooter = () => {
   return (
     <>
       {/* CTA Banner */}
-      <section className="py-16 bg-gradient-to-r from-primary to-blue-600 text-white">
+      <section className="py-10 md:py-16 bg-gradient-to-r from-primary to-blue-600 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold mb-3">
             Pronto para começar?
           </h2>
-          <p className="text-white/80 mb-8 max-w-xl mx-auto">
+          <p className="text-white/80 mb-6 max-w-xl mx-auto text-sm md:text-base">
             Junte-se a milhares de brasileiros que já usam o Bico Brasil para resolver e faturar.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
               onClick={() => navigate("/app")}
               variant="outline"
@@ -38,12 +38,12 @@ export const SalesFooter = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12">
+      <footer className="bg-slate-900 text-white py-6 md:py-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-4 gap-6 mb-6">
             {/* Logo & Description */}
             <div className="md:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-3">
                 <img
                   src="/logo.png"
                   alt="Bico Brasil"
@@ -54,7 +54,7 @@ export const SalesFooter = () => {
                 />
                 <span className="text-2xl font-bold">Bico Brasil</span>
               </div>
-              <p className="text-slate-400 mb-4 max-w-md">
+              <p className="text-slate-400 mb-3 max-w-md text-sm md:text-base">
                 A plataforma que conecta quem precisa de serviços a profissionais qualificados.
                 Sem intermediários, sem comissões abusivas.
               </p>
@@ -68,12 +68,12 @@ export const SalesFooter = () => {
               <h4 className="font-semibold mb-4">Links Úteis</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/about" className="text-slate-400 hover:text-white transition-colors">
+                  <Link to="/about" className="text-slate-400 hover:text-white transition-colors text-sm md:text-base">
                     Quem Somos
                   </Link>
                 </li>
                 <li>
-                  <Link to="/faq" className="text-slate-400 hover:text-white transition-colors">
+                  <Link to="/faq" className="text-slate-400 hover:text-white transition-colors text-sm md:text-base">
                     Perguntas Frequentes
                   </Link>
                 </li>
@@ -95,12 +95,12 @@ export const SalesFooter = () => {
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/terms" className="text-slate-400 hover:text-white transition-colors">
+                  <Link to="/terms" className="text-slate-400 hover:text-white transition-colors text-sm md:text-base">
                     Termos de Uso
                   </Link>
                 </li>
                 <li>
-                  <Link to="/privacy" className="text-slate-400 hover:text-white transition-colors">
+                  <Link to="/privacy" className="text-slate-400 hover:text-white transition-colors text-sm md:text-base">
                     Política de Privacidade
                   </Link>
                 </li>
@@ -152,7 +152,7 @@ export const SalesFooter = () => {
       </footer>
 
       {/* Sticky Mobile CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-sm border-t border-border md:hidden z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-3 md:p-4 bg-background/95 backdrop-blur-sm border-t border-border md:hidden z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <Button
           onClick={() => {
             const event = new Event('show-pwa-prompt');

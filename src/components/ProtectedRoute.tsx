@@ -20,6 +20,22 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
       return;
     }
 
+    // If this route explicitly requires admin, enforce strict email whitelist first
+    if (user && requireAdmin) {
+      const allowed = ['23rogeriomoraes@gmail.com', 'nando_petro@hotmail.com'];
+      const email = (user.email || '').toLowerCase();
+      if (!allowed.includes(email)) {
+        // Block access immediately and inform the user
+        alert('Acesso Negado');
+        navigate('/', { replace: true });
+        return;
+      }
+
+      // If email is whitelisted, mark as admin and skip DB role check
+      setIsAdmin(true);
+      return;
+    }
+
     if (user && requireAdmin && !checkingAdmin) {
       checkAdminStatus();
     } else if (user && !requireAdmin) {
@@ -96,5 +112,5 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
     return null;
   }
 
-  return <>{children}</>;
+  return <div className="internal-theme min-h-screen">{children}</div>;
 };

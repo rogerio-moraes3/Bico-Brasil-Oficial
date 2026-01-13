@@ -51,7 +51,7 @@ export default function PaymentHistory() {
         console.error('❌ Erro ao carregar pagamentos:', error);
         throw error;
       }
-      
+
       setPayments(data || []);
     } catch (error) {
       console.error('Error loading payments:', error);
@@ -82,12 +82,12 @@ export default function PaymentHistory() {
 
   const getPlanBadge = (planType: string | null) => {
     if (!planType) return '-';
-    
+
     const labels: Record<string, string> = {
       basico: 'Premium',
       vip: 'VIP',
     };
-    
+
     return <Badge variant="outline">{labels[planType] || planType}</Badge>;
   };
 

@@ -29,7 +29,7 @@ serve(async (req) => {
     // Get user from token
     const token = authHeader.replace("Bearer ", "");
     const { data: { user }, error: userError } = await supabase.auth.getUser(token);
-    
+
     if (userError || !user) {
       console.error("Auth error:", userError);
       return new Response(
@@ -55,7 +55,7 @@ serve(async (req) => {
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    
+
     if (!supabaseUrl) {
       throw new Error("SUPABASE_URL não configurado");
     }

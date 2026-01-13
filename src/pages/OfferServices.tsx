@@ -34,6 +34,7 @@ export default function OfferServices() {
     address: '',
     phone: '',
     availability: 'todos_os_dias',
+    available_today: false,
     customCategory: '',
     isCustomCategory: false
   });
@@ -42,14 +43,31 @@ export default function OfferServices() {
   const [categories, setCategories] = useState<any[]>([]);
   const [subcategories, setSubcategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isOnline, setIsOnline] = useState<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
 
   useEffect(() => {
     if (!user) {
       navigate('/auth');
       return;
     }
+    // restore autosave if present
+    const saved = localStorage.getItem('offer_services_autosave');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setFormData(prev => ({ ...prev, ...parsed }));
+      } catch {}
+    }
     loadData();
   }, [user, navigate]);
+
+  // Autosave form locally (debounced)
+  useEffect(() => {
+    const id = setTimeout(() => {
+      localStorage.setItem('offer_services_autosave', JSON.stringify(formData));
+    }, 800);
+    return () => clearTimeout(id);
+  }, [formData]);
 
   const loadData = async () => {
     const [categoriesRes, profileRes] = await Promise.all([
@@ -76,6 +94,17 @@ export default function OfferServices() {
       if (hasCity) setFormData(prev => ({ ...prev, city_id: user.user_metadata.city_id }));
     }
   }, [cities, user, formData.city_id]);
+
+  useEffect(() => {
+    const onOnline = () => setIsOnline(true);
+    const onOffline = () => setIsOnline(false);
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
+    return () => {
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+    };
+  }, []);
 
   const handleCategoryChange = async (categoryId: string) => {
     if (categoryId === 'outros') {
@@ -126,6 +155,17 @@ export default function OfferServices() {
         throw new Error('Telefone é obrigatório');
       }
 
+      // Offline handling
+      if (!navigator.onLine) {
+        // Save to offline queue (include auth id for later processing)
+        const { enqueue } = await import('@/lib/offlineQueue');
+        enqueue({ type: 'offerService', payload: { ...formData, _auth_id: user!.id } } as any);
+        localStorage.removeItem('offer_services_autosave');
+        toast({ title: 'Sem internet', description: 'Vamos publicar assim que a conexão voltar' });
+        navigate('/profile');
+        return;
+      }
+
       // 1. Atualizar perfil do usuário
       const { error: userError } = await supabase
         .from('users')
@@ -169,6 +209,9 @@ export default function OfferServices() {
 
       if (serviceError) throw serviceError;
 
+      // Clear autosave
+      localStorage.removeItem('offer_services_autosave');
+
       toast({
         title: "Serviço cadastrado!",
         description: "Seu serviço está visível para clientes.",
@@ -208,6 +251,12 @@ export default function OfferServices() {
             </div>
           </CardHeader>
           <CardContent>
+            {!isOnline && (
+              <div className="mb-4 rounded-md bg-yellow-50 border border-yellow-200 p-3 text-yellow-800">
+                <strong>Sem internet no momento</strong> — seus dados serão salvos localmente e publicados assim que a conexão voltar.
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
 
               {/* Título do Serviço */}
@@ -339,6 +388,16 @@ export default function OfferServices() {
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   required
                 />
+              </div>
+
+              {/* Disponível Hoje Toggle */}
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="available_today"
+                  checked={formData.available_today}
+                  onCheckedChange={(checked) => setFormData({ ...formData, available_today: checked })}
+                />
+                <Label htmlFor="available_today" className="cursor-pointer">Disponível hoje</Label>
               </div>
 
               {/* Disponibilidade */}

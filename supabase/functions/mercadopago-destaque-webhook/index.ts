@@ -14,36 +14,36 @@ async function validateWebhookSignature(
   secret: string
 ): Promise<boolean> {
   if (!xSignature || !xRequestId) return false;
-  
+
   try {
     const parts = xSignature.split(',');
     let ts = '', hash = '';
-    
+
     for (const part of parts) {
       const [key, value] = part.split('=');
       if (key?.trim() === 'ts') ts = value;
       if (key?.trim().startsWith('v')) hash = value;
     }
-    
+
     if (!ts || !hash) return false;
-    
+
     const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
-    
+
     const encoder = new TextEncoder();
     const keyData = encoder.encode(secret);
     const messageData = encoder.encode(manifest);
-    
+
     const cryptoKey = await crypto.subtle.importKey(
       'raw', keyData,
       { name: 'HMAC', hash: 'SHA-256' },
       false, ['sign']
     );
-    
+
     const signature = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
     const expectedHash = Array.from(new Uint8Array(signature))
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
-    
+
     return expectedHash === hash;
   } catch (error) {
     console.error('Erro ao validar assinatura:', error);
@@ -63,7 +63,7 @@ serve(async (req) => {
     // MercadoPago envia notificações de payment
     if (body.type === 'payment' || body.topic === 'payment') {
       const paymentId = body.data?.id || body.id;
-      
+
       if (!paymentId) {
         return new Response('OK', { status: 200 });
       }
@@ -93,7 +93,7 @@ serve(async (req) => {
       console.debug('✅ Assinatura do webhook validada');
 
       const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
-      
+
       // Buscar informações do pagamento
       const paymentResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
         headers: {
@@ -105,7 +105,7 @@ serve(async (req) => {
       console.debug('Payment details:', payment);
 
       const externalReference = payment.external_reference;
-      
+
       if (!externalReference) {
         console.debug('Sem external_reference, ignorando');
         return new Response('OK', { status: 200 });
@@ -151,7 +151,7 @@ serve(async (req) => {
           status: 'failed',
           payment_id: paymentId,
         }).eq('id', order.id);
-        
+
         console.debug('❌ Pagamento rejeitado/cancelado');
       }
     }

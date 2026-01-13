@@ -149,7 +149,7 @@ export function NotificationsPanel() {
                   {/* Conteúdo da notificação com transform */}
                   <div
                     onClick={() => handleNotificationClick(notification)}
-                    className={`p-4 cursor-pointer transition-transform duration-200 ease-out hover:bg-muted/50 ${!notification.read ? 'bg-primary/5' : ''} ${swipedId === notification.id ? '-translate-x-20' : 'translate-x-0'}` }
+                    className={`p-4 cursor-pointer transition-transform duration-200 ease-out hover:bg-muted/50 ${!notification.read ? 'bg-primary/5' : ''} ${swipedId === notification.id ? '-translate-x-20' : 'translate-x-0'}`}
                   >
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">{getNotificationIcon(notification.type)}</span>

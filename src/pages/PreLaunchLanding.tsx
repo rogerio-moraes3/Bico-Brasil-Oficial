@@ -62,7 +62,7 @@ export default function PreLaunchLanding() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.nome || !formData.email || !formData.cidade || !formData.tipo_interesse) {
       toast({
         title: "Preencha todos os campos",
@@ -136,7 +136,7 @@ export default function PreLaunchLanding() {
             O Bico Brasil está chegando — e vai mudar a forma como você trabalha.
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground mb-8">
-            Uma plataforma simples, rápida e segura para conectar quem precisa trabalhar com quem precisa de ajuda. 
+            Uma plataforma simples, rápida e segura para conectar quem precisa trabalhar com quem precisa de ajuda.
             Tudo isso sem burocracia, sem enrolação e com total liberdade.
           </p>
         </section>
@@ -175,7 +175,7 @@ export default function PreLaunchLanding() {
               </li>
             </ul>
             <p className="text-base italic bg-white/10 p-4 rounded-lg">
-              "Se você está precisando garantir o leite das crianças, pagar uma conta urgente ou fazer um dinheiro extra, 
+              "Se você está precisando garantir o leite das crianças, pagar uma conta urgente ou fazer um dinheiro extra,
               o Bico Brasil será o seu novo ponto de partida."
             </p>
           </div>
@@ -219,7 +219,7 @@ export default function PreLaunchLanding() {
               </li>
             </ul>
             <p className="text-base italic bg-white/10 p-4 rounded-lg">
-              "Chega de pedir ajuda em grupos de Facebook ou WhatsApp. 
+              "Chega de pedir ajuda em grupos de Facebook ou WhatsApp.
               Aqui você encontra alguém pronto para resolver seu problema ainda hoje."
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function PreLaunchLanding() {
             Estamos construindo algo GRANDE.
           </h3>
           <p className="text-lg text-muted-foreground mb-4">
-            Uma plataforma feita para a vida real — para quem precisa trabalhar, 
+            Uma plataforma feita para a vida real — para quem precisa trabalhar,
             para quem precisa contratar, e para quem não tem tempo a perder.
           </p>
           <p className="text-base text-muted-foreground mb-8">
@@ -314,7 +314,7 @@ export default function PreLaunchLanding() {
             </form>
 
             <p className="text-sm text-center text-muted-foreground mt-4">
-              Os primeiros inscritos poderão testar recursos, receber novidades antes de todo mundo 
+              Os primeiros inscritos poderão testar recursos, receber novidades antes de todo mundo
               e ganhar vantagens no lançamento oficial.
             </p>
           </div>
@@ -365,11 +365,11 @@ export default function PreLaunchLanding() {
               <p>Você será avisado por e-mail</p>
               <p>Obrigado por participar dos primeiros passos do Bico Brasil</p>
             </div>
-            
+
             {/* Link discreto para acesso admin - SEMPRE VISÍVEL */}
             <div className="mt-8">
-              <Link 
-                to={isAdmin ? "/admin" : "/auth"} 
+              <Link
+                to={isAdmin ? "/admin" : "/auth"}
                 className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors inline-flex items-center gap-1"
               >
                 🔐 Área Admin

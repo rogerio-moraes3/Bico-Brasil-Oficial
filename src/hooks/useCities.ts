@@ -22,6 +22,9 @@ export function useCities() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
+    // In-memory single-flight guard to avoid parallel fetches across multiple hook instances
+    let ongoingFetch: Promise<any[] | null> | null = null;
+
     const loadCities = async (forceRefresh = false) => {
         try {
             setLoading(true);
@@ -42,23 +45,37 @@ export function useCities() {
                 }
             }
 
-            // Fetch from Supabase
-            const { data, error: fetchError } = await supabase
-                .from('cities')
-                .select('id, name, state')
-                .eq('active', true)
-                .order('name');
-
-            if (fetchError) {
-                throw fetchError;
+            // If another instance already started fetching, wait for it
+            if (ongoingFetch && !forceRefresh) {
+                const result = await ongoingFetch;
+                if (result) setCities(result);
+                setLoading(false);
+                return;
             }
 
-            const citiesData = data || [];
-            setCities(citiesData);
+            // Start a single fetch and share the promise
+            ongoingFetch = (async () => {
+                const { data, error: fetchError } = await supabase
+                    .from('cities')
+                    .select('id, name, state')
+                    .eq('active', true)
+                    .order('name');
 
-            // Update cache
-            localStorage.setItem(CACHE_KEY, JSON.stringify(citiesData));
-            localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                if (fetchError) {
+                    throw fetchError;
+                }
+
+                const citiesData = data || [];
+
+                // Update cache
+                localStorage.setItem(CACHE_KEY, JSON.stringify(citiesData));
+                localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+
+                return citiesData;
+            })();
+
+            const fetched = await ongoingFetch;
+            if (fetched) setCities(fetched);
 
         } catch (err) {
             console.error('Error loading cities:', err);
@@ -70,6 +87,7 @@ export function useCities() {
                 setCities(JSON.parse(cached));
             }
         } finally {
+            ongoingFetch = null;
             setLoading(false);
         }
     };

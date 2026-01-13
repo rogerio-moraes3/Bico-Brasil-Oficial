@@ -319,3 +319,5 @@ trigger: raw inline css maximum priority
 <!-- Deploy Raw CSS 23:51 -->
 trigger: visual test red text
 <!-- Deploy Visual Test 00:53 -->
+<!-- Deploy City Filter Standardization 15:06 -->
+trigger: deploy city filter standardization

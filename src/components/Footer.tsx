@@ -46,12 +46,12 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-card text-card-foreground mt-20 border-t border-border">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-border">
+    <footer className="bg-card text-card-foreground mt-12 border-t border-border">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 divide-y md:divide-y-0 md:divide-x divide-border">
           {/* Coluna 1: Ajuda */}
-          <div className="pb-4 md:pb-0 md:pr-6">
-            <h3 className="font-semibold text-card-foreground mb-4">Ajuda</h3>
+          <div className="pb-3 md:pb-0 md:pr-6">
+            <h3 className="font-semibold text-card-foreground mb-3 text-sm md:text-base">Ajuda</h3>
             <ul className="space-y-2 text-sm text-card-foreground/80">
               <li>
                 <Link to="/about" onClick={scrollToTop} className="hover:text-foreground transition-colors">
@@ -72,8 +72,8 @@ export const Footer = () => {
           </div>
 
           {/* Coluna 2: Redes Sociais */}
-          <div className="pt-4 pb-4 md:pt-0 md:pb-0 md:px-6">
-            <h3 className="font-semibold text-card-foreground mb-4">Redes Sociais</h3>
+          <div className="pt-3 pb-3 md:pt-0 md:pb-0 md:px-6">
+            <h3 className="font-semibold text-card-foreground mb-3 text-sm md:text-base">Redes Sociais</h3>
             <ul className="space-y-2 text-sm text-card-foreground/80">
               <li>
                 <a href="https://www.instagram.com/bicobrasil_" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
@@ -104,10 +104,10 @@ export const Footer = () => {
           </div>
 
           {/* Coluna 3: Atendimento */}
-          <div className="pt-4 pb-4 md:pt-0 md:pb-0 md:px-6">
-            <h3 className="font-semibold text-card-foreground mb-4">Atendimento</h3>
-            <p className="text-sm text-card-foreground/80 mb-3">Segunda a sexta, 9h às 18h</p>
-            <p className="text-sm text-card-foreground/80 mb-4">Ainda está com dúvidas?</p>
+          <div className="pt-3 pb-3 md:pt-0 md:pb-0 md:px-6">
+            <h3 className="font-semibold text-card-foreground mb-3 text-sm md:text-base">Atendimento</h3>
+            <p className="text-sm text-card-foreground/80 mb-2">Segunda a sexta, 9h às 18h</p>
+            <p className="text-sm text-card-foreground/80 mb-3">Ainda está com dúvidas?</p>
             <Link
               to="/faq"
               onClick={scrollToTop}
@@ -147,9 +147,9 @@ export const Footer = () => {
 
         {/* CTA de Cadastro - apenas para usuários não logados */}
         {!user && (
-          <div className="mt-8 pt-8 border-t border-border text-center">
-            <h3 className="text-2xl font-bold text-card-foreground mb-3">Pronto para começar?</h3>
-            <p className="text-card-foreground/80 mb-6 max-w-md mx-auto">
+          <div className="mt-6 pt-6 border-t border-border text-center">
+            <h3 className="text-lg md:text-2xl font-bold text-card-foreground mb-2">Pronto para começar?</h3>
+            <p className="text-card-foreground/80 mb-4 max-w-md mx-auto text-sm md:text-base">
               Crie sua conta gratuitamente e comece a receber oportunidades de trabalho hoje mesmo.
             </p>
             <Button
@@ -169,17 +169,17 @@ export const Footer = () => {
         )}
 
         {/* Logo e descrição */}
-        <div className="mt-8 pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-6 pt-6 border-t border-border">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <Link to="/" className="flex items-center gap-2">
-              <img src={logo} alt="Bico Brasil" className="h-12 w-12" />
+              <img src={logo} alt="Bico Brasil" className="h-10 w-10" />
               <div className="flex flex-col justify-center">
-                <span className="font-bold text-xl text-card-foreground leading-tight w-[140px] inline-block">
+                <span className="font-bold text-lg md:text-xl text-card-foreground leading-tight w-[140px] inline-block">
                   Bico Brasil
                 </span>
-                <span className="text-[16px] text-card-foreground/80 leading-tight font-medium w-[140px] inline-block">
+                <span className="text-sm md:text-[16px] text-card-foreground/80 leading-tight font-medium w-[140px] inline-block">
                   Trabalhou, Tá Pago.
-                </span> 
+                </span>
               </div>
             </Link>
             <p className="text-sm text-card-foreground/80 max-w-md text-center md:text-left">

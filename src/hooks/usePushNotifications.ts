@@ -22,11 +22,11 @@ export const usePushNotifications = () => {
     try {
       const result = await Notification.requestPermission();
       setPermission(result);
-      
+
       if (result === 'granted' && user) {
         await subscribeToPush();
       }
-      
+
       return result === 'granted';
     } catch (error) {
       console.error('Error requesting notification permission:', error);
@@ -44,14 +44,14 @@ export const usePushNotifications = () => {
 
     try {
       const registration = await navigator.serviceWorker.ready;
-      
+
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidKey),
       });
 
       const subscriptionJson = subscription.toJSON();
-      
+
       // Get user profile ID
       const { data: userData } = await supabase
         .from('users')
@@ -67,7 +67,7 @@ export const usePushNotifications = () => {
           p256dh: subscriptionJson.keys?.p256dh || '',
           auth: subscriptionJson.keys?.auth || '',
         });
-        
+
         // Tabela pode não existir - não travar o app
         if (error) {
           console.error('Error saving push subscription:', error);

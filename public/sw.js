@@ -119,7 +119,7 @@ self.addEventListener('push', (event) => {
     requireInteraction: false,
     vibrate: [200, 100, 200]
   };
-  
+
   event.waitUntil(
     self.registration.showNotification(title, options)
   );
@@ -128,9 +128,9 @@ self.addEventListener('push', (event) => {
 // Notification click listener
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  
+
   const urlToOpen = event.notification.data?.url || '/';
-  
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {

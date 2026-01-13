@@ -34,6 +34,7 @@ export default function PostJob() {
     urgent: false,
     date_time: '',
     availability: 'todos_os_dias',
+    available_today: false,
     customCategory: '',
     isCustomCategory: false
   });
@@ -47,8 +48,37 @@ export default function PostJob() {
       navigate('/auth');
       return;
     }
+    // restore autosave if present
+    const saved = localStorage.getItem('post_job_autosave');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setFormData(prev => ({ ...prev, ...parsed }));
+      } catch {}
+    }
     loadData();
   }, [user, navigate]);
+
+  const [isOnline, setIsOnline] = useState<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
+
+  useEffect(() => {
+    const onOnline = () => setIsOnline(true);
+    const onOffline = () => setIsOnline(false);
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
+    return () => {
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+    };
+  }, []);
+
+  // Autosave form locally (debounced)
+  useEffect(() => {
+    const id = setTimeout(() => {
+      localStorage.setItem('post_job_autosave', JSON.stringify(formData));
+    }, 800);
+    return () => clearTimeout(id);
+  }, [formData]);
 
   const loadData = async () => {
     const [categoriesRes, profileRes] = await Promise.all([
@@ -124,6 +154,17 @@ export default function PostJob() {
 
 
 
+      // Offline handling
+      if (!navigator.onLine) {
+        const { enqueue } = await import('@/lib/offlineQueue');
+        enqueue({ type: 'publishJob', payload: { ...formData, _auth_id: user!.id } } as any);
+        localStorage.removeItem('post_job_autosave');
+        toast({ title: 'Sem internet', description: 'Vamos publicar assim que a conexão voltar' });
+        navigate('/jobs');
+        setLoading(false);
+        return;
+      }
+
       // Criar publicação
       const { data: jobData, error: jobError } = await supabase
         .from('job_postings')
@@ -139,7 +180,7 @@ export default function PostJob() {
           neighborhood: formData.neighborhood,
           urgent: formData.urgent,
           date_time: formData.date_time ? new Date(formData.date_time).toISOString() : null,
-          availability: formData.availability,
+          availability: formData.available_today ? 'hoje' : formData.availability,
           status: 'open'
         })
         .select();
@@ -205,6 +246,12 @@ export default function PostJob() {
           </CardHeader>
 
           <CardContent>
+            {!isOnline && (
+              <div className="mb-4 rounded-md bg-yellow-50 border border-yellow-200 p-3 text-yellow-800">
+                <strong>Sem internet no momento</strong> — seus dados serão salvos localmente e publicados assim que a conexão voltar.
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <Label htmlFor="title">Título do Trabalho *</Label>
@@ -323,30 +370,24 @@ export default function PostJob() {
                 />
               </div>
 
-              <div>
-                <Label>Disponibilidade *</Label>
-                <Select value={formData.availability} onValueChange={(val) => setFormData({ ...formData, availability: val })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos_os_dias">Todos os dias</SelectItem>
-                    <SelectItem value="seg_sex">Segunda a Sexta</SelectItem>
-                    <SelectItem value="finais_semana">Finais de semana</SelectItem>
-                    <SelectItem value="agendamento">Somente por agendamento</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="available_today"
+                    checked={formData.available_today}
+                    onCheckedChange={(checked) => setFormData({ ...formData, available_today: checked })}
+                  />
+                  <Label htmlFor="available_today" className="cursor-pointer">Disponível hoje</Label>
+                </div>
 
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="urgent"
-                  checked={formData.urgent}
-                  onCheckedChange={(checked) => setFormData({ ...formData, urgent: checked })}
-                />
-                <Label htmlFor="urgent" className="cursor-pointer">
-                  Trabalho Urgente
-                </Label>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="urgent"
+                    checked={formData.urgent}
+                    onCheckedChange={(checked) => setFormData({ ...formData, urgent: checked })}
+                  />
+                  <Label htmlFor="urgent" className="cursor-pointer">Trabalho Urgente</Label>
+                </div>
               </div>
 
               <Button type="submit" className="w-full" size="lg" disabled={loading}>

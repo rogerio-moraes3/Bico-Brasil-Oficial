@@ -15,13 +15,13 @@ serve(async (req) => {
     // Security: Require service role key for authentication
     const authHeader = req.headers.get('Authorization');
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    
+
     if (!authHeader || !authHeader.includes(serviceRoleKey || '')) {
       console.error('❌ Unauthorized access attempt to expire-old-payments');
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           success: false,
-          error: 'Unauthorized: This endpoint requires service role authentication' 
+          error: 'Unauthorized: This endpoint requires service role authentication'
         }),
         {
           status: 401,
@@ -42,7 +42,7 @@ serve(async (req) => {
 
     const { data: expiredPayments, error: updateError } = await supabase
       .from("payments")
-      .update({ 
+      .update({
         status: "failed",
         updated_at: new Date().toISOString()
       })
@@ -76,9 +76,9 @@ serve(async (req) => {
   } catch (error: any) {
     console.error('❌ Erro na função expire-old-payments:', error);
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         success: false,
-        error: error.message 
+        error: error.message
       }),
       {
         status: 500,

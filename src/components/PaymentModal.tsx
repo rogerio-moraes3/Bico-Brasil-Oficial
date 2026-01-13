@@ -63,19 +63,19 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
         if (payment?.status === 'paid') {
           clearInterval(pollInterval);
           setPollingPaymentId(null);
-          
+
           toast({
             title: "🎉 Pagamento Aprovado!",
             description: "Seu plano foi ativado com sucesso!"
           });
-          
+
           setTimeout(() => {
             window.location.href = '/payment-success';
           }, 1500);
         } else if (payment?.status === 'failed') {
           clearInterval(pollInterval);
           setPollingPaymentId(null);
-          
+
           toast({
             title: "❌ Pagamento não aprovado",
             description: "Tente novamente ou use outro método.",
@@ -90,7 +90,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
     const timeout = setTimeout(() => {
       clearInterval(pollInterval);
       setPollingPaymentId(null);
-      
+
       toast({
         title: "⏱️ Tempo esgotado",
         description: "Verifique se o pagamento foi processado.",
@@ -136,7 +136,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
         });
         return;
       }
-      
+
       if (/^(\d)\1{10}$/.test(cleanCPF)) {
         toast({
           title: "❌ CPF inválido",
@@ -152,9 +152,9 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
 
     try {
       const cleanCPF = payerCPF.replace(/\D/g, '');
-      
+
       const { data, error } = await supabase.functions.invoke('create-pix-payment', {
-        body: { 
+        body: {
           paymentMethod: method,
           planType: planType,
           amount: amount,
@@ -175,11 +175,11 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
           qr_code_base64: data.qr_code_base64,
           payment_id: data.payment_id
         });
-        
+
         setPollingPaymentId(data.payment_id);
         setShowQrModal(true);
         onOpenChange(false);
-        
+
         toast({
           title: "✅ QR Code gerado!",
           description: "Use o código PIX para finalizar o pagamento. Aguardando confirmação..."
@@ -196,12 +196,12 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
       }
     } catch (error: any) {
       console.error("Erro ao processar pagamento:", error);
-      
+
       let errorMessage = error.message || "Não foi possível processar o pagamento.";
       let errorTitle = "Erro ao processar pagamento";
-      
-      if (errorMessage.includes("credenciais de PRODUÇÃO") || 
-          errorMessage.includes("Unauthorized use of live credentials")) {
+
+      if (errorMessage.includes("credenciais de PRODUÇÃO") ||
+        errorMessage.includes("Unauthorized use of live credentials")) {
         errorTitle = "🔒 Conta Mercado Pago não ativada";
         errorMessage = "Suas credenciais de produção ainda não foram liberadas pelo Mercado Pago. Você precisa:\n\n1. Acessar o painel do Mercado Pago\n2. Completar a verificação de identidade\n3. Aguardar aprovação da conta\n\nOU use credenciais de TESTE temporariamente.";
       } else if (errorMessage.includes("Token") && errorMessage.includes("inválido")) {
@@ -215,7 +215,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
       } else if (errorMessage.includes("pendente") || errorMessage.includes("pending")) {
         errorMessage = "⏳ Você já tem um pagamento pendente. Complete-o ou aguarde expiração.";
       }
-      
+
       toast({
         title: errorTitle,
         description: errorMessage,
@@ -240,7 +240,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
               Escolha a forma de pagamento preferida para ativar seu {planType === 'vip' ? 'Plano VIP' : 'Plano Básico'} por R$ {amount.toFixed(2)}/mês
             </DialogDescription>
           </DialogHeader>
-        
+
           <div className="space-y-4 py-4">
             {/* Nome do Pagador */}
             <div className="space-y-2">
@@ -363,15 +363,15 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
           </div>
         </DialogContent>
       </Dialog>
-    
-    {/* Modal de QR Code PIX */}
-    <PixQRCodeModal
-      open={showQrModal}
-      onOpenChange={setShowQrModal}
-      qrCode={qrCodeData?.qr_code || ''}
-      qrCodeBase64={qrCodeData?.qr_code_base64 || ''}
-      paymentId={qrCodeData?.payment_id || ''}
-    />
-  </>
+
+      {/* Modal de QR Code PIX */}
+      <PixQRCodeModal
+        open={showQrModal}
+        onOpenChange={setShowQrModal}
+        qrCode={qrCodeData?.qr_code || ''}
+        qrCodeBase64={qrCodeData?.qr_code_base64 || ''}
+        paymentId={qrCodeData?.payment_id || ''}
+      />
+    </>
   );
 };

@@ -11,10 +11,10 @@ const corsHeaders = {
 interface EmailRequest {
   to: string;
   subject: string;
-  type: 'payment_generated' | 'payment_approved' | 'payment_failed' | 
-        'payment_receipt' | 'plan_activated' | 'welcome' | 
-        'payment_pending' | 'payment_expired' | 
-        'job_posted' | 'service_created';
+  type: 'payment_generated' | 'payment_approved' | 'payment_failed' |
+  'payment_receipt' | 'plan_activated' | 'welcome' |
+  'payment_pending' | 'payment_expired' |
+  'job_posted' | 'service_created';
   data: any;
 }
 

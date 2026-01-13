@@ -20,26 +20,26 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
   const record = rateLimitMap.get(ip);
-  
+
   if (!record || now - record.timestamp > RATE_LIMIT_WINDOW_MS) {
     rateLimitMap.set(ip, { count: 1, timestamp: now });
     return true;
   }
-  
+
   if (record.count >= RATE_LIMIT_MAX) {
     return false;
   }
-  
+
   record.count++;
   return true;
 }
 
 function validateCPF(cpf: string): boolean {
   const cleanCpf = cpf.replace(/\D/g, '');
-  
+
   if (cleanCpf.length !== 11) return false;
   if (/^(\d)\1{10}$/.test(cleanCpf)) return false;
-  
+
   let sum = 0;
   for (let i = 0; i < 9; i++) {
     sum += parseInt(cleanCpf[i]) * (10 - i);
@@ -47,7 +47,7 @@ function validateCPF(cpf: string): boolean {
   let digit = (sum * 10) % 11;
   if (digit === 10) digit = 0;
   if (digit !== parseInt(cleanCpf[9])) return false;
-  
+
   sum = 0;
   for (let i = 0; i < 10; i++) {
     sum += parseInt(cleanCpf[i]) * (11 - i);
@@ -55,7 +55,7 @@ function validateCPF(cpf: string): boolean {
   digit = (sum * 10) % 11;
   if (digit === 10) digit = 0;
   if (digit !== parseInt(cleanCpf[10])) return false;
-  
+
   return true;
 }
 
@@ -72,27 +72,27 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     // Get client IP for rate limiting
-    const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
-                     req.headers.get("cf-connecting-ip") || 
-                     "unknown";
-    
+    const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("cf-connecting-ip") ||
+      "unknown";
+
     // Check rate limit
     if (!checkRateLimit(clientIP)) {
       console.debug(`Rate limit exceeded for IP: ${clientIP}`);
       return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: "Muitas tentativas. Aguarde 1 hora antes de tentar novamente." 
+        JSON.stringify({
+          success: false,
+          error: "Muitas tentativas. Aguarde 1 hora antes de tentar novamente."
         }),
-        { 
-          status: 429, 
-          headers: { "Content-Type": "application/json", ...corsHeaders } 
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...corsHeaders }
         }
       );
     }
 
     const { cpf, action, newEmail }: RecoverRequest = await req.json();
-    
+
     // Validate CPF format
     const cleanCpf = cpf?.replace(/\D/g, '') || '';
     if (!validateCPF(cleanCpf)) {
@@ -127,10 +127,10 @@ const handler = async (req: Request): Promise<Response> => {
     await supabase.from('audit_log').insert({
       action: `cpf_recovery_${action}`,
       ip_address: clientIP,
-      payload: { 
+      payload: {
         cpf_last4: cleanCpf.slice(-4),
         found: !!user,
-        action 
+        action
       }
     });
 
@@ -146,8 +146,8 @@ const handler = async (req: Request): Promise<Response> => {
     if (action === 'lookup') {
       // Don't reveal if CPF exists or not - just confirm we received the request
       return new Response(
-        JSON.stringify({ 
-          success: true, 
+        JSON.stringify({
+          success: true,
           message: "Se este CPF estiver cadastrado, você poderá prosseguir com a recuperação.",
           canProceed: true // Always true to prevent enumeration
         }),
@@ -175,9 +175,9 @@ const handler = async (req: Request): Promise<Response> => {
 
       // Always return success message (prevents enumeration)
       return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: "Se este CPF estiver cadastrado, um link de recuperação foi enviado para o email associado." 
+        JSON.stringify({
+          success: true,
+          message: "Se este CPF estiver cadastrado, um link de recuperação foi enviado para o email associado."
         }),
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
@@ -201,9 +201,9 @@ const handler = async (req: Request): Promise<Response> => {
 
       if (existingUser) {
         return new Response(
-          JSON.stringify({ 
-            success: false, 
-            error: "Este email já está em uso por outra conta." 
+          JSON.stringify({
+            success: false,
+            error: "Este email já está em uso por outra conta."
           }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
@@ -219,9 +219,9 @@ const handler = async (req: Request): Promise<Response> => {
         if (authError) {
           console.error("Auth update error:", authError);
           return new Response(
-            JSON.stringify({ 
-              success: false, 
-              error: "Não foi possível atualizar o email. Entre em contato com o suporte." 
+            JSON.stringify({
+              success: false,
+              error: "Não foi possível atualizar o email. Entre em contato com o suporte."
             }),
             { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
           );
@@ -247,9 +247,9 @@ const handler = async (req: Request): Promise<Response> => {
 
       // Always return generic success (prevents enumeration)
       return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: "Se este CPF estiver cadastrado, o email foi atualizado e um link de recuperação foi enviado." 
+        JSON.stringify({
+          success: true,
+          message: "Se este CPF estiver cadastrado, o email foi atualizado e um link de recuperação foi enviado."
         }),
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );

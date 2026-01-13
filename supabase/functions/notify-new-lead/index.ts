@@ -15,7 +15,7 @@ function validateLead(data: unknown): { valid: boolean; error?: string; lead?: L
   }
 
   const obj = data as Record<string, unknown>;
-  
+
   // Check required fields
   if (!obj.lead || typeof obj.lead !== 'object') {
     return { valid: false, error: "Missing 'lead' object in request body" };
@@ -68,7 +68,7 @@ interface Lead {
 
 const handler = async (req: Request): Promise<Response> => {
   console.debug("🚀 [notify-new-lead] Edge Function iniciada");
-  
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -81,7 +81,7 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const rawBody = await req.text();
     console.debug("📦 [notify-new-lead] Dados recebidos (truncated):", rawBody.substring(0, 200));
-    
+
     // Parse and validate input
     let parsedBody: unknown;
     try {
@@ -156,8 +156,8 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const adminEmails = colaboradores.map(c => c.email);
-    const tipoInteresseFormatado = lead.tipo_interesse === 'fazer_bico' 
-      ? '🔨 Fazer Bico' 
+    const tipoInteresseFormatado = lead.tipo_interesse === 'fazer_bico'
+      ? '🔨 Fazer Bico'
       : '📢 Anunciar Serviço';
 
     // HTML template for admin notification (sanitized values)
@@ -213,7 +213,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Enviar email via Resend API para admins
     console.debug("📧 [notify-new-lead] Enviando email para admins");
-    
+
     const emailResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -318,7 +318,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const userEmailData = await userEmailResponse.json();
-    
+
     console.debug("📨 [notify-new-lead] Resposta do envio para usuário:", {
       status: userEmailResponse.status,
       ok: userEmailResponse.ok
@@ -332,7 +332,7 @@ const handler = async (req: Request): Promise<Response> => {
       payload: { id: userEmailData.id },
       error: userEmailResponse.ok ? null : JSON.stringify(userEmailData)
     }]);
-    
+
     if (!userEmailResponse.ok) {
       console.error("❌ [notify-new-lead] Erro ao enviar email para usuário");
     } else {
@@ -340,10 +340,10 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     console.debug("🎉 [notify-new-lead] Processo concluído com sucesso!");
-    
+
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         logged: true
       }),
       {
@@ -353,7 +353,7 @@ const handler = async (req: Request): Promise<Response> => {
     );
   } catch (error: any) {
     console.error("💥 [notify-new-lead] Erro fatal:", error.message);
-    
+
     // Logar erro fatal
     await supabase.from("email_log").insert([{
       email: "system",
@@ -361,7 +361,7 @@ const handler = async (req: Request): Promise<Response> => {
       status: "failed",
       error: error.message
     }]);
-    
+
     return new Response(
       JSON.stringify({ error: "Erro interno ao processar notificação" }),
       {

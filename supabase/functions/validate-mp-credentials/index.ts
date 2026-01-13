@@ -12,7 +12,7 @@ serve(async (req) => {
 
   try {
     const accessToken = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN");
-    
+
     if (!accessToken) {
       return new Response(
         JSON.stringify({
@@ -64,7 +64,7 @@ serve(async (req) => {
 
     // Validar token com API do Mercado Pago
 
-    
+
     const response = await fetch("https://api.mercadopago.com/users/me", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -73,17 +73,17 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      
+
       // Se erro 401/403, conta não está ativada
       const isNotActivated = response.status === 401 || response.status === 403;
-      
+
       console.error(`❌ Erro ${response.status}:`, errorData);
-      
+
       return new Response(
         JSON.stringify({
           ok: false,
           mode: "production",
-          reason: isNotActivated 
+          reason: isNotActivated
             ? "Suas credenciais de PRODUÇÃO ainda não foram ativadas. Complete a verificação da sua conta no Mercado Pago (documento, selfie, comprovante de endereço)."
             : "Token de produção inválido ou expirado. Gere um novo Access Token no painel do Mercado Pago.",
         }),
@@ -118,7 +118,7 @@ serve(async (req) => {
 
   } catch (error: any) {
     console.error("❌ Erro ao validar credenciais:", error);
-    
+
     return new Response(
       JSON.stringify({
         ok: false,

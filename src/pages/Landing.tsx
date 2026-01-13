@@ -61,20 +61,20 @@ export default function Landing() {
         {/* Hero Section */}
         <section className="container mx-auto px-4 py-16 text-center">
           <img src={logo} alt="Bico Brasil" className="h-32 w-32 mx-auto mb-8" />
-          
+
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
             Precisou de ajuda agora?
           </h1>
           <p className="text-3xl font-semibold text-primary mb-6">
             Bico Brasil resolve na hora.
           </p>
-          
+
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             👉 Conectamos pessoas que precisam de ajuda urgente com profissionais qualificados ou com ajudantes capacitados para serviços gerais que não exigem cursos ou diplomas. Rápido, fácil e seguro.
           </p>
-          
-          <Button 
-            size="lg" 
+
+          <Button
+            size="lg"
             className="text-lg px-8 py-6"
             onClick={() => navigate('/auth?mode=signup')}
           >
@@ -86,7 +86,7 @@ export default function Landing() {
         <section className="bg-white py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Como funciona</h2>
-            
+
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <Card className="p-6 text-center">
                 <div className="text-5xl mb-4">📱</div>
@@ -95,7 +95,7 @@ export default function Landing() {
                   Publique o que você precisa em segundos
                 </p>
               </Card>
-              
+
               <Card className="p-6 text-center">
                 <div className="text-5xl mb-4">👷</div>
                 <h3 className="font-semibold text-xl mb-2">2. Escolha o profissional</h3>
@@ -103,7 +103,7 @@ export default function Landing() {
                   Veja avaliações e escolha quem preferir
                 </p>
               </Card>
-              
+
               <Card className="p-6 text-center">
                 <div className="text-5xl mb-4">✅</div>
                 <h3 className="font-semibold text-xl mb-2">3. Resolva agora</h3>
@@ -119,10 +119,10 @@ export default function Landing() {
         <section className="py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Categorias Populares</h2>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-4xl mx-auto">
               {categories.map((cat) => (
-                <Card 
+                <Card
                   key={cat.name}
                   className="p-6 text-center hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => navigate('/jobs')}
@@ -144,7 +144,7 @@ export default function Landing() {
             <p className="mb-8">
               Deixe seus dados e entraremos em contato
             </p>
-            
+
             <form onSubmit={handleCapture} className="space-y-4">
               <Input
                 type="email"
@@ -162,7 +162,7 @@ export default function Landing() {
                 className="bg-white text-gray-900"
                 required
               />
-              <Button 
+              <Button
                 type="submit"
                 variant="secondary"
                 size="lg"
@@ -184,7 +184,7 @@ export default function Landing() {
               </button>
               <button type="button" onClick={() => navigate('/privacy')} className="hover:text-primary">
                 Privacidade
-              </button> 
+              </button>
               <a href="mailto:contato@bicobrasil.com" className="hover:text-primary">
                 Contato
               </a>

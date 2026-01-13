@@ -306,8 +306,8 @@ export default function SearchWorkers() {
       <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <h1 className="text-3xl font-bold mb-8">Buscar Profissionais</h1>
 
-        <Card className="mb-8 border border-border shadow-sm">
-          <CardContent className="pt-6">
+        <Card className="mb-8">
+          <CardContent className="p-6 pt-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
                 <Label>Categoria</Label>
@@ -343,16 +343,23 @@ export default function SearchWorkers() {
 
               <div>
                 <Label>Cidade</Label>
-                <CitySelect
+                <Select
                   value={filters.city_id}
-                  onChange={(value) => {
+                  onValueChange={(value) => {
                     setHasManualCitySelection(true);
                     setFilters(prev => ({ ...prev, city_id: value }));
                   }}
-                  cities={cities}
-                  includeAll={true}
-                  placeholder="Todas"
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas</SelectItem>
+                    {cities.map((city) => (
+                      <SelectItem key={city.id} value={city.id}>{city.name} - {city.state}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
@@ -411,6 +418,7 @@ export default function SearchWorkers() {
                     neighborhood: '',
                     minRating: 'all'
                   });
+                  setHasManualCitySelection(false);
                   setSearchQuery('');
                   setUseGeolocation(false);
                   setGeoLocation(null);

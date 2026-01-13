@@ -1,10 +1,13 @@
 // ========================================
-// CACHE DE CIDADES - OTIMIZAÇÃO
+// CACHE DE CIDADES - OTIMIZAÇÃO (LEGACY)
 // ========================================
-// Melhora performance sem alterar funcionalidades
+// NOTE: This module is legacy and kept for backward compatibility.
+// Prefer using the `useCities` hook which implements a consistent
+// caching strategy (localStorage TTL 1h) and a single-flight guard.
+// Do not introduce new call sites to this module.
 
 const CACHE_KEY = 'bico_cities_cache';
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 horas
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 horas (legacy)
 
 interface CachedData<T> {
     data: T;

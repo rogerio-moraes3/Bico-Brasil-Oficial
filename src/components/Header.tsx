@@ -67,7 +67,7 @@ export const Header = () => {
         Ir para conteúdo principal
       </a>
 
-      <header className="sticky top-0 z-50 w-full border-b border-[#0A1A2F]/20 bg-[#0A1A2F] text-white">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background text-foreground">
         <div className="container flex h-16 items-center justify-between px-2 md:px-4">
           <div className="flex items-center gap-2">
             {showBackButton && (
@@ -84,10 +84,10 @@ export const Header = () => {
             <Link to={user ? "/app" : "/"} className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
               <img src={logo} alt="Bico Brasil" className="h-10 w-10 md:h-12 md:w-12 shrink-0" />
               <div className="flex flex-col justify-center">
-                <span className="text-base md:text-lg font-bold leading-tight whitespace-nowrap text-white">
+                <span className="text-base md:text-lg font-bold leading-tight whitespace-nowrap text-foreground">
                   Bico Brasil
                 </span>
-                <span className="text-xs text-white/60 leading-tight font-medium whitespace-nowrap uppercase tracking-wider">
+                <span className="text-xs text-muted-foreground leading-tight font-medium whitespace-nowrap uppercase tracking-wider">
                   Trabalhou, Tá Pago.
                 </span>
               </div>

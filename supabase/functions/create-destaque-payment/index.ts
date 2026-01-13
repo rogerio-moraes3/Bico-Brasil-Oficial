@@ -8,10 +8,10 @@ const corsHeaders = {
 
 function validateCPF(cpf: string): boolean {
   const numbers = cpf.replace(/\D/g, "");
-  
+
   if (numbers.length !== 11) return false;
   if (/^(\d)\1{10}$/.test(numbers)) return false;
-  
+
   let sum = 0;
   for (let i = 0; i < 9; i++) {
     sum += parseInt(numbers.charAt(i)) * (10 - i);
@@ -19,7 +19,7 @@ function validateCPF(cpf: string): boolean {
   let checkDigit = 11 - (sum % 11);
   if (checkDigit === 10 || checkDigit === 11) checkDigit = 0;
   if (checkDigit !== parseInt(numbers.charAt(9))) return false;
-  
+
   sum = 0;
   for (let i = 0; i < 10; i++) {
     sum += parseInt(numbers.charAt(i)) * (11 - i);
@@ -27,7 +27,7 @@ function validateCPF(cpf: string): boolean {
   checkDigit = 11 - (sum % 11);
   if (checkDigit === 10 || checkDigit === 11) checkDigit = 0;
   if (checkDigit !== parseInt(numbers.charAt(10))) return false;
-  
+
   return true;
 }
 
@@ -119,7 +119,7 @@ serve(async (req) => {
     }
 
     const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
-    
+
     if (!accessToken) {
       console.error('❌ MERCADOPAGO_ACCESS_TOKEN não configurado');
       throw new Error('Configuração de pagamento ausente');
@@ -157,15 +157,15 @@ serve(async (req) => {
     });
 
     const mpData = await response.json();
-    
+
     if (!response.ok) {
       console.error('❌ Erro do Mercado Pago:', mpData);
-      
+
       await supabaseClient
         .from('destaque_orders')
         .update({ status: 'failed' })
         .eq('id', order.id);
-      
+
       throw new Error(mpData.message || 'Erro ao criar pagamento no Mercado Pago');
     }
 
@@ -173,7 +173,7 @@ serve(async (req) => {
 
     await supabaseClient
       .from('destaque_orders')
-      .update({ 
+      .update({
         payment_id: mpData.id,
         status: 'in_process'
       })
@@ -196,7 +196,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('💥 Erro na edge function:', error);
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: error instanceof Error ? error.message : 'Erro desconhecido',
         details: error
       }),

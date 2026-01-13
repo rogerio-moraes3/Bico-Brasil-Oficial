@@ -22,7 +22,7 @@ serve(async (req) => {
     // Buscar jobs que expiram em 1 dia
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     const { data: jobs, error } = await supabase
       .from('job_postings')
       .select(`
@@ -49,7 +49,7 @@ serve(async (req) => {
       try {
         // @ts-ignore - Supabase inner join returns object, not array
         const userAuthId = job.users?.auth_id;
-        
+
         if (!userAuthId) {
           console.debug(`[notify-job-expiration] Job ${job.id} sem auth_id válido`);
           continue;
@@ -80,31 +80,31 @@ serve(async (req) => {
     console.debug(`[notify-job-expiration] Processo concluído. ${notifiedCount} notificações enviadas.`);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         totalJobs: jobs?.length || 0,
         notified: notifiedCount
       }),
-      { 
-        headers: { 
+      {
+        headers: {
           ...corsHeaders,
-          'Content-Type': 'application/json' 
-        } 
+          'Content-Type': 'application/json'
+        }
       }
     );
   } catch (error: any) {
     console.error('[notify-job-expiration] Erro geral:', error);
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         success: false,
-        error: error.message 
+        error: error.message
       }),
-      { 
-        status: 500, 
-        headers: { 
+      {
+        status: 500,
+        headers: {
           ...corsHeaders,
-          'Content-Type': 'application/json' 
-        } 
+          'Content-Type': 'application/json'
+        }
       }
     );
   }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useCities } from "@/hooks/useCities";
 import {
   Select,
   SelectContent,
@@ -28,45 +29,18 @@ interface City {
  * should not be relied upon for new implementations.
  */
 export const CitySelector = () => {
-  const [cities, setCities] = useState<City[]>([]);
+  const { cities, loading } = useCities();
   const [selectedCity, setSelectedCity] = useState<string>("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadCities();
-    loadSelectedCity();
+    // Only read persisted city for display (do not write or dispatch events). Helper-only.
+    const saved = localStorage.getItem("selectedCity");
+    if (saved) setSelectedCity(saved);
   }, []);
 
-  const loadCities = async () => {
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from("cities")
-      .select("id, name, state")
-      .eq('active', true)
-      .order("name");
-
-    if (error) {
-      console.error("Error loading cities:", error);
-      setLoading(false);
-      return;
-    }
-
-    setCities(data || []);
-    setLoading(false);
-  };
-
-  const loadSelectedCity = () => {
-    const saved = localStorage.getItem("selectedCity");
-    if (saved) {
-      setSelectedCity(saved);
-    }
-  };
-
   const handleCityChange = (cityId: string) => {
+    // Update visual selection only. This component is helper-only and MUST NOT cause global side-effects.
     setSelectedCity(cityId);
-    localStorage.setItem("selectedCity", cityId);
-    window.dispatchEvent(new CustomEvent("cityChanged", { detail: cityId }));
   };
 
   return (

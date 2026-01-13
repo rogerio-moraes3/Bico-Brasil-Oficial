@@ -53,8 +53,8 @@ export const ProfileCompletionGuard = ({ children }: ProfileCompletionGuardProps
       if (profile.type === 'worker' && !profile.category) missingFields.push('Categoria de trabalho');
 
       if (missingFields.length > 0) {
-        navigate('/complete-profile', { 
-          state: { missingFields, fromGuard: true } 
+        navigate('/complete-profile', {
+          state: { missingFields, fromGuard: true }
         });
       } else {
         setIsComplete(true);

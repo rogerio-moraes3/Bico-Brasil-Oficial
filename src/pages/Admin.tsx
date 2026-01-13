@@ -82,9 +82,22 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 
 export default function Admin() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+
+  // ADMIN EMAIL WHITELIST (SECURITY CRITICAL)
+  useEffect(() => {
+    const allowed = ['23rogeriomoraes@gmail.com', 'nando_petro@hotmail.com'];
+    if (!user) return; // ProtectedRoute handles redirect to login if not authenticated
+    const email = (user.email || '').toLowerCase();
+    if (!allowed.includes(email)) {
+      // Immediate block and inform user
+      alert('Acesso Negado');
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   // Filtros
   const [timeFilter, setTimeFilter] = useState<'today' | 'yesterday' | '7days' | '30days' | 'thisMonth' | 'lastMonth' | 'custom'>('30days');

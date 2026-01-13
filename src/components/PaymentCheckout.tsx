@@ -68,10 +68,10 @@ export default function PaymentCheckout({ planName, amount, onSuccess }: Payment
 
     try {
       setLoading(true);
-      
+
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const url = `${supabaseUrl}/functions/v1/create-pix-payment`;
-      
+
       // Determine plan type
       const planType = planName.toLowerCase().includes('vip') ? 'vip' : 'basico';
 

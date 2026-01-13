@@ -29,6 +29,20 @@ export function NotificationPrompt() {
       
       setTimeout(() => setShowPrompt(true), 3000);
     }
+
+    const handleOfflineQueue = (e: any) => {
+      const detail = e?.detail || {};
+      if (detail.processed > 0) {
+        toast({ title: 'Fila sincronizada', description: `Foram sincronizados ${detail.processed} itens` });
+      } else if (detail.remaining === 0) {
+        toast({ title: 'Fila sincronizada', description: 'Todos os itens foram processados' });
+      } else if (detail.error) {
+        toast({ title: 'Erro na sincronização', description: detail.error, variant: 'destructive' });
+      }
+    };
+
+    window.addEventListener('offlineQueueProcessed', handleOfflineQueue);
+    return () => window.removeEventListener('offlineQueueProcessed', handleOfflineQueue);
   }, [user, permission, isSupported]);
 
   const handleEnable = async () => {

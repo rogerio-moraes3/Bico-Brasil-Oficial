@@ -125,7 +125,7 @@ export const JobDetailsModal = ({ job, open, onOpenChange, canViewContacts, isOw
             )}
           </div>
         </DialogHeader>
-        
+
         {/* Informações do contratante */}
         <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
           <Avatar className="h-12 w-12">
@@ -141,14 +141,14 @@ export const JobDetailsModal = ({ job, open, onOpenChange, canViewContacts, isOw
             </div>
           </div>
         </div>
-        
+
         {/* Detalhes do trabalho */}
         <div className="space-y-4">
           <div>
             <Label>Descrição Completa</Label>
             <p className="text-sm mt-1 whitespace-pre-wrap">{job.description}</p>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             {job.category?.name && (
               <div>
@@ -157,7 +157,7 @@ export const JobDetailsModal = ({ job, open, onOpenChange, canViewContacts, isOw
               </div>
             )}
           </div>
-          
+
           <div>
             <Label>Local</Label>
             <p className="text-sm mt-1 flex items-center gap-1">
@@ -165,7 +165,7 @@ export const JobDetailsModal = ({ job, open, onOpenChange, canViewContacts, isOw
               {job.city?.name} - {job.neighborhood}
             </p>
           </div>
-          
+
           {job.date_time && (
             <div>
               <Label>Data para Iniciar</Label>
@@ -176,7 +176,7 @@ export const JobDetailsModal = ({ job, open, onOpenChange, canViewContacts, isOw
             </div>
           )}
         </div>
-        
+
         {/* Contato - FREEMIUM HABILITADO */}
         <div className="border-t pt-4">
           <Label>Contato</Label>

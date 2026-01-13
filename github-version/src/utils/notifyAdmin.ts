@@ -15,9 +15,9 @@ export async function notifyAdmin(paymentData: {
     // - Enviar email via edge function
     // - Chamar webhook externo
     // - Inserir notificação na tabela de notificações
-    
+
     // Implementação futura: enviar notificação real
-    
+
     return { success: true };
   } catch (error) {
     console.error("❌ Erro ao notificar admin:", error);

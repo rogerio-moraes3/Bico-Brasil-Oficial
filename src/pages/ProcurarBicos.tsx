@@ -42,6 +42,8 @@ const ProcurarBicos = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [subcategories, setSubcategories] = useState<any[]>([]);
   const [hasManualCitySelection, setHasManualCitySelection] = useState(false);
+  const [isOnline, setIsOnline] = useState<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [showingCached, setShowingCached] = useState(false);
 
   const [filters, setFilters] = useState({
     city_id: 'all',
@@ -109,9 +111,48 @@ const ProcurarBicos = () => {
     }
   };
 
+  useEffect(() => {
+    const onOnline = () => {
+      setIsOnline(true);
+      setShowingCached(false);
+      // Try process offline queue when back online
+      import('@/lib/offlineHandlers').then(({ processOfflineQueue }) => {
+        processOfflineQueue().then((res) => {
+          if (res && res.processed) {
+            // dispatch event - NotificationPrompt listens and shows toast
+            window.dispatchEvent(new CustomEvent('offlineQueueProcessed', { detail: res }));
+          }
+        }).catch(err => console.error('Error processing offline queue', err));
+      });
+
+      loadJobs();
+    };
+
+    const onOffline = () => {
+      setIsOnline(false);
+      toast({ title: 'Sem internet no momento', description: 'Mostrando últimos dados disponíveis quando possível', variant: 'destructive' });
+      // Try load cached results if available
+      loadJobs();
+    };
+
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
+
+    return () => {
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+    };
+  }, []);
+
   const loadJobs = async () => {
     setLoading(true);
+
+    // Build a cache key based on filters and search
+    const cacheKey = `jobs_cache_${filters.city_id}_${filters.category_id}_${filters.dateFilter}_${filters.urgent}_${searchQuery}`;
+
     try {
+      if (!navigator.onLine) throw new Error('offline');
+
       let query = supabase
         .from('job_postings')
         .select(`
@@ -172,16 +213,36 @@ const ProcurarBicos = () => {
 
       if (error) throw error;
 
-
+      // Save cache for offline use
+      try { localStorage.setItem(cacheKey, JSON.stringify({ jobs: data, timestamp: Date.now() })); } catch (_) {}
 
       setJobs(data || []);
+      setShowingCached(false);
     } catch (error) {
       console.error('Erro ao buscar bicos:', error);
-      toast({
-        title: "Erro ao buscar",
-        description: "Não foi possível carregar os bicos",
-        variant: "destructive"
-      });
+
+      // Try to show cached data
+      try {
+        const raw = localStorage.getItem(cacheKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          setJobs(parsed.jobs || []);
+          setShowingCached(true);
+          toast({ title: 'Mostrando últimos dados disponíveis', description: 'Sem internet no momento', variant: 'warning' });
+        } else {
+          toast({
+            title: "Erro ao buscar",
+            description: "Não foi possível carregar os bicos",
+            variant: "destructive"
+          });
+        }
+      } catch (err) {
+        toast({
+          title: "Erro ao buscar",
+          description: "Não foi possível carregar os bicos",
+          variant: "destructive"
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -228,11 +289,32 @@ const ProcurarBicos = () => {
     const diffMs = now.getTime() - created.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
 
     if (diffMins < 60) return `${diffMins}min atrás`;
     if (diffHours < 24) return `${diffHours}h atrás`;
-    return `${diffDays}d atrás`;
+    return `${Math.floor(diffMs / 86400000)}d atrás`;
+  };
+
+  const formatJobDate = (iso?: string) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+
+    if (sameDay(d, today)) return 'Hoje';
+    if (sameDay(d, tomorrow)) return 'Amanhã';
+
+    return d.toLocaleDateString();
+  };
+
+  const formatCurrency = (value: any) => {
+    if (value === null || value === undefined || value === '') return '—';
+    const num = Number(value);
+    if (isNaN(num)) return String(value);
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(num);
   };
 
   const handleDeleteJob = async (jobId: string, e: React.MouseEvent) => {
@@ -409,89 +491,33 @@ const ProcurarBicos = () => {
         ) : (
           <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 gap-4' : 'space-y-4'}>
             {jobs.map((job) => (
-              <Card key={job.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleViewJob(job)}>
+              <Card key={job.id} className="cursor-pointer border border-border" onClick={() => handleViewJob(job)}>
                 <CardContent className="p-4">
-                  <div className="flex gap-4">
-                    <Avatar className="h-16 w-16 flex-shrink-0">
-                      <AvatarImage src={job.user?.profile_photo} />
-                      <AvatarFallback>{job.user?.name?.[0] || '?'}</AvatarFallback>
-                    </Avatar>
-
+                  <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-2">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-lg truncate">{job.title}</h3>
-                          <div className="flex gap-2 mt-1 flex-wrap">
-                            {(() => {
-                              const expirationStatus = getJobExpirationStatus(job.date_time);
-                              return (
-                                <>
-                                  {expirationStatus.isExpired && (
-                                    <Badge variant="destructive" className="bg-red-100 text-red-800 border-red-300">
-                                      ⏰ Expirado
-                                    </Badge>
-                                  )}
-                                  {expirationStatus.showWarning && (
-                                    <Badge variant="outline" className="bg-yellow-50 text-yellow-800 border-yellow-300">
-                                      ⚠️ Expira em {expirationStatus.daysUntilExpiration} dia(s)
-                                    </Badge>
-                                  )}
-                                </>
-                              );
-                            })()}
-                            {job.urgent && <Badge variant="destructive">🔥 Urgente</Badge>}
-                            {job.category?.name && <Badge variant="secondary">{job.category.name}</Badge>}
-                          </div>
-                        </div>
-                      </div>
-
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                        {job.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        {job.city?.name && (
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4" />
-                            {job.city.name} - {job.neighborhood}
-                          </div>
+                      <div className="flex items-center gap-2 mb-1">
+                        {job.category?.name && (
+                          <Badge className="text-xs" variant="secondary">{job.category.name}</Badge>
                         )}
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          {formatTimeAgo(job.created_at)}
-                        </div>
+                        <h3 className="font-semibold text-lg text-foreground truncate">{job.title}</h3>
                       </div>
 
-                      {/* Botões de Editar/Excluir - apenas para o próprio usuário */}
-                      {user && isJobOwner(job) && (
-                        <div className="flex gap-2 mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/edit-job/${job.id}`);
-                            }}
-                            className="flex-1"
-                          >
-                            <Edit className="h-4 w-4 mr-1" /> Editar
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={(e) => handleDeleteJob(job.id, e)}
-                            className="flex-1"
-                          >
-                            <Trash className="h-4 w-4 mr-1" /> Excluir
-                          </Button>
-                        </div>
-                      )}
+                      <div className="text-sm text-muted-foreground">
+                        {job.city?.name && `${job.city.name}${job.neighborhood ? ' — ' + job.neighborhood : ''}`}
+                      </div>
+
+                      <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{job.description}</p>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-2 text-right">
+                      <div className="text-sm font-medium text-foreground">{formatCurrency(job.price)}</div>
+                      <div className="text-xs text-muted-foreground">{job.date_time ? formatJobDate(job.date_time) : formatTimeAgo(job.created_at)}</div>
                     </div>
                   </div>
 
                   {/* WhatsApp Contact Button */}
                   {job.user?.phone && user?.id !== job.user_id && (
-                    <div className="px-4 pb-4 pt-2 border-t" onClick={(e) => e.stopPropagation()}>
+                    <div className="mt-4" onClick={(e) => e.stopPropagation()}>
                       <WhatsAppContactButton
                         phone={job.user.phone}
                         workerName={job.user.name || 'Contratante'}

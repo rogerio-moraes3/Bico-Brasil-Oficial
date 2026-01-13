@@ -46,12 +46,12 @@ async function validateWebhookSignature(
     // 2. Criar manifest conforme especificação do Mercado Pago
     const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
     console.debug("📝 Manifest:", manifest);
-    
+
     // 3. Usar Web Crypto API nativa do Deno (global crypto.subtle)
     const encoder = new TextEncoder();
     const keyData = encoder.encode(secret);
     const messageData = encoder.encode(manifest);
-    
+
     // 4. Importar chave secreta para HMAC
     const cryptoKey = await crypto.subtle.importKey(
       "raw",
@@ -60,14 +60,14 @@ async function validateWebhookSignature(
       false,
       ["sign"]
     );
-    
+
     // 5. Gerar assinatura HMAC SHA-256
     const signature = await crypto.subtle.sign(
       "HMAC",
       cryptoKey,
       messageData
     );
-    
+
     // 6. Converter para hexadecimal
     const expectedHash = Array.from(new Uint8Array(signature))
       .map(b => b.toString(16).padStart(2, '0'))
@@ -78,7 +78,7 @@ async function validateWebhookSignature(
     console.debug(`🔐 Resultado: ${isValid ? "✅ ASSINATURA VÁLIDA" : "❌ ASSINATURA INVÁLIDA"}`);
     console.debug(`   Hash esperado: ${expectedHash.substring(0, 20)}...`);
     console.debug(`   Hash recebido: ${hash.substring(0, 20)}...`);
-    
+
     return isValid;
   } catch (error) {
     console.error("❌ Erro ao validar assinatura:", error);
@@ -93,7 +93,7 @@ serve(async (req) => {
 
   try {
     console.debug('🔔 ========== WEBHOOK MERCADO PAGO ==========');
-    
+
     const body = await req.json();
     const paymentId = body.data?.id || body.id;
     const topic = body.topic || body.type;
@@ -186,7 +186,7 @@ serve(async (req) => {
     // Map Mercado Pago status to our status
     let newStatus: "paid" | "failed" | "pending" | "in_process" = "pending";
     const mpStatus = mpData.status;
-    
+
     if (mpStatus === "approved") newStatus = "paid";
     else if (["rejected", "cancelled", "refunded", "charged_back"].includes(mpStatus)) newStatus = "failed";
     else if (["in_process", "pending", "authorized"].includes(mpStatus)) newStatus = "in_process";
@@ -197,7 +197,7 @@ serve(async (req) => {
     // Update payment status
     const { error: updateError } = await supabase
       .from('payments')
-      .update({ 
+      .update({
         status: newStatus,
         webhook_response: mpData,
         updated_at: new Date().toISOString()
@@ -218,7 +218,7 @@ serve(async (req) => {
 
       const planType = payment.plan_type || 'basico';
       const now = new Date();
-      
+
       // Calcular duração baseada no plano
       const duration = planType === 'anual' ? 365 : 30;
       const subscriptionEnd = new Date();
@@ -409,7 +409,7 @@ serve(async (req) => {
         if (notifAdminError) console.error("Erro ao criar notificação admin:", notifAdminError);
         else console.debug("✅ Notificação criada para admin");
       }
-      
+
       console.debug('🎊 ========== PROCESSO COMPLETO ==========');
     } else {
       console.debug('ℹ️ Status:', newStatus, '- Nenhuma ação adicional necessária');

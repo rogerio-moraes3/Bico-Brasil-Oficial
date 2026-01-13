@@ -11,10 +11,13 @@ type Props = {
   placeholder?: string;
 };
 
+import { MapPin } from 'lucide-react';
+
 export default function CitySelect({ value, onChange, cities, includeAll = true, placeholder = 'Selecione a cidade' }: Props) {
   return (
     <Select value={value} onValueChange={(v) => onChange(v)}>
-      <SelectTrigger>
+      <SelectTrigger className="flex items-center gap-2">
+        <MapPin className="h-4 w-4 text-muted-foreground" />
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
