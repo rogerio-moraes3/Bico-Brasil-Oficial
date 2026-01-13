@@ -408,7 +408,7 @@ const ProcurarBicos = () => {
                 Cadastre-se como profissional e apareça nas buscas para receber propostas de trabalho!
               </p>
             </div>
-            <Button onClick={() => navigate('/offer-services')} size="lg" className="whitespace-nowrap bg-white text-black border border-black rounded-xl hover:bg-gray-50" style={{ color: '#1E2A5A' }}>
+            <Button onClick={() => navigate('/offer-services')} variant="outline" size="lg" className="whitespace-nowrap border-orange-600 text-orange-600 dark:border-white dark:text-white">
               <Briefcase className="mr-2 h-4 w-4" />
               Oferecer Serviços
             </Button>
@@ -429,7 +429,7 @@ const ProcurarBicos = () => {
             </p>
             <div className="flex gap-3 justify-center">
               <Button onClick={handleClearFilters} variant="outline">Limpar Filtros</Button>
-              <Button onClick={() => navigate('/offer-services')}>Oferecer Serviços</Button>
+              <Button onClick={() => navigate('/offer-services')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-white dark:text-white">Oferecer Serviços</Button>
             </div>
           </div>
         ) : (

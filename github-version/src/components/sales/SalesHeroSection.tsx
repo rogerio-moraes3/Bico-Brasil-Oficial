@@ -1,18 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search, Briefcase, ArrowRight } from "lucide-react";
-import { useEffect, useRef } from "react";
 
 export const SalesHeroSection = () => {
   const navigate = useNavigate();
-  const offerButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // Força a cor do botão após montagem
-    if (offerButtonRef.current) {
-      offerButtonRef.current.style.setProperty('color', '#1E2A5A', 'important');
-    }
-  }, []);
 
   return (
     <section className="bg-[#d4fddf] text-[#1E2A5A] dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 dark:text-white overflow-hidden">
@@ -48,52 +39,27 @@ export const SalesHeroSection = () => {
 
           {/* CTAs Secundários */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-6">
-            <button
+            <Button
               onClick={() => navigate("/app")}
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: '#1E2A5A',
-                border: '2px solid #1E2A5A',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontWeight: '600',
-                fontSize: '16px',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
+              variant="outline"
+              size="lg"
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
-              <Search className="w-5 h-5" style={{ color: '#1E2A5A' }} />
+              <Search className="w-5 h-5" />
               Buscar Profissional
-            </button>
+            </Button>
 
             <span className="hidden sm:block text-slate-500 dark:text-slate-400">|</span>
 
-            <button
-              ref={offerButtonRef}
+            <Button
               onClick={() => navigate("/app")}
-              style={{
-                color: 'red !important',
-                fontSize: '30px !important',
-                border: '1px solid #1E2A5A !important',
-                background: '#FFFFFF !important',
-                display: 'flex !important',
-                opacity: '1 !important',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                zIndex: 10
-              }}
+              variant="outline"
+              size="lg"
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
-              <Briefcase style={{ color: 'red !important' }} />
-              TESTE AZUL 123
-            </button>
+              <Briefcase className="w-5 h-5" />
+              Oferecer Serviços
+            </Button>
           </div>
 
           {/* Secondary CTA */}

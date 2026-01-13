@@ -17,18 +17,22 @@ export const SalesFooter = () => {
             Junte-se a milhares de brasileiros que já usam o Bico Brasil para resolver e faturar.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
+            <Button
               onClick={() => navigate("/app")}
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-[3px] border-white text-white bg-transparent hover:bg-white hover:text-primary hover:border-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              variant="outline"
+              size="lg"
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
               Buscar Profissional
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => navigate("/app")}
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-[3px] border-white text-white bg-transparent hover:bg-white hover:text-primary hover:border-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              variant="outline"
+              size="lg"
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
               Oferecer Serviços
-            </button>
+            </Button>
           </div>
         </div>
       </section>
