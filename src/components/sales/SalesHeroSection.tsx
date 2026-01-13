@@ -61,7 +61,7 @@ export const SalesHeroSection = () => {
             <button
               ref={offerButtonRef}
               onClick={() => navigate("/app")}
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-[3px] border-orange-500 dark:border-white text-orange-500 dark:text-white bg-white dark:bg-white/10 hover:bg-orange-500 hover:text-white dark:hover:bg-white dark:hover:text-primary font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-[3px] border-orange-500 !text-orange-500 dark:border-white dark:!text-white bg-white dark:bg-white/10 hover:bg-orange-500 hover:!text-white dark:hover:bg-white dark:hover:!text-primary font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
               <Briefcase className="w-5 h-5" />
               Oferecer Serviços
