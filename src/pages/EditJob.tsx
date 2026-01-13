@@ -12,8 +12,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import CitySelect from '@/components/CitySelect';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { useCities } from '@/hooks/useCities';
 import { Loader2, Briefcase } from 'lucide-react';
 import { safeGoBack } from '@/lib/utils';
 
@@ -33,7 +35,7 @@ export default function EditJob() {
     date_time: ''
   });
 
-  const [cities, setCities] = useState<any[]>([]);
+  const { cities, loading: citiesLoading } = useCities();
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
@@ -47,13 +49,11 @@ export default function EditJob() {
   }, [user, navigate, id]);
 
   const loadData = async () => {
-    const [citiesRes, categoriesRes, jobRes] = await Promise.all([
-      supabase.from('cities').select('*').eq('active', true).order('name'),
+    const [categoriesRes, jobRes] = await Promise.all([
       supabase.from('categories').select('*'),
       supabase.from('job_postings').select('*').eq('id', id).single()
     ]);
 
-    setCities(citiesRes.data || []);
     setCategories(categoriesRes.data || []);
 
     if (jobRes.data) {
@@ -185,18 +185,13 @@ export default function EditJob() {
 
                 <div className="space-y-2">
                   <Label htmlFor="city">Cidade *</Label>
-                  <Select value={formData.city_id} onValueChange={(value) => setFormData({ ...formData, city_id: value })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {cities.map((city) => (
-                        <SelectItem key={city.id} value={city.id}>
-                          {city.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <CitySelect
+                    value={formData.city_id}
+                    onChange={(value) => setFormData({ ...formData, city_id: value })}
+                    cities={cities}
+                    includeAll={false}
+                    placeholder="Selecione"
+                  />
                 </div>
               </div>
 

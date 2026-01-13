@@ -12,8 +12,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import CitySelect from '@/components/CitySelect';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { useCities } from '@/hooks/useCities';
 import { Loader2, Briefcase } from 'lucide-react';
 
 export default function PostJob() {
@@ -36,7 +38,7 @@ export default function PostJob() {
     isCustomCategory: false
   });
 
-  const [cities, setCities] = useState<any[]>([]);
+  const { cities, loading: citiesLoading } = useCities();
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -49,14 +51,25 @@ export default function PostJob() {
   }, [user, navigate]);
 
   const loadData = async () => {
-    const [citiesRes, categoriesRes] = await Promise.all([
-      supabase.from('cities').select('*').eq('active', true).order('name'),
-      supabase.from('categories').select('*')
+    const [categoriesRes, profileRes] = await Promise.all([
+      supabase.from('categories').select('*'),
+      supabase.from('users').select('city_id, neighborhood').eq('auth_id', user!.id).single()
     ]);
 
-    setCities(citiesRes.data || []);
     setCategories(categoriesRes.data || []);
+
+    if (profileRes.data) {
+      setFormData(prev => ({ ...prev, city_id: profileRes.data.city_id || '', neighborhood: profileRes.data.neighborhood || '' }));
+    }
   };
+
+  // Aplicar cidade do user.metadata como fallback quando cidades carregadas
+  useEffect(() => {
+    if (cities.length && user?.user_metadata?.city_id && !formData.city_id) {
+      const hasCity = cities.find(c => String(c.id) === String(user.user_metadata.city_id));
+      if (hasCity) setFormData(prev => ({ ...prev, city_id: user.user_metadata.city_id }));
+    }
+  }, [cities, user, formData.city_id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -280,22 +293,13 @@ export default function PostJob() {
 
                 <div>
                   <Label htmlFor="city">Cidade *</Label>
-                  <Select
+                  <CitySelect
                     value={formData.city_id}
-                    onValueChange={(value) => setFormData({ ...formData, city_id: value })}
-                    required
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {cities.map((city) => (
-                        <SelectItem key={city.id} value={city.id}>
-                          {city.name} - {city.state}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    onChange={(value) => setFormData({ ...formData, city_id: value })}
+                    cities={cities}
+                    includeAll={false}
+                    placeholder="Selecione"
+                  />
                 </div>
               </div>
 

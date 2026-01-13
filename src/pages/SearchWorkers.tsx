@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import CitySelect from '@/components/CitySelect';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Star, MapPin, MessageCircle, Loader2, Crown, Edit, Trash, Check, Pencil, Briefcase } from 'lucide-react';
@@ -19,6 +20,7 @@ import { UpgradeModal } from '@/components/UpgradeModal';
 import { expandSearchTerms } from '@/lib/searchSynonyms';
 import { GeolocationSearch } from '@/components/GeolocationSearch';
 import { WhatsAppContactButton } from '@/components/WhatsAppContactButton';
+import { useCities } from '@/hooks/useCities';
 
 export default function SearchWorkers() {
   const { toast } = useToast();
@@ -36,8 +38,9 @@ export default function SearchWorkers() {
   const [geoLocation, setGeoLocation] = useState<{ lat: number; lng: number; radius: number } | null>(null);
 
   const [workers, setWorkers] = useState<any[]>([]);
-  const [cities, setCities] = useState<any[]>([]);
+  const { cities, loading: citiesLoading } = useCities();
   const [categories, setCategories] = useState<any[]>([]);
+  const [hasManualCitySelection, setHasManualCitySelection] = useState(false);
   const [subcategories, setSubcategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -52,26 +55,41 @@ export default function SearchWorkers() {
   } = useAccessControl();
 
   useEffect(() => {
-    loadFilters();
+    loadCategories();
   }, []);
 
-  const loadFilters = async () => {
+  const loadCategories = async () => {
     try {
-      const [citiesRes, categoriesRes] = await Promise.all([
-        supabase.from('cities').select('*').eq('active', true).order('name'),
-        supabase.from('categories').select('*')
-      ]);
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*');
 
-      setCities(citiesRes.data || []);
-      setCategories(categoriesRes.data || []);
+      if (error) throw error;
+      setCategories(data || []);
     } catch (err: any) {
       toast({
-        title: "Erro ao carregar filtros",
+        title: "Erro ao carregar categorias",
         description: "Tente recarregar a página",
         variant: "destructive"
       });
     }
   };
+
+  // Aplicar cidade padrão do perfil do usuário APENAS UMA VEZ (não sobrescrever escolha manual)
+  useEffect(() => {
+    if (hasManualCitySelection || !cities.length || filters.city_id !== 'all') return;
+    if (!user?.user_metadata?.city_id) return;
+
+    const hasCity = cities.find(c => String(c.id) === String(user.user_metadata.city_id));
+    if (hasCity) {
+      setFilters(prev => ({ ...prev, city_id: user.user_metadata.city_id }));
+    }
+  }, [cities, user, hasManualCitySelection, filters.city_id]);
+
+  // Reexecutar busca automaticamente quando filtros ou query mudarem
+  useEffect(() => {
+    handleSearch();
+  }, [filters, searchQuery]);
 
   const handleCategoryChange = async (categoryId: string) => {
     setFilters({ ...filters, category: categoryId, subcategory: 'all' });
@@ -325,19 +343,16 @@ export default function SearchWorkers() {
 
               <div>
                 <Label>Cidade</Label>
-                <Select value={filters.city_id} onValueChange={(value) => setFilters({ ...filters, city_id: value })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Todas" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    {cities.map((city) => (
-                      <SelectItem key={city.id} value={city.id}>
-                        {city.name} - {city.state}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <CitySelect
+                  value={filters.city_id}
+                  onChange={(value) => {
+                    setHasManualCitySelection(true);
+                    setFilters(prev => ({ ...prev, city_id: value }));
+                  }}
+                  cities={cities}
+                  includeAll={true}
+                  placeholder="Todas"
+                />
               </div>
             </div>
 

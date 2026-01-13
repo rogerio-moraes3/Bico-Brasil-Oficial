@@ -12,7 +12,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import CitySelect from '@/components/CitySelect';
 import { useToast } from '@/hooks/use-toast';
+import { useCities } from '@/hooks/useCities';
 import { Loader2 } from 'lucide-react';
 
 export default function OfferServices() {
@@ -36,7 +38,7 @@ export default function OfferServices() {
     isCustomCategory: false
   });
 
-  const [cities, setCities] = useState<any[]>([]);
+  const { cities, loading: citiesLoading } = useCities();
   const [categories, setCategories] = useState<any[]>([]);
   const [subcategories, setSubcategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -50,13 +52,11 @@ export default function OfferServices() {
   }, [user, navigate]);
 
   const loadData = async () => {
-    const [citiesRes, categoriesRes, profileRes] = await Promise.all([
-      supabase.from('cities').select('*').eq('active', true).order('name'),
+    const [categoriesRes, profileRes] = await Promise.all([
       supabase.from('categories').select('*'),
       supabase.from('users').select('phone, city_id, neighborhood').eq('auth_id', user!.id).single()
     ]);
 
-    setCities(citiesRes.data || []);
     setCategories(categoriesRes.data || []);
 
     if (profileRes.data) {
@@ -68,6 +68,14 @@ export default function OfferServices() {
       }));
     }
   };
+
+  // Aplicar cidade do user.metadata se não veio no profileRes
+  useEffect(() => {
+    if (cities.length && user?.user_metadata?.city_id && !formData.city_id) {
+      const hasCity = cities.find(c => String(c.id) === String(user.user_metadata.city_id));
+      if (hasCity) setFormData(prev => ({ ...prev, city_id: user.user_metadata.city_id }));
+    }
+  }, [cities, user, formData.city_id]);
 
   const handleCategoryChange = async (categoryId: string) => {
     if (categoryId === 'outros') {
@@ -289,16 +297,13 @@ export default function OfferServices() {
               {/* Cidade */}
               <div>
                 <Label>Cidade *</Label>
-                <Select value={formData.city_id} onValueChange={(val) => setFormData({ ...formData, city_id: val })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a cidade" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {cities.map(city => (
-                      <SelectItem key={city.id} value={city.id}>{city.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <CitySelect
+                  value={formData.city_id}
+                  onChange={(val) => setFormData({ ...formData, city_id: val })}
+                  cities={cities}
+                  includeAll={false}
+                  placeholder="Selecione a cidade"
+                />
               </div>
 
               {/* Bairro - Opcional */}

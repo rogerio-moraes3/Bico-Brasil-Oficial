@@ -16,6 +16,9 @@ import { useToast } from "@/hooks/use-toast";
 import { validateWhatsAppUrl } from "@/lib/validation";
 import { supabase } from "@/integrations/supabase/client";
 import { useAccessControl } from '@/hooks/useAccessControl';
+import { useCities } from '@/hooks/useCities';
+import CitySelect from '@/components/CitySelect';
+import { Label } from '@/components/ui/label';
 
 interface Worker {
   id: string;
@@ -45,23 +48,14 @@ const Jobs = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<Array<{id: string; name: string; slug: string}>>([]);
-  const [subcategories, setSubcategories] = useState<Array<{id: string; name: string; slug: string}>>([]);
+  const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
+  const [subcategories, setSubcategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const { toast } = useToast();
   const { canViewContacts } = useAccessControl();
+  const { cities, loading: citiesLoading } = useCities();
 
   useEffect(() => {
     loadCategories();
-    loadSelectedCity();
-    
-    // Listen for city changes
-    const handleCityChange = (e: any) => {
-      setSelectedCityId(e.detail);
-      loadWorkers(e.detail);
-    };
-    
-    window.addEventListener('cityChanged', handleCityChange);
-    return () => window.removeEventListener('cityChanged', handleCityChange);
   }, []);
 
   useEffect(() => {
@@ -85,7 +79,7 @@ const Jobs = () => {
         .from('categories')
         .select('id, name, slug')
         .order('name');
-      
+
       if (error) throw error;
       setCategories(data || []);
     } catch (error) {
@@ -100,7 +94,7 @@ const Jobs = () => {
         .select('id, name, slug, categories!inner(slug)')
         .eq('categories.slug', categorySlug)
         .order('name');
-      
+
       if (error) throw error;
       setSubcategories(data || []);
     } catch (error) {
@@ -108,20 +102,14 @@ const Jobs = () => {
     }
   };
 
-  const loadSelectedCity = () => {
-    const saved = localStorage.getItem('selectedCity');
-    if (saved) {
-      setSelectedCityId(saved);
-      loadWorkers(saved);
-    }
-  };
+
 
   const loadWorkers = async (cityId: string) => {
     if (!cityId) return;
-    
+
     setLoading(true);
     setIsSearching(true);
-    
+
     try {
       let query = supabase
         .from('users')
@@ -180,7 +168,7 @@ const Jobs = () => {
 
   const openWhatsApp = (phone: string, name: string) => {
     const result = validateWhatsAppUrl(phone, name);
-    
+
     if (!result.valid) {
       toast({
         title: "Erro",
@@ -189,7 +177,7 @@ const Jobs = () => {
       });
       return;
     }
-    
+
     window.open(result.url, "_blank");
   };
 
@@ -197,8 +185,8 @@ const Jobs = () => {
   return (
     <div className="min-h-screen flex flex-col pb-20 md:pb-0 animate-fade-in">
       <Header />
-      
-      
+
+
       <main className="flex-grow container mx-auto px-4 py-8 overflow-y-auto max-h-[calc(100vh-150px)]">
         <Breadcrumbs />
         <div className="mb-8">
@@ -253,9 +241,19 @@ const Jobs = () => {
               </Select>
             </div>
             <div>
+              <Label>Cidade</Label>
+              <CitySelect
+                value={selectedCityId}
+                onChange={(value) => setSelectedCityId(value)}
+                cities={cities}
+                includeAll={false}
+                placeholder="Selecione sua cidade"
+              />
+            </div>
+            <div>
               <label className="text-sm font-medium mb-2 block">Bairro</label>
-              <Input 
-                placeholder="Todos os bairros" 
+              <Input
+                placeholder="Todos os bairros"
                 value={neighborhood}
                 onChange={(e) => setNeighborhood(e.target.value)}
               />
@@ -285,7 +283,7 @@ const Jobs = () => {
             <label className="text-sm font-medium mb-2 block">
               Outro serviço? Descreva aqui:
             </label>
-            <Textarea 
+            <Textarea
               placeholder="Descreva o serviço que você procura..."
               value={otherService}
               onChange={(e) => setOtherService(e.target.value)}
@@ -293,7 +291,7 @@ const Jobs = () => {
             />
           </div>
         </div>
-        
+
         <FloatingActionButton />
 
         {/* Results */}
@@ -304,7 +302,7 @@ const Jobs = () => {
         ) : workers.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">
-              {selectedCityId 
+              {selectedCityId
                 ? "Nenhum profissional encontrado nesta cidade."
                 : "Selecione uma cidade para ver os profissionais."}
             </p>
@@ -312,8 +310,8 @@ const Jobs = () => {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {workers.map((worker, index) => (
-              <Card 
-                key={worker.id} 
+              <Card
+                key={worker.id}
                 className="hover:shadow-lg transition-all cursor-pointer stagger-fade"
                 style={{ ['--stagger-delay' as any]: `${index * 0.1}s` }}
               >
@@ -342,7 +340,7 @@ const Jobs = () => {
                         {worker.neighborhood}, {worker.cities?.name}
                       </span>
                     </div>
-                    
+
                     {canViewContacts ? (
                       <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4 text-muted-foreground" />
@@ -354,7 +352,7 @@ const Jobs = () => {
                         <span className="italic">Disponível para Premium</span>
                       </div>
                     )}
-                    
+
                     <div className="flex items-center gap-2">
                       <div className="flex items-center">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -376,8 +374,8 @@ const Jobs = () => {
                 </CardContent>
                 <CardFooter>
                   {canViewContacts ? (
-                    <Button 
-                      className="w-full" 
+                    <Button
+                      className="w-full"
                       onClick={(e) => {
                         e.stopPropagation();
                         openWhatsApp(worker.phone, worker.name);
@@ -387,8 +385,8 @@ const Jobs = () => {
                       Conversar no WhatsApp
                     </Button>
                   ) : (
-                    <Button 
-                      className="w-full" 
+                    <Button
+                      className="w-full"
                       variant="outline"
                       onClick={() => window.location.href = '/premium'}
                     >

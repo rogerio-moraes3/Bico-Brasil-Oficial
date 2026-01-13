@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CitySelect from '@/components/CitySelect';
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -22,6 +23,7 @@ import { Search, Briefcase, Grid, List, MapPin, Clock, DollarSign, AlertCircle, 
 import { WhatsAppContactButton } from "@/components/WhatsAppContactButton";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { getJobExpirationStatus } from "@/utils/jobExpiration";
+import { useCities } from '@/hooks/useCities';
 
 const ProcurarBicos = () => {
   const navigate = useNavigate();
@@ -37,9 +39,9 @@ const ProcurarBicos = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-  const [cities, setCities] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [hasManualCitySelection, setHasManualCitySelection] = useState(false);
 
   const [filters, setFilters] = useState({
     city_id: 'all',
@@ -51,11 +53,23 @@ const ProcurarBicos = () => {
     dateFilter: 'all'
   });
 
-  // Carregar cidades e categorias
+  const { cities, loading: citiesLoading } = useCities();
+
+  // Carregar categorias
   useEffect(() => {
-    loadCities();
     loadCategories();
   }, []);
+
+  // Aplicar cidade padrão do perfil do usuário APENAS UMA VEZ (não sobrescrever escolha manual)
+  useEffect(() => {
+    if (hasManualCitySelection || !cities.length || filters.city_id !== 'all') return;
+    if (!user?.user_metadata?.city_id) return;
+
+    const hasCity = cities.find(c => String(c.id) === String(user.user_metadata?.city_id));
+    if (hasCity) {
+      setFilters(prev => ({ ...prev, city_id: user.user_metadata?.city_id }));
+    }
+  }, [cities, user, hasManualCitySelection, filters.city_id]);
 
   // Carregar subcategorias quando categoria mudar
   useEffect(() => {
@@ -67,22 +81,10 @@ const ProcurarBicos = () => {
     }
   }, [filters.category_id]);
 
-  // Carregar jobs quando filtros mudarem
+  // Carregar jobs quando filtros mudarem (inclui pesquisa)
   useEffect(() => {
     loadJobs();
-  }, []);
-
-  const loadCities = async () => {
-    const { data, error } = await supabase
-      .from('cities')
-      .select('id, name, state')
-      .eq('active', true)
-      .order('name');
-
-    if (!error && data) {
-      setCities(data);
-    }
-  };
+  }, [filters, searchQuery]);
 
   const loadCategories = async () => {
     const { data, error } = await supabase
@@ -302,19 +304,16 @@ const ProcurarBicos = () => {
                 />
               </div>
 
-              <Select value={filters.city_id} onValueChange={(value) => setFilters(prev => ({ ...prev, city_id: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todas as cidades" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as cidades</SelectItem>
-                  {cities.map(city => (
-                    <SelectItem key={city.id} value={city.id}>
-                      {city.name} - {city.state}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <CitySelect
+                value={filters.city_id}
+                onChange={(value) => {
+                  setHasManualCitySelection(true);
+                  setFilters(prev => ({ ...prev, city_id: value }));
+                }}
+                cities={cities}
+                includeAll={true}
+                placeholder="Todas as cidades"
+              />
 
               <Select value={filters.category_id} onValueChange={(value) => setFilters(prev => ({ ...prev, category_id: value }))}>
                 <SelectTrigger>

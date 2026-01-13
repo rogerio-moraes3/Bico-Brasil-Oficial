@@ -15,6 +15,18 @@ interface City {
   state: string;
 }
 
+/**
+ * CitySelector - Helper/Visual Component Only
+ * 
+ * This component provides a global city context indicator in the header.
+ * It does NOT control page-level filters.
+ * 
+ * Each page manages its own city filter using the CitySelect component.
+ * This component is for user convenience and visual context only.
+ * 
+ * The cityChanged event is dispatched for backward compatibility but
+ * should not be relied upon for new implementations.
+ */
 export const CitySelector = () => {
   const [cities, setCities] = useState<City[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");

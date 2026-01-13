@@ -7,7 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import CitySelect from '@/components/CitySelect';
 import { useToast } from '@/hooks/use-toast';
+import { useCities } from '@/hooks/useCities';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { validateCPF, formatCPF } from '@/lib/validators';
@@ -24,7 +26,7 @@ export default function CompleteProfile() {
 
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
-  const [cities, setCities] = useState<any[]>([]);
+  const { cities, loading: citiesLoading } = useCities();
   const [categories, setCategories] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     cpf: '',
@@ -44,9 +46,8 @@ export default function CompleteProfile() {
   }, [user]);
 
   const loadData = async () => {
-    const [profileRes, citiesRes, categoriesRes] = await Promise.all([
+    const [profileRes, categoriesRes] = await Promise.all([
       supabase.from('users').select('*').eq('auth_id', user!.id).maybeSingle(),
-      supabase.from('cities').select('*').eq('active', true).order('name'),
       supabase.from('categories').select('*').order('name'),
     ]);
 
@@ -62,7 +63,6 @@ export default function CompleteProfile() {
       });
     }
 
-    setCities(citiesRes.data || []);
     setCategories(categoriesRes.data || []);
   };
 
@@ -261,22 +261,13 @@ export default function CompleteProfile() {
 
               <div className="space-y-2">
                 <Label htmlFor="city">Cidade *</Label>
-                <Select
+                <CitySelect
                   value={formData.city_id}
-                  onValueChange={(value) => setFormData({ ...formData, city_id: value })}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione sua cidade" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {cities.map((city) => (
-                      <SelectItem key={city.id} value={city.id}>
-                        {city.name} - {city.state}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(value) => setFormData({ ...formData, city_id: value })}
+                  cities={cities}
+                  includeAll={false}
+                  placeholder="Selecione sua cidade"
+                />
               </div>
 
               <div className="space-y-2">
