@@ -11,7 +11,8 @@ export function NotificationPrompt() {
   const { permission, requestPermission, isSupported } = useNotifications();
   const { toast } = useToast();
   const [showPrompt, setShowPrompt] = useState(false);
-
+  const [queueCount, setQueueCount] = useState<number>(0);
+  const [processingQueue, setProcessingQueue] = useState(false);
   useEffect(() => {
     if (user && isSupported && permission === 'default') {
       const hasSeenPrompt = localStorage.getItem('notificationPromptSeen');
@@ -39,9 +40,24 @@ export function NotificationPrompt() {
       } else if (detail.error) {
         toast({ title: 'Erro na sincronização', description: detail.error, variant: 'destructive' });
       }
+
+      // update queue count on event
+      try {
+        const raw = localStorage.getItem('offline_queue_v1') || '[]';
+        const arr = JSON.parse(raw);
+        setQueueCount(arr.length || 0);
+      } catch { setQueueCount(0); }
     };
 
     window.addEventListener('offlineQueueProcessed', handleOfflineQueue);
+
+    // Initialize queue count on mount
+    try {
+      const raw = localStorage.getItem('offline_queue_v1') || '[]';
+      const arr = JSON.parse(raw);
+      setQueueCount(arr.length || 0);
+    } catch { setQueueCount(0); }
+
     return () => window.removeEventListener('offlineQueueProcessed', handleOfflineQueue);
   }, [user, permission, isSupported]);
 
@@ -107,6 +123,48 @@ export function NotificationPrompt() {
                   Agora não
                 </Button>
               </div>
+
+              {/* Offline queue indicator */}
+              {queueCount > 0 && (
+                <div className="mt-3 p-3 bg-muted border border-border rounded-md text-sm">
+                  Você tem <strong>{queueCount}</strong> item(s) aguardando sincronização.
+                  <div className="mt-2 flex gap-2">
+                    <Button
+                      size="sm"
+                      onClick={async () => {
+                        if (!navigator.onLine) {
+                          toast({ title: 'Sem internet', description: 'Conecte-se para sincronizar', variant: 'destructive' });
+                          return;
+                        }
+                        setProcessingQueue(true);
+                        try {
+                          const { processOfflineQueue } = await import('@/lib/offlineHandlers');
+                          await processOfflineQueue();
+                          const raw = localStorage.getItem('offline_queue_v1') || '[]';
+                          const arr = JSON.parse(raw);
+                          setQueueCount(arr.length || 0);
+                          toast({ title: 'Sincronização iniciada' });
+                        } catch (err) {
+                          console.error(err);
+                          toast({ title: 'Erro ao sincronizar', variant: 'destructive' });
+                        } finally {
+                          setProcessingQueue(false);
+                        }
+                      }}
+                      disabled={processingQueue}
+                    >
+                      {processingQueue ? 'Sincronizando...' : 'Sincronizar agora'}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => {
+                      localStorage.removeItem('offline_queue_v1');
+                      setQueueCount(0);
+                      toast({ title: 'Fila limpa localmente' });
+                    }}>
+                      Limpar fila local
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
             <Button
               variant="ghost"

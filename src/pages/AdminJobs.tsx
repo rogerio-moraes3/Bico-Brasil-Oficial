@@ -279,7 +279,7 @@ export default function AdminJobs() {
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-6">
           <Button variant="ghost" onClick={() => navigate('/admin')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-4 h-4 mr-2 text-foreground dark:text-white" />
             Voltar
           </Button>
           <h1 className="text-2xl font-bold">Gerenciar Anúncios (Jobs)</h1>

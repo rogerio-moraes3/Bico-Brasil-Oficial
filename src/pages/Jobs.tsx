@@ -71,7 +71,7 @@ const Jobs = () => {
     if (selectedCityId) {
       loadWorkers(selectedCityId);
     }
-  }, [selectedCityId, searchTerm, selectedCategory, selectedSubcategory, neighborhood]);
+  }, [selectedCityId]);
 
   const loadCategories = async () => {
     try {
@@ -143,7 +143,7 @@ const Jobs = () => {
         query = query.ilike('neighborhood', `%${neighborhood}%`);
       }
 
-      const { data, error } = await query.order('rating_avg', { ascending: false });
+      const { data, error } = await query.order('rating_avg', { ascending: false }).limit(30);
 
       if (error) throw error;
       setWorkers(data || []);
@@ -197,7 +197,7 @@ const Jobs = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-card p-6 rounded-lg border mb-8">
+        <div className="bg-card p-6 rounded-lg container-outline mb-8">
           <div className="grid md:grid-cols-3 gap-4 mb-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Buscar</label>

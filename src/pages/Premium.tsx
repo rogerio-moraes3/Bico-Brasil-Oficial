@@ -56,7 +56,7 @@ export default function Premium() {
           onClick={() => safeGoBack(navigate)}
           className="mb-4"
         >
-          <ArrowLeft className="h-5 w-5 mr-2" />
+          <ArrowLeft className="h-5 w-5 mr-2 text-foreground dark:text-white" />
           Voltar
         </Button>
 

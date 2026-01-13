@@ -192,9 +192,9 @@ export default function OfferServices() {
       }
 
       // 3. Criar registro na tabela worker_services
-      const { error: serviceError } = await supabase
-        .from('worker_services')
-        .insert({
+      let serviceResult: any = null;
+      try {
+        const payload: any = {
           user_id: userData.id,
           title: formData.service_title,
           description: formData.description,
@@ -205,9 +205,35 @@ export default function OfferServices() {
           location: formData.location || null,
           availability: formData.availability,
           active: true
-        });
+        };
 
-      if (serviceError) throw serviceError;
+        const { data: sdata, error: serror } = await supabase.from('worker_services').insert(payload).select();
+        if (serror) throw serror;
+        serviceResult = sdata;
+      } catch (serviceErr: any) {
+        if (serviceErr?.message?.toLowerCase?.().includes('availability')) {
+          try {
+            const payloadFallback: any = {
+              user_id: userData.id,
+              title: formData.service_title,
+              description: formData.description,
+              category_id: formData.isCustomCategory ? null : formData.category,
+              custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
+              subcategory_id: formData.subcategory || null,
+              price: formData.price ? parseFloat(formData.price) : null,
+              location: formData.location || null,
+              active: true
+            };
+            const { data: sdata2, error: serror2 } = await supabase.from('worker_services').insert(payloadFallback).select();
+            if (serror2) throw serror2;
+            serviceResult = sdata2;
+          } catch (e: any) {
+            throw e;
+          }
+        } else {
+          throw serviceErr;
+        }
+      }
 
       // Clear autosave
       localStorage.removeItem('offer_services_autosave');
@@ -235,7 +261,7 @@ export default function OfferServices() {
       <Header />
 
       <div className="container mx-auto px-4 py-8 pb-20 md:pb-8 max-w-3xl">
-        <Card className="max-h-[80vh] overflow-y-auto">
+        <Card className="max-h-[80vh] overflow-y-auto container-outline">
           <CardHeader>
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -426,6 +452,10 @@ export default function OfferServices() {
                   "Publicar Meu Serviço"
                 )}
               </Button>
+
+              {!isOnline && localStorage.getItem('offer_services_autosave') && (
+                <p className="text-sm text-muted-foreground mt-2">Salvo localmente — vamos publicar assim que a conexão voltar.</p>
+              )}
 
             </form>
           </CardContent>

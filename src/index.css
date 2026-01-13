@@ -59,8 +59,11 @@
 /* Tipografia */
 body {
   font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: var(--bb-text-dark);
-  background-color: var(--bb-white);
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
@@ -194,6 +197,25 @@ All colors MUST be HSL.
     --radius: 0.5rem;
     /* slightly rounded */
     --shadow-glow: none;
+
+    /* Container outline color used for main content borders */
+    --container-border: 229 50% 23%; /* navy-ish for light mode */
+
+    /* Ensure the internal theme applies a background color based on variables */
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  /* When the global dark mode is active, ensure internal-theme respects dark variables */
+  .dark .internal-theme {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --border: 0 0% 100%; /* white border in dark mode */
+    --container-border: 0 0% 100%;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 
   * {
@@ -207,6 +229,13 @@ All colors MUST be HSL.
   html {
     font-size: 13px;
     /* Alta densidade (legacy) */
+    background-color: hsl(var(--background));
+  }
+
+  /* Ensure root and body follow the theme variables explicitly (prevents white margins in dark mode) */
+  html, body, #root {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 
   body {

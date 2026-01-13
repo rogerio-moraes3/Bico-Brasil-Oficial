@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Briefcase, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -19,22 +20,16 @@ export default function Home() {
                     </p>
                 </div>
 
-                <div className="w-full max-w-md flex flex-col gap-4">
-                    <button
-                        onClick={() => navigate('/want-to-work')}
-                        className="bb-button w-full h-14 flex items-center justify-center gap-3 text-lg"
-                    >
+                        <div className="w-full max-w-md flex flex-col gap-4">
+                    <Button onClick={() => navigate('/want-to-work')} className="w-full h-14 flex items-center justify-center gap-3 text-lg font-semibold">
                         <Briefcase className="w-5 h-5" />
                         Quero trabalhar
-                    </button>
+                    </Button>
 
-                    <button
-                        onClick={() => navigate('/want-someone')}
-                        className="bb-button w-full h-14 flex items-center justify-center gap-3 text-lg"
-                    >
+                    <Button onClick={() => navigate('/want-someone')} className="w-full h-14 flex items-center justify-center gap-3 text-lg font-semibold">
                         <Search className="w-5 h-5" />
                         Quero alguém pra trabalhar
-                    </button>
+                    </Button>
                 </div>
             </main>
             <Footer />

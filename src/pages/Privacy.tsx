@@ -27,7 +27,7 @@ const Privacy = () => {
             onClick={() => safeGoBack(navigate)}
             className="mb-4"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="mr-2 h-4 w-4 text-foreground dark:text-white" />
             Voltar
           </Button>
           

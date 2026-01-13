@@ -86,10 +86,10 @@ export default function SearchWorkers() {
     }
   }, [cities, user, hasManualCitySelection, filters.city_id]);
 
-  // Reexecutar busca automaticamente quando filtros ou query mudarem
+  // Reexecutar busca automaticamente quando filtros mudarem (search is manual)
   useEffect(() => {
     handleSearch();
-  }, [filters, searchQuery]);
+  }, [filters]);
 
   const handleCategoryChange = async (categoryId: string) => {
     setFilters({ ...filters, category: categoryId, subcategory: 'all' });
@@ -133,11 +133,25 @@ export default function SearchWorkers() {
         servicesQuery = servicesQuery.or(orConditions);
       }
 
-      const { data: servicesData, error: servicesError } = await servicesQuery;
-
-      if (servicesError) {
-        console.error('❌ Erro ao buscar serviços:', servicesError);
-        throw servicesError;
+      let servicesData: any = null;
+      try {
+        const res = await servicesQuery;
+        servicesData = res.data;
+        if (res.error) throw res.error;
+      } catch (servicesError: any) {
+        // If availability column is not present in schema, retry without it
+        if (servicesError?.message?.toLowerCase?.().includes('availability')) {
+          console.warn('Availability column missing; retrying service query without it');
+          servicesQuery = supabase
+            .from('worker_services')
+            .select('id, user_id, title, description, price, location, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
+          const res2 = await servicesQuery;
+          if (res2.error) throw res2.error;
+          servicesData = res2.data;
+        } else {
+          console.error('❌ Erro ao buscar serviços:', servicesError);
+          throw servicesError;
+        }
       }
 
       if (!servicesData || servicesData.length === 0) {

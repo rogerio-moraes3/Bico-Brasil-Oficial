@@ -83,10 +83,10 @@ const ProcurarBicos = () => {
     }
   }, [filters.category_id]);
 
-  // Carregar jobs quando filtros mudarem (inclui pesquisa)
+  // Carregar jobs quando filtros mudarem (manual search only - search is triggered by button)
   useEffect(() => {
     loadJobs();
-  }, [filters, searchQuery]);
+  }, [filters]);
 
   const loadCategories = async () => {
     const { data, error } = await supabase
@@ -359,6 +359,17 @@ const ProcurarBicos = () => {
       <main className="flex-1 container mx-auto px-4 py-6 pb-20 md:pb-6 overflow-y-auto">
         <Breadcrumbs />
 
+        {(showingCached || !isOnline) && (
+          <div className="mb-4 rounded-md bg-yellow-50 border border-yellow-200 p-3 text-yellow-800">
+            { !isOnline ? (
+              <strong>Sem internet no momento</strong>
+            ) : (
+              <strong>Mostrando últimos dados disponíveis</strong>
+            ) }
+            <div className="text-sm">Os resultados podem estar desatualizados; serão atualizados quando a conexão voltar.</div>
+          </div>
+        ) }
+
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Procurar Bicos</h1>
@@ -371,7 +382,7 @@ const ProcurarBicos = () => {
         </div>
 
         {/* Filtros */}
-        <Card className="mb-6 border border-border shadow-sm">
+        <Card className="mb-6 container-outline bg-card shadow-sm">
           <CardContent className="pt-6 space-y-4">
             {/* Linha 1 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

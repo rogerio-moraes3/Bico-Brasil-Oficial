@@ -73,19 +73,19 @@ export const ProviderSection = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/10">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 md:p-6 text-center border border-white/10 min-h-[120px] flex flex-col justify-center">
                 <div className="text-4xl font-bold text-orange-400 mb-2">0%</div>
                 <div className="text-sm text-slate-400">Comissão sobre serviços</div>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/10">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 md:p-6 text-center border border-white/10 min-h-[120px] flex flex-col justify-center">
                 <div className="text-4xl font-bold text-blue-400 mb-2">100%</div>
                 <div className="text-sm text-slate-400">Contato direto</div>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/10">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 md:p-6 text-center border border-white/10 min-h-[120px] flex flex-col justify-center">
                 <div className="text-4xl font-bold text-green-400 mb-2">24h</div>
                 <div className="text-sm text-slate-400">Seu perfil no ar</div>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/10">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 md:p-6 text-center border border-white/10 min-h-[120px] flex flex-col justify-center">
                 <div className="text-4xl font-bold text-purple-400 mb-2">SEO</div>
                 <div className="text-sm text-slate-400">Otimizado p/ Google</div>
               </div>

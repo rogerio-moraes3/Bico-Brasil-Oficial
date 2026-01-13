@@ -255,7 +255,7 @@ export default function Messages() {
                       onClick={() => setSelectedConversation(null)}
                       className="md:hidden"
                     >
-                      <ArrowLeft className="h-4 w-4" />
+                      <ArrowLeft className="h-4 w-4 text-foreground dark:text-white" />
                     </Button>
                   )}
                   <CardTitle>
