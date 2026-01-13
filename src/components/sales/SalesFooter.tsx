@@ -19,13 +19,13 @@ export const SalesFooter = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => navigate("/app")}
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-[3px] border-white text-primary bg-white hover:bg-primary hover:text-white hover:border-primary font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-[3px] border-white text-white bg-transparent hover:bg-white hover:text-primary hover:border-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
               Buscar Profissional
             </button>
             <button
               onClick={() => navigate("/app")}
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-[3px] border-white text-primary bg-white hover:bg-primary hover:text-white hover:border-primary font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-[3px] border-white text-white bg-transparent hover:bg-white hover:text-primary hover:border-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
               Oferecer Serviços
             </button>
