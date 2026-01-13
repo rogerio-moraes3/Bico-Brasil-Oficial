@@ -50,22 +50,9 @@ export const SalesHeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-6">
             <button
               onClick={() => navigate("/app")}
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: '#1E2A5A',
-                border: '2px solid #1E2A5A',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontWeight: '600',
-                fontSize: '16px',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-2 border-primary text-primary bg-white hover:bg-primary hover:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
-              <Search className="w-5 h-5" style={{ color: '#1E2A5A' }} />
+              <Search className="w-5 h-5" />
               Buscar Profissional
             </button>
 
@@ -74,23 +61,9 @@ export const SalesHeroSection = () => {
             <button
               ref={offerButtonRef}
               onClick={() => navigate("/app")}
-              style={{
-                color: '#1E2A5A !important',
-                border: '1px solid #1E2A5A !important',
-                backgroundColor: '#FFFFFF !important',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontWeight: '600',
-                fontSize: '16px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                zIndex: 10
-              }}
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-2 border-primary text-primary bg-white hover:bg-primary hover:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
-              <Briefcase style={{ color: '#1E2A5A !important' }} />
+              <Briefcase className="w-5 h-5" />
               Oferecer Serviços
             </button>
           </div>

@@ -19,42 +19,15 @@ export const SalesFooter = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => navigate("/app")}
-              style={{
-                color: '#FFFFFF !important',
-                borderColor: '#FFFFFF !important',
-                border: '1px solid #FFFFFF',
-                background: 'transparent',
-                padding: '1rem 2rem',
-                borderRadius: '0.5rem',
-                fontWeight: '700',
-                fontSize: '16px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
-              }}
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-2 border-white text-white bg-transparent hover:bg-white hover:text-primary font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
-              Publicar Bico
-              <ArrowRight style={{ color: '#FFFFFF !important' }} />
+              Buscar Profissional
             </button>
             <button
               onClick={() => navigate("/app")}
-              style={{
-                color: '#FFFFFF !important',
-                borderColor: '#FFFFFF !important',
-                border: '1px solid #FFFFFF',
-                background: 'transparent',
-                padding: '1rem 2rem',
-                borderRadius: '0.5rem',
-                fontWeight: '700',
-                fontSize: '16px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
-              }}
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-2 border-white text-white bg-transparent hover:bg-white hover:text-primary font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
-              Buscar Bicos
+              Oferecer Serviços
             </button>
           </div>
         </div>
