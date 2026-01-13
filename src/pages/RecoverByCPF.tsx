@@ -166,7 +166,7 @@ export default function RecoverByCPF() {
             onClick={() => navigate('/auth?mode=login')}
             className="mb-4"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="h-4 w-4 mr-2 text-foreground dark:text-white" />
             Voltar ao login
           </Button>
 

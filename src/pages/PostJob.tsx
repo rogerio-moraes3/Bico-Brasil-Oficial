@@ -166,9 +166,9 @@ export default function PostJob() {
       }
 
       // Criar publicação
-      const { data: jobData, error: jobError } = await supabase
-        .from('job_postings')
-        .insert({
+      let jobData: any = null;
+      try {
+        const insertPayload: any = {
           user_id: userData.id,
           title: formData.title,
           description: formData.description,
@@ -182,12 +182,40 @@ export default function PostJob() {
           date_time: formData.date_time ? new Date(formData.date_time).toISOString() : null,
           availability: formData.available_today ? 'hoje' : formData.availability,
           status: 'open'
-        })
-        .select();
+        };
 
-      if (jobError) {
-        console.error('❌ Erro ao inserir job_posting:', jobError);
-        throw new Error('Erro ao publicar: ' + jobError.message);
+        const { data, error } = await supabase.from('job_postings').insert(insertPayload).select();
+        if (error) throw error;
+        jobData = data;
+      } catch (insertErr: any) {
+        // Fallback: some schemas may not have 'availability' column; retry without it
+        if (insertErr?.message?.toLowerCase?.().includes('availability')) {
+          try {
+            const insertPayloadFallback: any = {
+              user_id: userData.id,
+              title: formData.title,
+              description: formData.description,
+              price: formData.price ? parseFloat(formData.price) : null,
+              location: formData.location || null,
+              category_id: formData.isCustomCategory ? null : formData.category,
+              custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
+              city_id: formData.city_id,
+              neighborhood: formData.neighborhood,
+              urgent: formData.urgent,
+              date_time: formData.date_time ? new Date(formData.date_time).toISOString() : null,
+              status: 'open'
+            };
+            const { data: data2, error: error2 } = await supabase.from('job_postings').insert(insertPayloadFallback).select();
+            if (error2) throw error2;
+            jobData = data2;
+          } catch (e2: any) {
+            console.error('❌ Erro ao inserir job_posting (fallback):', e2);
+            throw new Error('Erro ao publicar: ' + (e2.message || e2));
+          }
+        } else {
+          console.error('❌ Erro ao inserir job_posting:', insertErr);
+          throw new Error('Erro ao publicar: ' + insertErr.message);
+        }
       }
 
 
@@ -234,7 +262,7 @@ export default function PostJob() {
       <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <Breadcrumbs />
 
-        <Card className="max-w-3xl mx-auto max-h-[80vh] overflow-y-auto">
+          <Card className="max-w-3xl mx-auto max-h-[80vh] overflow-y-auto container-outline">
           <CardHeader>
             <div className="flex items-center gap-3">
               <Briefcase className="h-6 w-6 text-primary" />
@@ -400,6 +428,10 @@ export default function PostJob() {
                   'Publicar Trabalho'
                 )}
               </Button>
+
+              {!isOnline && localStorage.getItem('post_job_autosave') && (
+                <p className="text-sm text-muted-foreground mt-2">Salvo localmente — vamos publicar assim que a conexão voltar.</p>
+              )}
             </form>
           </CardContent>
         </Card>

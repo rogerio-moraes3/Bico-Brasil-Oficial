@@ -77,7 +77,7 @@ export const BottomNav = () => {
             to={path}
             className={`flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-lg ${isActive(path)
               ? `${activeColor} scale-105`
-              : "text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
+              : "text-muted-foreground dark:text-white/90 hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
               }`}
           >
             <Icon className={`h-6 w-6 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />

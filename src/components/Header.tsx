@@ -67,7 +67,7 @@ export const Header = () => {
         Ir para conteúdo principal
       </a>
 
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background text-foreground">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background text-foreground" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="container flex h-16 items-center justify-between px-2 md:px-4">
           <div className="flex items-center gap-2">
             {showBackButton && (
@@ -75,7 +75,7 @@ export const Header = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => safeGoBack(navigate)}
-                className="md:hidden text-primary shadow-md font-bold shrink-0"
+                className="md:hidden text-primary dark:text-white shadow-md font-bold shrink-0"
               >
                 <ArrowLeft className="h-6 w-6" />
               </Button>
@@ -264,7 +264,7 @@ export const Header = () => {
 
 
 
-      <CitySelector />
+      {!(location.pathname.startsWith('/procurar-bicos') || location.pathname.startsWith('/search-workers')) && <CitySelector />}
     </>
   );
 };

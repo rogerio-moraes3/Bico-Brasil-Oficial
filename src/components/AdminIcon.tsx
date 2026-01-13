@@ -57,7 +57,7 @@ export function AdminIcon() {
   return (
     <Link
       to="/admin"
-      className="fixed bottom-24 right-4 bg-primary text-primary-foreground p-3 rounded-full shadow-lg hover:bg-primary/90 transition-all z-[9999] md:bottom-6"
+      className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 bg-primary text-primary-foreground p-3 rounded-full shadow-lg hover:bg-primary/90 transition-all z-[60] md:bottom-6"
       title="Painel Administrativo"
     >
       <BarChart3 size={22} />

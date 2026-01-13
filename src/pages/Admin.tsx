@@ -430,10 +430,10 @@ export default function Admin() {
 
   if (loading || !isAdmin) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center dark:bg-slate-950 dark:text-slate-200">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Carregando painel...</p>
+          <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">Carregando painel...</p>
         </div>
       </div>
     );
@@ -442,7 +442,7 @@ export default function Admin() {
   const uniqueCities = Array.from(new Set(leads.map(l => l.city || 'Outros'))).sort();
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200">
+    <div className="min-h-screen bg-background text-foreground dark:bg-slate-950 dark:text-slate-200">
       <Header />
 
       <main className="container mx-auto px-4 py-8">
@@ -455,7 +455,7 @@ export default function Admin() {
             <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mt-1">Bem-vindo, {userEmail}</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={loadAllData} variant="outline" size="sm" className="h-8 text-[10px] font-bold uppercase tracking-widest bg-slate-900 border-slate-800 hover:bg-slate-800">
+            <Button onClick={loadAllData} variant="outline" size="sm" className="h-8 text-[10px] font-bold uppercase tracking-widest bg-card border-border hover:bg-gray-100 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800">
               <Activity className="h-3.5 w-3.5 mr-1.5" />
               Sincronizar
             </Button>
@@ -469,7 +469,7 @@ export default function Admin() {
         {/* METRICAS RAPIDAS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
           <Card
-            className="bg-slate-900 border-slate-800 shadow-xl cursor-pointer hover:border-primary/50 transition-all"
+            className="bg-card border-border shadow-xl cursor-pointer hover:border-primary/50 transition-all dark:bg-slate-900 dark:border-slate-800"
             onClick={() => setUsersModalOpen(true)}
           >
             <CardHeader className="pb-2">
@@ -488,7 +488,7 @@ export default function Admin() {
           </Card>
 
           <Card
-            className="bg-slate-900 border-slate-800 shadow-xl cursor-pointer hover:border-emerald-500/50 transition-all"
+            className="bg-card border-border shadow-xl cursor-pointer hover:border-emerald-500/50 transition-all dark:bg-slate-900 dark:border-slate-800"
             onClick={() => setRevenueModalOpen(true)}
           >
             <CardHeader className="pb-2">
@@ -505,9 +505,9 @@ export default function Admin() {
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+          <Card className="bg-card border-border shadow-xl dark:bg-slate-900 dark:border-slate-800">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Pendente</CardTitle>
+              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Pendente</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-black text-amber-400 leading-none">
@@ -518,7 +518,7 @@ export default function Admin() {
           </Card>
 
           <Card
-            className="bg-slate-900 border-slate-800 shadow-xl cursor-pointer hover:border-primary/50 transition-all"
+            className="bg-card border-border shadow-xl cursor-pointer hover:border-primary/50 transition-all dark:bg-slate-900 dark:border-slate-800"
             onClick={() => setConversionModalOpen(true)}
           >
             <CardHeader className="pb-2">
@@ -533,31 +533,31 @@ export default function Admin() {
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+          <Card className="bg-card border-border shadow-xl dark:bg-slate-900 dark:border-slate-800">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Crescimento</CardTitle>
+              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Crescimento</CardTitle>
             </CardHeader>
             <CardContent>
               <div className={`text-3xl font-black leading-none ${metrics.growthRate >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                 {metrics.growthRate >= 0 ? '+' : ''}{metrics.growthRate.toFixed(1)}%
               </div>
-              <p className="text-[10px] text-slate-500 mt-2">vs mês anterior</p>
+              <p className="text-[10px] text-muted-foreground mt-2">vs mês anterior</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900 border-slate-800 shadow-xl">
+          <Card className="bg-card border-border shadow-xl dark:bg-slate-900 dark:border-slate-800">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Atividade Hoje</CardTitle>
+              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Atividade Hoje</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-black text-white leading-none">+{metrics.leadsToday}</div>
-              <p className="text-[10px] text-slate-500 mt-2">Novos registros em 24h</p>
+              <div className="text-3xl font-black text-primary leading-none">+{metrics.leadsToday}</div>
+              <p className="text-[10px] text-muted-foreground mt-2">Novos registros em 24h</p>
             </CardContent>
           </Card>
         </div>
 
         {/* GRAFICO DE TENDENCIA DE RECEITA */}
-        <Card className="bg-slate-900 border-slate-800 shadow-xl mb-8">
+        <Card className="bg-card border-border shadow-xl mb-8 dark:bg-slate-900 dark:border-slate-800">
           <CardHeader className="pb-4">
             <CardTitle className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-primary" />
@@ -606,7 +606,7 @@ export default function Admin() {
         </Card>
 
         {/* TABELA DE RECEITA ANUAL */}
-        <Card className="bg-slate-900 border-slate-800 shadow-xl mb-8">
+        <Card className="bg-card border-border shadow-xl mb-8 dark:bg-slate-900 dark:border-slate-800">
           <CardHeader className="pb-4">
             <CardTitle className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
               <DollarSign className="h-4 w-4 text-emerald-400" />
@@ -618,8 +618,8 @@ export default function Admin() {
           </CardHeader>
           <CardContent>
             <Table>
-              <TableHeader className="bg-slate-900/50">
-                <TableRow className="border-slate-800 hover:bg-transparent">
+              <TableHeader className="bg-card/50 dark:bg-slate-900/50">
+                <TableRow className="border-border hover:bg-transparent dark:border-slate-800">
                   <TableHead className="text-[10px] font-black text-slate-500 uppercase">Ano</TableHead>
                   <TableHead className="text-[10px] font-black text-slate-500 uppercase text-right">Receita</TableHead>
                   <TableHead className="text-[10px] font-black text-slate-500 uppercase text-right">Crescimento</TableHead>
@@ -634,7 +634,7 @@ export default function Admin() {
                     : 0;
 
                   return (
-                    <TableRow key={yearData.year} className="border-slate-800 hover:bg-slate-900/40">
+                    <TableRow key={yearData.year} className="border-border hover:bg-card/40 dark:border-slate-800">
                       <TableCell className="font-black text-white text-sm">{yearData.year}</TableCell>
                       <TableCell className="text-right">
                         <span className={`text-sm font-black ${yearData.isProjection ? 'text-amber-400' : 'text-emerald-400'}`}>
@@ -668,17 +668,17 @@ export default function Admin() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
               <Input
                 placeholder="BUSCAR POR NOME, EMAIL OU CPF..."
-                className="pl-10 admin-filter-input bg-slate-900 border-slate-800 text-xs font-bold uppercase tracking-wider"
+                className="pl-10 admin-filter-input bg-card border-border text-xs font-bold uppercase tracking-wider dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex gap-2">
               <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="admin-filter-select bg-slate-900 border-slate-800 text-[10px] font-black uppercase">
+                <SelectTrigger className="admin-filter-select bg-card border-border text-[10px] font-black uppercase dark:bg-slate-900 dark:border-slate-800 dark:text-white">
                   <SelectValue placeholder="TIPO" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 text-white">
+                <SelectContent className="bg-card border-border dark:bg-slate-900 dark:border-slate-800 dark:text-white">
                   <SelectItem value="all">TODOS TIPOS</SelectItem>
                   <SelectItem value="prestador">PRESTADORES</SelectItem>
                   <SelectItem value="empregador">EMPREGADORES</SelectItem>
@@ -686,10 +686,10 @@ export default function Admin() {
               </Select>
 
               <Select value={filterCity} onValueChange={setFilterCity}>
-                <SelectTrigger className="admin-filter-select bg-slate-900 border-slate-800 text-[10px] font-black uppercase">
+                <SelectTrigger className="admin-filter-select bg-card border-border text-[10px] font-black uppercase dark:bg-slate-900 dark:border-slate-800 dark:text-white">
                   <SelectValue placeholder="CIDADE" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 text-white">
+                <SelectContent className="bg-card border-border dark:bg-slate-900 dark:border-slate-800 dark:text-white">
                   <SelectItem value="all">TODAS CIDADES</SelectItem>
                   {uniqueCities.map(city => (
                     <SelectItem key={city} value={city}>{city.toUpperCase()}</SelectItem>
@@ -699,11 +699,11 @@ export default function Admin() {
             </div>
           </div>
 
-          <Card className="bg-slate-950 border-slate-800 overflow-hidden shadow-2xl">
+          <Card className="bg-card border-border overflow-hidden shadow-2xl dark:bg-slate-950 dark:border-slate-800">
             <div className="overflow-x-auto">
               <Table className="admin-table">
-                <TableHeader className="bg-slate-900/50">
-                  <TableRow className="border-slate-800 h-10 hover:bg-transparent">
+                <TableHeader className="bg-card/50 dark:bg-slate-900/50">
+                  <TableRow className="border-border h-10 hover:bg-transparent dark:border-slate-800">
                     <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Nome Completo</TableHead>
                     <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Email</TableHead>
                     <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">CPF / ID</TableHead>
@@ -717,13 +717,13 @@ export default function Admin() {
                   {filteredLeads.map((user) => (
                     <TableRow
                       key={user.id}
-                      className="border-slate-900 hover:bg-slate-900/40 cursor-pointer transition-colors group"
+                      className="border-border hover:bg-card/40 cursor-pointer transition-colors group dark:border-slate-800 dark:hover:bg-slate-900/40"
                       onClick={() => navigate(`/worker/${user.id}`)}
                     >
                       <TableCell className="py-2 px-4">
                         <div className="flex flex-col">
-                          <span className="text-[11px] font-black text-white group-hover:text-primary transition-colors">{user.name?.toUpperCase() || '-'}</span>
-                          <span className="text-[9px] text-slate-500 font-bold">{user.phone || 'Sem Telefone'}</span>
+                          <span className="text-[11px] font-black text-foreground dark:text-white group-hover:text-primary transition-colors">{user.name?.toUpperCase() || '-'}</span>
+                          <span className="text-[9px] text-muted-foreground font-bold">{user.phone || 'Sem Telefone'}</span>
                         </div>
                       </TableCell>
                       <TableCell className="py-2 px-4 text-[10px] text-slate-400 font-medium">{user.email}</TableCell>
