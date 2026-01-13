@@ -97,7 +97,7 @@ export default function WorkerProfile() {
       return;
     }
 
-    console.log('🔍 Carregando perfil do profissional ID:', id);
+
 
     try {
       // Fetch worker data using RPC to avoid permission errors
@@ -151,12 +151,10 @@ export default function WorkerProfile() {
         const { data: contact, error: contactError } = await supabase
           .rpc('get_worker_contact', { worker_id: id });
 
-        console.log('📞 Tentativa de carregar contato:', { contact, contactError, canViewContacts, isWorkerUnlocked });
-
         if (contact && contact.length > 0) {
           setContactInfo(contact[0]);
         } else if (contactError) {
-          console.log('📞 Acesso ao contato negado:', contactError.message);
+          // Acesso ao contato negado
         }
       }
 

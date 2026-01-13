@@ -67,7 +67,7 @@ interface Lead {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("🚀 [notify-new-lead] Edge Function iniciada");
+  console.debug("🚀 [notify-new-lead] Edge Function iniciada");
   
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -80,7 +80,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const rawBody = await req.text();
-    console.log("📦 [notify-new-lead] Dados recebidos (truncated):", rawBody.substring(0, 200));
+    console.debug("📦 [notify-new-lead] Dados recebidos (truncated):", rawBody.substring(0, 200));
     
     // Parse and validate input
     let parsedBody: unknown;
@@ -109,7 +109,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const lead = validation.lead;
-    console.log("✅ [notify-new-lead] Lead validado:", {
+    console.debug("✅ [notify-new-lead] Lead validado:", {
       nome: lead.nome,
       email: lead.email,
       cidade: lead.cidade,
@@ -136,7 +136,7 @@ const handler = async (req: Request): Promise<Response> => {
       .from("colaboradores_autorizados")
       .select("email");
 
-    console.log("👥 [notify-new-lead] Colaboradores buscados:", {
+    console.debug("👥 [notify-new-lead] Colaboradores buscados:", {
       quantidade: colaboradores?.length || 0,
       error: colabError
     });
@@ -212,7 +212,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // Enviar email via Resend API para admins
-    console.log("📧 [notify-new-lead] Enviando email para admins");
+    console.debug("📧 [notify-new-lead] Enviando email para admins");
     
     const emailResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -230,7 +230,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailData = await emailResponse.json();
 
-    console.log("📧 [notify-new-lead] Resposta do envio para admins:", {
+    console.debug("📧 [notify-new-lead] Resposta do envio para admins:", {
       status: emailResponse.status,
       ok: emailResponse.ok
     });
@@ -301,7 +301,7 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    console.log("📨 [notify-new-lead] Enviando email de confirmação para usuário");
+    console.debug("📨 [notify-new-lead] Enviando email de confirmação para usuário");
 
     const userEmailResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -319,7 +319,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const userEmailData = await userEmailResponse.json();
     
-    console.log("📨 [notify-new-lead] Resposta do envio para usuário:", {
+    console.debug("📨 [notify-new-lead] Resposta do envio para usuário:", {
       status: userEmailResponse.status,
       ok: userEmailResponse.ok
     });
@@ -336,10 +336,10 @@ const handler = async (req: Request): Promise<Response> => {
     if (!userEmailResponse.ok) {
       console.error("❌ [notify-new-lead] Erro ao enviar email para usuário");
     } else {
-      console.log("✅ [notify-new-lead] Email de confirmação enviado para usuário");
+      console.debug("✅ [notify-new-lead] Email de confirmação enviado para usuário");
     }
 
-    console.log("🎉 [notify-new-lead] Processo concluído com sucesso!");
+    console.debug("🎉 [notify-new-lead] Processo concluído com sucesso!");
     
     return new Response(
       JSON.stringify({ 

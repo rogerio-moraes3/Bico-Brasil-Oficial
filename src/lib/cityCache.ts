@@ -29,13 +29,11 @@ export const getCitiesWithCache = async () => {
 
             // Verificar se cache ainda é válido
             if (Date.now() - timestamp < CACHE_DURATION) {
-                console.log('✅ Cidades carregadas do cache (rápido!)');
                 return data;
             }
         }
 
         // Cache expirado ou não existe, buscar do banco
-        console.log('🔄 Buscando cidades do banco...');
         const { createClient } = await import('@/integrations/supabase/client');
         const supabase = createClient();
 
@@ -53,7 +51,6 @@ export const getCitiesWithCache = async () => {
             timestamp: Date.now()
         }));
 
-        console.log('✅ Cidades carregadas e cache atualizado');
         return data;
 
     } catch (error) {
@@ -69,7 +66,7 @@ export const getCitiesWithCache = async () => {
  */
 export const clearCitiesCache = () => {
     localStorage.removeItem(CACHE_KEY);
-    console.log('🗑️ Cache de cidades limpo');
+
 };
 
 /**

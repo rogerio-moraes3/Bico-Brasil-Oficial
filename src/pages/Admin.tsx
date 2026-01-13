@@ -561,13 +561,11 @@ export default function Admin() {
                 <XAxis
                   dataKey="date"
                   stroke="#64748b"
-                  style={{ fontSize: '10px', fontWeight: 'bold' }}
-                  tick={{ fill: '#64748b' }}
+                  tick={{ fill: '#64748b', fontSize: 10, fontWeight: 'bold' }}
                 />
                 <YAxis
                   stroke="#64748b"
-                  style={{ fontSize: '10px', fontWeight: 'bold' }}
-                  tick={{ fill: '#64748b' }}
+                  tick={{ fill: '#64748b', fontSize: 10, fontWeight: 'bold' }}
                   tickFormatter={(value) => `R$ ${value}`}
                 />
                 <Tooltip
@@ -936,8 +934,8 @@ export default function Admin() {
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={metrics.leadsByCity.slice(0, 5)}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="name" stroke="#64748b" style={{ fontSize: '10px' }} />
-                  <YAxis stroke="#64748b" style={{ fontSize: '10px' }} />
+                  <XAxis dataKey="name" stroke="#64748b" tick={{ fontSize: 10, fill: '#64748b' }} />
+                  <YAxis stroke="#64748b" tick={{ fontSize: 10, fill: '#64748b' }} />
                   <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b' }} />
                   <Bar dataKey="value" fill="#3b82f6" />
                 </BarChart>
@@ -967,7 +965,7 @@ export default function Admin() {
                 <span className="text-2xl font-black text-primary">{metrics.totalLeads}</span>
               </div>
               <div className="w-full bg-slate-800 h-2 rounded-full">
-                <div className="bg-primary h-2 rounded-full" style={{ width: '100%' }} />
+                <div className="bg-primary h-2 rounded-full w-full" />
               </div>
             </div>
 
@@ -977,7 +975,7 @@ export default function Admin() {
                 <span className="text-2xl font-black text-blue-400">{Math.floor(metrics.totalLeads * 0.7)}</span>
               </div>
               <div className="w-full bg-slate-800 h-2 rounded-full">
-                <div className="bg-blue-400 h-2 rounded-full" style={{ width: '70%' }} />
+                <div className="bg-blue-400 h-2 rounded-full w-[70%]" />
               </div>
             </div>
 

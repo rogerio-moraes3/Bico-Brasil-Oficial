@@ -139,9 +139,7 @@ export default function SearchWorkers() {
       }
 
       // FASE 3: Buscar usuários com filtros aplicados
-      console.log('👥 FASE 3: Buscando usuários dos serviços...');
       const userIds = servicesData.map(s => s.user_id);
-      console.log('🔑 IDs de usuários encontrados nos serviços:', userIds);
 
       // Use secure view that doesn't expose PII (phone, email, cpf, address)
       let usersQuery = supabase

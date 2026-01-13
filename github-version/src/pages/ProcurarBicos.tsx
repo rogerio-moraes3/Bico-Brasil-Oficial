@@ -170,15 +170,7 @@ const ProcurarBicos = () => {
 
       if (error) throw error;
 
-      console.log('📞 Jobs carregados:', {
-        total: data?.length,
-        sample: data?.[0] ? {
-          id: data[0].id,
-          title: data[0].title,
-          user: data[0].user,
-          user_phone: data[0].user?.phone
-        } : 'Nenhum job'
-      });
+
 
       setJobs(data || []);
     } catch (error) {
@@ -212,12 +204,7 @@ const ProcurarBicos = () => {
   };
 
   const handleViewJob = (job: any) => {
-    console.log('🎯 Abrindo modal para job:', {
-      id: job.id,
-      title: job.title,
-      user: job.user,
-      phone: job.user?.phone
-    });
+
     setSelectedJob(job);
     setShowDetailsModal(true);
   };

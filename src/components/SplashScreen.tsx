@@ -34,15 +34,15 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 }`}
         >
             {/* Container centralizado */}
-            <div className="flex flex-col items-center gap-8 animate-in fade-in duration-500">
+            <div className="flex flex-col items-center gap-8">
 
                 {/* Título Superior - BICO BRASIL */}
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-wide">
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-wide text-center">
                     BICO BRASIL
                 </h1>
 
                 {/* Bonequinho Trabalhador */}
-                <div className="w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
+                <div className="w-60 h-60 md:w-96 md:h-96 flex items-center justify-center">
                     <img
                         src="/worker-mascot.png"
                         alt="Trabalhador Bico Brasil"
@@ -55,7 +55,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 </div>
 
                 {/* Slogan Inferior - TRABALHOU, TÁ PAGO! */}
-                <p className="text-xl md:text-2xl lg:text-3xl font-bold text-primary tracking-wide px-4">
+                <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary tracking-wide px-4 text-center">
                     TRABALHOU, TÁ PAGO!
                 </p>
             </div>

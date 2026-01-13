@@ -58,7 +58,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    console.log('Webhook recebido:', body);
+    console.debug('Webhook recebido:', body);
 
     // MercadoPago envia notificações de payment
     if (body.type === 'payment' || body.topic === 'payment') {
@@ -90,7 +90,7 @@ serve(async (req) => {
         return new Response('Unauthorized', { status: 401, headers: corsHeaders });
       }
 
-      console.log('✅ Assinatura do webhook validada');
+      console.debug('✅ Assinatura do webhook validada');
 
       const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
       
@@ -102,12 +102,12 @@ serve(async (req) => {
       });
 
       const payment = await paymentResponse.json();
-      console.log('Payment details:', payment);
+      console.debug('Payment details:', payment);
 
       const externalReference = payment.external_reference;
       
       if (!externalReference) {
-        console.log('Sem external_reference, ignorando');
+        console.debug('Sem external_reference, ignorando');
         return new Response('OK', { status: 200 });
       }
 
@@ -145,14 +145,14 @@ serve(async (req) => {
           updated_at: new Date().toISOString(),
         }).eq('id', order.user_id);
 
-        console.log('✅ Destaque ativado para usuário:', order.user_id);
+        console.debug('✅ Destaque ativado para usuário:', order.user_id);
       } else if (payment.status === 'rejected' || payment.status === 'cancelled') {
         await supabaseClient.from('destaque_orders').update({
           status: 'failed',
           payment_id: paymentId,
         }).eq('id', order.id);
         
-        console.log('❌ Pagamento rejeitado/cancelado');
+        console.debug('❌ Pagamento rejeitado/cancelado');
       }
     }
 

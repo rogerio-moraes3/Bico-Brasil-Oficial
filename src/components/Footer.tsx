@@ -174,12 +174,12 @@ export const Footer = () => {
             <Link to="/" className="flex items-center gap-2">
               <img src={logo} alt="Bico Brasil" className="h-12 w-12" />
               <div className="flex flex-col justify-center">
-                <span className="font-bold text-xl text-card-foreground leading-tight" style={{ width: '140px', display: 'inline-block' }}>
+                <span className="font-bold text-xl text-card-foreground leading-tight w-[140px] inline-block">
                   Bico Brasil
                 </span>
-                <span className="text-[16px] text-card-foreground/80 leading-tight font-medium" style={{ width: '140px', display: 'inline-block' }}>
+                <span className="text-[16px] text-card-foreground/80 leading-tight font-medium w-[140px] inline-block">
                   Trabalhou, Tá Pago.
-                </span>
+                </span> 
               </div>
             </Link>
             <p className="text-sm text-card-foreground/80 max-w-md text-center md:text-left">

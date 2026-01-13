@@ -23,8 +23,7 @@ export const ProfileCompletionGuard = ({ children }: ProfileCompletionGuardProps
 
   const checkProfileCompletion = async () => {
     try {
-      console.log('[ProfileGuard] Verificando perfil para usuário:', user!.id);
-      
+
       const { data: profile, error } = await supabase
         .from('users')
         .select('*')
@@ -38,20 +37,13 @@ export const ProfileCompletionGuard = ({ children }: ProfileCompletionGuardProps
       }
 
       if (!profile) {
-        console.log('[ProfileGuard] Nenhum perfil encontrado, permitindo acesso');
         // Perfil será criado pelo AuthContext, permitir acesso
         setIsComplete(true);
         setLoading(false);
         return;
       }
 
-      console.log('[ProfileGuard] Perfil encontrado:', { 
-        phone: profile.phone, 
-        neighborhood: profile.neighborhood, 
-        city_id: profile.city_id,
-        type: profile.type,
-        category: profile.category 
-      });
+      // Perfil encontrado (sensitive parts omitted from logs)
 
       // Verificar campos essenciais
       const missingFields = [];
@@ -61,12 +53,10 @@ export const ProfileCompletionGuard = ({ children }: ProfileCompletionGuardProps
       if (profile.type === 'worker' && !profile.category) missingFields.push('Categoria de trabalho');
 
       if (missingFields.length > 0) {
-        console.log('[ProfileGuard] Campos faltando:', missingFields);
         navigate('/complete-profile', { 
           state: { missingFields, fromGuard: true } 
         });
       } else {
-        console.log('[ProfileGuard] Perfil completo, permitindo acesso');
         setIsComplete(true);
       }
     } catch (error) {

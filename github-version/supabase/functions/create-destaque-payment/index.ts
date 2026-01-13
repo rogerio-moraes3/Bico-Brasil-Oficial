@@ -100,7 +100,7 @@ serve(async (req) => {
       throw new Error('Plano inválido');
     }
 
-    console.log(`💰 Criando pagamento de destaque: ${days} dias, R$ ${amount}`);
+    console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${amount}`);
 
     const { data: order, error: orderError } = await supabaseClient
       .from('destaque_orders')
@@ -127,7 +127,7 @@ serve(async (req) => {
 
     // Log do tipo de token (produção ou teste)
     const isTestToken = accessToken.startsWith('TEST-');
-    console.log(`🔑 Usando token ${isTestToken ? 'de TESTE' : 'de PRODUÇÃO'}`);
+    console.debug(`🔑 Usando token ${isTestToken ? 'de TESTE' : 'de PRODUÇÃO'}`);
 
     const paymentData = {
       transaction_amount: amount,
@@ -144,7 +144,7 @@ serve(async (req) => {
       }
     };
 
-    console.log('📤 Enviando requisição para Mercado Pago...');
+    console.debug('📤 Enviando requisição para Mercado Pago...');
 
     const response = await fetchWithRetry('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
@@ -169,7 +169,7 @@ serve(async (req) => {
       throw new Error(mpData.message || 'Erro ao criar pagamento no Mercado Pago');
     }
 
-    console.log('✅ Pagamento criado com sucesso:', mpData.id);
+    console.debug('✅ Pagamento criado com sucesso:', mpData.id);
 
     await supabaseClient
       .from('destaque_orders')

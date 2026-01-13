@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -20,10 +20,10 @@ import Jobs from "./pages/Jobs";
 import PostJob from "./pages/PostJob";
 import Auth from "./pages/Auth";
 import RecoverByCPF from "./pages/RecoverByCPF";
-import Admin from "./pages/Admin";
-import AdminJobs from "./pages/AdminJobs";
-import AdminServices from "./pages/AdminServices";
-import AdminPayments from "./pages/AdminPayments";
+const Admin = lazy(() => import("./pages/Admin"));
+const AdminJobs = lazy(() => import("./pages/AdminJobs"));
+const AdminServices = lazy(() => import("./pages/AdminServices"));
+const AdminPayments = lazy(() => import("./pages/AdminPayments"));
 import Profile from "./pages/Profile";
 import PreLaunchLanding from "./pages/PreLaunchLanding";
 import Terms from "./pages/Terms";
@@ -34,7 +34,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailed from "./pages/PaymentFailed";
 import PaymentPending from "./pages/PaymentPending";
 import Messages from "./pages/Messages";
-import Analytics from "./pages/Analytics";
+const Analytics = lazy(() => import("./pages/Analytics"));
 import WorkerProfile from "./pages/WorkerProfile";
 import Appointments from "./pages/Appointments";
 import InstallApp from "./pages/InstallApp";
@@ -150,10 +150,10 @@ function App() {
                     </ProfileCompletionGuard>
                   </ProtectedRoute>
                 } />
-                <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-                <Route path="/admin/jobs" element={<ProtectedRoute><AdminJobs /></ProtectedRoute>} />
-                <Route path="/admin/services" element={<AdminServices />} />
-                <Route path="/admin/payments" element={<ProtectedRoute><AdminPayments /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute><Suspense fallback={<div className="p-8 text-center">Carregando painel administrativo...</div>}><Admin /></Suspense></ProtectedRoute>} />
+                <Route path="/admin/jobs" element={<ProtectedRoute><Suspense fallback={<div className="p-8 text-center">Carregando Jobs...</div>}><AdminJobs /></Suspense></ProtectedRoute>} />
+                <Route path="/admin/services" element={<ProtectedRoute><Suspense fallback={<div className="p-8 text-center">Carregando serviços administrativos...</div>}><AdminServices /></Suspense></ProtectedRoute>} />
+                <Route path="/admin/payments" element={<ProtectedRoute><Suspense fallback={<div className="p-8 text-center">Carregando pagamentos...</div>}><AdminPayments /></Suspense></ProtectedRoute>} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/contact" element={<Contact />} />
@@ -163,7 +163,9 @@ function App() {
                 <Route path="/analytics" element={
                   <ProtectedRoute>
                     <ProfileCompletionGuard>
-                      <Analytics />
+                      <Suspense fallback={<div className="p-8 text-center">Carregando analytics...</div>}>
+                        <Analytics />
+                      </Suspense>
                     </ProfileCompletionGuard>
                   </ProtectedRoute>
                 } />

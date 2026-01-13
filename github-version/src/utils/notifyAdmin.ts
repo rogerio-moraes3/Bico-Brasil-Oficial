@@ -10,16 +10,13 @@ export async function notifyAdmin(paymentData: {
   status: string;
 }) {
   try {
-    console.log("📧 Notificando admin sobre pagamento:", paymentData);
-    
     // TODO: Implementar notificação real
     // Exemplos:
     // - Enviar email via edge function
     // - Chamar webhook externo
     // - Inserir notificação na tabela de notificações
     
-    // Por enquanto, apenas log
-    console.log("✅ Admin notificado com sucesso");
+    // Implementação futura: enviar notificação real
     
     return { success: true };
   } catch (error) {

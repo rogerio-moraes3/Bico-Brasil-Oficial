@@ -40,7 +40,7 @@ serve(async (req) => {
 
   // Endpoint de teste GET
   if (req.method === "GET") {
-    console.log("🧪 GET Request - Edge Function Working!");
+    console.debug("🧪 GET Request - Edge Function Working!");
     return new Response(
       JSON.stringify({
         status: "ok",
@@ -59,13 +59,13 @@ serve(async (req) => {
   }
 
   try {
-    console.log("🚀 Iniciando create-mercadopago-payment...");
+    console.debug("🚀 Iniciando create-mercadopago-payment...");
 
     // Ler corpo
     const body = await req.json();
     const { planType, amount, payer } = body;
 
-    console.log("📦 Dados recebidos:", { planType, amount, payer: payer ? "presente" : "ausente" });
+    console.debug("📦 Dados recebidos:", { planType, amount, payer: payer ? "presente" : "ausente" });
 
     // Supabase client
     const supabaseClient = createClient(
@@ -83,7 +83,7 @@ serve(async (req) => {
     if (userError || !userData?.user) throw new Error("Usuário não autenticado");
 
     const user = userData.user;
-    console.log("✅ Usuário autenticado:", user.id);
+    console.debug("✅ Usuário autenticado:", user.id);
 
     // Buscar profile
     const { data: profile, error: profileError } = await supabaseClient
@@ -95,7 +95,7 @@ serve(async (req) => {
     if (profileError) throw profileError;
     if (!profile) throw new Error("Perfil não encontrado");
 
-    console.log("✅ Profile encontrado:", profile.id);
+    console.debug("✅ Profile encontrado:", profile.id);
 
     // Validar CPF
     if (!payer?.cpf) throw new Error("CPF obrigatório");
@@ -131,16 +131,16 @@ serve(async (req) => {
       .single();
 
     if (paymentError) throw paymentError;
-    console.log("✅ Registro de pagamento criado:", payment.id);
+    console.debug("✅ Registro de pagamento criado:", payment.id);
 
     // Token Mercado Pago
     const mpToken = Deno.env.get("MP_ACCESS_TOKEN");
     if (!mpToken) throw new Error("MP_ACCESS_TOKEN não configurado nos Secrets");
 
-    console.log("🔐 Token MP encontrado");
+    console.debug("🔐 Token MP encontrado");
 
     const planName = planType === "vip" ? "VIP" : "Básico";
-    console.log("💰 Criando pagamento PIX:", { amount, planName, user: profile.id });
+    console.debug("💰 Criando pagamento PIX:", { amount, planName, user: profile.id });
 
     // CRIAR PAGAMENTO PIX via API v1/payments
     const mpPayload = {
@@ -159,7 +159,7 @@ serve(async (req) => {
       external_reference: payment.id,
     };
 
-    console.log("📤 Enviando para Mercado Pago /v1/payments...");
+    console.debug("📤 Enviando para Mercado Pago /v1/payments...");
 
     const mpRes = await fetch("https://api.mercadopago.com/v1/payments", {
       method: "POST",
@@ -180,8 +180,8 @@ serve(async (req) => {
       mpData = { raw: mpText };
     }
 
-    console.log("📥 Resposta MP status:", mpRes.status);
-    console.log("📥 Resposta MP data:", JSON.stringify(mpData, null, 2));
+    console.debug("📥 Resposta MP status:", mpRes.status);
+    console.debug("📥 Resposta MP data:", JSON.stringify(mpData, null, 2));
 
     if (!mpRes.ok) {
       console.error("❌ Erro Mercado Pago:", mpText);
@@ -197,7 +197,7 @@ serve(async (req) => {
       throw new Error("QR Code não foi gerado pelo Mercado Pago");
     }
 
-    console.log("✅ QR Code gerado com sucesso!");
+    console.debug("✅ QR Code gerado com sucesso!");
 
     // Atualizar payment com QR code
     await supabaseClient

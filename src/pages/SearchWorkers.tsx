@@ -94,22 +94,16 @@ export default function SearchWorkers() {
     setError(null);
 
     try {
-      console.log('🔍 Iniciando busca de profissionais...');
-      console.log('📊 Filtros aplicados:', filters);
 
-      // FASE 2: Buscar serviços com busca inteligente
-      console.log('🔍 FASE 2: Buscando serviços...');
       let servicesQuery = supabase
         .from('worker_services')
         .select('id, user_id, title, description, price, location, custom_category, availability, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
 
       if (filters.category !== 'all') {
-        console.log('📌 Filtro categoria aplicado:', filters.category);
         servicesQuery = servicesQuery.eq('category_id', filters.category);
       }
 
       if (filters.subcategory !== 'all') {
-        console.log('📌 Filtro subcategoria aplicado:', filters.subcategory);
         servicesQuery = servicesQuery.eq('subcategory_id', filters.subcategory);
       }
 
@@ -128,10 +122,7 @@ export default function SearchWorkers() {
         throw servicesError;
       }
 
-      console.log(`📦 Serviços encontrados: ${servicesData?.length || 0}`);
-
       if (!servicesData || servicesData.length === 0) {
-        console.log('⚠️ Nenhum serviço encontrado com os filtros');
         setWorkers([]);
         setError("Nenhum profissional encontrado. Tente ajustar sua busca.");
         setLoading(false);
@@ -139,9 +130,7 @@ export default function SearchWorkers() {
       }
 
       // FASE 3: Buscar usuários com filtros aplicados
-      console.log('👥 FASE 3: Buscando usuários dos serviços...');
       const userIds = servicesData.map(s => s.user_id);
-      console.log('🔑 IDs de usuários encontrados nos serviços:', userIds);
 
       // Use secure view that doesn't expose PII (phone, email, cpf, address)
       let usersQuery = supabase
@@ -167,12 +156,10 @@ export default function SearchWorkers() {
 
       // Aplicar filtro de cidade
       if (filters.city_id !== 'all') {
-        console.log('🏙️ Filtro cidade aplicado:', filters.city_id);
         const selectedCity = cities.find(c => c.id === filters.city_id);
-        console.log('📍 Nome da cidade:', selectedCity?.name);
         usersQuery = usersQuery.eq('city_id', filters.city_id);
       } else {
-        console.log('🌍 Sem filtro de cidade - buscando em TODAS as cidades');
+        // sem filtro de cidade
       }
 
       // Aplicar filtro de bairro
@@ -192,7 +179,7 @@ export default function SearchWorkers() {
         throw usersError;
       }
 
-      console.log(`👥 Usuários encontrados: ${usersData?.length || 0}`);
+
 
       // FASE 4: Combinar e processar resultados com badges
       const combined = (usersData || []).map(user => {
@@ -236,7 +223,7 @@ export default function SearchWorkers() {
         return (b.rating_avg || 0) - (a.rating_avg || 0);
       });
 
-      console.log(`✅ Total de profissionais combinados: ${combined.length}`);
+
       setWorkers(combined);
 
       if (combined.length === 0) {
@@ -468,7 +455,7 @@ export default function SearchWorkers() {
                 <p className="text-muted-foreground mb-6">
                   Não encontrou o profissional que precisa? Publique uma vaga e deixe que eles venham até você!
                 </p>
-                <Button onClick={() => navigate('/post-job')} size="lg">
+                <Button onClick={() => navigate('/post-job')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-white dark:text-white">
                   Publicar Vaga
                 </Button>
               </Card>
@@ -482,7 +469,6 @@ export default function SearchWorkers() {
                       <Link
                         to={`/worker/${worker.id}`}
                         onClick={(e) => {
-                          console.log('🔗 Navegando para perfil do profissional:', worker.id);
                           if (!canViewProfiles) {
                             e.preventDefault();
                             setShowUpgradeModal(true);

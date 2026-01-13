@@ -210,7 +210,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('Profile completion email sent to:', email);
+    console.debug('Profile completion email sent to:', email);
 
     return new Response(
       JSON.stringify({ success: true }),

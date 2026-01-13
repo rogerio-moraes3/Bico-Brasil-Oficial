@@ -17,7 +17,7 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    console.log('[notify-job-expiration] Iniciando verificação de jobs expirando...');
+    console.debug('[notify-job-expiration] Iniciando verificação de jobs expirando...');
 
     // Buscar jobs que expiram em 1 dia
     const tomorrow = new Date();
@@ -41,7 +41,7 @@ serve(async (req) => {
       throw error;
     }
 
-    console.log(`[notify-job-expiration] Encontrados ${jobs?.length || 0} jobs expirando em breve`);
+    console.debug(`[notify-job-expiration] Encontrados ${jobs?.length || 0} jobs expirando em breve`);
 
     let notifiedCount = 0;
 
@@ -51,7 +51,7 @@ serve(async (req) => {
         const userAuthId = job.users?.auth_id;
         
         if (!userAuthId) {
-          console.warn(`[notify-job-expiration] Job ${job.id} sem auth_id válido`);
+          console.debug(`[notify-job-expiration] Job ${job.id} sem auth_id válido`);
           continue;
         }
 
@@ -70,14 +70,14 @@ serve(async (req) => {
           console.error(`[notify-job-expiration] Erro ao criar notificação para job ${job.id}:`, notifError);
         } else {
           notifiedCount++;
-          console.log(`[notify-job-expiration] Notificação criada para job ${job.id} (${job.title})`);
+          console.debug(`[notify-job-expiration] Notificação criada para job ${job.id} (${job.title})`);
         }
       } catch (err) {
         console.error(`[notify-job-expiration] Erro ao processar job ${job.id}:`, err);
       }
     }
 
-    console.log(`[notify-job-expiration] Processo concluído. ${notifiedCount} notificações enviadas.`);
+    console.debug(`[notify-job-expiration] Processo concluído. ${notifiedCount} notificações enviadas.`);
 
     return new Response(
       JSON.stringify({ 

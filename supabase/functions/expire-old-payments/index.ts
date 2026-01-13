@@ -30,7 +30,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('⏰ Iniciando expiração automática de QR Codes antigos...');
+    console.debug('⏰ Iniciando expiração automática de QR Codes antigos...');
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -38,7 +38,7 @@ serve(async (req) => {
 
     // Expirar pagamentos pendentes com mais de 15 minutos
     const expirationTime = new Date(Date.now() - 15 * 60 * 1000).toISOString();
-    console.log('🔍 Buscando pagamentos pendentes antes de:', expirationTime);
+    console.debug('🔍 Buscando pagamentos pendentes antes de:', expirationTime);
 
     const { data: expiredPayments, error: updateError } = await supabase
       .from("payments")
@@ -56,10 +56,10 @@ serve(async (req) => {
     }
 
     const count = expiredPayments?.length || 0;
-    console.log(`✅ ${count} pagamento(s) expirado(s)`);
+    console.debug(`✅ ${count} pagamento(s) expirado(s)`);
 
     if (expiredPayments && expiredPayments.length > 0) {
-      console.log('📋 IDs expirados:', expiredPayments.map(p => p.id).join(', '));
+      console.debug('📋 IDs expirados:', expiredPayments.map(p => p.id).join(', '));
     }
 
     return new Response(

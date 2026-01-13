@@ -40,7 +40,7 @@ async function fetchWithRetry(url: string, options: any, retries = 2, waitMs = 6
       return response;
     } catch (err) {
       if (i === retries) throw err;
-      console.log(`⚠️ Retry ${i + 1}/${retries} após ${waitMs}ms...`);
+      console.debug(`⚠️ Retry ${i + 1}/${retries} após ${waitMs}ms...`);
       await new Promise(resolve => setTimeout(resolve, waitMs));
     }
   }
@@ -97,8 +97,8 @@ serve(async (req) => {
     if (profileError) throw profileError;
     if (!profile) throw new Error("Perfil do usuário não encontrado");
 
-    console.log("🚀 Iniciando processo de pagamento...");
-    console.log(`👤 Usuário: ${profile.name} (${profile.id})`);
+    console.debug("🚀 Iniciando processo de pagamento...");
+    console.debug(`👤 Usuário: ${profile.name} (${profile.id})`);
 
     // Validar Access Token
     const accessToken = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN");
@@ -111,16 +111,16 @@ serve(async (req) => {
     const isProductionToken = accessToken.startsWith("APP_USR-");
     const isTestToken = accessToken.startsWith("TEST-");
 
-    console.log(`🔐 Token tipo: ${isProductionToken ? "PRODUÇÃO" : isTestToken ? "TESTE" : "DESCONHECIDO"}`);
+    console.debug(`🔐 Token tipo: ${isProductionToken ? "PRODUÇÃO" : isTestToken ? "TESTE" : "DESCONHECIDO"}`);
 
     // ⚠️ Avisar se for teste, mas NÃO bloquear
     if (isTestToken) {
-      console.warn("⚠️ Usando credenciais de TESTE - Pagamentos em sandbox (não são reais)");
+      console.debug("⚠️ Usando credenciais de TESTE - Pagamentos em sandbox (não são reais)");
     }
 
     // ℹ️ Informativo (não bloqueia mais)
     if (isProductionToken) {
-      console.log("✅ Usando credenciais de PRODUÇÃO - Pagamentos reais");
+      console.debug("✅ Usando credenciais de PRODUÇÃO - Pagamentos reais");
     }
 
     // ====== AUTO-CANCELAMENTO DE PAGAMENTOS PENDENTES ======
@@ -156,9 +156,9 @@ serve(async (req) => {
           );
 
           if (cancelResponse.ok) {
-            console.log(`✅ Pagamento ${oldPayment.id} cancelado no MP`);
+            console.debug(`✅ Pagamento ${oldPayment.id} cancelado no MP`);
           } else {
-            console.log(`⚠️ Não foi possível cancelar ${oldPayment.id} no MP (continuando...)`);
+            console.debug(`⚠️ Não foi possível cancelar ${oldPayment.id} no MP (continuando...)`);
           }
 
           // Atualizar status no banco
@@ -167,14 +167,14 @@ serve(async (req) => {
             .update({ status: "cancelled" })
             .eq("id", oldPayment.id);
 
-          console.log(`✅ Pagamento ${oldPayment.id} marcado como cancelled no banco`);
+          console.debug(`✅ Pagamento ${oldPayment.id} marcado como cancelled no banco`);
         } catch (error) {
           console.error(`❌ Erro ao cancelar pagamento ${oldPayment.id}:`, error);
           // Continua mesmo com erro
         }
       }
 
-      console.log('✅ Cancelamento automático concluído');
+      console.debug('✅ Cancelamento automático concluído');
     }
 
     // Params
@@ -203,7 +203,7 @@ serve(async (req) => {
 
     if (paymentError) throw paymentError;
 
-    console.log('🔐 Token MP existe:', !!accessToken);
+    console.debug('🔐 Token MP existe:', !!accessToken);
     if (!accessToken) throw new Error("Token Mercado Pago não configurado");
 
     const planName = planType === "vip"
@@ -211,9 +211,9 @@ serve(async (req) => {
       : planType === "anual"
         ? "Anual (R$ 249,90)"
         : "Premium (R$ 19,90)";
-    console.log('💰 Criando NOVO pagamento PIX para user:', profile.id);
-    console.log('📊 Valor:', amount, 'Plano:', planName);
-    console.log('👤 Pagador:', payer?.name, payer?.email);
+    console.debug('💰 Criando NOVO pagamento PIX para user:', profile.id);
+    console.debug('📊 Valor:', amount, 'Plano:', planName);
+    console.debug('👤 Pagador:', payer?.name, payer?.email);
 
     // --- PIX ---
     if (paymentMethod === "pix") {
@@ -227,12 +227,12 @@ serve(async (req) => {
       const payerName = payer?.name || profile.name || "Nome não informado";
       const payerEmail = payer?.email || email || profile.email || "email@exemplo.com";
 
-      console.log("👤 Dados do Pagador:");
-      console.log("   Nome:", payerName);
-      console.log("   Email:", payerEmail);
-      console.log("   CPF:", payerCPF);
+      console.debug("👤 Dados do Pagador:");
+      console.debug("   Nome:", payerName);
+      console.debug("   Email:", payerEmail);
+      console.debug("   CPF:", payerCPF);
 
-      console.log('📤 Enviando pagamento PIX para Mercado Pago...');
+      console.debug('📤 Enviando pagamento PIX para Mercado Pago...');
 
       // Corpo da requisição conforme documentação oficial do Mercado Pago
       // 📚 Documentação: https://www.mercadopago.com.br/developers/en/reference/payments/_payments/post
@@ -284,11 +284,11 @@ serve(async (req) => {
         }
       };
 
-      console.log("📋 Corpo da requisição:", JSON.stringify(pixPaymentBody, null, 2));
-      console.log("📤 Enviando para Mercado Pago API...");
-      console.log("🔑 Token tipo:", isProductionToken ? "PRODUÇÃO" : "TESTE");
-      console.log("💰 Valor:", amount);
-      console.log("👤 CPF:", payerCPF);
+      console.debug("📋 Corpo da requisição:", JSON.stringify(pixPaymentBody, null, 2));
+      console.debug("📤 Enviando para Mercado Pago API...");
+      console.debug("🔑 Token tipo:", isProductionToken ? "PRODUÇÃO" : "TESTE");
+      console.debug("💰 Valor:", amount);
+      console.debug("👤 CPF:", payerCPF);
 
       // FASE 1: Requisição com retry e Idempotency Key
       const mpRes = await fetchWithRetry(
@@ -314,10 +314,10 @@ serve(async (req) => {
         pixData = { raw: text };
       }
 
-      console.log('✅ PIX criado com sucesso!');
-      console.log('📋 ID Pagamento MP:', pixData.id);
-      console.log('💳 Status:', pixData.status);
-      console.log('🔗 QR Code gerado:', !!pixData.point_of_interaction?.transaction_data?.qr_code);
+      console.debug('✅ PIX criado com sucesso!');
+      console.debug('📋 ID Pagamento MP:', pixData.id);
+      console.debug('💳 Status:', pixData.status);
+      console.debug('🔗 QR Code gerado:', !!pixData.point_of_interaction?.transaction_data?.qr_code);
 
       // FASE 1: Tratamento de erros específicos
       if (!mpRes.ok) {
@@ -337,7 +337,7 @@ serve(async (req) => {
               errorMessage = "Token do Mercado Pago está mal formatado ou inválido. Verifique se copiou corretamente.";
             }
           } catch (parseError) {
-            console.warn("⚠️ Não foi possível parsear erro JSON");
+            console.debug("⚠️ Não foi possível parsear erro JSON");
           }
 
           return new Response(JSON.stringify({
@@ -369,7 +369,7 @@ serve(async (req) => {
 
       // Enviar email com QR Code PIX
       try {
-        console.log("📧 Enviando email com QR Code PIX...");
+        console.debug("📧 Enviando email com QR Code PIX...");
         const emailResponse = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`, {
           method: "POST",
           headers: {
@@ -393,9 +393,9 @@ serve(async (req) => {
         });
 
         if (emailResponse.ok) {
-          console.log("✅ Email PIX enviado com sucesso para:", email || profile.email);
+          console.debug("✅ Email PIX enviado com sucesso para:", email || profile.email);
         } else {
-          console.log("⚠️ Falha ao enviar email PIX (não crítico)");
+          console.debug("⚠️ Falha ao enviar email PIX (não crítico)");
         }
       } catch (emailErr) {
         console.error("⚠️ Erro ao enviar email PIX (não fatal):", emailErr);

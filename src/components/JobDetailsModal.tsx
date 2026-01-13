@@ -43,12 +43,7 @@ export const JobDetailsModal = ({ job, open, onOpenChange, canViewContacts, isOw
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  console.log('📞 JobDetailsModal recebeu:', {
-    jobId: job?.id,
-    jobTitle: job?.title,
-    user: job?.user,
-    phone: job?.user?.phone
-  });
+
 
   const formatDate = (date: string) => {
     if (!date) return 'Não especificada';

@@ -30,8 +30,6 @@ export default function PaymentHistory() {
 
   const loadPayments = async () => {
     try {
-      console.log('💳 Carregando histórico de pagamentos...');
-      
       const { data: userData } = await supabase
         .from('users')
         .select('id')
@@ -54,7 +52,6 @@ export default function PaymentHistory() {
         throw error;
       }
       
-      console.log('✅ Pagamentos carregados:', data?.length || 0);
       setPayments(data || []);
     } catch (error) {
       console.error('Error loading payments:', error);

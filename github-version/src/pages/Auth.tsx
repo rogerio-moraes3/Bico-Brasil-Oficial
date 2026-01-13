@@ -49,13 +49,11 @@ export default function Auth() {
         const firstInput = document.querySelector('input[name="name"]') as HTMLInputElement;
         if (firstInput) {
           firstInput.focus();
-          console.log('✅ Foco automático no campo nome');
         }
       } else {
         const emailInput = document.querySelector('input[name="email"]') as HTMLInputElement;
         if (emailInput) {
           emailInput.focus();
-          console.log('✅ Foco automático no campo email');
         }
       }
     }, 150);
@@ -358,7 +356,6 @@ export default function Auth() {
     }
 
     setLoading(true);
-    console.log('[Auth] Iniciando cadastro');
 
     try {
       // Verificar consentimento LGPD

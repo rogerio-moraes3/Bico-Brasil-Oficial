@@ -52,8 +52,6 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
   useEffect(() => {
     if (!pollingPaymentId) return;
 
-    console.log('🔄 Iniciando polling para payment:', pollingPaymentId);
-    
     const pollInterval = setInterval(async () => {
       try {
         const { data: payment } = await supabase
@@ -61,8 +59,6 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
           .select('status')
           .eq('id', pollingPaymentId)
           .single();
-
-        console.log('📊 Status atual:', payment?.status);
 
         if (payment?.status === 'paid') {
           clearInterval(pollInterval);

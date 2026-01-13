@@ -170,15 +170,7 @@ const ProcurarBicos = () => {
 
       if (error) throw error;
 
-      console.log('📞 Jobs carregados:', {
-        total: data?.length,
-        sample: data?.[0] ? {
-          id: data[0].id,
-          title: data[0].title,
-          user: data[0].user,
-          user_phone: data[0].user?.phone
-        } : 'Nenhum job'
-      });
+
 
       setJobs(data || []);
     } catch (error) {
@@ -212,12 +204,7 @@ const ProcurarBicos = () => {
   };
 
   const handleViewJob = (job: any) => {
-    console.log('🎯 Abrindo modal para job:', {
-      id: job.id,
-      title: job.title,
-      user: job.user,
-      phone: job.user?.phone
-    });
+
     setSelectedJob(job);
     setShowDetailsModal(true);
   };
@@ -226,18 +213,9 @@ const ProcurarBicos = () => {
   const isJobOwner = (job: any) => {
     if (!user) return false;
 
-    console.log('🔍 Verificando ownership do anúncio:', {
-      job_id: job.id,
-      job_title: job.title,
-      job_user_id: job.user_id,
-      job_user_auth_id: job.user?.auth_id,
-      current_user_id: user.id
-    });
-
     // Comparar auth_id do job.user com o auth_id do usuário logado
     // Incluir fallback verificando user_id diretamente caso o join falhe
     const isOwner = job.user?.auth_id === user.id || job.user_id === user.id;
-    console.log('✅ Resultado ownership:', isOwner);
 
     return isOwner;
   };
@@ -260,8 +238,6 @@ const ProcurarBicos = () => {
     if (!confirm('Tem certeza que deseja excluir este anúncio?')) return;
 
     try {
-      console.log('🗑️ Tentando excluir anúncio:', jobId);
-
       const { error } = await supabase
         .from('job_postings')
         .delete()
@@ -279,7 +255,6 @@ const ProcurarBicos = () => {
         return;
       }
 
-      console.log('✅ Anúncio excluído com sucesso');
       toast({ title: "Anúncio excluído com sucesso" });
       loadJobs();
     } catch (err) {

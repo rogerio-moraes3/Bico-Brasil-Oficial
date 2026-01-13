@@ -9,7 +9,7 @@ export default function AuthCallback() {
         let mounted = true
 
         const run = async () => {
-            console.log('🔵 CALLBACK START')
+
 
             try {
                 // 1) Get code from URL params
@@ -39,16 +39,13 @@ export default function AuthCallback() {
                     return
                 }
 
-                console.log('✅ SESSION OK:', data.session.user.id)
-
                 // Trigger handle_new_user() já criou o perfil automaticamente
                 // Não precisa chamar Edge Function
 
                 // Limpar URL (agora seguro, pois já temos sessão)
-                console.log('🔵 Limpando URL...')
                 window.history.replaceState({}, '', window.location.pathname)
 
-                console.log('🔵 REDIRECTING TO /app')
+                // Redirecionando para /app
 
                 // Redirecionar para /app
                 if (mounted) {

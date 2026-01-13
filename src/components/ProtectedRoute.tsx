@@ -47,7 +47,6 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
       }
 
       if (!userData) {
-        console.warn('[ProtectedRoute] Usuário não encontrado na tabela users');
         navigate('/');
         setCheckingAdmin(false);
         return;
@@ -69,10 +68,8 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
       }
 
       if (!roleData) {
-        console.warn('[ProtectedRoute] Usuário não é admin');
         navigate('/');
       } else {
-        console.log('[ProtectedRoute] Usuário é admin ✅');
         setIsAdmin(true);
       }
     } catch (error) {

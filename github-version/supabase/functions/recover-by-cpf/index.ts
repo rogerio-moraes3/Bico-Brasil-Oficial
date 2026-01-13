@@ -78,7 +78,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Check rate limit
     if (!checkRateLimit(clientIP)) {
-      console.log(`Rate limit exceeded for IP: ${clientIP}`);
+      console.debug(`Rate limit exceeded for IP: ${clientIP}`);
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -96,7 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Validate CPF format
     const cleanCpf = cpf?.replace(/\D/g, '') || '';
     if (!validateCPF(cleanCpf)) {
-      console.log(`Invalid CPF format attempted`);
+      console.debug(`Invalid CPF format attempted`);
       return new Response(
         JSON.stringify({ success: false, error: "CPF inválido" }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }

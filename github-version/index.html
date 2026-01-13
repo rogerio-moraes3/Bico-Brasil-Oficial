@@ -153,7 +153,7 @@
       const storedVersion = parseInt(localStorage.getItem(VERSION_KEY) || '0');
 
       if (storedVersion < CURRENT_VERSION) {
-        console.log('🔄 Updating app... clearing old caches');
+        // App update: clearing old caches
 
         // Unregister all service workers
         if ('serviceWorker' in navigator) {
@@ -170,9 +170,8 @@
         }
 
         localStorage.setItem(VERSION_KEY, CURRENT_VERSION.toString());
-        console.log('✅ Cache cleared, reloading...');
         window.location.reload(true);
-        return;
+        return; 
       }
 
       // Register service worker normally

@@ -48,7 +48,6 @@ export function PlanCheckoutModal({
   // Auto-preencher dados do usuário ao abrir modal
   useEffect(() => {
     if (open && user) {
-      console.log('UI_VERDE_APLICADA_V3'); // Verificação de deploy
       const fetchUserData = async () => {
         const { data } = await supabase
           .from('users')
@@ -76,7 +75,6 @@ export function PlanCheckoutModal({
       // Auto-aprovar após 2s para não travar
       const timeout = setTimeout(() => {
         if (!mpValidation?.ok) {
-          console.log("⚡ Auto-aprovando credenciais (timeout)");
           setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success', icon: '✅' });
         }
       }, 2000);
@@ -105,13 +103,11 @@ export function PlanCheckoutModal({
       setMpValidation(validation);
 
       if (!validation.ok) {
-        console.warn('⚠️ Mercado Pago:', validation.reason);
         setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success', icon: '✅' }); // Permite prosseguir
       } else {
-        console.log('✅ Mercado Pago:', validation.reason);
+        // validação ok
       }
     } catch (err) {
-      console.warn('⚠️ Erro ao validar (não bloqueante):', err);
       setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success', icon: '✅' }); // Permite prosseguir
     } finally {
       setValidatingMP(false);
@@ -190,8 +186,6 @@ export function PlanCheckoutModal({
       if (!data.qr_code || !data.qr_code_base64) {
         throw new Error("Dados do QR Code não foram retornados");
       }
-
-      console.log("✅ QR Code gerado com sucesso:", data.payment_id);
 
       setQrCodeData({
         qr_code: data.qr_code,

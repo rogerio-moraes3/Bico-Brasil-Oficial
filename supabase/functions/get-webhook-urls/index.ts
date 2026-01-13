@@ -47,7 +47,7 @@ serve(async (req) => {
       .maybeSingle();
 
     if (roleError || !role) {
-      console.log("Admin check failed for user:", user.id);
+      console.debug("Admin check failed for user:", user.id);
       return new Response(
         JSON.stringify({ error: "Forbidden: Admin access required" }),
         { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -77,7 +77,7 @@ serve(async (req) => {
       current_environment: Deno.env.get("DENO_DEPLOYMENT_ID") ? "production" : "development",
     };
 
-    console.log("Webhook URLs returned to admin:", user.email);
+    console.debug("Webhook URLs returned to admin:", user.email);
 
     return new Response(
       JSON.stringify(webhookUrls, null, 2),

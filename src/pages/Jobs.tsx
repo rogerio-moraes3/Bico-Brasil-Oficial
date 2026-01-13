@@ -314,8 +314,8 @@ const Jobs = () => {
             {workers.map((worker, index) => (
               <Card 
                 key={worker.id} 
-                className="hover:shadow-lg transition-all cursor-pointer"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="hover:shadow-lg transition-all cursor-pointer stagger-fade"
+                style={{ ['--stagger-delay' as any]: `${index * 0.1}s` }}
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">

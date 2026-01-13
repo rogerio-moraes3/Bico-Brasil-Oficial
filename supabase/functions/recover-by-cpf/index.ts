@@ -78,7 +78,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Check rate limit
     if (!checkRateLimit(clientIP)) {
-      console.log(`Rate limit exceeded for IP: ${clientIP}`);
+
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -96,7 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Validate CPF format
     const cleanCpf = cpf?.replace(/\D/g, '') || '';
     if (!validateCPF(cleanCpf)) {
-      console.log(`Invalid CPF format attempted`);
+      console.debug(`Invalid CPF format attempted`);
       return new Response(
         JSON.stringify({ success: false, error: "CPF inválido" }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
@@ -169,7 +169,7 @@ const handler = async (req: Request): Promise<Response> => {
         if (resetError) {
           console.error("Reset email error:", resetError);
         } else {
-          console.log(`Recovery email sent for CPF ending in ${cleanCpf.slice(-4)}`);
+          console.debug(`Recovery email sent for CPF ending in ${cleanCpf.slice(-4)}`);
         }
       }
 
@@ -242,7 +242,7 @@ const handler = async (req: Request): Promise<Response> => {
           }
         });
 
-        console.log(`Email changed and recovery sent for CPF ending in ${cleanCpf.slice(-4)}`);
+        console.debug(`Email changed and recovery sent for CPF ending in ${cleanCpf.slice(-4)}`);
       }
 
       // Always return generic success (prevents enumeration)

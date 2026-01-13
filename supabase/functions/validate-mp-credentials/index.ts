@@ -33,7 +33,7 @@ serve(async (req) => {
 
     // Se for token de TESTE, permitir (não bloquear)
     if (isTestToken) {
-      console.log("⚠️ Token de TESTE detectado - modo sandbox ativo");
+
       return new Response(
         JSON.stringify({
           ok: true,
@@ -63,7 +63,7 @@ serve(async (req) => {
     }
 
     // Validar token com API do Mercado Pago
-    console.log("🔍 Validando token com API do Mercado Pago...");
+
     
     const response = await fetch("https://api.mercadopago.com/users/me", {
       headers: {
@@ -96,8 +96,7 @@ serve(async (req) => {
 
     const accountData = await response.json();
 
-    console.log("✅ Token de PRODUÇÃO válido!");
-    console.log(`🏢 Conta: ${accountData.id} - ${accountData.nickname}`);
+    // Token validado em produção
 
     return new Response(
       JSON.stringify({

@@ -340,14 +340,14 @@ export default function PreLaunchLanding() {
             </h3>
             {isAdmin ? (
               <Link to="/admin">
-                <Button variant="default" size="lg" className="gap-2">
+                <Button variant="outline" size="lg" className="gap-2 border-orange-600 text-orange-600 dark:border-white dark:text-white">
                   <Settings className="h-4 w-4" />
                   Acessar Painel
                 </Button>
               </Link>
             ) : (
               <Link to="/auth">
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-white dark:text-white">
                   Fazer Login
                 </Button>
               </Link>

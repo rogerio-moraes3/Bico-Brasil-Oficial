@@ -71,7 +71,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log(`📧 Enviando email tipo: ${type} para: ${to} (user: ${user.id})`);
+    console.debug(`📧 Enviando email tipo: ${type} para: ${to} (user: ${user.id})`);
 
     let html = '';
 
@@ -416,7 +416,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const result = await resendResponse.json();
-    console.log('✅ Email enviado com sucesso:', result);
+    console.debug('✅ Email enviado com sucesso:', result);
 
     return new Response(
       JSON.stringify(result),

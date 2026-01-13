@@ -115,18 +115,16 @@ All colors MUST be HSL.
      ======================================== */
 
   html {
-    font-size: 13px !important;
-    /* FORÇA GLOBAL - Alta Densidade Superbet */
+    font-size: 13px;
+    /* Alta densidade (legacy) */
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 13px !important;
-    /* FORÇA GLOBAL */
-    /* Base reduzida para 13px - Alta densidade Superbet */
-    line-height: 1.4 !important;
-    /* FORÇA GLOBAL */
+    font-size: 13px;
+    /* Base reduzida para 13px - (legacy) */
+    line-height: 1.4;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -184,6 +182,42 @@ All colors MUST be HSL.
   /* Botões menores e mais corporativos */
   .btn-premium {
     @apply h-7 px-2.5 text-[11px] font-semibold rounded uppercase tracking-wider;
+  }
+
+  /* Futuristic background layers moved from inline styles to classes */
+  .futuristic-bg-main {
+    background: radial-gradient(circle at 30% 20%, rgba(0,255,157,0.08), transparent 60%), radial-gradient(circle at 70% 80%, rgba(0,123,255,0.08), transparent 60%);
+    animation: moveFuture 12s ease-in-out infinite alternate;
+    opacity: 0.35;
+    filter: blur(35px) saturate(140%);
+  }
+
+  .futuristic-bg-secondary {
+    background: radial-gradient(circle at 60% 30%, rgba(8,26,52,0.12), transparent 50%), radial-gradient(circle at 20% 70%, rgba(0,255,157,0.06), transparent 50%);
+    animation: metalMove 18s linear infinite alternate;
+    opacity: 0.25;
+    filter: blur(40px);
+  }
+
+  @keyframes moveFuture {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-12px); }
+  }
+
+  @keyframes metalMove {
+    from { transform: translateY(0px) rotate(0deg); }
+    to { transform: translateY(-8px) rotate(2deg); }
+  }
+
+  /* Staggered fade-in for list items (uses --stagger-delay css var) */
+  .stagger-fade {
+    animation: fadeInUp 400ms ease both;
+    animation-delay: var(--stagger-delay, 0s);
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
@@ -304,7 +338,7 @@ All colors MUST be HSL.
   .dark .bg-white,
   .dark .bg-gray-50,
   .dark .bg-gray-100 {
-    background-color: hsl(209 100% 12%) !important;
+    background-color: hsl(209 100% 12%);
   }
 
   /* Garantir texto claro em dark mode */
@@ -324,7 +358,7 @@ All colors MUST be HSL.
   /* Bordas visíveis no dark mode */
   .dark .border,
   .dark [class*="border-"] {
-    border-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.15);
   }
 
   /* Prose (texto de páginas institucionais) no dark mode */
@@ -333,7 +367,7 @@ All colors MUST be HSL.
   .dark .prose li,
   .dark .prose ul,
   .dark .prose ol {
-    color: hsl(0 0% 90%) !important;
+    color: hsl(0 0% 90%);
   }
 
   .dark .prose strong {
@@ -511,8 +545,8 @@ All colors MUST be HSL.
   input,
   select,
   textarea {
-    line-height: 1.5 !important;
-    min-height: 44px !important;
+    line-height: 1.5;
+    min-height: 44px; 
   }
 
   /* ===== EFEITOS SOFISTICADOS SPLIT-SCREEN ===== */
@@ -687,9 +721,9 @@ All colors MUST be HSL.
   .edge-fade,
   .noise-texture,
   .center-divider {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
+    display: none;
+    opacity: 0;
+    visibility: hidden; 
   }
 }
 

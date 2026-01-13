@@ -4,17 +4,17 @@
 
 /* Custom font sizes - override global 13px */
 .text-slogan-sm {
-    font-size: 9px !important;
-    line-height: 1.4 !important;
+    font-size: 9px;
+    line-height: 1.4;
 }
 
 .text-plan-value {
-    font-size: 72px !important;
-    line-height: 1 !important;
+    font-size: 72px;
+    line-height: 1;
 }
 
 @media (min-width: 768px) {
     .md\:text-plan-value {
-        font-size: 96px !important;
+        font-size: 96px;
     }
 }

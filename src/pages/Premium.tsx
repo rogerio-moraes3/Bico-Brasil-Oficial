@@ -82,7 +82,7 @@ export default function Premium() {
                 </div>
                 <CardDescription className="text-base text-slate-700 dark:text-slate-300">Ideal para começar a receber trabalhos</CardDescription>
                 <div className="mt-6 mb-4">
-                  <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 19,90</span>
+                  <span className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg text-[2.5rem] leading-[1]">R$ 19,90</span>
                   <span className="text-slate-400 text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
@@ -97,7 +97,7 @@ export default function Premium() {
                     </li>
                   ))}
                 </ul>
-                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'basico', amount: 19.90, name: 'Premium' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button variant="outline" size="lg" className="w-full text-base font-semibold border-2 border-[#FF6A00] text-[#FF6A00] dark:border-white dark:text-white shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'basico', amount: 19.90, name: 'Premium' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
 
@@ -109,7 +109,7 @@ export default function Premium() {
                 </div>
                 <CardDescription className="text-base text-slate-700 dark:text-slate-300">Destaque total e máxima visibilidade</CardDescription>
                 <div className="mt-6 mb-4">
-                  <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg">R$ 29,90</span>
+                  <span className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg text-[2.5rem] leading-[1]">R$ 29,90</span>
                   <span className="text-slate-400 text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
@@ -124,7 +124,7 @@ export default function Premium() {
                     </li>
                   ))}
                 </ul>
-                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'vip', amount: 29.90, name: 'VIP' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button variant="outline" size="lg" className="w-full text-base font-semibold border-2 border-[#FF6A00] text-[#FF6A00] dark:border-white dark:text-white shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'vip', amount: 29.90, name: 'VIP' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
 
@@ -136,7 +136,7 @@ export default function Premium() {
                 </div>
                 <CardDescription className="text-base text-slate-700 dark:text-slate-300">12 meses de Premium com 30% de desconto</CardDescription>
                 <div className="mt-6 mb-4">
-                  <span style={{ fontSize: '2.5rem', lineHeight: '1' }} className="font-extrabold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent drop-shadow-lg">R$ 249,90</span>
+                  <span className="font-extrabold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent drop-shadow-lg text-[2.5rem] leading-[1]">R$ 249,90</span>
                   <span className="text-slate-400 text-xl font-medium">/ano</span>
                   <p className="text-sm text-slate-400 mt-2 font-medium">Equivale a R$ 20,82/mês (economize R$ 108,90)</p>
                 </div>
@@ -158,7 +158,7 @@ export default function Premium() {
                     <span className="text-sm font-semibold text-amber-400">Pague 1 ano e economize 30%!</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button variant="outline" size="lg" className="w-full text-base font-semibold border-2 border-[#FF6A00] text-[#FF6A00] dark:border-white dark:text-white shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
           </div>

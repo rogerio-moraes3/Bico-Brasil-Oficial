@@ -142,7 +142,7 @@
 </head>
 
 <body style="background-color: #0A1A2F; margin: 0;">
-  <div id="root"></div>
+  <div id="root" style="background-color: #0A1A2F;"></div>
   <script type="module" src="/src/main.tsx"></script>
 
   <script>
@@ -153,7 +153,7 @@
       const storedVersion = parseInt(localStorage.getItem(VERSION_KEY) || '0');
 
       if (storedVersion < CURRENT_VERSION) {
-        console.log('🔄 Updating app... clearing old caches');
+        console.debug('🔄 Updating app... clearing old caches');
 
         // Unregister all service workers
         if ('serviceWorker' in navigator) {

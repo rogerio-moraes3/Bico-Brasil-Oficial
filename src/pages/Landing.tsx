@@ -179,12 +179,12 @@ export default function Landing() {
         <footer className="bg-gray-900 text-white py-8">
           <div className="container mx-auto px-4 text-center">
             <div className="flex justify-center gap-6 mb-4">
-              <button onClick={() => navigate('/terms')} className="hover:text-primary">
+              <button type="button" onClick={() => navigate('/terms')} className="hover:text-primary">
                 Termos de Uso
               </button>
-              <button onClick={() => navigate('/privacy')} className="hover:text-primary">
+              <button type="button" onClick={() => navigate('/privacy')} className="hover:text-primary">
                 Privacidade
-              </button>
+              </button> 
               <a href="mailto:contato@bicobrasil.com" className="hover:text-primary">
                 Contato
               </a>

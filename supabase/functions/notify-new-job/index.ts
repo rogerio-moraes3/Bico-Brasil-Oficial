@@ -19,7 +19,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { jobId, categoryId, cityId } = await req.json();
 
-    console.log(`📢 Notificando novo trabalho: ${jobId} - Categoria: ${categoryId}, Cidade: ${cityId}`);
+
 
     // Buscar detalhes do trabalho
     const { data: job, error: jobError } = await supabase
@@ -51,7 +51,7 @@ const handler = async (req: Request): Promise<Response> => {
       throw workersError;
     }
 
-    console.log(`👥 Encontrados ${workers?.length || 0} prestadores para notificar`);
+
 
     // Criar notificações no banco
     if (workers && workers.length > 0) {
@@ -71,7 +71,7 @@ const handler = async (req: Request): Promise<Response> => {
       if (notifError) {
         console.error('⚠️ Erro ao criar notificações:', notifError);
       } else {
-        console.log(`✅ ${notifications.length} notificações criadas`);
+
       }
     }
 

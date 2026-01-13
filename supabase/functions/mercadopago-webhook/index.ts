@@ -17,7 +17,7 @@ async function validateWebhookSignature(
   secret: string
 ): Promise<boolean> {
   if (!xSignature || !xRequestId) {
-    console.warn("⚠️ Headers de assinatura ausentes");
+    console.debug("⚠️ Headers de assinatura ausentes");
     return false;
   }
 
@@ -34,18 +34,18 @@ async function validateWebhookSignature(
     }
 
     if (!ts || !hash) {
-      console.warn("⚠️ Formato de assinatura inválido");
-      console.log("   x-signature:", xSignature);
+      console.debug("⚠️ Formato de assinatura inválido");
+      console.debug("   x-signature:", xSignature);
       return false;
     }
 
-    console.log("🔐 Validando assinatura...");
-    console.log("   Timestamp:", ts);
-    console.log("   Hash recebido:", hash.substring(0, 20) + "...");
+    console.debug("🔐 Validando assinatura...");
+    console.debug("   Timestamp:", ts);
+    console.debug("   Hash recebido:", hash.substring(0, 20) + "...");
 
     // 2. Criar manifest conforme especificação do Mercado Pago
     const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
-    console.log("📝 Manifest:", manifest);
+    console.debug("📝 Manifest:", manifest);
     
     // 3. Usar Web Crypto API nativa do Deno (global crypto.subtle)
     const encoder = new TextEncoder();
@@ -75,9 +75,9 @@ async function validateWebhookSignature(
 
     // 7. Comparar hashes
     const isValid = expectedHash === hash;
-    console.log(`🔐 Resultado: ${isValid ? "✅ ASSINATURA VÁLIDA" : "❌ ASSINATURA INVÁLIDA"}`);
-    console.log(`   Hash esperado: ${expectedHash.substring(0, 20)}...`);
-    console.log(`   Hash recebido: ${hash.substring(0, 20)}...`);
+    console.debug(`🔐 Resultado: ${isValid ? "✅ ASSINATURA VÁLIDA" : "❌ ASSINATURA INVÁLIDA"}`);
+    console.debug(`   Hash esperado: ${expectedHash.substring(0, 20)}...`);
+    console.debug(`   Hash recebido: ${hash.substring(0, 20)}...`);
     
     return isValid;
   } catch (error) {
@@ -92,14 +92,14 @@ serve(async (req) => {
   }
 
   try {
-    console.log('🔔 ========== WEBHOOK MERCADO PAGO ==========');
+    console.debug('🔔 ========== WEBHOOK MERCADO PAGO ==========');
     
     const body = await req.json();
     const paymentId = body.data?.id || body.id;
     const topic = body.topic || body.type;
 
     if (!paymentId || topic !== 'payment') {
-      console.log('⚠️ Notificação ignorada');
+      console.debug('⚠️ Notificação ignorada');
       return new Response('OK', { status: 200, headers: corsHeaders });
     }
 
@@ -139,7 +139,7 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    console.log("✅ Assinatura validada com sucesso");
+    console.debug("✅ Assinatura validada com sucesso");
 
     const mpToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
     if (!mpToken) {
@@ -148,7 +148,7 @@ serve(async (req) => {
     }
 
     // Fetch payment details from Mercado Pago
-    console.log('📡 Buscando detalhes do pagamento no MP...');
+    console.debug('📡 Buscando detalhes do pagamento no MP...');
     const mpResponse = await fetch(
       `https://api.mercadopago.com/v1/payments/${paymentId}`,
       {
@@ -164,10 +164,10 @@ serve(async (req) => {
     }
 
     const mpData = await mpResponse.json();
-    console.log('✅ Detalhes do pagamento recebidos');
-    console.log('💳 Status MP:', mpData.status);
-    console.log('💰 Valor:', mpData.transaction_amount);
-    console.log('📧 Email:', mpData.payer?.email);
+    console.debug('✅ Detalhes do pagamento recebidos');
+    console.debug('💳 Status MP:', mpData.status);
+    console.debug('💰 Valor:', mpData.transaction_amount);
+    console.debug('📧 Email:', mpData.payer?.email);
 
     // Find payment in our database using mercadopago_payment_id
     const { data: payment, error: paymentError } = await supabase
@@ -181,7 +181,7 @@ serve(async (req) => {
       return new Response('OK', { status: 200, headers: corsHeaders });
     }
 
-    console.log('✅ Pagamento encontrado:', payment.id);
+    console.debug('✅ Pagamento encontrado:', payment.id);
 
     // Map Mercado Pago status to our status
     let newStatus: "paid" | "failed" | "pending" | "in_process" = "pending";
@@ -192,7 +192,7 @@ serve(async (req) => {
     else if (["in_process", "pending", "authorized"].includes(mpStatus)) newStatus = "in_process";
     else newStatus = "pending";
 
-    console.log('🔄 Atualizando status:', payment.status, '->', newStatus);
+    console.debug('🔄 Atualizando status:', payment.status, '->', newStatus);
 
     // Update payment status
     const { error: updateError } = await supabase
@@ -211,10 +211,10 @@ serve(async (req) => {
 
     // If payment approved, activate user plan
     if (newStatus === 'paid' && payment.user_id) {
-      console.log('🎉 ========== PAGAMENTO APROVADO ==========');
-      console.log('👤 Usuário ID:', payment.user_id);
-      console.log('💰 Valor:', mpData.transaction_amount);
-      console.log('📦 Plano:', payment.plan_type || 'basico');
+      console.debug('🎉 ========== PAGAMENTO APROVADO ==========');
+      console.debug('👤 Usuário ID:', payment.user_id);
+      console.debug('💰 Valor:', mpData.transaction_amount);
+      console.debug('📦 Plano:', payment.plan_type || 'basico');
 
       const planType = payment.plan_type || 'basico';
       const now = new Date();
@@ -237,10 +237,10 @@ serve(async (req) => {
       if (updateUserError) {
         console.error("❌ Erro ao ativar plano:", updateUserError);
       } else {
-        console.log("✅ Plano ativado com sucesso!");
-        console.log(`   Tipo: ${planType}`);
-        console.log(`   Válido de: ${now.toISOString()}`);
-        console.log(`   Válido até: ${subscriptionEnd.toISOString()}`);
+        console.debug("✅ Plano ativado com sucesso!");
+        console.debug(`   Tipo: ${planType}`);
+        console.debug(`   Válido de: ${now.toISOString()}`);
+        console.debug(`   Válido até: ${subscriptionEnd.toISOString()}`);
       }
 
       const { error: subError } = await supabase
@@ -271,7 +271,7 @@ serve(async (req) => {
           };
 
           // 1. Confirmação de Pagamento Aprovado (imediato)
-          console.log("📧 [1/4] Enviando confirmação de pagamento...");
+          console.debug("📧 [1/4] Enviando confirmação de pagamento...");
           await fetch(emailBaseUrl, {
             method: "POST",
             headers: emailHeaders,
@@ -289,12 +289,12 @@ serve(async (req) => {
               },
             }),
           });
-          console.log("✅ [1/4] Email de confirmação enviado");
+          console.debug("✅ [1/4] Email de confirmação enviado");
 
           // 2. Recibo Profissional (após 3 segundos)
           setTimeout(async () => {
             try {
-              console.log("📧 [2/4] Enviando recibo...");
+              console.debug("📧 [2/4] Enviando recibo...");
               await fetch(emailBaseUrl, {
                 method: "POST",
                 headers: emailHeaders,
@@ -314,7 +314,7 @@ serve(async (req) => {
                   },
                 }),
               });
-              console.log("✅ [2/4] Recibo enviado");
+              console.debug("✅ [2/4] Recibo enviado");
             } catch (err) {
               console.error("⚠️ Erro ao enviar recibo (não fatal):", err);
             }
@@ -323,7 +323,7 @@ serve(async (req) => {
           // 3. Liberação de Acesso (após 6 segundos)
           setTimeout(async () => {
             try {
-              console.log("📧 [3/4] Enviando liberação de acesso...");
+              console.debug("📧 [3/4] Enviando liberação de acesso...");
               await fetch(emailBaseUrl, {
                 method: "POST",
                 headers: emailHeaders,
@@ -340,7 +340,7 @@ serve(async (req) => {
                   },
                 }),
               });
-              console.log("✅ [3/4] Email de liberação enviado");
+              console.debug("✅ [3/4] Email de liberação enviado");
             } catch (err) {
               console.error("⚠️ Erro ao enviar liberação (não fatal):", err);
             }
@@ -349,7 +349,7 @@ serve(async (req) => {
           // 4. Boas-Vindas (após 10 segundos)
           setTimeout(async () => {
             try {
-              console.log("📧 [4/4] Enviando boas-vindas...");
+              console.debug("📧 [4/4] Enviando boas-vindas...");
               await fetch(emailBaseUrl, {
                 method: "POST",
                 headers: emailHeaders,
@@ -363,7 +363,7 @@ serve(async (req) => {
                   },
                 }),
               });
-              console.log("✅ [4/4] Email de boas-vindas enviado");
+              console.debug("✅ [4/4] Email de boas-vindas enviado");
             } catch (err) {
               console.error("⚠️ Erro ao enviar boas-vindas (não fatal):", err);
             }
@@ -386,7 +386,7 @@ serve(async (req) => {
         });
 
       if (notifUserError) console.error("Erro ao criar notificação usuário:", notifUserError);
-      else console.log("✅ Notificação criada para o usuário:", payment.user_id);
+      else console.debug("✅ Notificação criada para o usuário:", payment.user_id);
 
       // Buscar admin e criar notificação
       const { data: adminRoles } = await supabase
@@ -407,16 +407,16 @@ serve(async (req) => {
           });
 
         if (notifAdminError) console.error("Erro ao criar notificação admin:", notifAdminError);
-        else console.log("✅ Notificação criada para admin");
+        else console.debug("✅ Notificação criada para admin");
       }
       
-      console.log('🎊 ========== PROCESSO COMPLETO ==========');
+      console.debug('🎊 ========== PROCESSO COMPLETO ==========');
     } else {
-      console.log('ℹ️ Status:', newStatus, '- Nenhuma ação adicional necessária');
+      console.debug('ℹ️ Status:', newStatus, '- Nenhuma ação adicional necessária');
     }
 
-    console.log('✅ Webhook processado com sucesso');
-    console.log('==========================================\n');
+    console.debug('✅ Webhook processado com sucesso');
+    console.debug('==========================================\n');
     return new Response('OK', { status: 200, headers: corsHeaders });
 
   } catch (error) {

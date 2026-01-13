@@ -63,7 +63,6 @@ export default function PostJob() {
     setLoading(true);
 
     try {
-      console.log('📝 Iniciando publicação de trabalho...');
 
       // Validações
       if (!formData.title.trim()) {
@@ -79,7 +78,7 @@ export default function PostJob() {
         throw new Error('Cidade é obrigatória');
       }
 
-      console.log('✅ Validações OK, buscando usuário...');
+
 
       // Buscar user_id e verificar publicações grátis
       const { data: userData, error: userError } = await supabase
@@ -110,8 +109,7 @@ export default function PostJob() {
         return;
       }
 
-      console.log('✅ Usuário encontrado:', userData.id);
-      console.log('📤 Enviando dados para job_postings...');
+
 
       // Criar publicação
       const { data: jobData, error: jobError } = await supabase
@@ -138,7 +136,7 @@ export default function PostJob() {
         throw new Error('Erro ao publicar: ' + jobError.message);
       }
 
-      console.log('✅ Trabalho publicado com sucesso!', jobData);
+
 
       // Decrementar publicações grátis se for empregador
       if (userData.user_role === 'empregador' && userData.free_posts_remaining > 0) {

@@ -16,7 +16,6 @@ export const usePushNotifications = () => {
 
   const requestPermission = async () => {
     if (!isSupported) {
-      console.log('Push notifications not supported');
       return false;
     }
 
@@ -40,7 +39,6 @@ export const usePushNotifications = () => {
 
     const vapidKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
     if (!vapidKey) {
-      console.warn('VAPID key not configured - skipping push subscription');
       return;
     }
 
@@ -72,11 +70,7 @@ export const usePushNotifications = () => {
         
         // Tabela pode não existir - não travar o app
         if (error) {
-          if (error.code === '42P01') {
-            console.warn('push_subscriptions table does not exist yet');
-          } else {
-            console.error('Error saving push subscription:', error);
-          }
+          console.error('Error saving push subscription:', error);
         }
       }
     } catch (error) {

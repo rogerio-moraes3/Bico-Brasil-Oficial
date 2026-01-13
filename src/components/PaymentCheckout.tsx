@@ -68,7 +68,6 @@ export default function PaymentCheckout({ planName, amount, onSuccess }: Payment
 
     try {
       setLoading(true);
-      console.log("🔍 Criando pagamento PIX");
       
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const url = `${supabaseUrl}/functions/v1/create-pix-payment`;
@@ -100,7 +99,6 @@ export default function PaymentCheckout({ planName, amount, onSuccess }: Payment
       }
 
       const data = await response.json();
-      console.log("✅ Pagamento criado:", data);
 
       // Set QR Code data and open modal
       setQrCode(data.qrCode);

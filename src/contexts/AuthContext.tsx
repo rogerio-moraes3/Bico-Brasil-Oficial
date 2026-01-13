@@ -38,7 +38,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
-        console.log('[AuthContext] Sessão inicial:', session?.user?.id || 'nenhuma');
       }
     };
 
@@ -46,7 +45,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // DEPOIS: configurar listener para mudanças futuras
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('[AuthContext] Auth state changed:', event, session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
 
@@ -68,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   .from('users')
                   .update({ profile_photo: googleAvatar })
                   .eq('auth_id', session.user.id);
-                console.log('[AuthContext] Foto do Google atualizada');
+
               }
             }
           } catch (error) {
@@ -86,8 +84,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, userData: any) => {
     try {
-      console.log('[AuthContext] Iniciando signup para:', email);
-
       // Enviar dados do usuário via options.data
       // Dados já vêm sanitizados do Auth.tsx
       const { data, error } = await supabase.auth.signUp({
@@ -105,8 +101,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) throw error;
-
-      console.log('[AuthContext] Signup realizado com sucesso');
       return { error: null };
     } catch (error: any) {
       console.error('[AuthContext] SignUp error:', error);
@@ -130,13 +124,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      console.log('[AuthContext] Iniciando logout...');
       // Limpar estado local PRIMEIRO
       setUser(null);
       setSession(null);
       // Limpar no Supabase
       await supabase.auth.signOut();
-      console.log('[AuthContext] Logout concluído, limpando cache...');
       // MARRETA: Limpar TUDO
       localStorage.clear();
       sessionStorage.clear();
