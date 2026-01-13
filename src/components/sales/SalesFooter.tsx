@@ -20,41 +20,41 @@ export const SalesFooter = () => {
             <button
               onClick={() => navigate("/app")}
               style={{
-                color: 'red !important',
-                fontSize: '30px !important',
-                border: '1px solid #FFFFFF !important',
-                background: 'transparent !important',
-                display: 'flex !important',
-                opacity: '1 !important',
+                color: '#FFFFFF !important',
+                borderColor: '#FFFFFF !important',
+                border: '1px solid #FFFFFF',
+                background: 'transparent',
                 padding: '1rem 2rem',
                 borderRadius: '0.5rem',
                 fontWeight: '700',
+                fontSize: '16px',
                 cursor: 'pointer',
+                display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem'
               }}
             >
-              TESTE BRANCO 123
-              <ArrowRight style={{ color: 'red !important' }} />
+              Publicar Bico
+              <ArrowRight style={{ color: '#FFFFFF !important' }} />
             </button>
             <button
               onClick={() => navigate("/app")}
               style={{
-                color: 'red !important',
-                fontSize: '30px !important',
-                border: '1px solid #FFFFFF !important',
-                background: 'transparent !important',
-                display: 'flex !important',
-                opacity: '1 !important',
+                color: '#FFFFFF !important',
+                borderColor: '#FFFFFF !important',
+                border: '1px solid #FFFFFF',
+                background: 'transparent',
                 padding: '1rem 2rem',
                 borderRadius: '0.5rem',
                 fontWeight: '700',
+                fontSize: '16px',
                 cursor: 'pointer',
+                display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem'
               }}
             >
-              TESTE BRANCO 123
+              Buscar Bicos
             </button>
           </div>
         </div>

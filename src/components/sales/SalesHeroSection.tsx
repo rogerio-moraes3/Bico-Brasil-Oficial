@@ -75,24 +75,23 @@ export const SalesHeroSection = () => {
               ref={offerButtonRef}
               onClick={() => navigate("/app")}
               style={{
-                color: 'red !important',
-                fontSize: '30px !important',
+                color: '#1E2A5A !important',
                 border: '1px solid #1E2A5A !important',
-                background: '#FFFFFF !important',
-                display: 'flex !important',
-                opacity: '1 !important',
+                backgroundColor: '#FFFFFF !important',
                 padding: '12px 24px',
                 borderRadius: '8px',
                 fontWeight: '600',
+                fontSize: '16px',
                 cursor: 'pointer',
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
                 zIndex: 10
               }}
             >
-              <Briefcase style={{ color: 'red !important' }} />
-              TESTE AZUL 123
+              <Briefcase style={{ color: '#1E2A5A !important' }} />
+              Oferecer Serviços
             </button>
           </div>
 
