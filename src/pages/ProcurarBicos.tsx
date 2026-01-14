@@ -83,10 +83,8 @@ const ProcurarBicos = () => {
     }
   }, [filters.category_id]);
 
-  // Carregar jobs quando filtros mudarem (manual search only - search is triggered by button)
-  useEffect(() => {
-    loadJobs();
-  }, [filters]);
+  // Manual search only: loadJobs is triggered by explicit user action (magnifying glass / Buscar button)
+  // Removed automatic trigger on filters change to avoid unexpected network calls and UX surprises.
 
   const loadCategories = async () => {
     const { data, error } = await supabase
@@ -214,7 +212,7 @@ const ProcurarBicos = () => {
       if (error) throw error;
 
       // Save cache for offline use
-      try { localStorage.setItem(cacheKey, JSON.stringify({ jobs: data, timestamp: Date.now() })); } catch (_) {}
+      try { localStorage.setItem(cacheKey, JSON.stringify({ jobs: data, timestamp: Date.now() })); } catch (_) { }
 
       setJobs(data || []);
       setShowingCached(false);
@@ -361,14 +359,14 @@ const ProcurarBicos = () => {
 
         {(showingCached || !isOnline) && (
           <div className="mb-4 rounded-md bg-yellow-50 border border-yellow-200 p-3 text-yellow-800">
-            { !isOnline ? (
+            {!isOnline ? (
               <strong>Sem internet no momento</strong>
             ) : (
               <strong>Mostrando últimos dados disponíveis</strong>
-            ) }
+            )}
             <div className="text-sm">Os resultados podem estar desatualizados; serão atualizados quando a conexão voltar.</div>
           </div>
-        ) }
+        )}
 
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -392,7 +390,6 @@ const ProcurarBicos = () => {
                   placeholder="Digite o tipo de bico..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   className="pl-9"
                 />
               </div>
@@ -475,7 +472,7 @@ const ProcurarBicos = () => {
                 Cadastre-se como profissional e apareça nas buscas para receber propostas de trabalho!
               </p>
             </div>
-            <Button onClick={() => navigate('/offer-services')} variant="outline" size="lg" className="whitespace-nowrap border-orange-600 text-orange-600 dark:border-white dark:text-white">
+            <Button onClick={() => navigate('/offer-services')} variant="outline" size="lg" className="whitespace-nowrap border-orange-600 text-orange-600 dark:border-border dark:text-foreground">
               <Briefcase className="mr-2 h-4 w-4" />
               Oferecer Serviços
             </Button>
@@ -496,7 +493,7 @@ const ProcurarBicos = () => {
             </p>
             <div className="flex gap-3 justify-center">
               <Button onClick={handleClearFilters} variant="outline">Limpar Filtros</Button>
-              <Button onClick={() => navigate('/offer-services')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-white dark:text-white">Oferecer Serviços</Button>
+              <Button onClick={() => navigate('/offer-services')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-border dark:text-foreground">Oferecer Serviços</Button>
             </div>
           </div>
         ) : (

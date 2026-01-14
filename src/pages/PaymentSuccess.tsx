@@ -21,25 +21,25 @@ export default function PaymentSuccess() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-grow container mx-auto px-4 py-16 pb-20 md:pb-16">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => safeGoBack(navigate)}
-          className="mb-4"
+          className="mb-4 text-[var(--nav-link)]"
         >
-          <ArrowLeft className="h-4 w-4 mr-2 text-foreground dark:text-white" />
+          <ArrowLeft className="h-4 w-4 mr-2 text-[var(--nav-link)]" />
           Voltar
         </Button>
         <div className="max-w-md mx-auto text-center animate-fade-in">
           <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4 animate-scale-in" />
           <h1 className="text-3xl font-bold mb-4">Pagamento Confirmado!</h1>
           <p className="text-muted-foreground mb-8">
-            Seu Plano Pro foi ativado com sucesso. Agora você terá maior visibilidade 
+            Seu Plano Pro foi ativado com sucesso. Agora você terá maior visibilidade
             e mais oportunidades de trabalho!
           </p>
-          
+
           <div className="space-y-3">
             <Button onClick={() => navigate('/')} className="w-full">
               Voltar para Início

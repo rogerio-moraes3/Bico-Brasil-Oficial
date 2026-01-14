@@ -26,25 +26,42 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
       // map availability
       const availability = payload.available_today ? 'hoje' : payload.availability || null;
 
-      const { error: insertError } = await supabase
-        .from('job_postings')
-        .insert({
-          user_id: userData.id,
-          title: payload.title,
-          description: payload.description,
-          price: payload.price ? parseFloat(payload.price) : null,
-          location: payload.location || null,
-          category_id: payload.isCustomCategory ? null : payload.category,
-          custom_category: payload.isCustomCategory ? payload.customCategory : null,
-          city_id: payload.city_id,
-          neighborhood: payload.neighborhood,
-          urgent: payload.urgent || false,
-          date_time: payload.date_time ? new Date(payload.date_time).toISOString() : null,
-          availability: availability,
-          status: 'open'
-        });
+      // Check schema and include availability only if the column exists; fallback retry without it on error
+      const { hasColumn } = await import('@/lib/schemaCheck');
+      const availabilityExists = await hasColumn('job_postings', 'availability');
 
-      if (insertError) throw insertError;
+      const insertPayload: any = {
+        user_id: userData.id,
+        title: payload.title,
+        description: payload.description,
+        price: payload.price ? parseFloat(payload.price) : null,
+        location: payload.location || null,
+        category_id: payload.isCustomCategory ? null : payload.category,
+        custom_category: payload.isCustomCategory ? payload.customCategory : null,
+        city_id: payload.city_id,
+        neighborhood: payload.neighborhood,
+        urgent: payload.urgent || false,
+        date_time: payload.date_time ? new Date(payload.date_time).toISOString() : null,
+        status: 'open'
+      };
+
+      if (availabilityExists) {
+        insertPayload.availability = availability;
+      }
+
+      let insertError: any = null;
+      const insertRes = await supabase.from('job_postings').insert(insertPayload);
+      if (insertRes.error) {
+        insertError = insertRes.error;
+        // Last resort fallback: retry without availability if error references it
+        if (insertError.message?.toLowerCase?.().includes('availability')) {
+          delete insertPayload.availability;
+          const retryRes = await supabase.from('job_postings').insert(insertPayload);
+          if (retryRes.error) throw retryRes.error;
+        } else {
+          throw insertError;
+        }
+      }
 
       // decrement free posts if employer
       if (userData.user_role === 'empregador' && userData.free_posts_remaining > 0) {
@@ -86,22 +103,36 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
       if (getUserError || !userData) throw new Error('Usuario nao encontrado');
 
       // insert worker service
-      const { error: serviceError } = await supabase
-        .from('worker_services')
-        .insert({
-          user_id: userData.id,
-          title: payload.service_title,
-          description: payload.description,
-          category_id: payload.isCustomCategory ? null : payload.category,
-          custom_category: payload.isCustomCategory ? payload.customCategory : null,
-          subcategory_id: payload.subcategory || null,
-          price: payload.price ? parseFloat(payload.price) : null,
-          location: payload.location || null,
-          availability: payload.available_today ? 'hoje' : payload.availability,
-          active: true
-        });
+      const { hasColumn } = await import('@/lib/schemaCheck');
+      const availabilityExistsSvc = await hasColumn('worker_services', 'availability');
 
-      if (serviceError) throw serviceError;
+      const servicePayload: any = {
+        user_id: userData.id,
+        title: payload.service_title,
+        description: payload.description,
+        category_id: payload.isCustomCategory ? null : payload.category,
+        custom_category: payload.isCustomCategory ? payload.customCategory : null,
+        subcategory_id: payload.subcategory || null,
+        price: payload.price ? parseFloat(payload.price) : null,
+        location: payload.location || null,
+        active: true
+      };
+
+      if (availabilityExistsSvc) {
+        servicePayload.availability = payload.available_today ? 'hoje' : payload.availability;
+      }
+
+      const svcRes = await supabase.from('worker_services').insert(servicePayload);
+      if (svcRes.error) {
+        const svcErr = svcRes.error;
+        if (svcErr.message?.toLowerCase?.().includes('availability')) {
+          delete servicePayload.availability;
+          const retry = await supabase.from('worker_services').insert(servicePayload);
+          if (retry.error) throw retry.error;
+        } else {
+          throw svcErr;
+        }
+      }
 
       processedCount++;
     }

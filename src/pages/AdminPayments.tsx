@@ -42,7 +42,7 @@ export default function AdminPayments() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [filteredPayments, setFilteredPayments] = useState<Payment[]>([]);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
-  
+
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -140,7 +140,7 @@ export default function AdminPayments() {
     const approved = data.filter(p => p.status === 'paid');
     const pending = data.filter(p => p.status === 'pending');
     const failed = data.filter(p => p.status === 'failed');
-    
+
     const totalRevenue = approved.reduce((sum, p) => sum + p.amount, 0);
     const avgTicket = approved.length > 0 ? totalRevenue / approved.length : 0;
 
@@ -164,8 +164,8 @@ export default function AdminPayments() {
       })
       .reduce((sum, p) => sum + p.amount, 0);
 
-    const growthRate = revenueLastMonth > 0 
-      ? ((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 100 
+    const growthRate = revenueLastMonth > 0
+      ? ((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 100
       : 0;
 
     setStats({
@@ -244,7 +244,7 @@ export default function AdminPayments() {
 
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(p => 
+      filtered = filtered.filter(p =>
         p.user?.name?.toLowerCase().includes(term) ||
         p.user?.email?.toLowerCase().includes(term) ||
         p.mercadopago_payment_id?.toLowerCase().includes(term)
@@ -325,7 +325,7 @@ export default function AdminPayments() {
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-6">
           <Button variant="ghost" onClick={() => navigate('/admin')}>
-            <ArrowLeft className="w-4 h-4 mr-2 text-foreground dark:text-white" />
+            <ArrowLeft className="w-4 h-4 mr-2 text-[var(--nav-link)]" />
             Voltar
           </Button>
           <h1 className="text-2xl font-bold">Gerenciar Pagamentos</h1>
@@ -468,7 +468,7 @@ export default function AdminPayments() {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={dateFilter} onValueChange={setDateFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Período" />

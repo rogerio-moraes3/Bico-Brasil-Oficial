@@ -16,7 +16,8 @@ import CitySelect from '@/components/CitySelect';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { useCities } from '@/hooks/useCities';
-import { Loader2, Briefcase } from 'lucide-react';
+import { Loader2, Briefcase, ArrowLeft } from 'lucide-react';
+import { safeGoBack } from '@/lib/utils';
 
 export default function PostJob() {
   const { user } = useAuth();
@@ -54,7 +55,7 @@ export default function PostJob() {
       try {
         const parsed = JSON.parse(saved);
         setFormData(prev => ({ ...prev, ...parsed }));
-      } catch {}
+      } catch { }
     }
     loadData();
   }, [user, navigate]);
@@ -168,6 +169,10 @@ export default function PostJob() {
       // Criar publicação
       let jobData: any = null;
       try {
+        // Check schema for availability column to avoid noisy errors
+        const { hasColumn } = await import('@/lib/schemaCheck');
+        const availabilityExists = await hasColumn('job_postings', 'availability');
+
         const insertPayload: any = {
           user_id: userData.id,
           title: formData.title,
@@ -180,15 +185,18 @@ export default function PostJob() {
           neighborhood: formData.neighborhood,
           urgent: formData.urgent,
           date_time: formData.date_time ? new Date(formData.date_time).toISOString() : null,
-          availability: formData.available_today ? 'hoje' : formData.availability,
           status: 'open'
         };
+
+        if (availabilityExists) {
+          insertPayload.availability = formData.available_today ? 'hoje' : formData.availability;
+        }
 
         const { data, error } = await supabase.from('job_postings').insert(insertPayload).select();
         if (error) throw error;
         jobData = data;
       } catch (insertErr: any) {
-        // Fallback: some schemas may not have 'availability' column; retry without it
+        // Fallback: some schemas may not have 'availability' column; retry without it as a last resort
         if (insertErr?.message?.toLowerCase?.().includes('availability')) {
           try {
             const insertPayloadFallback: any = {
@@ -262,7 +270,7 @@ export default function PostJob() {
       <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <Breadcrumbs />
 
-          <Card className="max-w-3xl mx-auto max-h-[80vh] overflow-y-auto container-outline">
+        <Card className="max-w-3xl mx-auto max-h-[80vh] overflow-y-auto container-outline">
           <CardHeader>
             <div className="flex items-center gap-3">
               <Briefcase className="h-6 w-6 text-primary" />

@@ -11,15 +11,15 @@ export default function PaymentPending() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-grow container mx-auto px-4 py-16 pb-20 md:pb-16">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => safeGoBack(navigate)}
-          className="mb-4"
+          className="mb-4 text-[var(--nav-link)]"
         >
-          <ArrowLeft className="h-4 w-4 mr-2 text-foreground dark:text-white" />
+          <ArrowLeft className="h-4 w-4 mr-2 text-[var(--nav-link)]" />
           Voltar
         </Button>
         <div className="max-w-md mx-auto text-center animate-fade-in">
@@ -29,7 +29,7 @@ export default function PaymentPending() {
             Seu pagamento está sendo processado. Você receberá uma confirmação assim que for aprovado.
             Isso pode levar alguns minutos.
           </p>
-          
+
           <div className="space-y-3">
             <Button onClick={() => navigate('/')} className="w-full">
               Voltar para Início

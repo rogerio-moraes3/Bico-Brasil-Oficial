@@ -109,21 +109,37 @@ export default function EditService() {
         throw new Error('Descrição é obrigatória');
       }
 
-      const { error } = await supabase
-        .from('worker_services')
-        .update({
-          title: formData.title.trim(),
-          description: formData.description.trim(),
-          category_id: formData.category_id || null,
-          subcategory_id: formData.subcategory_id || null,
-          price: formData.price ? parseFloat(formData.price) : null,
-          availability: formData.availability,
-          active: formData.active,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', id);
+      // Check schema for availability column to avoid runtime errors
+      const { hasColumn } = await import('@/lib/schemaCheck');
+      const availabilityExists = await hasColumn('worker_services', 'availability');
 
-      if (error) throw error;
+      const updatePayload: any = {
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        category_id: formData.category_id || null,
+        subcategory_id: formData.subcategory_id || null,
+        price: formData.price ? parseFloat(formData.price) : null,
+        active: formData.active,
+        updated_at: new Date().toISOString()
+      };
+
+      if (availabilityExists) {
+        updatePayload.availability = formData.availability;
+      }
+
+      // Try to update; if schema changed unexpectedly, retry without availability as a fallback
+      let updateError: any = null;
+      let res = await supabase.from('worker_services').update(updatePayload).eq('id', id);
+      if (res.error) {
+        updateError = res.error;
+        if (updateError.message?.toLowerCase?.().includes('availability')) {
+          delete updatePayload.availability;
+          const retryRes = await supabase.from('worker_services').update(updatePayload).eq('id', id);
+          if (retryRes.error) throw retryRes.error;
+        } else {
+          throw updateError;
+        }
+      }
 
       toast({
         title: "Serviço atualizado",
@@ -161,9 +177,9 @@ export default function EditService() {
           variant="ghost"
           size="sm"
           onClick={() => safeGoBack(navigate, '/profile')}
-          className="mb-4"
+          className="mb-4 text-[var(--nav-link)]"
         >
-          <ArrowLeft className="h-4 w-4 mr-2 text-foreground dark:text-white" />
+          <ArrowLeft className="h-4 w-4 mr-2 text-[var(--nav-link)]" />
           Voltar
         </Button>
 

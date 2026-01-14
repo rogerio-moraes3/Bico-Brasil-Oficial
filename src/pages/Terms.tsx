@@ -10,27 +10,25 @@ import { safeGoBack } from "@/lib/utils";
 
 const Terms = () => {
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   return (
     <div className="min-h-screen flex flex-col pb-20 md:pb-0 bg-background">
       <Header />
-      
+
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <Breadcrumbs />
           <Button
             variant="ghost"
             onClick={() => safeGoBack(navigate)}
-            className="mb-4"
+            className="mb-4 text-[var(--nav-link)]"
           >
-            <ArrowLeft className="mr-2 h-4 w-4 text-foreground dark:text-white" />
-            Voltar
+            <ArrowLeft className="mr-2 h-4 w-4 text-[var(--nav-link)]" />
           </Button>
-          
           <h1 className="text-4xl font-bold mb-8">Termos de Uso</h1>
 
           <Card className="mb-6">
@@ -39,7 +37,7 @@ const Terms = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none">
               <p>
-                O Bico Brasil é uma plataforma que conecta contratantes e prestadores de serviço 
+                O Bico Brasil é uma plataforma que conecta contratantes e prestadores de serviço
                 para trabalhos manuais em Presidente Prudente-SP e região.
               </p>
             </CardContent>
@@ -59,7 +57,7 @@ const Terms = () => {
                 <li>É responsável por problemas decorrentes dos trabalhos realizados</li>
                 <li>Realiza verificação de antecedentes criminais (a menos que o usuário forneça)</li>
               </ul>
-              
+
               <p className="mt-4 mb-4">
                 <strong>O contratante é responsável por:</strong>
               </p>
@@ -120,8 +118,8 @@ const Terms = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none">
               <p>
-                O Bico Brasil atua apenas como intermediário de conexão. Qualquer problema, 
-                disputa ou dano relacionado aos serviços contratados deve ser resolvido 
+                O Bico Brasil atua apenas como intermediário de conexão. Qualquer problema,
+                disputa ou dano relacionado aos serviços contratados deve ser resolvido
                 diretamente entre as partes envolvidas.
               </p>
             </CardContent>
@@ -133,7 +131,7 @@ const Terms = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none">
               <p>
-                O Bico Brasil pode atualizar estes termos a qualquer momento. Continuando 
+                O Bico Brasil pode atualizar estes termos a qualquer momento. Continuando
                 a usar a plataforma, você concorda com as novas versões dos termos.
               </p>
             </CardContent>
@@ -145,25 +143,25 @@ const Terms = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none space-y-4">
               <p>
-                O Bico Brasil atua apenas como plataforma de intermediação entre prestadores de serviços 
+                O Bico Brasil atua apenas como plataforma de intermediação entre prestadores de serviços
                 (pessoas físicas ou jurídicas autônomas) e contratantes.
               </p>
               <p>
-                A utilização do Bico Brasil não constitui vínculo empregatício, societário, de subordinação 
+                A utilização do Bico Brasil não constitui vínculo empregatício, societário, de subordinação
                 ou qualquer relação de trabalho entre a plataforma e o prestador de serviços.
               </p>
               <p>
-                O prestador é responsável pela execução correta do serviço, e o contratante é responsável 
+                O prestador é responsável pela execução correta do serviço, e o contratante é responsável
                 pelo pagamento, aceitabilidade do serviço e avaliação.
               </p>
               <p>
-                A plataforma presta serviço técnico-operacional de divulgação, conexão e pagamento 
-                (quando aplicável), não assumindo responsabilidade direta por eventuais falhas técnicas, 
+                A plataforma presta serviço técnico-operacional de divulgação, conexão e pagamento
+                (quando aplicável), não assumindo responsabilidade direta por eventuais falhas técnicas,
                 danos causados por terceiros ou acordos financeiros privados celebrados entre usuários.
               </p>
               <p>
-                Em casos de disputa entre contratante e prestador, a plataforma atua como canal de 
-                comunicação e disponibiliza registros e avaliações, mas não substitui acordos privados 
+                Em casos de disputa entre contratante e prestador, a plataforma atua como canal de
+                comunicação e disponibiliza registros e avaliações, mas não substitui acordos privados
                 e não responde por obrigações trabalhistas entre as partes.
               </p>
             </CardContent>

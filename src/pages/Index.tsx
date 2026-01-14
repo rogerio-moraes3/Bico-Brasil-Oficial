@@ -45,7 +45,7 @@ export default function Index() {
           <div className="w-full max-w-md flex flex-col gap-4 mt-6">
             <Button onClick={() => navigate('/want-to-work')} className="w-full h-12 font-semibold">Quero trabalhar</Button>
             <Button onClick={() => navigate('/want-someone')} className="w-full h-12 font-semibold">Quero alguém pra trabalhar</Button>
-          </div> 
+          </div>
 
           <p className="text-sm text-muted-foreground mt-4">Acesse rapidamente as opções para buscar ou publicar trabalhos.</p>
         </main>

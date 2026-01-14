@@ -27,7 +27,7 @@ export default function RecoverByCPF() {
 
   const handleLookup = async () => {
     const cleanCpf = cpf.replace(/\D/g, '');
-    
+
     if (!validateCPF(cleanCpf)) {
       toast({
         title: "CPF inválido",
@@ -38,7 +38,7 @@ export default function RecoverByCPF() {
     }
 
     setLoading(true);
-    
+
     try {
       const { data, error } = await supabase.functions.invoke('recover-by-cpf', {
         body: { cpf: cleanCpf, action: 'lookup' }
@@ -60,7 +60,7 @@ export default function RecoverByCPF() {
       }
     } catch (error: any) {
       console.error('Lookup error:', error);
-      const errorMessage = error?.message?.includes('429') 
+      const errorMessage = error?.message?.includes('429')
         ? "Muitas tentativas. Aguarde 1 hora antes de tentar novamente."
         : "Erro ao processar solicitação. Tente novamente.";
       toast({
@@ -76,7 +76,7 @@ export default function RecoverByCPF() {
   const sendResetToEmail = async () => {
     const cleanCpf = cpf.replace(/\D/g, '');
     setLoading(true);
-    
+
     try {
       const { data, error } = await supabase.functions.invoke('recover-by-cpf', {
         body: { cpf: cleanCpf, action: 'send-reset' }
@@ -92,7 +92,7 @@ export default function RecoverByCPF() {
       });
     } catch (error: any) {
       console.error('Reset error:', error);
-      const errorMessage = error?.message?.includes('429') 
+      const errorMessage = error?.message?.includes('429')
         ? "Muitas tentativas. Aguarde 1 hora antes de tentar novamente."
         : "Erro ao processar solicitação. Tente novamente.";
       toast({
@@ -117,7 +117,7 @@ export default function RecoverByCPF() {
 
     const cleanCpf = cpf.replace(/\D/g, '');
     setLoading(true);
-    
+
     try {
       const { data, error } = await supabase.functions.invoke('recover-by-cpf', {
         body: { cpf: cleanCpf, action: 'change-email', newEmail }
@@ -143,7 +143,7 @@ export default function RecoverByCPF() {
       }
     } catch (error: any) {
       console.error('Change email error:', error);
-      const errorMessage = error?.message?.includes('429') 
+      const errorMessage = error?.message?.includes('429')
         ? "Muitas tentativas. Aguarde 1 hora antes de tentar novamente."
         : "Erro ao processar solicitação. Tente novamente.";
       toast({
@@ -166,7 +166,7 @@ export default function RecoverByCPF() {
             onClick={() => navigate('/auth?mode=login')}
             className="mb-4"
           >
-            <ArrowLeft className="h-4 w-4 mr-2 text-foreground dark:text-white" />
+            <ArrowLeft className="h-4 w-4 mr-2 text-[var(--nav-link)]" />
             Voltar ao login
           </Button>
 
@@ -182,7 +182,7 @@ export default function RecoverByCPF() {
                 {mode === 'change-email' && 'Digite um novo email para recuperação'}
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="space-y-4">
               {mode === 'lookup' && (
                 <>
@@ -196,8 +196,8 @@ export default function RecoverByCPF() {
                       maxLength={14}
                     />
                   </div>
-                  <Button 
-                    onClick={handleLookup} 
+                  <Button
+                    onClick={handleLookup}
                     className="w-full"
                     disabled={loading || cpf.replace(/\D/g, '').length !== 11}
                   >
@@ -219,8 +219,8 @@ export default function RecoverByCPF() {
                     </p>
                   </div>
 
-                  <Button 
-                    onClick={sendResetToEmail} 
+                  <Button
+                    onClick={sendResetToEmail}
                     className="w-full"
                     disabled={loading}
                   >
@@ -243,20 +243,20 @@ export default function RecoverByCPF() {
                     </div>
                   </div>
 
-                  <Button 
+                  <Button
                     variant="outline"
-                    onClick={() => setMode('change-email')} 
+                    onClick={() => setMode('change-email')}
                     className="w-full"
                   >
                     Usar outro email para recuperação
                   </Button>
 
-                  <Button 
+                  <Button
                     variant="ghost"
                     onClick={() => {
                       setMode('lookup');
                       setCpf('');
-                    }} 
+                    }}
                     className="w-full"
                   >
                     Tentar outro CPF
@@ -283,17 +283,17 @@ export default function RecoverByCPF() {
                     />
                   </div>
 
-                  <Button 
-                    onClick={handleChangeEmail} 
+                  <Button
+                    onClick={handleChangeEmail}
                     className="w-full"
                     disabled={loading || !newEmail}
                   >
                     {loading ? 'Processando...' : 'Atualizar email e enviar link'}
                   </Button>
 
-                  <Button 
+                  <Button
                     variant="ghost"
-                    onClick={() => setMode('options')} 
+                    onClick={() => setMode('options')}
                     className="w-full"
                   >
                     Voltar

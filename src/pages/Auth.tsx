@@ -489,9 +489,9 @@ export default function Auth() {
           <Button
             variant="ghost"
             onClick={() => safeGoBack(navigate)}
-            className="mb-4"
+            className="mb-4 text-[var(--nav-link)]"
           >
-            <ArrowLeft className="mr-2 h-4 w-4 text-foreground dark:text-white" />
+            <ArrowLeft className="mr-2 h-4 w-4 text-[var(--nav-link)]" />
             Voltar
           </Button>
           {showResetPassword ? (

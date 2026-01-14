@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 
 export const SearchBar = () => {
     return (
-        <div className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="sticky top-0 z-40 bg-background border-b border-border shadow-sm">
             <div className="container mx-auto px-4 py-4">
                 <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
