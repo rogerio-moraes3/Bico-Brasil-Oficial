@@ -407,7 +407,6 @@ export default function SearchWorkers() {
                   placeholder="Ex: Encanador..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 />
               </div>
             </div>
