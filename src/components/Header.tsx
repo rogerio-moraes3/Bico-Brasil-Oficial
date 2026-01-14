@@ -98,21 +98,21 @@ export const Header = () => {
           <nav className="hidden md:flex items-center gap-4 z-40">
             <Link
               to="/app"
-              className={`text-xs font-bold uppercase tracking-wider transition-colors hover:text-white/80 whitespace-nowrap ${location.pathname === '/' || location.pathname === '/app' ? 'text-primary' : 'text-white/90'
+              className={`text-xs font-bold uppercase tracking-wider transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/' || location.pathname === '/app' ? 'text-primary' : 'text-[var(--nav-link)]'
                 }`}
             >
               Início
             </Link>
             <Link
               to="/premium"
-              className={`text-xs font-bold uppercase tracking-wider transition-colors hover:text-white/80 whitespace-nowrap ${location.pathname === '/premium' ? 'text-primary' : 'text-white/90'
+              className={`text-xs font-bold uppercase tracking-wider transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/premium' ? 'text-primary' : 'text-[var(--nav-link)]'
                 }`}
             >
               Planos
             </Link>
             <Link
               to="/download"
-              className="text-sm font-medium transition-colors hover:text-white/80 flex items-center gap-1 text-white/90"
+              className="text-sm font-medium transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-1 text-[var(--nav-link)]"
             >
               <Download className="h-4 w-4" />
               <span className="hidden lg:inline">Baixar App</span>

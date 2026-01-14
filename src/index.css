@@ -53,6 +53,21 @@ body {
   background-color: #0A1A2F;
 }
 
+/* Eliminate white sidebars in dark mode - full width background */
+html,
+body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: hsl(var(--background));
+}
+
+html.dark,
+body.dark {
+  background-color: #001F3F;
+  /* Match dark mode background */
+}
+
 /* Card Padrão Bico Brasil */
 .bb-card {
   background-color: var(--bb-card-bg);
