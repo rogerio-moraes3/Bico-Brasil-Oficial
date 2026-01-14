@@ -115,7 +115,7 @@ export default function SearchWorkers() {
 
       let servicesQuery = supabase
         .from('worker_services')
-        .select('id, user_id, title, description, price, location, custom_category, availability, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
+        .select('id, user_id, title, description, price, custom_category, availability, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
 
       if (filters.category !== 'all') {
         servicesQuery = servicesQuery.eq('category_id', filters.category);
@@ -144,7 +144,7 @@ export default function SearchWorkers() {
           console.warn('Availability column missing; retrying service query without it');
           servicesQuery = supabase
             .from('worker_services')
-            .select('id, user_id, title, description, price, location, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
+            .select('id, user_id, title, description, price, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
           const res2 = await servicesQuery;
           if (res2.error) throw res2.error;
           servicesData = res2.data;
