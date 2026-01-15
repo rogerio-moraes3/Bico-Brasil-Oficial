@@ -114,7 +114,6 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
         custom_category: payload.isCustomCategory ? payload.customCategory : null,
         subcategory_id: payload.subcategory || null,
         price: payload.price ? parseFloat(payload.price) : null,
-        location: payload.location || null,
         active: true
       };
 
