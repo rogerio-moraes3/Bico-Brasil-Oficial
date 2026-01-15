@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useCities } from '@/hooks/useCities';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { safeGoBack } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
 
 export default function OfferServices() {
   const { user } = useAuth();

@@ -215,7 +215,7 @@ export const Header = () => {
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 mt-6">
-                  <div className="absolute top-0 right-0 bg-slate-700 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
+                  <div className="absolute top-0 right-0 bg-slate-800 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
                     POPULAR
                   </div>{user && (
                     <div className="flex items-center gap-3 p-3 border rounded-lg mb-2">
