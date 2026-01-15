@@ -33,13 +33,14 @@ export function NotificationPrompt() {
 
     const handleOfflineQueue = (e: any) => {
       const detail = e?.detail || {};
-      if (detail.processed > 0) {
-        toast({ title: 'Fila sincronizada', description: `Foram sincronizados ${detail.processed} itens` });
-      } else if (detail.remaining === 0) {
-        toast({ title: 'Fila sincronizada', description: 'Todos os itens foram processados' });
-      } else if (detail.error) {
-        toast({ title: 'Erro na sincronização', description: detail.error, variant: 'destructive' });
-      }
+      // Suppress technical messages from user UI - keep internal processing
+      // if (detail.processed > 0) {
+      //   toast({ title: 'Fila sincronizada', description: `Foram sincronizados ${detail.processed} itens` });
+      // } else if (detail.remaining === 0) {
+      //   toast({ title: 'Fila sincronizada', description: 'Todos os itens foram processados' });
+      // } else if (detail.error) {
+      //   toast({ title: 'Erro na sincronização', description: detail.error, variant: 'destructive' });
+      // }
 
       // update queue count on event
       try {
@@ -105,9 +106,9 @@ export function NotificationPrompt() {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-20 md:bottom-4 right-4 z-50 max-w-sm animate-fade-in">
+    <div className="fixed top-4 right-4 z-50 max-w-xs animate-fade-in">
       <Card>
-        <CardContent className="p-4">
+        <CardContent className="p-3">
           <div className="flex items-start gap-3">
             <Bell className="h-5 w-5 text-primary mt-0.5" />
             <div className="flex-1">

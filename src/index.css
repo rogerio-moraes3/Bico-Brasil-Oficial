@@ -247,6 +247,13 @@ All colors MUST be HSL.
 
     /* Container outline color moved to :root so it applies globally */
 
+    /* Light mode form borders - navy blue */
+    input,
+    select,
+    textarea {
+      border-color: var(--container-border);
+    }
+
     /* Ensure the internal theme applies a background color based on variables */
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
@@ -645,18 +652,18 @@ All colors MUST be HSL.
     background-color: hsl(209 100% 20%);
   }
 
-  /* Inputs e selects no dark mode */
+  /* Inputs e selects no dark mode - WHITE BORDERS */
   .dark input,
   .dark select,
   .dark textarea {
     background-color: hsl(209 100% 15%);
-    border-color: hsl(209 80% 30%);
+    border-color: rgba(255, 255, 255, 0.3) !important;
     color: hsl(0 0% 100%);
   }
 
   /* Botões outline no dark mode */
   .dark .border-input {
-    border-color: hsl(209 80% 30%);
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
   /* Separadores visíveis */
@@ -664,15 +671,15 @@ All colors MUST be HSL.
     background-color: hsl(209 80% 25%);
   }
 
-  /* Bordas translúcidas para containers no dark mode */
+  /* Bordas translúcidas para containers no dark mode - WHITE */
   .dark .border-border {
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
-  /* Garantir que CardTitle seja visível */
-  .dark [class*="CardTitle"],
-  .dark .card-title {
-    color: hsl(0 0% 100%);
+  /* Search blocks and form containers in dark mode */
+  .dark .search-block,
+  .dark form {
+    border-color: rgba(255, 255, 255, 0.3) !important;
   }
 
   .animate-fade-in {
