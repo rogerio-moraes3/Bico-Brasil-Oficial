@@ -208,7 +208,6 @@ export default function OfferServices() {
           custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
           subcategory_id: formData.subcategory || null,
           price: formData.price ? parseFloat(formData.price) : null,
-          location: formData.location || null,
           active: true
         };
 
@@ -228,7 +227,6 @@ export default function OfferServices() {
               custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
               subcategory_id: formData.subcategory || null,
               price: formData.price ? parseFloat(formData.price) : null,
-              location: formData.location || null,
               active: true
             };
             const { data: sdata2, error: serror2 } = await supabase.from('worker_services').insert(payloadFallback).select();

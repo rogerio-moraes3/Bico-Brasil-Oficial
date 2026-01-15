@@ -114,8 +114,8 @@ export default function SearchWorkers() {
       const { hasColumn } = await import('@/lib/schemaCheck');
       const availabilityExists = await hasColumn('worker_services', 'availability');
 
-      let selectFields = 'id, user_id, title, description, price, location, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)';
-      if (availabilityExists) selectFields = 'id, user_id, title, description, price, location, custom_category, availability, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)';
+      let selectFields = 'id, user_id, title, description, price, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)';
+      if (availabilityExists) selectFields = 'id, user_id, title, description, price, custom_category, availability, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)';
 
       let servicesQuery = supabase
         .from('worker_services')
@@ -148,7 +148,7 @@ export default function SearchWorkers() {
           console.warn('Availability column missing; retrying service query without it');
           servicesQuery = supabase
             .from('worker_services')
-            .select('id, user_id, title, description, price, location, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
+            .select('id, user_id, title, description, price, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
           const res2 = await servicesQuery;
           if (res2.error) throw res2.error;
           servicesData = res2.data;
