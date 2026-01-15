@@ -168,9 +168,9 @@ export default function SearchWorkers() {
       // FASE 3: Buscar usuários com filtros aplicados
       const userIds = servicesData.map(s => s.user_id);
 
-      // Use secure view that doesn't expose PII (phone, email, cpf, address)
+      // Query users table directly instead of view for reliability
       let usersQuery = supabase
-        .from('public_worker_profiles')
+        .from('users')
         .select(`
           id, 
           name, 
@@ -185,7 +185,8 @@ export default function SearchWorkers() {
           created_at, 
           destaque_expires_at, 
           plan_active, 
-          subscription_end
+          subscription_end,
+          type
         `)
         .in('id', userIds)
         .eq('type', 'worker');
