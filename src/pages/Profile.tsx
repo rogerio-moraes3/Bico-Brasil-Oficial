@@ -841,11 +841,11 @@ export default function Profile() {
                   {/* Status da Assinatura */}
                   <div className="p-4 rounded-lg border bg-muted/30">
                     <h3 className="font-semibold mb-2">Status Atual</h3>
-                    {profile.plan_active && profile.subscription_end ? (
+                    {profile.plan_active ? (
                       <div className="space-y-2">
                         <Badge className="bg-green-500">Plano Pro Ativo</Badge>
                         <p className="text-sm text-muted-foreground">
-                          Válido até: {new Date(profile.subscription_end).toLocaleDateString('pt-BR')}
+                          Você tem acesso a todos os recursos premium
                         </p>
                       </div>
                     ) : (
@@ -899,8 +899,7 @@ export default function Profile() {
                             const { error } = await supabase
                               .from('users')
                               .update({
-                                plan_active: false,
-                                subscription_end: new Date().toISOString()
+                                plan_active: false
                               })
                               .eq('auth_id', user?.id);
 

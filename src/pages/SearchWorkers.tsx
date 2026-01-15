@@ -185,7 +185,6 @@ export default function SearchWorkers() {
           created_at, 
           destaque_expires_at, 
           plan_active, 
-          subscription_end,
           type
         `)
         .in('id', userIds)
@@ -222,7 +221,7 @@ export default function SearchWorkers() {
       const combined = (usersData || []).map(user => {
         const service = servicesData.find(s => s.user_id === user.id);
         const hasDestaque = user.destaque_expires_at && new Date(user.destaque_expires_at) > new Date();
-        const isPremium = user.plan_active && user.subscription_end && new Date(user.subscription_end) > new Date();
+        const isPremium = user.plan_active || false;
 
         return {
           id: user.id,
@@ -238,7 +237,6 @@ export default function SearchWorkers() {
           created_at: user.created_at,
           destaque_expires_at: user.destaque_expires_at,
           plan_active: user.plan_active,
-          subscription_end: user.subscription_end,
           service_id: service?.id,
           service_title: service?.title || 'Serviço sem título',
           service_description: service?.description || 'Sem descrição',

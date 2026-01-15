@@ -40,31 +40,30 @@ export const useAccessControl = () => {
       // Buscar dados do usuário
       const { data: userData } = await supabase
         .from('users')
-        .select('is_tester, plan_active, subscription_end')
+        .select('is_tester, plan_active')
         .eq('auth_id', user!.id)
         .single();
 
       const isTester = userData?.is_tester || false;
-      const isPremium = userData?.plan_active && 
-        (!userData.subscription_end || new Date(userData.subscription_end) > new Date());
+      const isPremium = userData?.plan_active || false;
 
       // Contar visualizações (se não for tester nem premium)
       let profileViewsCount = 0;
       let contactUnlocksCount = 0;
-      
+
       if (!isTester && !isPremium) {
         const { count: viewsCount } = await supabase
           .from('profile_views')
           .select('*', { count: 'exact', head: true })
           .eq('viewer_id', user!.id);
-        
+
         profileViewsCount = viewsCount || 0;
 
         const { count: unlocksCount } = await supabase
           .from('contact_unlocks')
           .select('*', { count: 'exact', head: true })
           .eq('user_id', user!.id);
-        
+
         contactUnlocksCount = unlocksCount || 0;
       }
 
@@ -105,7 +104,7 @@ export const useAccessControl = () => {
 
       // Atualizar contagem local
       await loadAccessControl();
-      
+
       return { success: true };
     } catch (error) {
       console.error('Erro ao registrar visualização:', error);
@@ -129,7 +128,7 @@ export const useAccessControl = () => {
 
   const unlockWorkerContact = async (workerId: string): Promise<boolean> => {
     if (!user) return false;
-    
+
     try {
       const { error } = await supabase
         .from('contact_unlocks')
