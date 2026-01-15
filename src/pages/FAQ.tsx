@@ -1,10 +1,16 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { FAQ as FAQComponent } from '@/components/FAQ';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import { safeGoBack } from '@/lib/utils';
 
 
 export default function FAQPage() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -12,9 +18,16 @@ export default function FAQPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      
-      
+
       <main className="flex-grow container mx-auto px-4 py-16 pb-20 md:pb-16">
+        <Button
+          variant="ghost"
+          onClick={() => safeGoBack(navigate)}
+          className="mb-4 text-[var(--nav-link)]"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2 text-[var(--nav-link)]" />
+          Voltar
+        </Button>
         <h1 className="text-4xl font-bold mb-8 text-center">Perguntas Frequentes</h1>
         <FAQComponent />
       </main>

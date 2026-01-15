@@ -42,7 +42,7 @@ export default function AdminJobs() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
-  
+
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -129,11 +129,11 @@ export default function AdminJobs() {
       // Count views and contacts per job
       const viewsCount: Record<string, number> = {};
       const contactsCount: Record<string, number> = {};
-      
+
       viewsData?.forEach(v => {
         viewsCount[v.job_id] = (viewsCount[v.job_id] || 0) + 1;
       });
-      
+
       contactsData?.forEach(c => {
         contactsCount[c.job_id] = (contactsCount[c.job_id] || 0) + 1;
       });
@@ -161,7 +161,7 @@ export default function AdminJobs() {
       // Extract unique categories and cities
       const uniqueCategories = [...new Set(enrichedJobs.map(j => j.category).filter(Boolean))];
       const uniqueCities = [...new Set(enrichedJobs.map(j => j.city).filter(Boolean))] as string[];
-      
+
       setCategories(uniqueCategories);
       setCities(uniqueCities);
 
@@ -178,7 +178,7 @@ export default function AdminJobs() {
 
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(j => 
+      filtered = filtered.filter(j =>
         j.title?.toLowerCase().includes(term) ||
         j.description?.toLowerCase().includes(term) ||
         j.contractor_name?.toLowerCase().includes(term)
@@ -279,7 +279,7 @@ export default function AdminJobs() {
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-6">
           <Button variant="ghost" onClick={() => navigate('/admin')}>
-            <ArrowLeft className="w-4 h-4 mr-2 text-foreground dark:text-white" />
+            <ArrowLeft className="w-4 h-4 mr-2 text-[var(--nav-link)]" />
             Voltar
           </Button>
           <h1 className="text-2xl font-bold">Gerenciar Anúncios (Jobs)</h1>
@@ -352,7 +352,7 @@ export default function AdminJobs() {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Status" />
@@ -542,7 +542,7 @@ export default function AdminJobs() {
                   <div>
                     <p className="text-sm text-muted-foreground">Data Agendada</p>
                     <p className="font-medium">
-                      {selectedJob.date_time 
+                      {selectedJob.date_time
                         ? format(new Date(selectedJob.date_time), 'dd/MM/yyyy HH:mm', { locale: ptBR })
                         : '-'}
                     </p>

@@ -50,7 +50,7 @@ export default function AdminServices() {
   const [services, setServices] = useState<WorkerService[]>([]);
   const [filteredServices, setFilteredServices] = useState<WorkerService[]>([]);
   const [selectedService, setSelectedService] = useState<WorkerService | null>(null);
-  
+
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -116,7 +116,7 @@ export default function AdminServices() {
       .from('categories')
       .select('id, name')
       .order('name');
-    
+
     setCategories(data || []);
   };
 
@@ -165,7 +165,7 @@ export default function AdminServices() {
 
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(s => 
+      filtered = filtered.filter(s =>
         s.title?.toLowerCase().includes(term) ||
         s.description?.toLowerCase().includes(term) ||
         s.user?.name?.toLowerCase().includes(term)
@@ -220,8 +220,8 @@ export default function AdminServices() {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" onClick={() => navigate('/admin')}>
-            <ArrowLeft className="w-4 h-4 mr-2 text-foreground dark:text-white" />
+          <Button variant="ghost" onClick={() => safeGoBack(navigate, '/admin')} className="text-[var(--nav-link)]">
+            <ArrowLeft className="w-4 h-4 mr-2 text-[var(--nav-link)]" />
             Voltar
           </Button>
           <h1 className="text-2xl font-bold">Gerenciar Serviços</h1>
@@ -294,7 +294,7 @@ export default function AdminServices() {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Status" />
@@ -450,7 +450,7 @@ export default function AdminServices() {
                     )}
                   </div>
                 </div>
-                
+
                 <div>
                   <p className="text-sm text-muted-foreground">Descrição</p>
                   <p className="font-medium">{selectedService.description}</p>
@@ -478,7 +478,7 @@ export default function AdminServices() {
                     <div>
                       <p className="text-sm text-muted-foreground">Rating</p>
                       <p className="font-medium">
-                        {selectedService.user?.rating_avg 
+                        {selectedService.user?.rating_avg
                           ? `${selectedService.user.rating_avg.toFixed(1)} (${selectedService.user.rating_count} avaliações)`
                           : 'Sem avaliações'}
                       </p>

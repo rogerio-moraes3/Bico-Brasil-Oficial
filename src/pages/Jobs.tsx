@@ -67,11 +67,7 @@ const Jobs = () => {
     }
   }, [selectedCategory]);
 
-  useEffect(() => {
-    if (selectedCityId) {
-      loadWorkers(selectedCityId);
-    }
-  }, [selectedCityId]);
+  // Manual search only: users must click the search button (magnifying glass) to run queries. Removed auto-trigger on city selection.
 
   const loadCategories = async () => {
     try {
@@ -206,7 +202,6 @@ const Jobs = () => {
                   placeholder="Nome, profissão, bairro..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   className="pr-10"
                 />
                 <Button

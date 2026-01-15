@@ -25,7 +25,10 @@ export const Header = () => {
   const { unreadCount } = useNotifications();
   const { mode, setMode } = useUserMode();
   const [open, setOpen] = useState(false);
-  const showBackButton = location.pathname !== "/" && location.pathname !== "/landing";
+  // Show back button on internal routes (public paths excluded) or when there is a history stack
+  const publicPaths = ['/', '/landing', '/auth', '/install', '/download', '/pre-launch', '/prelaunch'];
+  const hasHistory = typeof window !== 'undefined' && window.history && window.history.length > 1;
+  const showBackButton = hasHistory || !publicPaths.some(p => location.pathname.startsWith(p));
 
   const navItems = [
     { path: "/", label: "Início" },
@@ -75,7 +78,8 @@ export const Header = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => safeGoBack(navigate)}
-                className="md:hidden text-primary dark:text-white shadow-md font-bold shrink-0"
+                aria-label="Voltar"
+                className="text-[var(--nav-link)] shadow-md font-bold shrink-0 h-10 w-10 flex items-center justify-center"
               >
                 <ArrowLeft className="h-6 w-6" />
               </Button>
@@ -185,14 +189,14 @@ export const Header = () => {
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
                   size="sm"
-                  className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-white hover:bg-gray-100 border border-gray-300 text-gray-900 dark:text-white"
+                  className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-card hover:bg-muted border border-border text-foreground"
                 >
                   Cadastre-se
                 </Button>
                 <Button
                   onClick={() => navigate('/auth')}
                   size="sm"
-                  className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-white hover:bg-gray-100 border border-gray-300 text-gray-900 dark:text-white"
+                  className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-card hover:bg-muted border border-border text-foreground"
                 >
                   Entrar
                 </Button>
@@ -202,7 +206,7 @@ export const Header = () => {
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" aria-label="Menu de navegação">
+                <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-10 w-10 flex items-center justify-center">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>

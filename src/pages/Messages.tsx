@@ -177,7 +177,7 @@ export default function Messages() {
       });
     } else {
       setNewMessage('');
-      
+
       // Update conversation timestamp
       await supabase
         .from('conversations')
@@ -200,7 +200,7 @@ export default function Messages() {
   return (
     <>
       <Header />
-      
+
       <div className="min-h-screen bg-muted/30 py-8 pb-20 md:pb-8">
         <div className="container mx-auto px-4 max-w-6xl">
           <Breadcrumbs />
@@ -222,9 +222,8 @@ export default function Messages() {
                       <div
                         key={conv.id}
                         onClick={() => setSelectedConversation(conv.id)}
-                        className={`p-4 border-b cursor-pointer hover:bg-muted/50 transition-colors ${
-                          selectedConversation === conv.id ? 'bg-muted' : ''
-                        }`}
+                        className={`p-4 border-b cursor-pointer hover:bg-muted/50 transition-colors ${selectedConversation === conv.id ? 'bg-muted' : ''
+                          }`}
                       >
                         <div className="flex items-center gap-3">
                           <Avatar>
@@ -253,9 +252,9 @@ export default function Messages() {
                       variant="ghost"
                       size="icon"
                       onClick={() => setSelectedConversation(null)}
-                      className="md:hidden"
+                      className="md:hidden text-[var(--nav-link)]"
                     >
-                      <ArrowLeft className="h-4 w-4 text-foreground dark:text-white" />
+                      <ArrowLeft className="h-4 w-4 text-[var(--nav-link)]" />
                     </Button>
                   )}
                   <CardTitle>
@@ -270,28 +269,26 @@ export default function Messages() {
                       {messages.map((msg) => (
                         <div
                           key={msg.id}
-                          className={`mb-4 flex ${
-                            msg.sender_id === user?.id ? 'justify-end' : 'justify-start'
-                          }`}
+                          className={`mb-4 flex ${msg.sender_id === user?.id ? 'justify-end' : 'justify-start'
+                            }`}
                         >
                           <div
-                            className={`max-w-[70%] rounded-lg p-3 ${
-                              msg.sender_id === user?.id
+                            className={`max-w-[70%] rounded-lg p-3 ${msg.sender_id === user?.id
                                 ? 'bg-primary text-primary-foreground'
                                 : 'bg-muted'
-                            }`}
+                              }`}
                           >
                             {msg.media_url && msg.media_type?.startsWith('image/') && (
-                              <img 
-                                src={msg.media_url} 
-                                alt="Mídia" 
+                              <img
+                                src={msg.media_url}
+                                alt="Mídia"
                                 className="rounded-lg mb-2 max-w-full"
                               />
                             )}
                             {msg.media_url && msg.media_type?.startsWith('video/') && (
-                              <video 
-                                src={msg.media_url} 
-                                controls 
+                              <video
+                                src={msg.media_url}
+                                controls
                                 className="rounded-lg mb-2 max-w-full"
                               />
                             )}
@@ -306,8 +303,8 @@ export default function Messages() {
                     </ScrollArea>
 
                     <div className="space-y-2">
-                      <MediaUpload 
-                        bucket="chat-media" 
+                      <MediaUpload
+                        bucket="chat-media"
                         onUpload={handleMediaUpload}
                       />
                       <form onSubmit={sendMessage} className="flex gap-2">

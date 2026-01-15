@@ -86,10 +86,7 @@ export default function SearchWorkers() {
     }
   }, [cities, user, hasManualCitySelection, filters.city_id]);
 
-  // Reexecutar busca automaticamente quando filtros mudarem (search is manual)
-  useEffect(() => {
-    handleSearch();
-  }, [filters]);
+
 
   const handleCategoryChange = async (categoryId: string) => {
     setFilters({ ...filters, category: categoryId, subcategory: 'all' });
@@ -113,9 +110,16 @@ export default function SearchWorkers() {
 
     try {
 
+      // Check schema: availability may not exist in every environment
+      const { hasColumn } = await import('@/lib/schemaCheck');
+      const availabilityExists = await hasColumn('worker_services', 'availability');
+
+      let selectFields = 'id, user_id, title, description, price, location, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)';
+      if (availabilityExists) selectFields = 'id, user_id, title, description, price, location, custom_category, availability, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)';
+
       let servicesQuery = supabase
         .from('worker_services')
-        .select('id, user_id, title, description, price, custom_category, availability, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
+        .select(selectFields);
 
       if (filters.category !== 'all') {
         servicesQuery = servicesQuery.eq('category_id', filters.category);
@@ -144,7 +148,7 @@ export default function SearchWorkers() {
           console.warn('Availability column missing; retrying service query without it');
           servicesQuery = supabase
             .from('worker_services')
-            .select('id, user_id, title, description, price, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
+            .select('id, user_id, title, description, price, location, custom_category, category_id, subcategory_id, active, category:categories(name), subcategory:subcategories(name)');
           const res2 = await servicesQuery;
           if (res2.error) throw res2.error;
           servicesData = res2.data;
@@ -407,6 +411,7 @@ export default function SearchWorkers() {
                   placeholder="Ex: Encanador..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pr-10"
                 />
               </div>
             </div>
@@ -470,7 +475,7 @@ export default function SearchWorkers() {
                 Publique sua vaga e deixe que os profissionais venham até você!
               </p>
             </div>
-            <Button onClick={() => navigate('/post-job')} size="lg" className="whitespace-nowrap bg-white text-black border border-black rounded-xl hover:bg-gray-50">
+            <Button onClick={() => navigate('/post-job')} size="lg" className="whitespace-nowrap bg-card text-foreground border-border rounded-xl hover:bg-muted">
               <Briefcase className="mr-2 h-4 w-4" />
               Publicar Vaga
             </Button>
@@ -491,7 +496,7 @@ export default function SearchWorkers() {
                 <p className="text-muted-foreground mb-6">
                   Não encontrou o profissional que precisa? Publique uma vaga e deixe que eles venham até você!
                 </p>
-                <Button onClick={() => navigate('/post-job')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-white dark:text-white">
+                <Button onClick={() => navigate('/post-job')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-border dark:text-foreground">
                   Publicar Vaga
                 </Button>
               </Card>

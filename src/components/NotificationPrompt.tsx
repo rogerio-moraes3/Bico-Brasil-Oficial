@@ -17,17 +17,17 @@ export function NotificationPrompt() {
     if (user && isSupported && permission === 'default') {
       const hasSeenPrompt = localStorage.getItem('notificationPromptSeen');
       const dismissedTime = localStorage.getItem('notificationPromptDismissed');
-      
+
       // Não mostrar se foi visto/bloqueado permanentemente
       if (hasSeenPrompt) return;
-      
+
       // Se foi apenas fechado, esperar 24h antes de mostrar novamente
       if (dismissedTime) {
         const timeSinceDismiss = Date.now() - parseInt(dismissedTime);
         const twentyFourHours = 24 * 60 * 60 * 1000;
         if (timeSinceDismiss < twentyFourHours) return;
       }
-      
+
       setTimeout(() => setShowPrompt(true), 3000);
     }
 
@@ -63,7 +63,7 @@ export function NotificationPrompt() {
 
   const handleEnable = async () => {
     const result = await requestPermission();
-    
+
     if (result === 'granted') {
       toast({
         title: "Notificações ativadas! ✅",

@@ -27,7 +27,7 @@ interface WorkerData {
   category: string;
   subcategory: string;
   description: string;
-  availability: string;
+  availability?: string;
   price: string;
   verified: boolean;
   rating_avg: number;

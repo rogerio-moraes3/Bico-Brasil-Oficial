@@ -76,7 +76,7 @@ export default function Contact() {
       setMessage("");
     } catch (error: any) {
       console.error('Erro ao enviar mensagem:', error);
-      
+
       // Exibir erro de validação
       if (error.errors && error.errors.length > 0) {
         toast({
@@ -102,7 +102,7 @@ export default function Contact() {
         <title>Central de Ajuda - Bico Brasil</title>
         <meta name="description" content="Entre em contato com o Bico Brasil. Tire suas dúvidas, envie sugestões e receba suporte." />
       </Helmet>
-      
+
       <div className="min-h-screen flex flex-col pb-20 md:pb-0 bg-background">
         <Header />
         <main className="flex-1 container mx-auto px-4 py-12">
@@ -111,12 +111,10 @@ export default function Contact() {
             <Button
               variant="ghost"
               onClick={() => safeGoBack(navigate)}
-              className="mb-4"
+              className="mb-4 text-[var(--nav-link)]"
             >
-              <ArrowLeft className="mr-2 h-4 w-4 text-foreground dark:text-white" />
-              Voltar
+              <ArrowLeft className="mr-2 h-4 w-4 text-[var(--nav-link)]" />
             </Button>
-            
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold mb-4">Central de Ajuda e Suporte</h1>
               <p className="text-muted-foreground">
@@ -205,7 +203,7 @@ export default function Contact() {
                 <p className="text-sm text-muted-foreground mb-2">
                   Você também pode nos enviar um email diretamente:
                 </p>
-                <a 
+                <a
                   href="mailto:contato.bicobrasil@gmail.com"
                   className="text-primary hover:underline font-medium"
                 >
@@ -214,7 +212,7 @@ export default function Contact() {
                 <p className="text-sm text-muted-foreground mt-4">
                   Para questões relacionadas à LGPD:
                 </p>
-                <a 
+                <a
                   href="mailto:contato.bicobrasil@gmail.com"
                   className="text-primary hover:underline font-medium"
                 >

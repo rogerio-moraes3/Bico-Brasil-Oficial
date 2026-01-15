@@ -25,7 +25,23 @@
   /* Toggle */
   --bb-toggle-active: var(--bb-primary-blue);
   --bb-toggle-inactive: #D1D5DB;
+
+  /* Modern switch tokens (H, S, L components for hsl var usage) */
+  --switch-on: 218 100% 56%;
+  /* matches internal primary */
+  --switch-off: 0 0% 86%;
+  --switch-thumb: 0 0% 100%;
+
+  /* Theme navigation color tokens */
+  --nav-link: #1E2A5A;
+  /* Navy for light mode */
+  --nav-link-hover: #162042;
+  /* Slightly darker hover */
+
+  /* Container border color (moved to :root so outlines are available app-wide) */
+  --container-border: #1E2A5A;
 }
+
 
 /* Botão Padrão Bico Brasil */
 .bb-button {
@@ -180,6 +196,17 @@ All colors MUST be HSL.
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
 
+    /* Switch tokens for dark mode */
+    --switch-on: 217.2 91.2% 59.8%;
+    --switch-off: 217.2 32.6% 17.5%;
+    --switch-thumb: 210 40% 98%;
+
+    /* Navigation link colors for dark mode */
+    --nav-link: hsl(210 40% 98%);
+    /* Light text for dark mode */
+    --nav-link-hover: hsl(0 0% 100%);
+    /* Pure white on hover */
+
     --sidebar-background: 209 100% 12%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 29 100% 50%;
@@ -218,9 +245,7 @@ All colors MUST be HSL.
     /* slightly rounded */
     --shadow-glow: none;
 
-    /* Container outline color used for main content borders */
-    --container-border: 229 50% 23%;
-    /* navy-ish for light mode */
+    /* Container outline color moved to :root so it applies globally */
 
     /* Ensure the internal theme applies a background color based on variables */
     background-color: hsl(var(--background));
@@ -236,6 +261,12 @@ All colors MUST be HSL.
     --border: 0 0% 100%;
     /* white border in dark mode */
     --container-border: 0 0% 100%;
+
+    /* Ensure switches inside the internal theme use sensible dark tokens */
+    --switch-on: 217.2 91.2% 59.8%;
+    --switch-off: 217.2 32.6% 17.5%;
+    --switch-thumb: 210 40% 98%;
+
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
@@ -366,6 +397,15 @@ All colors MUST be HSL.
   .stagger-fade {
     animation: fadeInUp 400ms ease both;
     animation-delay: var(--stagger-delay, 0s);
+  }
+
+  /* Container outline used for main content cards/containers to provide visible borders
+     Uses --container-border which is navy in internal light mode and white in dark mode */
+  .container-outline {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--container-border);
+    border-radius: 0.5rem;
   }
 
   @keyframes fadeInUp {

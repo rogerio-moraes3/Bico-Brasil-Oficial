@@ -15,7 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import CitySelect from '@/components/CitySelect';
 import { useToast } from '@/hooks/use-toast';
 import { useCities } from '@/hooks/useCities';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowLeft } from 'lucide-react';
+import { safeGoBack } from '@/lib/utils';
 
 export default function OfferServices() {
   const { user } = useAuth();
@@ -56,7 +57,7 @@ export default function OfferServices() {
       try {
         const parsed = JSON.parse(saved);
         setFormData(prev => ({ ...prev, ...parsed }));
-      } catch {}
+      } catch { }
     }
     loadData();
   }, [user, navigate]);
@@ -194,6 +195,10 @@ export default function OfferServices() {
       // 3. Criar registro na tabela worker_services
       let serviceResult: any = null;
       try {
+        // Check if availability exists in schema
+        const { hasColumn } = await import('@/lib/schemaCheck');
+        const availabilityExists = await hasColumn('worker_services', 'availability');
+
         const payload: any = {
           user_id: userData.id,
           title: formData.service_title,
@@ -203,9 +208,10 @@ export default function OfferServices() {
           subcategory_id: formData.subcategory || null,
           price: formData.price ? parseFloat(formData.price) : null,
           location: formData.location || null,
-          availability: formData.availability,
           active: true
         };
+
+        if (availabilityExists) payload.availability = formData.availability;
 
         const { data: sdata, error: serror } = await supabase.from('worker_services').insert(payload).select();
         if (serror) throw serror;
@@ -261,6 +267,15 @@ export default function OfferServices() {
       <Header />
 
       <div className="container mx-auto px-4 py-8 pb-20 md:pb-8 max-w-3xl">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => safeGoBack(navigate, '/profile')}
+          className="mb-4 text-[var(--nav-link)]"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2 text-[var(--nav-link)]" />
+          Voltar
+        </Button>
         <Card className="max-h-[80vh] overflow-y-auto container-outline">
           <CardHeader>
             <div className="flex items-start justify-between gap-4">

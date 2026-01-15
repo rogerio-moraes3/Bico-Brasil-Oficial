@@ -99,9 +99,9 @@ export default function PaymentHistory() {
           variant="ghost"
           size="sm"
           onClick={() => safeGoBack(navigate, '/profile')}
-          className="mb-4"
+          className="mb-4 text-[var(--nav-link)]"
         >
-          <ArrowLeft className="h-4 w-4 mr-2 text-foreground dark:text-white" />
+          <ArrowLeft className="h-4 w-4 mr-2 text-[var(--nav-link)]" />
           Voltar
         </Button>
 

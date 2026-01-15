@@ -7,15 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import { Edit2, Trash2, Briefcase, Wrench, Calendar, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
@@ -50,6 +50,12 @@ export function MyAdsTab() {
   const [loading, setLoading] = useState(true);
   const [jobPostings, setJobPostings] = useState<JobPosting[]>([]);
   const [workerServices, setWorkerServices] = useState<WorkerService[]>([]);
+  const [jobsPage, setJobsPage] = useState(0);
+  const [servicesPage, setServicesPage] = useState(0);
+  const [jobsLoadingMore, setJobsLoadingMore] = useState(false);
+  const [servicesLoadingMore, setServicesLoadingMore] = useState(false);
+  const [hasMoreJobs, setHasMoreJobs] = useState(true);
+  const [hasMoreServices, setHasMoreServices] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; type: 'job' | 'service'; id: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -59,8 +65,16 @@ export function MyAdsTab() {
     }
   }, [user]);
 
+  const PAGE_SIZE = 10;
+
   const loadUserAds = async () => {
     if (!user) return;
+
+    setLoading(true);
+    setJobsPage(0);
+    setServicesPage(0);
+    setHasMoreJobs(true);
+    setHasMoreServices(true);
 
     try {
       // Buscar o user_id do perfil
@@ -75,7 +89,7 @@ export function MyAdsTab() {
         return;
       }
 
-      // Buscar job_postings do usuário
+      // Buscar primeira página de job_postings do usuário
       const { data: jobs, error: jobsError } = await supabase
         .from('job_postings')
         .select(`
@@ -84,15 +98,17 @@ export function MyAdsTab() {
           category:categories(name)
         `)
         .eq('user_id', userData.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(0, PAGE_SIZE - 1);
 
       if (jobsError) {
         console.error('Erro ao carregar job_postings:', jobsError);
       } else {
         setJobPostings(jobs || []);
+        setHasMoreJobs((jobs || []).length === PAGE_SIZE);
       }
 
-      // Buscar worker_services do usuário
+      // Buscar primeira página de worker_services do usuário
       const { data: services, error: servicesError } = await supabase
         .from('worker_services')
         .select(`
@@ -100,12 +116,14 @@ export function MyAdsTab() {
           category:categories(name)
         `)
         .eq('user_id', userData.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(0, PAGE_SIZE - 1);
 
       if (servicesError) {
         console.error('Erro ao carregar worker_services:', servicesError);
       } else {
         setWorkerServices(services || []);
+        setHasMoreServices((services || []).length === PAGE_SIZE);
       }
 
     } catch (error) {
@@ -165,6 +183,91 @@ export function MyAdsTab() {
     }
   };
 
+  // Load more helpers for pagination
+  const loadMoreJobs = async () => {
+    if (!user || !hasMoreJobs) return;
+    setJobsLoadingMore(true);
+
+    try {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('id')
+        .eq('auth_id', user.id)
+        .single();
+
+      if (!userData) return;
+
+      const nextPage = jobsPage + 1;
+      const start = nextPage * PAGE_SIZE;
+      const end = start + PAGE_SIZE - 1;
+
+      const { data: jobs, error } = await supabase
+        .from('job_postings')
+        .select(`
+          id, title, description, status, created_at, neighborhood, urgent,
+          city:cities(name),
+          category:categories(name)
+        `)
+        .eq('user_id', userData.id)
+        .order('created_at', { ascending: false })
+        .range(start, end);
+
+      if (error) {
+        console.error('Erro ao carregar mais job_postings:', error);
+      } else {
+        setJobPostings(prev => [...prev, ...(jobs || [])]);
+        setJobsPage(nextPage);
+        setHasMoreJobs((jobs || []).length === PAGE_SIZE);
+      }
+    } catch (e) {
+      console.error('Erro ao carregar mais job_postings:', e);
+    } finally {
+      setJobsLoadingMore(false);
+    }
+  };
+
+  const loadMoreServices = async () => {
+    if (!user || !hasMoreServices) return;
+    setServicesLoadingMore(true);
+
+    try {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('id')
+        .eq('auth_id', user.id)
+        .single();
+
+      if (!userData) return;
+
+      const nextPage = servicesPage + 1;
+      const start = nextPage * PAGE_SIZE;
+      const end = start + PAGE_SIZE - 1;
+
+      const { data: services, error } = await supabase
+        .from('worker_services')
+        .select(`
+          id, title, description, active, created_at, price,
+          category:categories(name)
+        `)
+        .eq('user_id', userData.id)
+        .order('created_at', { ascending: false })
+        .range(start, end);
+
+      if (error) {
+        console.error('Erro ao carregar mais worker_services:', error);
+      } else {
+        setWorkerServices(prev => [...prev, ...(services || [])]);
+        setServicesPage(nextPage);
+        setHasMoreServices((services || []).length === PAGE_SIZE);
+      }
+    } catch (e) {
+      console.error('Erro ao carregar mais worker_services:', e);
+    } finally {
+      setServicesLoadingMore(false);
+    }
+  };
+
+
   if (loading) {
     return (
       <Card>
@@ -214,8 +317,8 @@ export function MyAdsTab() {
                   </h3>
                   <div className="space-y-3">
                     {jobPostings.map((job) => (
-                      <div 
-                        key={job.id} 
+                      <div
+                        key={job.id}
                         className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
                       >
                         <div className="flex items-start justify-between gap-4">
@@ -249,16 +352,16 @@ export function MyAdsTab() {
                             </div>
                           </div>
                           <div className="flex gap-2 flex-shrink-0">
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="icon"
                               onClick={() => navigate(`/edit-job/${job.id}`)}
                               title="Editar"
                             >
                               <Edit2 className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="icon"
                               onClick={() => setDeleteDialog({ open: true, type: 'job', id: job.id })}
                               title="Excluir"
@@ -270,6 +373,14 @@ export function MyAdsTab() {
                         </div>
                       </div>
                     ))}
+
+                    {hasMoreJobs && (
+                      <div className="text-center">
+                        <Button onClick={loadMoreJobs} disabled={jobsLoadingMore} variant="outline">
+                          {jobsLoadingMore ? 'Carregando...' : 'Carregar mais'}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -283,8 +394,8 @@ export function MyAdsTab() {
                   </h3>
                   <div className="space-y-3">
                     {workerServices.map((service) => (
-                      <div 
-                        key={service.id} 
+                      <div
+                        key={service.id}
                         className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
                       >
                         <div className="flex items-start justify-between gap-4">
@@ -314,16 +425,16 @@ export function MyAdsTab() {
                             </div>
                           </div>
                           <div className="flex gap-2 flex-shrink-0">
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="icon"
                               onClick={() => navigate(`/edit-service/${service.id}`)}
                               title="Editar"
                             >
                               <Edit2 className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="icon"
                               onClick={() => setDeleteDialog({ open: true, type: 'service', id: service.id })}
                               title="Excluir"
@@ -335,6 +446,14 @@ export function MyAdsTab() {
                         </div>
                       </div>
                     ))}
+
+                    {hasMoreServices && (
+                      <div className="text-center">
+                        <Button onClick={loadMoreServices} disabled={servicesLoadingMore} variant="outline">
+                          {servicesLoadingMore ? 'Carregando...' : 'Carregar mais'}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -349,14 +468,14 @@ export function MyAdsTab() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir este {deleteDialog?.type === 'job' ? 'trabalho' : 'serviço'}? 
+              Tem certeza que deseja excluir este {deleteDialog?.type === 'job' ? 'trabalho' : 'serviço'}?
               Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleting}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={handleDelete} 
+            <AlertDialogAction
+              onClick={handleDelete}
               disabled={deleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

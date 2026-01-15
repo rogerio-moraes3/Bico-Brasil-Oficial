@@ -54,9 +54,9 @@ export default function Premium() {
           variant="ghost"
           size="sm"
           onClick={() => safeGoBack(navigate)}
-          className="mb-4"
+          className="mb-4 text-[var(--nav-link)]"
         >
-          <ArrowLeft className="h-5 w-5 mr-2 text-foreground dark:text-white" />
+          <ArrowLeft className="h-5 w-5 mr-2 text-[var(--nav-link)]" />
           Voltar
         </Button>
 

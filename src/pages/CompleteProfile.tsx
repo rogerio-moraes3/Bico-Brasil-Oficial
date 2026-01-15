@@ -15,7 +15,8 @@ import { Footer } from '@/components/Footer';
 import { validateCPF, formatCPF } from '@/lib/validators';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { safeGoBack } from '@/lib/utils';
 
 export default function CompleteProfile() {
   const location = useLocation();
@@ -190,7 +191,15 @@ export default function CompleteProfile() {
       <Header />
 
       <div className="container mx-auto px-4 py-8 min-h-screen overflow-y-auto pb-20 md:pb-8">
-        <Card className="max-w-2xl mx-auto max-h-[85vh] overflow-y-auto">
+        <Button
+          variant="ghost"
+          onClick={() => safeGoBack(navigate, '/app')}
+          className="mb-4 text-[var(--nav-link)]"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2 text-[var(--nav-link)]" />
+          Voltar
+        </Button>
+        <Card className="max-w-2xl mx-auto max-h-[85vh] overflow-y-auto container-outline">
           <CardHeader>
             <CardTitle className="text-2xl text-center flex items-center justify-center gap-2">
               <AlertCircle className="h-6 w-6 text-primary" />

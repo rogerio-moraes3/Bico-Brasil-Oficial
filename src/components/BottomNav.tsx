@@ -66,7 +66,7 @@ export const BottomNav = () => {
   ];
 
   return (
-    <nav style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 z-50 shadow-lg transition-transform duration-300 ${hidden ? 'translate-y-full' : 'translate-y-0'}`}>
+    <nav style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 shadow-lg transition-transform duration-300 ${hidden ? 'translate-y-full' : 'translate-y-0'}`}>
       {/* Indicador de modo */}
       <div className={`h-1 ${indicatorColor} transition-colors duration-300`} />
 

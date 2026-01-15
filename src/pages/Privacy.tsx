@@ -10,27 +10,27 @@ import { safeGoBack } from "@/lib/utils";
 
 const Privacy = () => {
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   return (
     <div className="min-h-screen flex flex-col pb-20 md:pb-0 bg-background">
       <Header />
-      
+
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <Breadcrumbs />
           <Button
             variant="ghost"
             onClick={() => safeGoBack(navigate)}
-            className="mb-4"
+            className="mb-4 text-[var(--nav-link)]"
           >
-            <ArrowLeft className="mr-2 h-4 w-4 text-foreground dark:text-white" />
+            <ArrowLeft className="mr-2 h-4 w-4 text-[var(--nav-link)]" />
             Voltar
           </Button>
-          
+
           <h1 className="text-4xl font-bold mb-8">Política de Privacidade</h1>
 
           <Card className="mb-6">
@@ -76,9 +76,9 @@ const Privacy = () => {
                 <li>Com processadores de pagamento (Mercado Pago) para assinaturas</li>
                 <li>Quando exigido por lei ou ordem judicial</li>
               </ul>
-              
+
               <p className="mt-4">
-                Nunca vendemos ou alugamos seus dados pessoais para empresas de marketing 
+                Nunca vendemos ou alugamos seus dados pessoais para empresas de marketing
                 ou publicidade.
               </p>
             </CardContent>
@@ -97,7 +97,7 @@ const Privacy = () => {
                 <li><strong>Revogar</strong> consentimento para uso de dados</li>
                 <li><strong>Portar</strong> seus dados para outra plataforma</li>
               </ul>
-              
+
               <p className="mt-4">
                 Para exercer qualquer um desses direitos, entre em contato:
                 <br />
@@ -112,7 +112,7 @@ const Privacy = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none">
               <p>
-                Utilizamos medidas de segurança técnicas e organizacionais para proteger 
+                Utilizamos medidas de segurança técnicas e organizacionais para proteger
                 seus dados contra acesso não autorizado, perda ou vazamento. Isso inclui:
               </p>
               <ul className="list-disc pl-6 space-y-2 mt-4">
@@ -130,7 +130,7 @@ const Privacy = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none">
               <p>
-                Utilizamos cookies essenciais para o funcionamento da plataforma 
+                Utilizamos cookies essenciais para o funcionamento da plataforma
                 (login, preferências). Não usamos cookies de rastreamento para publicidade.
               </p>
             </CardContent>
@@ -142,8 +142,8 @@ const Privacy = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none">
               <p>
-                Mantemos seus dados enquanto sua conta estiver ativa. Após a exclusão 
-                da conta, seus dados são removidos em até 30 dias, exceto informações 
+                Mantemos seus dados enquanto sua conta estiver ativa. Após a exclusão
+                da conta, seus dados são removidos em até 30 dias, exceto informações
                 que devemos manter por obrigação legal (registros fiscais, por exemplo).
               </p>
             </CardContent>
@@ -155,7 +155,7 @@ const Privacy = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none">
               <p>
-                Podemos atualizar esta política periodicamente. Mudanças significativas 
+                Podemos atualizar esta política periodicamente. Mudanças significativas
                 serão notificadas por e-mail ou na plataforma.
               </p>
             </CardContent>
@@ -167,7 +167,7 @@ const Privacy = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none space-y-4">
               <p>
-                Ao criar sua conta no Bico Brasil, você autoriza expressamente o tratamento de seus 
+                Ao criar sua conta no Bico Brasil, você autoriza expressamente o tratamento de seus
                 dados pessoais (nome, telefone, email, CPF, documentos, imagens) para fins de:
               </p>
               <ul className="list-disc pl-6 space-y-2">
@@ -178,11 +178,11 @@ const Privacy = () => {
                 <li>Cumprimento de obrigações legais</li>
               </ul>
               <p>
-                Você está ciente dos direitos previstos na Lei n.º 13.709/2018 (LGPD) e concorda que 
+                Você está ciente dos direitos previstos na Lei n.º 13.709/2018 (LGPD) e concorda que
                 seus dados sejam utilizados nos termos desta Política de Privacidade.
               </p>
               <p className="font-semibold">
-                Você pode exercer seus direitos de acesso, correção, eliminação ou portabilidade 
+                Você pode exercer seus direitos de acesso, correção, eliminação ou portabilidade
                 de dados a qualquer momento através do email de contato.
               </p>
             </CardContent>
