@@ -57,7 +57,7 @@ export default function Landing() {
         <meta name="description" content="Encontre pedreiros, ajudantes, faxineiras e profissionais da sua cidade em segundos. Bico Brasil - Presidente Prudente-SP" />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-b from-white to-orange-50 pb-20 md:pb-0 overflow-y-auto">
+      <div className="min-h-screen bg-gradient-to-b from-white to-orange-50 pb-20 overflow-y-auto">
         {/* Hero Section */}
         <section className="container mx-auto px-4 py-16 text-center">
           <img src={logo} alt="Bico Brasil" className="h-32 w-32 mx-auto mb-8" />
@@ -176,9 +176,9 @@ export default function Landing() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-900 text-white py-8">
+        <footer className="bg-gray-900 text-white py-6 md:py-8">
           <div className="container mx-auto px-4 text-center">
-            <div className="flex justify-center gap-6 mb-4">
+            <div className="flex justify-center gap-4 md:gap-6 mb-3 md:mb-4 text-sm md:text-base">
               <button type="button" onClick={() => navigate('/terms')} className="hover:text-primary">
                 Termos de Uso
               </button>
@@ -189,7 +189,7 @@ export default function Landing() {
                 Contato
               </a>
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="text-xs md:text-sm text-gray-400">
               © 2025 Bico Brasil - Presidente Prudente-SP
             </p>
           </div>
