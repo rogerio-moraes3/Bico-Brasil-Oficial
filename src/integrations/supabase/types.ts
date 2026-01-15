@@ -630,7 +630,7 @@ export type Database = {
           city_id: string | null
           created_at: string | null
           custom_category: string | null
-          date_time: string | null
+
           description: string
           id: string
           is_test: boolean | null
@@ -646,7 +646,7 @@ export type Database = {
           city_id?: string | null
           created_at?: string | null
           custom_category?: string | null
-          date_time?: string | null
+
           description: string
           id?: string
           is_test?: boolean | null
@@ -662,7 +662,7 @@ export type Database = {
           city_id?: string | null
           created_at?: string | null
           custom_category?: string | null
-          date_time?: string | null
+
           description?: string
           id?: string
           is_test?: boolean | null

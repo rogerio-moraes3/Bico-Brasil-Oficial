@@ -41,7 +41,6 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
         city_id: payload.city_id,
         neighborhood: payload.neighborhood,
         urgent: payload.urgent || false,
-        date_time: payload.date_time ? new Date(payload.date_time).toISOString() : null,
         status: 'open'
       };
 

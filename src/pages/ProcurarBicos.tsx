@@ -519,7 +519,7 @@ const ProcurarBicos = () => {
 
                     <div className="flex flex-col items-end gap-2 text-right">
                       <div className="text-sm font-medium text-foreground">{formatCurrency(job.price)}</div>
-                      <div className="text-xs text-muted-foreground">{job.date_time ? formatJobDate(job.date_time) : formatTimeAgo(job.created_at)}</div>
+                      <div className="text-xs text-muted-foreground">{formatTimeAgo(job.created_at)}</div>
                     </div>
                   </div>
 

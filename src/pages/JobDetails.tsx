@@ -151,11 +151,11 @@ export default function JobDetails() {
   return (
     <div className="min-h-screen flex flex-col pb-20 md:pb-0">
       <Header />
-      
-      
+
+
       <main className="flex-grow container mx-auto px-4 py-8">
         <Breadcrumbs />
-        
+
         <Card className="max-w-3xl mx-auto">
           <CardHeader>
             <div className="flex items-start justify-between">
@@ -222,17 +222,6 @@ export default function JobDetails() {
                 {job.city?.name} - {job.neighborhood || 'Bairro não especificado'}
               </p>
             </div>
-
-            {/* Data */}
-            {job.date_time && (
-              <div>
-                <h3 className="font-semibold mb-2">Data para Iniciar</h3>
-                <p className="text-sm flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  {formatDate(job.date_time)}
-                </p>
-              </div>
-            )}
 
             {/* Contato via WhatsApp */}
             {job.user?.phone && !isOwner && (

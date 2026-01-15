@@ -166,15 +166,7 @@ export const JobDetailsModal = ({ job, open, onOpenChange, canViewContacts, isOw
             </p>
           </div>
 
-          {job.date_time && (
-            <div>
-              <Label>Data para Iniciar</Label>
-              <p className="text-sm mt-1 flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                {formatDate(job.date_time)}
-              </p>
-            </div>
-          )}
+
         </div>
 
         {/* Contato - FREEMIUM HABILITADO */}

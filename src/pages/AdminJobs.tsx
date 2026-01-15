@@ -26,7 +26,7 @@ interface Job {
   status: string;
   urgent: boolean;
   created_at: string;
-  date_time: string | null;
+
   contractor_name: string;
   contractor_phone: string;
   contractor_id: string | null;
@@ -539,14 +539,7 @@ export default function AdminJobs() {
                       {format(new Date(selectedJob.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Data Agendada</p>
-                    <p className="font-medium">
-                      {selectedJob.date_time
-                        ? format(new Date(selectedJob.date_time), 'dd/MM/yyyy HH:mm', { locale: ptBR })
-                        : '-'}
-                    </p>
-                  </div>
+
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Descrição</p>
