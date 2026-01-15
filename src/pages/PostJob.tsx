@@ -169,9 +169,10 @@ export default function PostJob() {
       // Criar publicação
       let jobData: any = null;
       try {
-        // Check schema for availability column to avoid noisy errors
+        // Check schema for availability and date_time columns to avoid noisy errors
         const { hasColumn } = await import('@/lib/schemaCheck');
         const availabilityExists = await hasColumn('job_postings', 'availability');
+        const dateTimeExists = await hasColumn('job_postings', 'date_time');
 
         const insertPayload: any = {
           user_id: userData.id,
@@ -183,9 +184,12 @@ export default function PostJob() {
           city_id: formData.city_id,
           neighborhood: formData.neighborhood,
           urgent: formData.urgent,
-          date_time: formData.date_time ? new Date(formData.date_time).toISOString() : null,
           status: 'open'
         };
+
+        if (dateTimeExists) {
+          insertPayload.date_time = formData.date_time ? new Date(formData.date_time).toISOString() : null;
+        }
 
         if (availabilityExists) {
           insertPayload.availability = formData.available_today ? 'hoje' : formData.availability;
@@ -195,8 +199,8 @@ export default function PostJob() {
         if (error) throw error;
         jobData = data;
       } catch (insertErr: any) {
-        // Fallback: some schemas may not have 'availability' column; retry without it as a last resort
-        if (insertErr?.message?.toLowerCase?.().includes('availability')) {
+        // Fallback: some schemas may not have 'availability' or 'date_time' columns; retry without them
+        if (insertErr?.message?.toLowerCase?.().includes('availability') || insertErr?.message?.toLowerCase?.().includes('date_time')) {
           try {
             const insertPayloadFallback: any = {
               user_id: userData.id,
@@ -208,7 +212,6 @@ export default function PostJob() {
               city_id: formData.city_id,
               neighborhood: formData.neighborhood,
               urgent: formData.urgent,
-              date_time: formData.date_time ? new Date(formData.date_time).toISOString() : null,
               status: 'open'
             };
             const { data: data2, error: error2 } = await supabase.from('job_postings').insert(insertPayloadFallback).select();

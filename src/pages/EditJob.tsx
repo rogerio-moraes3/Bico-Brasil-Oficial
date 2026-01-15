@@ -89,13 +89,27 @@ export default function EditJob() {
         throw new Error('Cidade é obrigatória');
       }
 
+      // Check schema for date_time column to avoid errors
+      const { hasColumn } = await import('@/lib/schemaCheck');
+      const dateTimeExists = await hasColumn('job_postings', 'date_time');
+
+      const updatePayload: any = {
+        title: formData.title,
+        description: formData.description,
+        category_id: formData.category_id,
+        city_id: formData.city_id,
+        neighborhood: formData.neighborhood,
+        urgent: formData.urgent,
+        updated_at: new Date().toISOString()
+      };
+
+      if (dateTimeExists) {
+        updatePayload.date_time = formData.date_time ? new Date(formData.date_time).toISOString() : null;
+      }
+
       const { error } = await supabase
         .from('job_postings')
-        .update({
-          ...formData,
-          date_time: formData.date_time ? new Date(formData.date_time).toISOString() : null,
-          updated_at: new Date().toISOString()
-        })
+        .update(updatePayload)
         .eq('id', id);
 
       if (error) throw error;
