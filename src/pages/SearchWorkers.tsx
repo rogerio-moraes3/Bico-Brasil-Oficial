@@ -119,7 +119,8 @@ export default function SearchWorkers() {
 
       let servicesQuery = supabase
         .from('worker_services')
-        .select(selectFields);
+        .select(selectFields)
+        .eq('active', true); // Only show active services
 
       if (filters.category !== 'all') {
         servicesQuery = servicesQuery.eq('category_id', filters.category);
@@ -561,7 +562,7 @@ export default function SearchWorkers() {
                               {worker.rating_avg > 0 && (
                                 <div className="flex items-center justify-center gap-1 text-sm">
                                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                  <span className="font-medium">{worker.rating_avg.toFixed(1)}</span>
+                                  <span className="font-medium">{worker.rating_avg && typeof worker.rating_avg === 'number' && !isNaN(worker.rating_avg) ? worker.rating_avg.toFixed(1) : '0.0'}</span>
                                   <span className="text-muted-foreground">
                                     ({worker.rating_count} {worker.rating_count === 1 ? 'avaliação' : 'avaliações'})
                                   </span>

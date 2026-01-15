@@ -60,7 +60,7 @@ export default function Ranking() {
       .from('ranking_top_jobs')
       .select('*')
       .limit(20);
-    
+
     if (!error && data) {
       setTopJobs(data);
     }
@@ -71,7 +71,7 @@ export default function Ranking() {
       .from('ranking_top_workers')
       .select('*')
       .limit(20);
-    
+
     if (!error && data) {
       setTopWorkers(data);
     }
@@ -82,7 +82,7 @@ export default function Ranking() {
       .from('ranking_top_contractors')
       .select('*')
       .limit(20);
-    
+
     if (!error && data) {
       setTopContractors(data);
     }
@@ -97,43 +97,43 @@ export default function Ranking() {
 
     const jobsChannel = supabase
       .channel('ranking-jobs-updates')
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'job_postings' 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'job_postings'
       }, () => loadTopJobs())
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'job_views' 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'job_views'
       }, () => loadTopJobs())
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'job_contacts' 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'job_contacts'
       }, () => loadTopJobs())
       .subscribe();
 
     const workersChannel = supabase
       .channel('ranking-workers-updates')
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
         table: 'jobs'
       }, () => loadTopWorkers())
       .subscribe();
 
     const contractorsChannel = supabase
       .channel('ranking-contractors-updates')
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'job_postings' 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'job_postings'
       }, () => loadTopContractors())
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'jobs' 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'jobs'
       }, () => loadTopContractors())
       .subscribe();
 
@@ -169,7 +169,7 @@ export default function Ranking() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      
+
       <main className="flex-grow container mx-auto px-4 py-8 pb-24">
         <div className="text-center mb-8 animate-fade-in">
           <div className="flex items-center justify-center gap-2 mb-2">
@@ -179,8 +179,8 @@ export default function Ranking() {
           <p className="text-muted-foreground mb-4">
             Veja quem está fazendo a diferença na plataforma
           </p>
-          <ShareButtons 
-            text="Confira os melhores profissionais e contratantes do Bico Brasil!" 
+          <ShareButtons
+            text="Confira os melhores profissionais e contratantes do Bico Brasil!"
             url="https://bicobrasil.com.br/ranking"
             className="justify-center"
           />
@@ -239,7 +239,7 @@ export default function Ranking() {
                             <Badge variant="destructive">Urgente</Badge>
                           )}
                         </div>
-                        
+
                         <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
                           <div className="flex items-center gap-1">
                             <Eye className="h-4 w-4" />
@@ -270,8 +270,8 @@ export default function Ranking() {
               </div>
             ) : (
               topWorkers.map((worker, index) => (
-                <Card 
-                  key={worker.id} 
+                <Card
+                  key={worker.id}
                   className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer animate-fade-in"
                   onClick={() => navigate(`/worker/${worker.id}`)}
                 >
@@ -318,7 +318,7 @@ export default function Ranking() {
                             <div className="flex items-center justify-center gap-1">
                               <Star className="h-5 w-5 fill-yellow-500 text-yellow-500" />
                               <span className="text-2xl font-bold">
-                                {worker.rating_avg.toFixed(1)}
+                                {worker.rating_avg && typeof worker.rating_avg === 'number' && !isNaN(worker.rating_avg) ? worker.rating_avg.toFixed(1) : '0.0'}
                               </span>
                             </div>
                             <div className="text-xs text-muted-foreground">

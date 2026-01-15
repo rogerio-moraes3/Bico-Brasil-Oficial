@@ -413,11 +413,11 @@ export function MyAdsTab() {
                               {service.category?.name && (
                                 <span>{service.category.name}</span>
                               )}
-                              {service.price && (
+                              {service.price && typeof service.price === 'number' && !isNaN(service.price) ? (
                                 <span className="font-medium text-primary">
                                   R$ {service.price.toFixed(2)}
                                 </span>
-                              )}
+                              ) : null}
                               <span className="flex items-center gap-1">
                                 <Calendar className="h-3 w-3" />
                                 {format(new Date(service.created_at), "dd/MM/yyyy", { locale: ptBR })}

@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { FavoritesTab } from '@/components/FavoritesTab';
 import { NotificationsPanel } from '@/components/NotificationsPanel';
-import { BadgeDisplay } from '@/components/BadgeDisplay';
+
 import { MyAdsTab } from '@/components/MyAdsTab';
 import { MediaUpload } from '@/components/MediaUpload';
 import {
@@ -441,11 +441,11 @@ export default function Profile() {
                         {profile.rating_avg > 0 && (
                           <Badge variant="outline" className="gap-1">
                             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                            {profile.rating_avg.toFixed(1)}
+                            {profile.rating_avg && typeof profile.rating_avg === 'number' && !isNaN(profile.rating_avg) ? profile.rating_avg.toFixed(1) : '0.0'}
                           </Badge>
                         )}
                       </div>
-                      <BadgeDisplay userId={profile.id} />
+
                     </div>
                   </div>
                 </div>
@@ -785,7 +785,7 @@ export default function Profile() {
                   <CardContent>
                     <div className="flex items-center gap-2">
                       <p className="text-3xl font-bold">
-                        {profile.rating_avg > 0 ? profile.rating_avg.toFixed(1) : '-'}
+                        {profile.rating_avg && typeof profile.rating_avg === 'number' && !isNaN(profile.rating_avg) && profile.rating_avg > 0 ? profile.rating_avg.toFixed(1) : '-'}
                       </p>
                       {profile.rating_avg > 0 && (
                         <Star className="h-6 w-6 fill-yellow-400 text-yellow-400" />

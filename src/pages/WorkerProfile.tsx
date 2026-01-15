@@ -349,7 +349,7 @@ export default function WorkerProfile() {
                     {worker.rating_avg > 0 && (
                       <Badge variant="outline" className="gap-1">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        {worker.rating_avg.toFixed(1)} ({worker.rating_count} avaliações)
+                        {worker.rating_avg && typeof worker.rating_avg === 'number' && !isNaN(worker.rating_avg) ? worker.rating_avg.toFixed(1) : '0.0'} ({worker.rating_count || 0} avaliações)
                       </Badge>
                     )}
                     <Badge variant="secondary">

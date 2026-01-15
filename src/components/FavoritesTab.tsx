@@ -93,10 +93,10 @@ export function FavoritesTab() {
     <div className="space-y-4">
       {favorites.map((worker) => {
         const initials = worker.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
-        
+
         return (
-          <Card 
-            key={worker.id} 
+          <Card
+            key={worker.id}
             className="hover:shadow-md transition-shadow cursor-pointer"
             onClick={(e) => {
               if (!(e.target as HTMLElement).closest('button')) {
@@ -127,7 +127,7 @@ export function FavoritesTab() {
                     {worker.rating_avg > 0 && (
                       <Badge variant="outline" className="gap-1">
                         <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        {worker.rating_avg.toFixed(1)} ({worker.rating_count})
+                        {worker.rating_avg && typeof worker.rating_avg === 'number' && !isNaN(worker.rating_avg) ? worker.rating_avg.toFixed(1) : '0.0'} ({worker.rating_count || 0})
                       </Badge>
                     )}
                     {worker.price && (
