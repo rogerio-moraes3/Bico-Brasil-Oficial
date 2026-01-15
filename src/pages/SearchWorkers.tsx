@@ -584,7 +584,7 @@ export default function SearchWorkers() {
                                 className="flex-1"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  navigate(`/editar-servico/${worker.service_id}`);
+                                  navigate(`/edit-service/${worker.service_id}`);
                                 }}
                               >
                                 <Pencil className="h-4 w-4 mr-2" />
