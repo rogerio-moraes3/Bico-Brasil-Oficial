@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Home, Briefcase, Search, User } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, Briefcase, Search, User, ChevronLeft } from "lucide-react";
 import { useUserMode } from "@/contexts/UserModeContext";
+import { safeGoBack } from "@/lib/utils";
 
 export const BottomNav = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { mode } = useUserMode();
   const [hidden, setHidden] = useState(false);
 
@@ -41,8 +43,14 @@ export const BottomNav = () => {
     ? 'bg-blue-500'
     : 'bg-green-500';
 
-  // 4 itens fixos para navegação principal
+  // 5 itens: Voltar + 4 itens fixos para navegação principal
   const navItems = [
+    {
+      path: "back",
+      icon: ChevronLeft,
+      label: "Voltar",
+      isBack: true
+    },
     {
       path: "/app",
       icon: Home,
@@ -71,21 +79,36 @@ export const BottomNav = () => {
       <div className={`h-1 ${indicatorColor} transition-colors duration-300`} />
 
       <div className="flex items-center justify-around h-16 px-2">
-        {navItems.map(({ path, icon: Icon, label }) => (
-          <Link
-            key={path}
-            to={path}
-            className={`flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-lg ${isActive(path)
-              ? `${activeColor} scale-105`
-              : "text-muted-foreground dark:text-white/90 hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
-              }`}
-          >
-            <Icon className={`h-6 w-6 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />
-            <span className={`text-xs font-medium ${isActive(path) ? 'font-semibold' : ''}`}>
-              {label}
-            </span>
-          </Link>
-        ))}
+        {navItems.map(({ path, icon: Icon, label, isBack }) => {
+          if (isBack) {
+            return (
+              <button
+                key="back"
+                onClick={() => safeGoBack(navigate)}
+                className="flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-lg text-muted-foreground dark:text-white/90 hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <Icon className="h-6 w-6 stroke-2" />
+                <span className="text-xs font-medium">{label}</span>
+              </button>
+            );
+          }
+
+          return (
+            <Link
+              key={path}
+              to={path}
+              className={`flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-lg ${isActive(path)
+                ? `${activeColor} scale-105`
+                : "text-muted-foreground dark:text-white/90 hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+            >
+              <Icon className={`h-6 w-6 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />
+              <span className={`text-xs font-medium ${isActive(path) ? 'font-semibold' : ''}`}>
+                {label}
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Share2, Copy, MessageCircle } from 'lucide-react';
+import { Network, Copy, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ShareButtonsProps {
@@ -9,8 +9,8 @@ interface ShareButtonsProps {
   className?: string;
 }
 
-export function ShareButtons({ 
-  title = 'Bico Brasil', 
+export function ShareButtons({
+  title = 'Bico Brasil',
   text = 'Encontre profissionais ou ofereça seus serviços no Bico Brasil!',
   url,
   className = ''
