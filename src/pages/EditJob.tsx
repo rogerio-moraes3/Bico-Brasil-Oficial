@@ -32,7 +32,7 @@ export default function EditJob() {
     city_id: '',
     neighborhood: '',
     urgent: false,
-    date_time: ''
+
   });
 
   const { cities, loading: citiesLoading } = useCities();
@@ -63,8 +63,7 @@ export default function EditJob() {
         category_id: jobRes.data.category_id || '',
         city_id: jobRes.data.city_id || '',
         neighborhood: jobRes.data.neighborhood || '',
-        urgent: jobRes.data.urgent || false,
-        date_time: jobRes.data.date_time ? new Date(jobRes.data.date_time).toISOString().slice(0, 16) : ''
+        urgent: jobRes.data.urgent || false
       });
     }
 
@@ -89,27 +88,17 @@ export default function EditJob() {
         throw new Error('Cidade é obrigatória');
       }
 
-      // Check schema for date_time column to avoid errors
-      const { hasColumn } = await import('@/lib/schemaCheck');
-      const dateTimeExists = await hasColumn('job_postings', 'date_time');
-
-      const updatePayload: any = {
-        title: formData.title,
-        description: formData.description,
-        category_id: formData.category_id,
-        city_id: formData.city_id,
-        neighborhood: formData.neighborhood,
-        urgent: formData.urgent,
-        updated_at: new Date().toISOString()
-      };
-
-      if (dateTimeExists) {
-        updatePayload.date_time = formData.date_time ? new Date(formData.date_time).toISOString() : null;
-      }
-
       const { error } = await supabase
         .from('job_postings')
-        .update(updatePayload)
+        .update({
+          title: formData.title,
+          description: formData.description,
+          category_id: formData.category_id,
+          city_id: formData.city_id,
+          neighborhood: formData.neighborhood,
+          urgent: formData.urgent,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', id);
 
       if (error) throw error;
@@ -216,16 +205,6 @@ export default function EditJob() {
                   placeholder="Ex: Centro"
                   value={formData.neighborhood}
                   onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="date_time">Data e Hora (opcional)</Label>
-                <Input
-                  id="date_time"
-                  type="datetime-local"
-                  value={formData.date_time}
-                  onChange={(e) => setFormData({ ...formData, date_time: e.target.value })}
                 />
               </div>
 

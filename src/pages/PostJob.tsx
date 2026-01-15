@@ -33,7 +33,7 @@ export default function PostJob() {
     city_id: '',
     neighborhood: '',
     urgent: false,
-    date_time: '',
+
     availability: 'todos_os_dias',
     available_today: false,
     customCategory: '',
@@ -169,10 +169,9 @@ export default function PostJob() {
       // Criar publicação
       let jobData: any = null;
       try {
-        // Check schema for availability and date_time columns to avoid noisy errors
+        // Check schema for availability column to avoid noisy errors
         const { hasColumn } = await import('@/lib/schemaCheck');
         const availabilityExists = await hasColumn('job_postings', 'availability');
-        const dateTimeExists = await hasColumn('job_postings', 'date_time');
 
         const insertPayload: any = {
           user_id: userData.id,
@@ -187,10 +186,6 @@ export default function PostJob() {
           status: 'open'
         };
 
-        if (dateTimeExists) {
-          insertPayload.date_time = formData.date_time ? new Date(formData.date_time).toISOString() : null;
-        }
-
         if (availabilityExists) {
           insertPayload.availability = formData.available_today ? 'hoje' : formData.availability;
         }
@@ -199,8 +194,8 @@ export default function PostJob() {
         if (error) throw error;
         jobData = data;
       } catch (insertErr: any) {
-        // Fallback: some schemas may not have 'availability' or 'date_time' columns; retry without them
-        if (insertErr?.message?.toLowerCase?.().includes('availability') || insertErr?.message?.toLowerCase?.().includes('date_time')) {
+        // Fallback: some schemas may not have 'availability' column; retry without it
+        if (insertErr?.message?.toLowerCase?.().includes('availability')) {
           try {
             const insertPayloadFallback: any = {
               user_id: userData.id,
@@ -394,16 +389,6 @@ export default function PostJob() {
                   placeholder="Digite o bairro"
                   value={formData.neighborhood}
                   onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="date_time">Data/Hora Desejada (opcional)</Label>
-                <Input
-                  id="date_time"
-                  type="datetime-local"
-                  value={formData.date_time}
-                  onChange={(e) => setFormData({ ...formData, date_time: e.target.value })}
                 />
               </div>
 
