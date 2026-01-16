@@ -700,9 +700,9 @@ export default function Admin() {
           </div>
 
           <Card className="bg-card border-border overflow-hidden shadow-2xl">
-            <div className="overflow-x-auto">
+            <div className="max-h-[500px] overflow-y-auto">
               <Table className="admin-table">
-                <TableHeader className="bg-card/50">
+                <TableHeader className="bg-card/50 sticky top-0 z-10">
                   <TableRow className="border-border h-10 hover:bg-transparent">
                     <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Nome Completo</TableHead>
                     <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Email</TableHead>
