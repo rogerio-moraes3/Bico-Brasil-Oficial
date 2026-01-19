@@ -903,57 +903,79 @@ export default function Admin() {
         </DialogContent>
       </Dialog>
 
-      {/* MODAL: SEGMENTAÇÃO DE USUÁRIOS */}
+      {/* MODAL: LISTA DE USUÁRIOS - FORMATO DOCUMENTO */}
       <Dialog open={usersModalOpen} onOpenChange={setUsersModalOpen}>
-        <DialogContent className="max-w-3xl bg-card border-border">
+        <DialogContent className="max-w-4xl max-h-[90vh] bg-card border-border overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-xl font-black text-foreground flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
-              Segmentação de Usuários
+              Lista de Usuários
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              Análise detalhada por tipo e localização
+              Prontuário administrativo com busca e paginação
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-sm font-black text-foreground mb-4">Por Tipo</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <PieChart>
-                  <Pie
-                    data={[
-                      { name: 'Prestadores', value: metrics.leadsByType.fazer_bico },
-                      { name: 'Contratantes', value: metrics.leadsByType.anunciar_servico }
-                    ]}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    <Cell fill="#3b82f6" />
-                    <Cell fill="#f59e0b" />
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+          {/* Search Field */}
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nome..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 text-sm"
+            />
+          </div>
 
-            <div>
-              <h3 className="text-sm font-black text-foreground mb-4">Top 5 Cidades</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={metrics.leadsByCity.slice(0, 5)}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="name" stroke="#64748b" tick={{ fontSize: 10, fill: '#64748b' }} />
-                  <YAxis stroke="#64748b" tick={{ fontSize: 10, fill: '#64748b' }} />
-                  <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b' }} />
-                  <Bar dataKey="value" fill="#3b82f6" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+          {/* User List - 5 items with scroll */}
+          <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+            {filteredLeads.slice(0, 5).map((lead) => (
+              <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                  <div>
+                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Nome:</span>
+                    <p className="text-foreground mt-0.5">{lead.name || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">CPF/Email:</span>
+                    <p className="text-foreground mt-0.5 truncate">{lead.email || lead.cpf || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Celular:</span>
+                    <p className="text-foreground mt-0.5">{lead.phone || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Cidade:</span>
+                    <p className="text-foreground mt-0.5">{lead.city || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Bairro:</span>
+                    <p className="text-foreground mt-0.5">{lead.neighborhood || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Tipo:</span>
+                    <p className="text-foreground mt-0.5">
+                      <Badge className={`text-xs ${lead.type === 'fazer_bico' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'
+                        }`}>
+                        {lead.type === 'fazer_bico' ? 'Prestador' : 'Contratante'}
+                      </Badge>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {filteredLeads.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">Nenhum usuário encontrado</p>
+              </div>
+            )}
+          </div>
+
+          {/* Pagination Info */}
+          <div className="mt-4 pt-4 border-t border-border text-center text-xs text-muted-foreground">
+            Mostrando {Math.min(5, filteredLeads.length)} de {filteredLeads.length} usuários
+            {searchTerm && ` (filtrado de ${leads.length} total)`}
           </div>
         </DialogContent>
       </Dialog>

@@ -497,7 +497,7 @@ const ProcurarBicos = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 place-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 place-items-center">
             {jobs.map((job) => (
               <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-xl border max-w-sm w-full" onClick={() => handleViewJob(job)}>
                 <CardContent className="p-4">

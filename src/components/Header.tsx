@@ -207,7 +207,7 @@ export const Header = () => {
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-10 w-10 flex items-center justify-center">
-                  <Menu className="h-5 w-5" />
+                  <Menu className="h-5 w-5 text-foreground" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
