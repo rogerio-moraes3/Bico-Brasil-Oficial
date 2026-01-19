@@ -319,12 +319,12 @@ export function MyAdsTab() {
                     {jobPostings.map((job) => (
                       <div
                         key={job.id}
-                        className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                        className="p-3 border rounded-lg hover:bg-muted/50 transition-colors overflow-hidden"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap mb-1">
-                              <h4 className="font-medium truncate">{job.title}</h4>
+                              <h4 className="font-medium text-sm truncate">{job.title}</h4>
                               {job.urgent && (
                                 <Badge variant="destructive" className="text-xs">Urgente</Badge>
                               )}
@@ -396,12 +396,12 @@ export function MyAdsTab() {
                     {workerServices.map((service) => (
                       <div
                         key={service.id}
-                        className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                        className="p-3 border rounded-lg hover:bg-muted/50 transition-colors overflow-hidden"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap mb-1">
-                              <h4 className="font-medium truncate">{service.title}</h4>
+                              <h4 className="font-medium text-sm truncate">{service.title}</h4>
                               <Badge variant={service.active ? 'default' : 'secondary'} className="text-xs">
                                 {service.active ? 'Ativo' : 'Inativo'}
                               </Badge>
