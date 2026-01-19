@@ -128,7 +128,7 @@ export default function SearchWorkers() {
       let servicesQuery = supabase
         .from('worker_services')
         .select(selectFields)
-        .eq('active', true); // Only show active services
+        .eq('active', true); // CRITICAL: Only show active services, hide deleted ones
 
       // Apply filters only if user has selected any
       if (hasFilters) {
