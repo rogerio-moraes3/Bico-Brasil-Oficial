@@ -296,7 +296,6 @@ export default function SearchWorkers() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-
       {/* Banner de acesso para testers */}
       {isTester && (
         <div className="bg-purple-900/30 border-b border-purple-500/30 py-3">
@@ -460,7 +459,6 @@ export default function SearchWorkers() {
               </Button>
             </div>
 
-            {/* Geolocalização */}
             <div className="pt-4 border-t">
               <GeolocationSearch
                 onLocationChange={(lat, lng, radius) => setGeoLocation({ lat, lng, radius })}
@@ -469,7 +467,6 @@ export default function SearchWorkers() {
           </CardContent>
         </Card>
 
-        {/* Contador de resultados */}
         {searched && !loading && !error && workers.length > 0 && (
           <div className="mb-4 text-sm text-muted-foreground">
             Encontrados {workers.length} profissionai{workers.length !== 1 ? 's' : ''}
@@ -478,7 +475,6 @@ export default function SearchWorkers() {
           </div>
         )}
 
-        {/* CTA sempre visível - Publicar Vaga */}
         <Card className="p-6 bg-gradient-to-br from-blue-600 to-blue-700 border-blue-500/30 text-white">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
@@ -495,13 +491,14 @@ export default function SearchWorkers() {
         </Card>
 
         {searched && (
-          <div className="space-y-6">
-
-            {error ? (
+          <div className="space-y-6 mt-8">
+            {error && (
               <Card className="p-8 text-center">
                 <p className="text-muted-foreground">{error}</p>
               </Card>
-            ) : workers.length === 0 && searched ? (
+            )}
+
+            {!error && workers.length === 0 && (
               <Card className="p-8 text-center">
                 <Briefcase className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Nenhum profissional encontrado</h3>
@@ -512,166 +509,165 @@ export default function SearchWorkers() {
                   Publicar Vaga
                 </Button>
               </Card>
-            ) : workers.length > 0 ? (
-              <>
-                {/* RENDER PROOF v96fa9a6 */}
-                <div className="bg-red-600 text-white text-xs p-1 mb-2 text-center font-mono">
-                  RENDER PROOF SearchWorkers v96fa9a6
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
-                  {workers.map((worker) => {
-                    const isOwner = user?.id === worker.id;
+            )}
 
-                    return (
-                      <Card key={worker.id} className="h-full hover:shadow-lg transition-shadow max-w-sm w-full mx-auto">
-                        <Link
-                          to={`/worker/${worker.id}`}
-                          onClick={(e) => {
-                            if (!canViewProfiles) {
-                              e.preventDefault();
-                              setShowUpgradeModal(true);
-                            }
-                          }}
-                          className="block"
-                        >
-                          <CardContent className="p-4">
-                            <div className="flex flex-col items-center gap-3 mb-3">
-                              <div className="relative">
-                                <Avatar className="h-24 w-24">
-                                  <AvatarImage
-                                    src={worker.profile_photo || ''}
-                                    alt={worker.name}
-                                  />
-                                  <AvatarFallback>
-                                    {worker.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                                  </AvatarFallback>
-                                </Avatar>
-                                {worker.verified && (
-                                  <Badge className="absolute -top-1 -right-1 bg-blue-500">
-                                    <Check className="h-3 w-3" />
+            {workers.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
+                {workers.map((worker) => {
+                  const isOwner = user?.id === worker.id;
+
+                  return (
+                    <Card key={worker.id} className="h-full hover:shadow-lg transition-shadow max-w-sm w-full mx-auto">
+                      <Link
+                        to={`/worker/${worker.id}`}
+                        onClick={(e) => {
+                          if (!canViewProfiles) {
+                            e.preventDefault();
+                            setShowUpgradeModal(true);
+                          }
+                        }}
+                        className="block"
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex flex-col items-center gap-3 mb-3">
+                            <div className="relative">
+                              <Avatar className="h-24 w-24">
+                                <AvatarImage
+                                  src={worker.profile_photo || ''}
+                                  alt={worker.name}
+                                />
+                                <AvatarFallback>
+                                  {worker.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              {worker.verified && (
+                                <Badge className="absolute -top-1 -right-1 bg-blue-500">
+                                  <Check className="h-3 w-3" />
+                                </Badge>
+                              )}
+                            </div>
+
+                            <div className="text-center w-full">
+                              <h3 className="font-semibold text-base mb-1">{worker.name}</h3>
+                              <p className="text-sm text-muted-foreground mb-2">
+                                {worker.city}
+                                {worker.neighborhood && ` - ${worker.neighborhood}`}
+                              </p>
+                              <p className="text-sm font-medium text-primary mb-3">
+                                {worker.service_title || worker.category}
+                              </p>
+
+                              <div className="flex gap-2 justify-center flex-wrap mb-3">
+                                {worker.destaque_expires_at && new Date(worker.destaque_expires_at) > new Date() && (
+                                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                                    ⭐ Destaque
+                                  </Badge>
+                                )}
+                                {worker.plan_active && (
+                                  <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                                    💎 Premium
                                   </Badge>
                                 )}
                               </div>
 
-                              <div className="text-center w-full">
-                                <h3 className="font-semibold text-base mb-1">{worker.name}</h3>
-                                <p className="text-sm text-muted-foreground mb-2">
-                                  {worker.city}
-                                  {worker.neighborhood && ` - ${worker.neighborhood}`}
-                                </p>
-                                <p className="text-sm font-medium text-primary mb-3">
-                                  {worker.service_title || worker.category}
-                                </p>
-
-                                <div className="flex gap-2 justify-center flex-wrap mb-3">
-                                  {worker.destaque_expires_at && new Date(worker.destaque_expires_at) > new Date() && (
-                                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                                      ⭐ Destaque
-                                    </Badge>
-                                  )}
-                                  {worker.plan_active && (
-                                    <Badge variant="secondary" className="bg-purple-100 text-purple-800">
-                                      💎 Premium
-                                    </Badge>
-                                  )}
+                              {worker.rating_avg > 0 && (
+                                <div className="flex items-center justify-center gap-1 text-sm">
+                                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                  <span className="font-medium">{worker.rating_avg && typeof worker.rating_avg === 'number' && !isNaN(worker.rating_avg) ? worker.rating_avg.toFixed(1) : '0.0'}</span>
+                                  <span className="text-muted-foreground">
+                                    ({worker.rating_count} {worker.rating_count === 1 ? 'avaliação' : 'avaliações'})
+                                  </span>
                                 </div>
-
-                                {worker.rating_avg > 0 && (
-                                  <div className="flex items-center justify-center gap-1 text-sm">
-                                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                    <span className="font-medium">{worker.rating_avg && typeof worker.rating_avg === 'number' && !isNaN(worker.rating_avg) ? worker.rating_avg.toFixed(1) : '0.0'}</span>
-                                    <span className="text-muted-foreground">
-                                      ({worker.rating_count} {worker.rating_count === 1 ? 'avaliação' : 'avaliações'})
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
+                              )}
                             </div>
+                          </div>
 
-                            {worker.service_description && (
-                              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                                {worker.service_description}
-                              </p>
-                            )}
+                          {worker.service_description && (
+                            <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                              {worker.service_description}
+                            </p>
+                          )}
 
-                            {isOwner && (
-                              <div className="flex gap-2 mt-4">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="flex-1"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    navigate(`/edit-service/${worker.service_id}`);
-                                  }}
-                                >
-                                  <Pencil className="h-4 w-4 mr-2" />
-                                  Editar
-                                </Button>
-                              </div>
-                            )}
-
-                            {/* Share Button - Always visible */}
-                            <div className="mt-4 pt-4 border-t">
+                          {isOwner && (
+                            <div className="flex gap-2 mt-4">
                               <Button
-                                variant="ghost"
+                                variant="outline"
                                 size="sm"
-                                className="w-full"
-                                onClick={async (e) => {
+                                className="flex-1"
+                                onClick={(e) => {
                                   e.preventDefault();
-                                  const shareUrl = `${window.location.origin}/worker/${worker.id}`;
-                                  const shareText = `Confira ${worker.name} no Bico Brasil! ${worker.service_title} - Cadastre-se para entrar em contato!`;
-
-                                  try {
-                                    if (navigator.share) {
-                                      await navigator.share({
-                                        title: 'Bico Brasil',
-                                        text: shareText,
-                                        url: shareUrl
-                                      });
-                                    } else {
-                                      await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`);
-                                      toast({
-                                        title: "Link copiado!",
-                                        description: "Cole e compartilhe onde quiser",
-                                      });
-                                    }
-                                  } catch (err) {
-                                    console.error('Share error:', err);
-                                  }
+                                  navigate(`/edit-service/${worker.service_id}`);
                                 }}
                               >
-                                <Share2 className="h-4 w-4 mr-2" />
-                                Compartilhar
+                                <Pencil className="h-4 w-4 mr-2" />
+                                Editar
                               </Button>
                             </div>
-                          </CardContent>
-                        </Link>
+                          )}
 
-                        {!isOwner && worker.phone && (
-                          <div className="px-6 pb-6 pt-2 border-t">
-                            <WhatsAppContactButton
-                              phone={worker.phone}
-                              workerName={worker.name}
-                              canViewContact={canViewProfiles}
-                              remainingViews={remainingFreeViews}
-                              onUpgradeClick={() => setShowUpgradeModal(true)}
-                            />
+                          <div className="mt-4 pt-4 border-t">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full"
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                const shareUrl = `${window.location.origin}/worker/${worker.id}`;
+                                const shareText = `Confira ${worker.name} no Bico Brasil! ${worker.service_title} - Cadastre-se para entrar em contato!`;
+
+                                try {
+                                  if (navigator.share) {
+                                    await navigator.share({
+                                      title: 'Bico Brasil',
+                                      text: shareText,
+                                      url: shareUrl
+                                    });
+                                  } else {
+                                    await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`);
+                                    toast({
+                                      title: "Link copiado!",
+                                      description: "Cole e compartilhe onde quiser",
+                                    });
+                                  }
+                                } catch (err) {
+                                  console.error('Share error:', err);
+                                }
+                              }}
+                            >
+                              <Share2 className="h-4 w-4 mr-2" />
+                              Compartilhar
+                            </Button>
                           </div>
-                        )}
-                      </Card>
-                    );
-                  })}
-                </div>
-              </>
-            ) : null}
-      </main>
+                        </CardContent>
+                      </Link>
 
-      <UpgradeModal
-        open={showUpgradeModal}
-        onOpenChange={setShowUpgradeModal}
-        remainingViews={remainingFreeViews}
-      />
+                      {!isOwner && worker.phone && (
+                        <div className="px-6 pb-6 pt-2 border-t">
+                          <WhatsAppContactButton
+                            phone={worker.phone}
+                            workerName={worker.name}
+                            canViewContact={canViewProfiles}
+                            remainingViews={remainingFreeViews}
+                            onUpgradeClick={() => setShowUpgradeModal(true)}
+                          />
+                        </div>
+                      )}
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {showUpgradeModal && (
+          <UpgradeModal
+            open={showUpgradeModal}
+            onOpenChange={setShowUpgradeModal}
+            remainingViews={remainingFreeViews}
+          />
+        )}
+      </main>
 
       <Footer />
     </div>
