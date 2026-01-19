@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import CitySelect from '@/components/CitySelect';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, MessageCircle, Loader2, Crown, Edit, Trash, Check, Pencil, Briefcase } from 'lucide-react';
+import { Star, MapPin, MessageCircle, Loader2, Crown, Edit, Trash, Check, Pencil, Briefcase, Share2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAccessControl } from '@/hooks/useAccessControl';
@@ -593,6 +593,41 @@ export default function SearchWorkers() {
                               </Button>
                             </div>
                           )}
+
+                          {/* Share Button - Always visible */}
+                          <div className="mt-4 pt-4 border-t">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full"
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                const shareUrl = `${window.location.origin}/worker/${worker.id}`;
+                                const shareText = `Confira ${worker.name} no Bico Brasil! ${worker.service_title} - Cadastre-se para entrar em contato!`;
+
+                                try {
+                                  if (navigator.share) {
+                                    await navigator.share({
+                                      title: 'Bico Brasil',
+                                      text: shareText,
+                                      url: shareUrl
+                                    });
+                                  } else {
+                                    await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`);
+                                    toast({
+                                      title: "Link copiado!",
+                                      description: "Cole e compartilhe onde quiser",
+                                    });
+                                  }
+                                } catch (err) {
+                                  console.error('Share error:', err);
+                                }
+                              }}
+                            >
+                              <Share2 className="h-4 w-4 mr-2" />
+                              Compartilhar
+                            </Button>
+                          </div>
                         </CardContent>
                       </Link>
 
