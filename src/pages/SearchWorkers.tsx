@@ -665,7 +665,6 @@ export default function SearchWorkers() {
                 </div>
               </>
             ) : null}
-          </main>
       </main>
 
       <UpgradeModal
