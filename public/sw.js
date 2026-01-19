@@ -1,6 +1,6 @@
 // Service worker with intelligent caching strategy
-const CACHE_VERSION = 'bico-brasil-v26-' + new Date().getTime();
-console.debug('🔧 Service Worker v26 iniciado');
+const CACHE_VERSION = 'bico-brasil-v27-' + new Date().getTime();
+console.debug('🔧 Service Worker v27 iniciado');
 const CACHE_NAMES = {
   static: CACHE_VERSION + '-static',
   dynamic: CACHE_VERSION + '-dynamic',
@@ -34,7 +34,7 @@ self.addEventListener('activate', (event) => {
           })
       );
     }).then(() => {
-      console.debug('✅ Service Worker v21 ativado - cache limpo!');
+      console.debug('✅ Service Worker v27 ativado - cache limpo!');
       return self.clients.claim();
     })
   );

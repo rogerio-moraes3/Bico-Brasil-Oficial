@@ -2,10 +2,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-// Cache bust: v11
+// Cache bust: v12
 
 // AUMENTE ESTE NÚMERO sempre que quiser forçar rebuild total
-const CACHE_VERSION = 7;
+const CACHE_VERSION = 8;
 
 export default defineConfig(({ mode }) => ({
   plugins: [
