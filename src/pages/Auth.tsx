@@ -484,7 +484,7 @@ export default function Auth() {
     <>
       <Header />
       <div className="min-h-screen bg-gradient-to-b from-background to-muted py-12 px-4 pb-20 md:pb-12">
-        <div className="container max-w-md mx-auto">
+        <div className="container max-w-xl mx-auto">
           {/* Botão Voltar */}
           <Button
             variant="ghost"

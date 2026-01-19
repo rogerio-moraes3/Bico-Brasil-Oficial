@@ -109,6 +109,14 @@ export default function SearchWorkers() {
     setError(null);
 
     try {
+      // Check if user has any filters selected
+      const hasFilters =
+        filters.category !== 'all' ||
+        filters.subcategory !== 'all' ||
+        filters.city_id !== 'all' ||
+        filters.neighborhood.trim() !== '' ||
+        filters.minRating !== 'all' ||
+        searchQuery.trim() !== '';
 
       // Check schema: availability may not exist in every environment
       const { hasColumn } = await import('@/lib/schemaCheck');
@@ -122,21 +130,25 @@ export default function SearchWorkers() {
         .select(selectFields)
         .eq('active', true); // Only show active services
 
-      if (filters.category !== 'all') {
-        servicesQuery = servicesQuery.eq('category_id', filters.category);
-      }
+      // Apply filters only if user has selected any
+      if (hasFilters) {
+        if (filters.category !== 'all') {
+          servicesQuery = servicesQuery.eq('category_id', filters.category);
+        }
 
-      if (filters.subcategory !== 'all') {
-        servicesQuery = servicesQuery.eq('subcategory_id', filters.subcategory);
-      }
+        if (filters.subcategory !== 'all') {
+          servicesQuery = servicesQuery.eq('subcategory_id', filters.subcategory);
+        }
 
-      if (searchQuery.trim()) {
-        const expandedTerms = expandSearchTerms(searchQuery);
-        const orConditions = expandedTerms.map(term =>
-          `title.ilike.%${term}%,description.ilike.%${term}%`
-        ).join(',');
-        servicesQuery = servicesQuery.or(orConditions);
+        if (searchQuery.trim()) {
+          const expandedTerms = expandSearchTerms(searchQuery);
+          const orConditions = expandedTerms.map(term =>
+            `title.ilike.%${term}%,description.ilike.%${term}%`
+          ).join(',');
+          servicesQuery = servicesQuery.or(orConditions);
+        }
       }
+      // If no filters, query will return all active services
 
       let servicesData: any = null;
       try {

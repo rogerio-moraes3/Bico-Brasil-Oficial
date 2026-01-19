@@ -251,6 +251,12 @@ All colors MUST be HSL.
     input,
     select,
     textarea {
+      border-color: var(--container-border) !important;
+    }
+
+    /* Ensure all borders use navy in light mode */
+    .border,
+    [class*="border-"] {
       border-color: var(--container-border);
     }
 
@@ -268,6 +274,18 @@ All colors MUST be HSL.
     --border: 0 0% 100%;
     /* white border in dark mode */
     --container-border: 0 0% 100%;
+
+    /* Dark mode - white borders everywhere */
+    input,
+    select,
+    textarea {
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .border,
+    [class*="border-"] {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
 
     /* Ensure switches inside the internal theme use sensible dark tokens */
     --switch-on: 217.2 91.2% 59.8%;
