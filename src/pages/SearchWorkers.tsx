@@ -513,7 +513,12 @@ export default function SearchWorkers() {
                 </Button>
               </Card>
             ) : workers.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto">
+              <>
+                {/* RENDER PROOF v96fa9a6 */}
+                <div className="bg-red-600 text-white text-xs p-1 mb-2 text-center font-mono">
+                  RENDER PROOF SearchWorkers v96fa9a6
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
                 {workers.map((worker) => {
                   const isOwner = user?.id === worker.id;
 

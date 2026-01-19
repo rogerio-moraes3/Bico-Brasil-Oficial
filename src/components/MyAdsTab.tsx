@@ -307,159 +307,164 @@ export function MyAdsTab() {
               </div>
             </div>
           ) : (
-            <div className="space-y-6">
-              {/* Trabalhos Publicados */}
-              {jobPostings.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Briefcase className="h-5 w-5 text-primary" />
-                    Trabalhos Publicados ({jobPostings.length})
-                  </h3>
-                  <div className="space-y-3">
-                    {jobPostings.map((job) => (
-                      <div
-                        key={job.id}
-                        className="p-3 border rounded-lg hover:bg-muted/50 transition-colors overflow-hidden"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap mb-1">
-                              <h4 className="font-medium text-sm truncate">{job.title}</h4>
-                              {job.urgent && (
-                                <Badge variant="destructive" className="text-xs">Urgente</Badge>
-                              )}
-                              <Badge variant={job.status === 'open' ? 'default' : 'secondary'} className="text-xs">
-                                {job.status === 'open' ? 'Aberto' : job.status}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                              {job.description}
-                            </p>
-                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                              {job.category?.name && (
-                                <span>{job.category.name}</span>
-                              )}
-                              {job.city?.name && (
+            <>
+              {/* RENDER PROOF v96fa9a6 */}
+              <div className="bg-red-600 text-white text-xs p-1 mb-2 text-center font-mono">
+                RENDER PROOF MyAdsTab v96fa9a6
+              </div>
+              <div className="space-y-6">
+                {/* Trabalhos Publicados */}
+                {jobPostings.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                      <Briefcase className="h-5 w-5 text-primary" />
+                      Trabalhos Publicados ({jobPostings.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {jobPostings.map((job) => (
+                        <div
+                          key={job.id}
+                          className="p-3 border rounded-lg hover:bg-muted/50 transition-colors overflow-hidden"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap mb-1">
+                                <h4 className="font-medium text-sm truncate">{job.title}</h4>
+                                {job.urgent && (
+                                  <Badge variant="destructive" className="text-xs">Urgente</Badge>
+                                )}
+                                <Badge variant={job.status === 'open' ? 'default' : 'secondary'} className="text-xs">
+                                  {job.status === 'open' ? 'Aberto' : job.status}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                                {job.description}
+                              </p>
+                              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                {job.category?.name && (
+                                  <span>{job.category.name}</span>
+                                )}
+                                {job.city?.name && (
+                                  <span className="flex items-center gap-1">
+                                    <MapPin className="h-3 w-3" />
+                                    {job.city.name}
+                                  </span>
+                                )}
                                 <span className="flex items-center gap-1">
-                                  <MapPin className="h-3 w-3" />
-                                  {job.city.name}
+                                  <Calendar className="h-3 w-3" />
+                                  {format(new Date(job.created_at), "dd/MM/yyyy", { locale: ptBR })}
                                 </span>
-                              )}
-                              <span className="flex items-center gap-1">
-                                <Calendar className="h-3 w-3" />
-                                {format(new Date(job.created_at), "dd/MM/yyyy", { locale: ptBR })}
-                              </span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex gap-2 flex-shrink-0">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => navigate(`/edit-job/${job.id}`)}
-                              title="Editar"
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => setDeleteDialog({ open: true, type: 'job', id: job.id })}
-                              title="Excluir"
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <div className="flex gap-2 flex-shrink-0">
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => navigate(`/edit-job/${job.id}`)}
+                                title="Editar"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setDeleteDialog({ open: true, type: 'job', id: job.id })}
+                                title="Excluir"
+                                className="text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
 
-                    {hasMoreJobs && (
-                      <div className="text-center">
-                        <Button onClick={loadMoreJobs} disabled={jobsLoadingMore} variant="outline">
-                          {jobsLoadingMore ? 'Carregando...' : 'Carregar mais'}
-                        </Button>
-                      </div>
-                    )}
+                      {hasMoreJobs && (
+                        <div className="text-center">
+                          <Button onClick={loadMoreJobs} disabled={jobsLoadingMore} variant="outline">
+                            {jobsLoadingMore ? 'Carregando...' : 'Carregar mais'}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Serviços Oferecidos */}
-              {workerServices.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Wrench className="h-5 w-5 text-green-600" />
-                    Serviços Oferecidos ({workerServices.length})
-                  </h3>
-                  <div className="space-y-3">
-                    {workerServices.map((service) => (
-                      <div
-                        key={service.id}
-                        className="p-3 border rounded-lg hover:bg-muted/50 transition-colors overflow-hidden"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap mb-1">
-                              <h4 className="font-medium text-sm truncate">{service.title}</h4>
-                              <Badge variant={service.active ? 'default' : 'secondary'} className="text-xs">
-                                {service.active ? 'Ativo' : 'Inativo'}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                              {service.description}
-                            </p>
-                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                              {service.category?.name && (
-                                <span>{service.category.name}</span>
-                              )}
-                              {service.price && typeof service.price === 'number' && !isNaN(service.price) ? (
-                                <span className="font-medium text-primary">
-                                  R$ {service.price.toFixed(2)}
+                {/* Serviços Oferecidos */}
+                {workerServices.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                      <Wrench className="h-5 w-5 text-green-600" />
+                      Serviços Oferecidos ({workerServices.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {workerServices.map((service) => (
+                        <div
+                          key={service.id}
+                          className="p-3 border rounded-lg hover:bg-muted/50 transition-colors overflow-hidden"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap mb-1">
+                                <h4 className="font-medium text-sm truncate">{service.title}</h4>
+                                <Badge variant={service.active ? 'default' : 'secondary'} className="text-xs">
+                                  {service.active ? 'Ativo' : 'Inativo'}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                                {service.description}
+                              </p>
+                              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                {service.category?.name && (
+                                  <span>{service.category.name}</span>
+                                )}
+                                {service.price && typeof service.price === 'number' && !isNaN(service.price) ? (
+                                  <span className="font-medium text-primary">
+                                    R$ {service.price.toFixed(2)}
+                                  </span>
+                                ) : null}
+                                <span className="flex items-center gap-1">
+                                  <Calendar className="h-3 w-3" />
+                                  {format(new Date(service.created_at), "dd/MM/yyyy", { locale: ptBR })}
                                 </span>
-                              ) : null}
-                              <span className="flex items-center gap-1">
-                                <Calendar className="h-3 w-3" />
-                                {format(new Date(service.created_at), "dd/MM/yyyy", { locale: ptBR })}
-                              </span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex gap-2 flex-shrink-0">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => navigate(`/edit-service/${service.id}`)}
-                              title="Editar"
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => setDeleteDialog({ open: true, type: 'service', id: service.id })}
-                              title="Excluir"
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <div className="flex gap-2 flex-shrink-0">
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => navigate(`/edit-service/${service.id}`)}
+                                title="Editar"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setDeleteDialog({ open: true, type: 'service', id: service.id })}
+                                title="Excluir"
+                                className="text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
 
-                    {hasMoreServices && (
-                      <div className="text-center">
-                        <Button onClick={loadMoreServices} disabled={servicesLoadingMore} variant="outline">
-                          {servicesLoadingMore ? 'Carregando...' : 'Carregar mais'}
-                        </Button>
-                      </div>
-                    )}
+                      {hasMoreServices && (
+                        <div className="text-center">
+                          <Button onClick={loadMoreServices} disabled={servicesLoadingMore} variant="outline">
+                            {servicesLoadingMore ? 'Carregando...' : 'Carregar mais'}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
           )}
-        </CardContent>
+            </CardContent>
       </Card>
 
       {/* Dialog de confirmação de exclusão */}

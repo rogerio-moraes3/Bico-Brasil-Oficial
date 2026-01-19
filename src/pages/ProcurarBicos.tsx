@@ -497,104 +497,109 @@ const ProcurarBicos = () => {
             </div>
           </div>
         ) : (
-          <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6' : 'space-y-4'}>
-            {jobs.map((job) => (
-              <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-xl border max-w-sm w-full" onClick={() => handleViewJob(job)}>
-                <CardContent className="p-4">
-                  <div className="space-y-3">
-                    {/* Header */}
-                    <div className="space-y-2">
-                      {job.category?.name && (
-                        <Badge className="text-xs font-medium" variant="secondary">{job.category.name}</Badge>
+          <>
+            {/* RENDER PROOF v96fa9a6 */}
+            <div className="bg-red-600 text-white text-xs p-1 mb-2 text-center font-mono">
+              RENDER PROOF ProcurarBicos v96fa9a6
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 place-items-center">
+              {jobs.map((job) => (
+                <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-xl border max-w-sm w-full" onClick={() => handleViewJob(job)}>
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      {/* Header */}
+                      <div className="space-y-2">
+                        {job.category?.name && (
+                          <Badge className="text-xs font-medium" variant="secondary">{job.category.name}</Badge>
+                        )}
+                        <h3 className="font-bold text-base leading-tight">{job.title}</h3>
+                      </div>
+
+                      {/* Location */}
+                      {job.city?.name && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <MapPin className="h-4 w-4 flex-shrink-0" />
+                          <span>{job.city.name}{job.neighborhood ? ` — ${job.neighborhood}` : ''}</span>
+                        </div>
                       )}
-                      <h3 className="font-bold text-base leading-tight">{job.title}</h3>
+
+                      {/* Description */}
+                      <p className="text-sm text-muted-foreground line-clamp-2">{job.description}</p>
+
+                      {/* Price and Time */}
+                      <div className="flex items-center justify-between pt-2 border-t">
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="h-4 w-4 text-primary" />
+                          <span className="text-base font-bold">{formatCurrency(job.price)}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span>{formatTimeAgo(job.created_at)}</span>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-2 pt-2">
+                        {/* Share Button */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const shareUrl = `${window.location.origin}/job/${job.id}`;
+                            const shareText = `Vaga no Bico Brasil: ${job.title} - ${formatCurrency(job.price)}. Cadastre-se em ${window.location.origin}`;
+
+                            if (navigator.share) {
+                              navigator.share({ title: job.title, text: shareText, url: shareUrl });
+                            } else {
+                              navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+                              toast({ title: "Link copiado!", description: "Cole e compartilhe com seus amigos" });
+                            }
+                          }}
+                        >
+                          <Share2 className="h-4 w-4 mr-1" />
+                          Compartilhar
+                        </Button>
+                      </div>
+
+                      {/* WhatsApp Contact Button */}
+                      {job.user?.phone && user?.id !== job.user_id && (
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <WhatsAppContactButton
+                            phone={job.user.phone}
+                            workerName={job.user.name || 'Contratante'}
+                            canViewContact={canViewContacts}
+                            remainingViews={remainingFreeViews}
+                            onUpgradeClick={() => setShowUpgradeModal(true)}
+                          />
+                        </div>
+                      )}
                     </div>
-
-                    {/* Location */}
-                    {job.city?.name && (
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <MapPin className="h-4 w-4 flex-shrink-0" />
-                        <span>{job.city.name}{job.neighborhood ? ` — ${job.neighborhood}` : ''}</span>
-                      </div>
-                    )}
-
-                    {/* Description */}
-                    <p className="text-sm text-muted-foreground line-clamp-2">{job.description}</p>
-
-                    {/* Price and Time */}
-                    <div className="flex items-center justify-between pt-2 border-t">
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="h-4 w-4 text-primary" />
-                        <span className="text-base font-bold">{formatCurrency(job.price)}</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        <span>{formatTimeAgo(job.created_at)}</span>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-2 pt-2">
-                      {/* Share Button */}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const shareUrl = `${window.location.origin}/job/${job.id}`;
-                          const shareText = `Vaga no Bico Brasil: ${job.title} - ${formatCurrency(job.price)}. Cadastre-se em ${window.location.origin}`;
-
-                          if (navigator.share) {
-                            navigator.share({ title: job.title, text: shareText, url: shareUrl });
-                          } else {
-                            navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
-                            toast({ title: "Link copiado!", description: "Cole e compartilhe com seus amigos" });
-                          }
-                        }}
-                      >
-                        <Share2 className="h-4 w-4 mr-1" />
-                        Compartilhar
-                      </Button>
-                    </div>
-
-                    {/* WhatsApp Contact Button */}
-                    {job.user?.phone && user?.id !== job.user_id && (
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <WhatsAppContactButton
-                          phone={job.user.phone}
-                          workerName={job.user.name || 'Contratante'}
-                          canViewContact={canViewContacts}
-                          remainingViews={remainingFreeViews}
-                          onUpgradeClick={() => setShowUpgradeModal(true)}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
         )}
-      </main>
+          </main>
 
-      <Footer />
+        <Footer />
 
-      {selectedJob && (
-        <JobDetailsModal
-          job={selectedJob}
-          open={showDetailsModal}
-          onOpenChange={setShowDetailsModal}
-          canViewContacts={isTester || isPremium || canViewContacts}
-          isOwner={isJobOwner(selectedJob)}
+        {selectedJob && (
+          <JobDetailsModal
+            job={selectedJob}
+            open={showDetailsModal}
+            onOpenChange={setShowDetailsModal}
+            canViewContacts={isTester || isPremium || canViewContacts}
+            isOwner={isJobOwner(selectedJob)}
+          />
+        )}
+
+        <UpgradeModal
+          open={showUpgradeModal}
+          onOpenChange={setShowUpgradeModal}
+          remainingViews={remainingFreeViews}
         />
-      )}
-
-      <UpgradeModal
-        open={showUpgradeModal}
-        onOpenChange={setShowUpgradeModal}
-        remainingViews={remainingFreeViews}
-      />
     </div>
   );
 };
