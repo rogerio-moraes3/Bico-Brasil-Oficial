@@ -518,7 +518,7 @@ export default function SearchWorkers() {
                   const isOwner = user?.id === worker.id;
 
                   return (
-                    <Card key={worker.id} className="h-full hover:shadow-lg transition-shadow">
+                    <Card key={worker.id} className="h-full hover:shadow-lg transition-shadow max-w-sm w-full mx-auto">
                       <Link
                         to={`/worker/${worker.id}`}
                         onClick={(e) => {
@@ -529,8 +529,8 @@ export default function SearchWorkers() {
                         }}
                         className="block"
                       >
-                        <CardContent className="p-6">
-                          <div className="flex flex-col items-center gap-4 mb-4">
+                        <CardContent className="p-4">
+                          <div className="flex flex-col items-center gap-3 mb-3">
                             <div className="relative">
                               <Avatar className="h-24 w-24">
                                 <AvatarImage
@@ -549,7 +549,7 @@ export default function SearchWorkers() {
                             </div>
 
                             <div className="text-center w-full">
-                              <h3 className="font-semibold text-lg mb-1">{worker.name}</h3>
+                              <h3 className="font-semibold text-base mb-1">{worker.name}</h3>
                               <p className="text-sm text-muted-foreground mb-2">
                                 {worker.city}
                                 {worker.neighborhood && ` - ${worker.neighborhood}`}

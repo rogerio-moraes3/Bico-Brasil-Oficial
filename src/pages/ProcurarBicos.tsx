@@ -499,15 +499,15 @@ const ProcurarBicos = () => {
         ) : (
           <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6' : 'space-y-4'}>
             {jobs.map((job) => (
-              <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-xl border" onClick={() => handleViewJob(job)}>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
+              <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-xl border max-w-sm w-full" onClick={() => handleViewJob(job)}>
+                <CardContent className="p-4">
+                  <div className="space-y-3">
                     {/* Header */}
                     <div className="space-y-2">
                       {job.category?.name && (
                         <Badge className="text-xs font-medium" variant="secondary">{job.category.name}</Badge>
                       )}
-                      <h3 className="font-bold text-lg leading-tight">{job.title}</h3>
+                      <h3 className="font-bold text-base leading-tight">{job.title}</h3>
                     </div>
 
                     {/* Location */}

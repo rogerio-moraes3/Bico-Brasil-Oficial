@@ -330,13 +330,13 @@ const Jobs = () => {
             {workers.map((worker, index) => (
               <Card
                 key={worker.id}
-                className="hover:shadow-lg transition-all cursor-pointer stagger-fade"
+                className="hover:shadow-lg transition-all cursor-pointer stagger-fade max-w-sm w-full mx-auto"
                 style={{ ['--stagger-delay' as any]: `${index * 0.1}s` }}
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <CardTitle className="text-xl mb-1 flex items-center gap-2">
+                      <CardTitle className="text-base mb-1 flex items-center gap-2">
                         {worker.name}
                       </CardTitle>
                       <p className="text-sm text-muted-foreground">
