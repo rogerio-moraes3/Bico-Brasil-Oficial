@@ -368,19 +368,16 @@ const ProcurarBicos = () => {
           </div>
         )}
 
-        <section className="mb-6 md:mb-8">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-2">Procurar Bicos</h1>
-            <p className="text-sm md:text-base text-muted-foreground leading-normal">
-              Encontre oportunidades de trabalho na sua região
-            </p>
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Procurar Bicos</h1>
+            <p className="text-muted-foreground">Encontre oportunidades de trabalho na sua região</p>
           </div>
-
           <ShareButtons
             text="Procurando bicos? Encontre oportunidades de trabalho no Bico Brasil!"
             url="https://bicobrasil.com.br/procurar-bicos"
           />
-        </section>
+        </div>
 
         {/* Filtros */}
         <Card className="mb-6 container-outline bg-card shadow-sm">

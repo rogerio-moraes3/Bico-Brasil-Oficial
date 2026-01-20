@@ -62,16 +62,16 @@ export default function Premium() {
 
         <Breadcrumbs />
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 md:mb-12 animate-fade-in">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+          <div className="text-center mb-12 animate-fade-in">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
               Planos Premium
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground leading-normal max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Escolha o plano ideal para turbinar seu perfil e receber mais oportunidades de trabalho
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 mb-16 max-w-7xl mx-auto">
             <Card className="relative border-2 border-[#FF6A00] hover:border-[#FF8A20] hover:shadow-[0_0_30px_rgba(255,106,0,0.3)] transition-all duration-300 flex flex-col hover:-translate-y-1">
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">

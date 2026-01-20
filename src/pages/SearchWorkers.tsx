@@ -333,7 +333,7 @@ export default function SearchWorkers() {
       )}
 
       <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
-        <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-8">Buscar Profissionais</h1>
+        <h1 className="text-3xl font-bold mb-8">Buscar Profissionais</h1>
 
         <Card className="mb-8">
           <CardContent className="p-6 pt-6">
