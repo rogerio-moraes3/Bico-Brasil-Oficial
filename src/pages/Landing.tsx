@@ -62,7 +62,7 @@ export default function Landing() {
         <section className="container mx-auto px-4 py-16 text-center">
           <img src={logo} alt="Bico Brasil" className="h-32 w-32 mx-auto mb-8" />
 
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
             Precisou de ajuda agora?
           </h1>
           <p className="text-3xl font-semibold text-primary mb-6">
