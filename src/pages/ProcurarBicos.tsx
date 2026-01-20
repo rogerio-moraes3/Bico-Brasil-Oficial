@@ -164,14 +164,12 @@ const ProcurarBicos = () => {
           urgent,
           created_at,
           status,
-          active,
           user_id,
           category:categories(name),
           city:cities(name, state),
           user:users!user_id(name, profile_photo, plan_active, is_tester, auth_id, phone)
         `)
         .eq('status', 'open')
-        .eq('active', true) // CRITICAL: Only show active jobs, hide deleted ones
         .order('created_at', { ascending: false });
 
       // Filtro de busca textual
