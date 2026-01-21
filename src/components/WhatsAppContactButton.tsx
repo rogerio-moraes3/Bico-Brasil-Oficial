@@ -57,8 +57,11 @@ export const WhatsAppContactButton = ({
       const { error } = await supabase.rpc('decrement_view_credits', {
         user_auth_id: user.id
       });
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('❌ Erro ao decrementar crédito:', error);
+        throw new Error('Erro ao processar sua solicitação');
+      }
 
       toast({
         title: "Visualização registrada",
@@ -69,11 +72,11 @@ export const WhatsAppContactButton = ({
       const cleanPhone = phone.replace(/\D/g, '');
       const message = encodeURIComponent(`Olá ${workerName}, vi seu anúncio no Bico Brasil e tenho interesse.`);
       window.open(`https://wa.me/55${cleanPhone}?text=${message}`, '_blank');
-    } catch (err) {
-      console.error("Erro ao decrementar visualização:", err);
+    } catch (err: any) {
+      console.error("❌ Erro ao contatar:", err);
       toast({
         title: "Erro",
-        description: "Não foi possível registrar visualização",
+        description: err.message || "Não foi possível abrir o WhatsApp. Tente novamente.",
         variant: "destructive"
       });
     }

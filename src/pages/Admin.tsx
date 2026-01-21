@@ -24,7 +24,9 @@ import {
   Smartphone,
   Calendar,
   Lock,
-  ArrowRight
+  ArrowRight,
+  MapPin,
+  Copy
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -146,6 +148,8 @@ export default function Admin() {
   const [revenueModalOpen, setRevenueModalOpen] = useState(false);
   const [usersModalOpen, setUsersModalOpen] = useState(false);
   const [conversionModalOpen, setConversionModalOpen] = useState(false);
+  const [userDetailModalOpen, setUserDetailModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   // Detailed data for modals
   const [paymentDetails, setPaymentDetails] = useState<any[]>([]);
@@ -718,7 +722,10 @@ export default function Admin() {
                     <TableRow
                       key={user.id}
                       className="border-border hover:bg-card/40 cursor-pointer transition-colors group"
-                      onClick={() => navigate(`/worker/${user.id}`)}
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setUserDetailModalOpen(true);
+                      }}
                     >
                       <TableCell className="py-2 px-4">
                         <div className="flex flex-col">
@@ -1031,6 +1038,193 @@ export default function Admin() {
               </div>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* MODAL: DETALHES DO USUÁRIO */}
+      <Dialog open={userDetailModalOpen} onOpenChange={setUserDetailModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black text-foreground flex items-center gap-3">
+              <UserCheck className="h-5 w-5 text-primary" />
+              Detalhes do Usuário
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              Informações completas de cadastro
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedUser && (
+            <div className="space-y-6 mt-4">
+              {/* Header com Avatar e Nome */}
+              <div className="flex items-center gap-4 p-4 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="relative">
+                  <Avatar className="h-20 w-20 border-2 border-primary">
+                    <AvatarImage src={selectedUser.profile_photo} />
+                    <AvatarFallback className="bg-primary/10 text-primary font-black text-xl">
+                      {selectedUser.name?.substring(0, 2).toUpperCase() || '??'}
+                    </AvatarFallback>
+                  </Avatar>
+                  {selectedUser.verified && (
+                    <div className="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1.5">
+                      <CheckCircle2 className="h-4 w-4 text-white" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-black text-xl text-foreground">{selectedUser.name || 'Sem Nome'}</h3>
+                  <div className="flex gap-2 mt-2 flex-wrap">
+                    <Badge className={`text-[9px] font-black ${selectedUser.user_role === 'empregador' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'} border-0`}>
+                      {selectedUser.user_role === 'empregador' ? 'EMPREGADOR' : 'PRESTADOR'}
+                    </Badge>
+                    {selectedUser.plan_active && (
+                      <Badge className="text-[9px] font-black bg-amber-500/10 text-amber-500 border-0">
+                        <Crown className="h-3 w-3 mr-1" />
+                        PREMIUM
+                      </Badge>
+                    )}
+                    {selectedUser.verified && (
+                      <Badge className="text-[9px] font-black bg-emerald-500/10 text-emerald-500 border-0">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        VERIFICADO
+                      </Badge>
+                    )}
+                    {selectedUser.is_tester && (
+                      <Badge className="text-[9px] font-black bg-purple-500/10 text-purple-500 border-0">
+                        TESTER
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Informações Pessoais */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                  <UserCheck className="h-4 w-4" />
+                  Informações Pessoais
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Email</div>
+                    <div className="text-xs text-slate-200 font-medium break-all">{selectedUser.email || '—'}</div>
+                  </div>
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">CPF</div>
+                    <div className="text-xs text-slate-200 font-mono">{selectedUser.cpf || '—'}</div>
+                  </div>
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Telefone</div>
+                    <div className="text-xs text-slate-200 font-medium">
+                      <Smartphone className="h-3 w-3 inline mr-1" />
+                      {selectedUser.phone || '—'}
+                    </div>
+                  </div>
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Data de Nascimento</div>
+                    <div className="text-xs text-slate-200 font-medium">
+                      <Calendar className="h-3 w-3 inline mr-1" />
+                      {selectedUser.birth_date ? new Date(selectedUser.birth_date).toLocaleDateString('pt-BR') : '—'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Localização */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Localização
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Cidade</div>
+                    <div className="text-xs text-slate-200 font-medium">{selectedUser.city || '—'}</div>
+                  </div>
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Bairro</div>
+                    <div className="text-xs text-slate-200 font-medium">{selectedUser.neighborhood || '—'}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Informações do Sistema */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                  <Activity className="h-4 w-4" />
+                  Informações do Sistema
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Data de Cadastro</div>
+                    <div className="text-xs text-slate-200 font-medium">
+                      {selectedUser.created_at ? new Date(selectedUser.created_at).toLocaleString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      }) : '—'}
+                    </div>
+                  </div>
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Última Atualização</div>
+                    <div className="text-xs text-slate-200 font-medium">
+                      {selectedUser.updated_at ? new Date(selectedUser.updated_at).toLocaleString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      }) : '—'}
+                    </div>
+                  </div>
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800 col-span-2">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">ID do Usuário (public.users)</div>
+                    <div className="text-xs text-slate-200 font-mono break-all flex items-center gap-2">
+                      {selectedUser.id || '—'}
+                      {selectedUser.id && (
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(selectedUser.id);
+                            toast({ title: "ID copiado!" });
+                          }}
+                          className="text-primary hover:text-primary/80"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800 col-span-2">
+                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Auth ID (auth.users)</div>
+                    <div className="text-xs text-slate-200 font-mono break-all flex items-center gap-2">
+                      {selectedUser.auth_id || '—'}
+                      {selectedUser.auth_id && (
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(selectedUser.auth_id);
+                            toast({ title: "Auth ID copiado!" });
+                          }}
+                          className="text-primary hover:text-primary/80"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Botões de Ação */}
+              <div className="flex gap-2 pt-4 border-t border-slate-800">
+                <Button variant="outline" size="sm" onClick={() => { setUserDetailModalOpen(false); setTimeout(() => navigate(`/worker/${selectedUser.id}`), 300); }} className="flex-1">
+                  <ArrowRight className="h-4 w-4 mr-2" />Ver Perfil Público
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setUserDetailModalOpen(false)} className="flex-1">Fechar</Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 

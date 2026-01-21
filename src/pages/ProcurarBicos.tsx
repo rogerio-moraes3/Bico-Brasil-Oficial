@@ -133,12 +133,40 @@ const ProcurarBicos = () => {
       loadJobs();
     };
 
+    // Clear cache and reload when user returns to page (fixes deletion sync issue)
+    const onFocus = () => {
+      // Clear all job caches
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('jobs_cache_')) {
+          localStorage.removeItem(key);
+        }
+      });
+      loadJobs();
+    };
+
+    // Listen for custom event when job is deleted from profile
+    const onJobDeleted = () => {
+      // Clear cache and reload
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('jobs_cache_')) {
+          localStorage.removeItem(key);
+        }
+      });
+      loadJobs();
+    };
+
     window.addEventListener('online', onOnline);
     window.addEventListener('offline', onOffline);
+    window.addEventListener('focus', onFocus);
+    window.addEventListener('jobDeleted', onJobDeleted);
 
     return () => {
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('jobDeleted', onJobDeleted);
     };
   }, []);
 
@@ -497,9 +525,9 @@ const ProcurarBicos = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 place-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {jobs.map((job) => (
-              <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-xl border max-w-sm w-full" onClick={() => handleViewJob(job)}>
+              <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-xl border-2 border-border bg-card-light dark:bg-card w-full" onClick={() => handleViewJob(job)}>
                 <CardContent className="p-4">
                   <div className="space-y-3">
                     {/* Header */}

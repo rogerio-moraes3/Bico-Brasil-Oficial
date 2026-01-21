@@ -75,6 +75,7 @@ export default {
         // Cores utilitárias extras para uso direto
         'light-bg': '#F6F7F9',
         'light-card': '#FFFFFF',
+        'card-light': 'hsl(210 20% 98%)', // Soft off-white for cards in light mode
         'light-text': '#2A2A2A',
         'light-title': '#161616',
         'dark-bg': '#001F3F',

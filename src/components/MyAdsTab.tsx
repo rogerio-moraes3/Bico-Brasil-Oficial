@@ -152,6 +152,10 @@ export function MyAdsTab() {
         if (error) throw error;
 
         setJobPostings(prev => prev.filter(j => j.id !== deleteDialog.id));
+
+        // Dispatch custom event to notify other pages to refresh
+        window.dispatchEvent(new CustomEvent('jobDeleted'));
+
         toast({
           title: "Trabalho excluído",
           description: "Seu anúncio foi removido com sucesso."
@@ -165,6 +169,10 @@ export function MyAdsTab() {
         if (error) throw error;
 
         setWorkerServices(prev => prev.filter(s => s.id !== deleteDialog.id));
+
+        // Dispatch custom event to notify other pages to refresh
+        window.dispatchEvent(new CustomEvent('serviceDeleted'));
+
         toast({
           title: "Serviço excluído",
           description: "Seu serviço foi removido com sucesso."

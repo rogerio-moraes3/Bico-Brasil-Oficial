@@ -182,8 +182,15 @@ export default function WorkerProfile() {
     }
   };
 
+  const [unlocking, setUnlocking] = useState(false);
+
   const handleFreeUnlock = async () => {
     if (!user || !worker) {
+      toast({
+        title: "Login necessário",
+        description: "Faça login para desbloquear contatos",
+        variant: "destructive"
+      });
       navigate('/auth');
       return;
     }
@@ -193,7 +200,11 @@ export default function WorkerProfile() {
       return;
     }
 
+    if (unlocking) return; // Prevent double-click
+
     try {
+      setUnlocking(true);
+
       const { error } = await supabase
         .from('contact_unlocks')
         .insert({
@@ -202,23 +213,26 @@ export default function WorkerProfile() {
         });
 
       if (error && !error.message.includes('duplicate')) {
-        throw error;
+        console.error('❌ Erro ao inserir unlock:', error);
+        throw new Error(error.message || 'Erro ao desbloquear contato');
       }
 
       setIsWorkerUnlocked(true);
       toast({
-        title: "Contato desbloqueado",
+        title: "✅ Contato desbloqueado!",
         description: `Você ainda tem ${remainingFreeUnlocks - 1} desbloqueios gratuitos.`,
       });
 
       await loadWorkerData();
-    } catch (err) {
-      console.error('Erro ao desbloquear:', err);
+    } catch (err: any) {
+      console.error('❌ Erro ao desbloquear:', err);
       toast({
         title: "Erro ao desbloquear",
-        description: "Tente novamente mais tarde.",
+        description: err.message || "Tente novamente. Se o problema persistir, contate o suporte.",
         variant: "destructive"
       });
+    } finally {
+      setUnlocking(false);
     }
   };
 
@@ -308,7 +322,7 @@ export default function WorkerProfile() {
         <div className="container mx-auto px-4 max-w-4xl">
           <Breadcrumbs workerName={worker.name} />
 
-          <Card className="mt-6">
+          <Card className="mt-6 bg-card-light dark:bg-card border-2 border-border">
             <CardContent className="p-6">
               <div className="flex flex-col md:flex-row gap-6 items-start">
                 <div className="flex-shrink-0">
@@ -387,7 +401,7 @@ export default function WorkerProfile() {
                         )}
                       </>
                     ) : !isWorkerUnlocked && (
-                      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-300 dark:border-yellow-700 rounded-xl p-5 my-4 shadow-sm">
+                      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-300 dark:border-yellow-700 rounded-xl p-4 md:p-5 my-4 shadow-sm mx-auto max-w-full overflow-hidden">
                         <div className="flex items-start gap-3">
                           <Lock className="h-6 w-6 text-yellow-600 dark:text-yellow-400 mt-1 flex-shrink-0" />
                           <div className="flex-1">
@@ -403,9 +417,10 @@ export default function WorkerProfile() {
                                 </p>
                                 <Button
                                   onClick={handleFreeUnlock}
-                                  className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold"
+                                  disabled={unlocking}
+                                  className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold disabled:opacity-50"
                                 >
-                                  🎁 Desbloquear com Crédito Grátis ({remainingFreeUnlocks}/3)
+                                  {unlocking ? "Desbloqueando..." : `🎁 Desbloquear com Crédito Grátis (${remainingFreeUnlocks}/3)`}
                                 </Button>
                               </>
                             ) : (
@@ -447,10 +462,13 @@ export default function WorkerProfile() {
                     ) : !isWorkerUnlocked && (
                       <Button
                         onClick={remainingFreeUnlocks > 0 ? handleFreeUnlock : () => setShowUpgradeModal(true)}
-                        className="w-full md:w-auto"
+                        disabled={unlocking}
+                        className="w-full md:w-auto disabled:opacity-50"
                         variant="default"
                       >
-                        {remainingFreeUnlocks > 0 ? (
+                        {unlocking ? (
+                          "Desbloqueando..."
+                        ) : remainingFreeUnlocks > 0 ? (
                           <>🎁 Desbloquear Grátis ({remainingFreeUnlocks}/3)</>
                         ) : (
                           <>

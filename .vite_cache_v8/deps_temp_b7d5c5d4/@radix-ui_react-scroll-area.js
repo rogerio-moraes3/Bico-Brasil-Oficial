@@ -3,6 +3,9 @@ import {
   clamp
 } from "./chunk-TCQMTAGU.js";
 import {
+  useCallbackRef
+} from "./chunk-UHYBTFRT.js";
+import {
   useDirection
 } from "./chunk-Y2ZVGGK4.js";
 import {
@@ -11,9 +14,6 @@ import {
 import {
   composeEventHandlers
 } from "./chunk-ZMAP7OQT.js";
-import {
-  useCallbackRef
-} from "./chunk-UHYBTFRT.js";
 import {
   createContextScope,
   useLayoutEffect2
