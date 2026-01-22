@@ -349,8 +349,9 @@ export default function Auth() {
     // Prevenir duplo disparo
     if (loading) return;
 
-    // Validar que é um form
-    if (!(e.currentTarget instanceof HTMLFormElement)) {
+    // Garantir que o target seja um form (mais seguro que usar currentTarget)
+    const form = e.target as HTMLFormElement;
+    if (!(form instanceof HTMLFormElement)) {
       console.error('[Auth] Erro: evento não é de um form');
       return;
     }
@@ -391,8 +392,8 @@ export default function Auth() {
         return;
       }
 
-      // Obter dados do formulário
-      const formData = new FormData(e.currentTarget);
+      // Obter dados do formulário de forma segura
+      const formData = new FormData(form);
       const name = (formData.get('name') as string || '').trim();
       const email = (formData.get('email') as string || '').trim();
       const phone = (formData.get('phone') as string || '').trim();
@@ -401,18 +402,30 @@ export default function Auth() {
       const cleanCpf = cpf.replace(/\D/g, '');
       const cleanPhone = phone.replace(/\D/g, '');
 
-      // Validar campos obrigatórios
-      if (!name || !email || !cleanCpf || !cleanPhone || !selectedCity) {
+      // Validar CPF (bloquear se inválido)
+      if (!validateCPF(cleanCpf)) {
         toast({
-          title: "Campos obrigatórios",
-          description: "Preencha todos os campos",
+          title: "CPF inválido",
+          description: "Por favor, verifique o CPF e tente novamente",
           variant: "destructive"
         });
         setLoading(false);
         return;
       }
 
-      // Payload completo com dados sanitizados
+      // Validar campos obrigatórios e city_id contra lista carregada
+      const cityExists = cities.some(c => c.id === selectedCity);
+      if (!name || !email || !cleanCpf || !cleanPhone || !selectedCity || !cityExists) {
+        toast({
+          title: "Campos obrigatórios",
+          description: "Preencha todos os campos corretamente e selecione uma cidade válida",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Payload mínimo compatível com schema
       const signupData = {
         name,
         email,
@@ -422,26 +435,12 @@ export default function Auth() {
         city_id: selectedCity
       };
 
+      // Chamar signUp (mantendo contrato atual do useAuth)
       const { error } = await signUp(email, signupPassword, signupData);
 
       if (error) {
-        // Se erro 500, tentar login automático (usuário pode ter sido criado)
-        if (error.message?.includes('500') || error.message?.includes('Database error')) {
-          const { error: loginError } = await signIn(email, signupPassword);
-
-          if (!loginError) {
-            setLoading(false);
-            toast({
-              title: "Cadastro realizado!",
-              description: "Bem-vindo ao Bico Brasil"
-            });
-            setTimeout(() => {
-              navigate('/app');
-            }, 1000);
-            return;
-          }
-        }
-
+        // Não fazer fallback automático para login em caso de erro 500.
+        // Exibir mensagem clara para o usuário.
         let errorMessage = error.message;
         if (error.message?.includes('User already registered') || error.message?.includes('already been registered')) {
           errorMessage = 'Este e-mail já está cadastrado. Tente fazer login.';
@@ -563,7 +562,7 @@ export default function Auth() {
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                         onClick={() => setShowNewPassword(!showNewPassword)}
                       >
-                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />} 
                       </Button>
                     </div>
                   </div>
