@@ -1059,12 +1059,11 @@ export default function Admin() {
               {/* Header com Avatar e Nome */}
               <div className="flex items-center gap-4 p-4 bg-slate-900/50 rounded-lg border border-slate-800">
                 <div className="relative">
-                  <Avatar className="h-20 w-20 border-2 border-primary">
-                    <AvatarImage src={selectedUser.profile_photo} />
-                    <AvatarFallback className="bg-primary/10 text-primary font-black text-xl">
-                      {selectedUser.name?.substring(0, 2).toUpperCase() || '??'}
-                    </AvatarFallback>
-                  </Avatar>
+                  <img
+                    src={selectedUser.profile_photo ?? '/fallback-avatar.png'}
+                    alt='avatar'
+                    style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', border: '2px solid hsl(var(--primary))' }}
+                  />
                   {selectedUser.verified && (
                     <div className="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1.5">
                       <CheckCircle2 className="h-4 w-4 text-white" />
