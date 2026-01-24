@@ -1,23 +1,18 @@
-# Bico Brasil
+# Documento Mestre
 
-O Bico Brasil é uma plataforma web/mobile que conecta pessoas que precisam ganhar dinheiro rapidamente com oportunidades de trabalho informal imediato (“bicos”) na sua cidade. O sistema prioriza simplicidade, rapidez e acesso direto ao trabalho, sem intermediações complexas.
+## Visão Geral
+O Bico Brasil é uma plataforma de conexão direta e rápida entre prestadores e contratantes, focada inicialmente em Presidente Prudente.
 
-## Problema social/econômico
+## O Problema Social
+Resolvemos a urgência financeira do trabalhador informal e a dificuldade de encontrar serviços locais confiáveis sem burocracia.
 
-Pessoas desempregadas ou subempregadas precisam gerar renda diária ou imediata para suprir necessidades básicas (alimentação, contas, transporte) e não encontram soluções rápidas, acessíveis e confiáveis nos canais tradicionais.
+## Perfil do Usuário
+Trabalhadores com baixa familiaridade tecnológica, uso exclusivo em mobile e extrema urgência. O sistema deve ser "à prova de erro".
 
-## Usuário real (perfil)
+## Princípios de Produto
+- **Velocidade > Perfeição:** O bico deve ser publicado e encontrado em segundos.
+- **Cadastro Minimalista:** Pedir apenas o essencial (identidade e contato).
+- **Ação Imediata:** O app deve levar o usuário ao resultado com o menor número de cliques possível.
 
-Adultos de baixa a média renda, muitos desempregados ou em trabalhos informais. Escolaridade variada (fundamental a médio). Acesso principalmente via celular, internet móvel limitada, pouco tempo disponível e baixa tolerância a processos longos ou confusos.
-
-## Objetivo principal do sistema
-
-Permitir que o usuário encontre e execute um bico de forma rápida, clara e prática, gerando renda no menor tempo possível.
-
-## O que o sistema NÃO é
-
-- Não é rede social.
-- Não é marketplace complexo.
-- Não é plataforma corporativa de RH.
-- Não é app de freelancing profissional.
-- Não é sistema de anúncios genéricos sem curadoria mínima.
+## Stack Tecnológica
+React, Vite, Supabase e Shadcn/UI.
