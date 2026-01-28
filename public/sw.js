@@ -102,6 +102,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Network First for external fonts (Google Fonts, etc.) - prevent CORS issues
+  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')) {
+    event.respondWith(
+      fetch(request).catch(() => safeCacheMatch(request).then(cached => cached || createOfflineFallback('Font offline')))
+    );
+    return;
+  }
+
   // Skip analytics endpoints (let them fail silently)
   if (url.pathname.includes('/~api/analytics') || url.pathname.includes('/analytics')) {
     event.respondWith(

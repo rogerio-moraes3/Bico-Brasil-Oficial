@@ -91,6 +91,29 @@ function App() {
     };
   }, []);
 
+  // CRITICAL FIX: Detect auth errors from URL to prevent login loops
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error');
+    const errorDescription = params.get('error_description');
+
+    if (error === 'server_error' || errorDescription) {
+      // Remove error params from URL
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+
+      // Show user-friendly message
+      import('@/hooks/use-toast').then(({ useToast }) => {
+        const { toast } = useToast();
+        toast({
+          title: "Erro de autenticação",
+          description: "Houve um problema ao fazer login. Por favor, tente novamente.",
+          variant: "destructive"
+        });
+      });
+    }
+  }, []);
+
   // Mostrar splash screen apenas uma vez por sessão
   if (showSplash) {
     return <SplashScreen onComplete={() => {
