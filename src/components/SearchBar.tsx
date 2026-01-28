@@ -1,19 +1,59 @@
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import React from 'react';
+import { Card } from '@/components/Card';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Search, MapPin, Filter } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-export const SearchBar = () => {
+interface SearchBarProps {
+    onSearch?: (query: string) => void;
+    placeholder?: string;
+    showFilters?: boolean;
+    onFilterClick?: () => void;
+    className?: string;
+}
+
+export function SearchBar({
+    onSearch,
+    placeholder = 'Buscar...',
+    showFilters = false,
+    onFilterClick,
+    className
+}: SearchBarProps) {
+    const [query, setQuery] = React.useState('');
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSearch?.(query);
+    };
+
     return (
-        <div className="sticky top-0 z-40 bg-background border-b border-border shadow-sm">
-            <div className="container mx-auto px-4 py-4">
-                <div className="relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <Card className={cn('shadow-lg', className)}>
+            <form onSubmit={handleSubmit} className="flex gap-2">
+                <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                        type="search"
-                        placeholder="O que você precisa hoje?"
-                        className="w-full h-14 pl-12 pr-4 text-base rounded-full border-2 border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                        type="text"
+                        placeholder={placeholder}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        className="pl-10"
                     />
                 </div>
-            </div>
-        </div>
+                {showFilters && (
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={onFilterClick}
+                    >
+                        <Filter className="h-4 w-4" />
+                    </Button>
+                )}
+                <Button type="submit">
+                    Buscar
+                </Button>
+            </form>
+        </Card>
     );
-};
+}
