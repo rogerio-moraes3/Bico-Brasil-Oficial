@@ -123,8 +123,8 @@ export const Header = () => {
             </Link>
           </nav>
 
-          {/* Right Section */}
-          <div className="flex items-center gap-2 md:gap-3">
+          {/* Right Section - Refined Alignment */}
+          <div className="flex items-center gap-3">
             <ThemeToggle />
             <PWAInstallButton />
             {/* Badge de Publicações Grátis */}
@@ -185,7 +185,7 @@ export const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
                   size="sm"

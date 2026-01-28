@@ -483,7 +483,7 @@ export default function Auth() {
     <>
       <Header />
       <div className="min-h-screen bg-gradient-to-b from-background to-muted py-12 px-4 pb-20 md:pb-12">
-        <div className="container max-w-xl mx-auto">
+        <div className="container max-w-md mx-auto">
           {/* Botão Voltar */}
           <Button
             variant="ghost"
@@ -494,7 +494,7 @@ export default function Auth() {
             Voltar
           </Button>
           {showResetPassword ? (
-            <Card>
+            <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="text-2xl">Recuperar Senha</CardTitle>
                 <CardDescription>
@@ -534,7 +534,7 @@ export default function Auth() {
               </CardContent>
             </Card>
           ) : mode === 'reset-password' ? (
-            <Card>
+            <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="text-2xl">Nova Senha</CardTitle>
                 <CardDescription>
@@ -562,7 +562,7 @@ export default function Auth() {
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                         onClick={() => setShowNewPassword(!showNewPassword)}
                       >
-                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />} 
+                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
                   </div>
@@ -596,7 +596,7 @@ export default function Auth() {
               </CardContent>
             </Card>
           ) : (
-            <Card>
+            <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="text-2xl">
                   {mode === 'login' ? 'Entrar' : 'Cadastrar'}
