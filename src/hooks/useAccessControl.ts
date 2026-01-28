@@ -9,8 +9,6 @@ interface AccessControlData {
   canViewProfiles: boolean;
   canViewContacts: boolean;
   remainingFreeViews: number;
-  contactUnlocksCount: number;
-  remainingFreeUnlocks: number;
 }
 
 export const useAccessControl = () => {
@@ -21,9 +19,7 @@ export const useAccessControl = () => {
     profileViewsCount: 0,
     canViewProfiles: true,
     canViewContacts: false,
-    remainingFreeViews: 3,
-    contactUnlocksCount: 0,
-    remainingFreeUnlocks: 3
+    remainingFreeViews: 3
   });
   const [loading, setLoading] = useState(true);
 
@@ -47,35 +43,28 @@ export const useAccessControl = () => {
       const isTester = userData?.is_tester || false;
       const isPremium = userData?.plan_active || false;
 
-      // Contar visualizações (se não for tester nem premium)
+      // Buscar créditos do usuário (user_credits)
+      let remainingFreeViews = 3;
       let profileViewsCount = 0;
-      let contactUnlocksCount = 0;
 
       if (!isTester && !isPremium) {
-        const { count: viewsCount } = await supabase
-          .from('profile_views')
-          .select('*', { count: 'exact', head: true })
-          .eq('viewer_id', user!.id);
+        const { data: creditsData } = await supabase
+          .from('user_credits')
+          .select('remaining_free_views')
+          .eq('user_id', user!.id)
+          .single();
 
-        profileViewsCount = viewsCount || 0;
-
-        const { count: unlocksCount } = await supabase
-          .from('contact_unlocks')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user!.id);
-
-        contactUnlocksCount = unlocksCount || 0;
+        remainingFreeViews = creditsData?.remaining_free_views || 0;
+        profileViewsCount = 3 - remainingFreeViews;
       }
 
       setAccessData({
         isTester,
         isPremium,
         profileViewsCount,
-        canViewProfiles: isTester || isPremium || profileViewsCount < 3,
-        canViewContacts: isTester || isPremium,
-        remainingFreeViews: Math.max(0, 3 - profileViewsCount),
-        contactUnlocksCount,
-        remainingFreeUnlocks: Math.max(0, 3 - contactUnlocksCount)
+        canViewProfiles: isTester || isPremium || remainingFreeViews > 0,
+        canViewContacts: isTester || isPremium || remainingFreeViews > 0,
+        remainingFreeViews
       });
     } catch (error) {
       console.error('Erro ao carregar controle de acesso:', error);
@@ -91,14 +80,12 @@ export const useAccessControl = () => {
     }
 
     try {
-      const { error } = await supabase
-        .from('profile_views')
-        .insert({
-          viewer_id: user.id,
-          viewed_profile_id: viewedProfileId
-        });
+      // Decrementar crédito usando RPC
+      const { error } = await supabase.rpc('decrement_view_credits', {
+        user_auth_id: user.id
+      });
 
-      if (error && !error.message.includes('duplicate')) {
+      if (error) {
         throw error;
       }
 
@@ -116,28 +103,20 @@ export const useAccessControl = () => {
     if (!user) return false;
     if (accessData.isTester || accessData.isPremium) return true;
 
-    const { data } = await supabase
-      .from('contact_unlocks')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('worker_id', workerId)
-      .maybeSingle();
-
-    return !!data;
+    // Verificar se tem créditos disponíveis
+    return accessData.remainingFreeViews > 0;
   };
 
   const unlockWorkerContact = async (workerId: string): Promise<boolean> => {
     if (!user) return false;
 
     try {
-      const { error } = await supabase
-        .from('contact_unlocks')
-        .insert({
-          user_id: user.id,
-          worker_id: workerId
-        });
+      // Decrementar crédito usando RPC
+      const { error } = await supabase.rpc('decrement_view_credits', {
+        user_auth_id: user.id
+      });
 
-      if (error && !error.message.includes('duplicate')) {
+      if (error) {
         throw error;
       }
 
