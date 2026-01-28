@@ -141,11 +141,44 @@ export default function SearchWorkers() {
         }
 
         if (searchQuery.trim()) {
-          const expandedTerms = expandSearchTerms(searchQuery);
-          const orConditions = expandedTerms.map(term =>
-            `title.ilike.%${term}%,description.ilike.%${term}%`
-          ).join(',');
-          servicesQuery = servicesQuery.or(orConditions);
+          // SMART SEARCH RPC: Logs search terms for analytics and uses fuzzy matching
+          try {
+            const { data: rpcResults, error: rpcError } = await supabase.rpc('buscar_e_logar_ocupacoes', {
+              termo_txt: searchQuery.trim()
+            });
+
+            if (rpcError) {
+              console.warn('RPC buscar_e_logar_ocupacoes failed, falling back to ilike:', rpcError);
+              // Fallback to original logic
+              const expandedTerms = expandSearchTerms(searchQuery);
+              const orConditions = expandedTerms.map(term =>
+                `title.ilike.%${term}%,description.ilike.%${term}%`
+              ).join(',');
+              servicesQuery = servicesQuery.or(orConditions);
+            } else if (rpcResults && rpcResults.length > 0) {
+              // RPC returned matching occupation IDs, filter by them
+              const occupationNames = rpcResults.map((r: any) => r.nome);
+              const orConditions = occupationNames.map(name =>
+                `title.ilike.%${name}%,description.ilike.%${name}%,custom_category.ilike.%${name}%`
+              ).join(',');
+              servicesQuery = servicesQuery.or(orConditions);
+            } else {
+              // RPC returned no results, use original search term
+              const expandedTerms = expandSearchTerms(searchQuery);
+              const orConditions = expandedTerms.map(term =>
+                `title.ilike.%${term}%,description.ilike.%${term}%`
+              ).join(',');
+              servicesQuery = servicesQuery.or(orConditions);
+            }
+          } catch (err) {
+            console.error('Error calling RPC:', err);
+            // Fallback to original logic
+            const expandedTerms = expandSearchTerms(searchQuery);
+            const orConditions = expandedTerms.map(term =>
+              `title.ilike.%${term}%,description.ilike.%${term}%`
+            ).join(',');
+            servicesQuery = servicesQuery.or(orConditions);
+          }
         }
       }
       // If no filters, query will return all active services
