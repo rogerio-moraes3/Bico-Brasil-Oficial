@@ -134,19 +134,12 @@ export default function WorkerProfile() {
         subcategory: null
       });
 
-      // Verificar se worker já foi desbloqueado
+      // Verificar se worker já foi desbloqueado (usando apenas user_credits)
       if (user) {
-        const { data: unlockData } = await supabase
-          .from('contact_unlocks')
-          .select('id')
-          .eq('user_id', user.id)
-          .eq('worker_id', id)
-          .maybeSingle();
-
-        setIsWorkerUnlocked(!!unlockData || canViewContacts);
+        setIsWorkerUnlocked(canViewContacts);
       }
 
-      // Fetch contact info via secure RPC function (checks premium/tester status and contact_unlocks)
+      // Fetch contact info via secure RPC function (checks premium/tester status and user_credits)
       if ((canViewContacts || isWorkerUnlocked) && user) {
         const { data: contact, error: contactError } = await supabase
           .rpc('get_worker_contact', { worker_id: id });
@@ -205,15 +198,13 @@ export default function WorkerProfile() {
     try {
       setUnlocking(true);
 
-      const { error } = await supabase
-        .from('contact_unlocks')
-        .insert({
-          user_id: user.id,
-          worker_id: worker.id
-        });
+      // Decrementar crédito usando RPC (user_credits)
+      const { error } = await supabase.rpc('decrement_view_credits', {
+        user_auth_id: user.id
+      });
 
-      if (error && !error.message.includes('duplicate')) {
-        console.error('❌ Erro ao inserir unlock:', error);
+      if (error) {
+        console.error('❌ Erro ao decrementar crédito:', error);
         throw new Error(error.message || 'Erro ao desbloquear contato');
       }
 
