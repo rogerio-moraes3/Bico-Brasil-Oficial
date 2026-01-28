@@ -35,7 +35,6 @@ export const UnlockWithCredits = ({
         const isAdmin = user.email === ADMIN_BYPASS_EMAIL;
 
         if (isAdmin) {
-            console.log('🔓 Admin bypass ativo - contato liberado sem débito de crédito');
             const cleanPhone = phone.replace(/\D/g, '');
             const message = encodeURIComponent(`Olá ${workerName}, vi seu anúncio no Bico Brasil.`);
             window.open(`https://wa.me/55${cleanPhone}?text=${message}`, '_blank');

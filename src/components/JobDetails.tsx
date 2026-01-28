@@ -22,7 +22,6 @@ export const JobDetails = () => {
         const isAdmin = user?.email === ADMIN_BYPASS_EMAIL;
 
         if (isAdmin) {
-            console.log('🔓 Admin bypass ativo para:', user.email);
             window.open(`https://wa.me/55${cleanPhone}`, '_blank');
             return;
         }

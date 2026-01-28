@@ -33,7 +33,6 @@ export const CreditsProvider = ({ children }: { children: React.ReactNode }) => 
 
         // Admin bypass: admin sempre tem créditos ilimitados
         if (user.email === ADMIN_BYPASS_EMAIL) {
-            console.log('🔓 Admin bypass: créditos ilimitados para', user.email);
             setRemainingCredits(999);
             return;
         }
@@ -59,7 +58,6 @@ export const CreditsProvider = ({ children }: { children: React.ReactNode }) => 
 
         // Admin bypass: admin não gasta créditos
         if (user.email === ADMIN_BYPASS_EMAIL) {
-            console.log('🔓 Admin bypass: crédito não debitado para', user.email);
             return true;
         }
 
@@ -98,7 +96,6 @@ export const useCredits = () => {
 export async function spendCreditAndRevealContact(userId: string, jobId: string, userEmail?: string) {
     // Admin bypass
     if (userEmail === ADMIN_BYPASS_EMAIL) {
-        console.log('🔓 Admin bypass: contato revelado sem débito para', userEmail);
         return true;
     }
 
