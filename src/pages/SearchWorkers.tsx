@@ -86,6 +86,12 @@ export default function SearchWorkers() {
     }
   }, [cities, user, hasManualCitySelection, filters.city_id]);
 
+  // AUTO-LOAD: Trigger search automatically when component mounts and cities are loaded
+  useEffect(() => {
+    if (!citiesLoading && cities.length > 0 && !searched) {
+      handleSearch();
+    }
+  }, [citiesLoading, cities]);
 
 
   const handleCategoryChange = async (categoryId: string) => {
