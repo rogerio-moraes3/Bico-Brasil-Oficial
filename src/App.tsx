@@ -14,6 +14,7 @@ import { BottomNav } from "./components/BottomNav";
 import { NotificationPrompt } from "./components/NotificationPrompt";
 import { AdminIcon } from "./components/AdminIcon";
 import { SplashScreen } from "./components/SplashScreen";
+import { Gatekeeper } from "./components/Gatekeeper";
 import Index from "./pages/Index";
 import SalesLandingPage from "./pages/SalesLandingPage";
 import Home from "./pages/Home";
@@ -103,6 +104,7 @@ function App() {
       <UserModeProvider>
         <AuthProvider>
           <NotificationProvider>
+            <Gatekeeper />
             <Toaster />
             <Sonner />
             <PWAInstallPrompt />
