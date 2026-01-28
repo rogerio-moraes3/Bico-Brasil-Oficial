@@ -173,7 +173,12 @@ export default function SearchWorkers() {
 
       if (!servicesData || servicesData.length === 0) {
         setWorkers([]);
-        setError("Nenhum profissional encontrado. Tente ajustar sua busca.");
+        // UX Anti-Frustração: Informar que registramos o interesse
+        if (searchQuery.trim()) {
+          setError(`Não encontramos profissionais para "${searchQuery}", mas registramos seu interesse! Em breve novos profissionais poderão aparecer.`);
+        } else {
+          setError("Nenhum profissional encontrado. Tente ajustar sua busca.");
+        }
         setLoading(false);
         return;
       }
@@ -275,7 +280,11 @@ export default function SearchWorkers() {
       setWorkers(combined);
 
       if (combined.length === 0) {
-        setError("Nenhum profissional encontrado. Tente remover alguns filtros ou usar palavras-chave diferentes.");
+        if (searchQuery.trim()) {
+          setError(`Não encontramos profissionais para "${searchQuery}", mas registramos seu interesse! Tente remover alguns filtros.`);
+        } else {
+          setError("Nenhum profissional encontrado. Tente remover alguns filtros ou usar palavras-chave diferentes.");
+        }
       } else {
         setError(null);
       }
