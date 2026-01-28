@@ -65,30 +65,8 @@ function App() {
   });
 
   useEffect(() => {
-    // Limpar caches antigos na inicialização
-    if ('caches' in window) {
-      caches.keys().then(names => {
-        names.forEach(name => {
-          if (name.includes('bico-brasil-v') && !name.includes('v26')) {
-            caches.delete(name);
-          }
-        });
-      });
-    }
-
-    // Tentar processar fila offline quando voltarmos online
-    const handleOnline = () => {
-      import('./lib/offlineHandlers').then(({ processOfflineQueue }) => {
-        processOfflineQueue().then(() => console.info('Offline queue processed')).catch(err => console.error('Error processing offline queue', err));
-      });
-    };
-
-    if (navigator.onLine) handleOnline();
-    window.addEventListener('online', handleOnline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-    };
+    // NUCLEAR FIX: No offline persistence, no cache resurrection
+    // Site is 100% dependent on real-time Supabase data
   }, []);
 
   // CRITICAL FIX: Detect auth errors from URL to prevent login loops
