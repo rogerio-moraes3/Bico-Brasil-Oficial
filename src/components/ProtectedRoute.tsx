@@ -8,95 +8,56 @@ interface ProtectedRouteProps {
   requireAdmin?: boolean;
 }
 
+const ADMIN_EMAILS = ['23rogeriomoraes@gmail.com', 'nando_petro@hotmail.com'];
+
 export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [checkingAdmin, setCheckingAdmin] = useState(false);
+  const [profileChecked, setProfileChecked] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) {
+    // Wait for auth to finish loading
+    if (loading) return;
+
+    // No user -> redirect to login
+    if (!user) {
       navigate('/auth?mode=login');
       return;
     }
 
-    // If this route explicitly requires admin, enforce strict email whitelist first
-    if (user && requireAdmin) {
-      const allowed = ['23rogeriomoraes@gmail.com', 'nando_petro@hotmail.com'];
-      const email = (user.email || '').toLowerCase();
-      if (!allowed.includes(email)) {
-        // Block access immediately and inform the user
+    // Admin bypass: never redirect admin users
+    const email = (user.email || '').toLowerCase();
+    const isAdminUser = ADMIN_EMAILS.includes(email);
+
+    if (isAdminUser) {
+      setIsAdmin(true);
+      setProfileChecked(true);
+      return;
+    }
+
+    // If this route explicitly requires admin
+    if (requireAdmin) {
+      if (!isAdminUser) {
+        // Block access immediately
         alert('Acesso Negado');
         navigate('/', { replace: true });
         return;
       }
-
-      // If email is whitelisted, mark as admin and skip DB role check
       setIsAdmin(true);
       return;
     }
 
-    if (user && requireAdmin && !checkingAdmin) {
-      checkAdminStatus();
-    } else if (user && !requireAdmin) {
+    // For non-admin routes, just mark as checked
+    if (!requireAdmin) {
       setIsAdmin(true);
+      setProfileChecked(true);
     }
   }, [user, loading, requireAdmin, navigate]);
 
-  const checkAdminStatus = async () => {
-    if (!user) return;
-    setCheckingAdmin(true);
-
-    try {
-      // 1. Primeiro buscar o user_id da tabela public.users
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('id')
-        .eq('auth_id', user.id)
-        .maybeSingle();
-
-      if (userError) {
-        console.error('[ProtectedRoute] Erro ao buscar usuário:', userError);
-        navigate('/');
-        setCheckingAdmin(false);
-        return;
-      }
-
-      if (!userData) {
-        navigate('/');
-        setCheckingAdmin(false);
-        return;
-      }
-
-      // 2. Buscar role com o user_id correto
-      const { data: roleData, error: roleError } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userData.id)
-        .eq('role', 'admin')
-        .maybeSingle();
-
-      if (roleError) {
-        console.error('[ProtectedRoute] Erro ao verificar role:', roleError);
-        navigate('/');
-        setCheckingAdmin(false);
-        return;
-      }
-
-      if (!roleData) {
-        navigate('/');
-      } else {
-        setIsAdmin(true);
-      }
-    } catch (error) {
-      console.error('[ProtectedRoute] Erro inesperado:', error);
-      navigate('/');
-    } finally {
-      setCheckingAdmin(false);
-    }
-  };
-
-  if (loading || (requireAdmin && isAdmin === null)) {
+  // Show loading spinner while checking
+  if (loading || !profileChecked) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -104,10 +65,12 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
     );
   }
 
+  // No user after loading -> don't render
   if (!user) {
     return null;
   }
 
+  // Require admin but not admin -> don't render
   if (requireAdmin && !isAdmin) {
     return null;
   }
