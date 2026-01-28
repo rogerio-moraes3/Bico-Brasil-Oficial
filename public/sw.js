@@ -110,6 +110,16 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Skip Google Analytics and user content domains (prevent CORS errors)
+  if (url.hostname.includes('googleusercontent.com') ||
+    url.hostname.includes('googletagmanager.com') ||
+    url.hostname.includes('google-analytics.com')) {
+    event.respondWith(
+      fetch(request).catch(() => new Response('', { status: 204 }))
+    );
+    return;
+  }
+
   // Skip analytics endpoints (let them fail silently)
   if (url.pathname.includes('/~api/analytics') || url.pathname.includes('/analytics')) {
     event.respondWith(
