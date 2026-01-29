@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -7,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,50 +48,56 @@ export function MyAdsTab() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(true);
-  const [jobPostings, setJobPostings] = useState<JobPosting[]>([]);
-  const [workerServices, setWorkerServices] = useState<WorkerService[]>([]);
-  const [jobsPage, setJobsPage] = useState(0);
-  const [servicesPage, setServicesPage] = useState(0);
-  const [jobsLoadingMore, setJobsLoadingMore] = useState(false);
-  const [servicesLoadingMore, setServicesLoadingMore] = useState(false);
-  const [hasMoreJobs, setHasMoreJobs] = useState(true);
-  const [hasMoreServices, setHasMoreServices] = useState(true);
+  const queryClient = useQueryClient();
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; type: 'job' | 'service'; id: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      loadUserAds();
-    }
-  }, [user]);
+  // SINGLE SOURCE OF TRUTH: React Query for worker_services
+  const { data: workerServices = [], isLoading: servicesLoading } = useQuery({
+    queryKey: ['worker_services', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
 
-  const PAGE_SIZE = 10;
-
-  const loadUserAds = async () => {
-    if (!user) return;
-
-    setLoading(true);
-    setJobsPage(0);
-    setServicesPage(0);
-    setHasMoreJobs(true);
-    setHasMoreServices(true);
-
-    try {
-      // Buscar o user_id do perfil
       const { data: userData } = await supabase
         .from('users')
         .select('id')
         .eq('auth_id', user.id)
         .single();
 
-      if (!userData) {
-        setLoading(false);
-        return;
-      }
+      if (!userData) return [];
 
-      // Buscar primeira página de job_postings do usuário
-      const { data: jobs, error: jobsError } = await supabase
+      const { data: services } = await supabase
+        .from('worker_services')
+        .select(`
+          id, title, description, active, created_at, price,
+          category:categories(name)
+        `)
+        .eq('user_id', userData.id)
+        .eq('active', true) // CRITICAL: Only fetch active services
+        .order('created_at', { ascending: false });
+
+      return services || [];
+    },
+    enabled: !!user,
+    staleTime: 0, // Always fetch fresh data
+    gcTime: 0 // Don't cache deleted items
+  });
+
+  // SINGLE SOURCE OF TRUTH: React Query for job_postings
+  const { data: jobPostings = [], isLoading: jobsLoading } = useQuery({
+    queryKey: ['job_postings', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+
+      const { data: userData } = await supabase
+        .from('users')
+        .select('id')
+        .eq('auth_id', user.id)
+        .single();
+
+      if (!userData) return [];
+
+      const { data: jobs } = await supabase
         .from('job_postings')
         .select(`
           id, title, description, status, created_at, neighborhood, urgent,
@@ -98,45 +105,14 @@ export function MyAdsTab() {
           category:categories(name)
         `)
         .eq('user_id', userData.id)
-        .order('created_at', { ascending: false })
-        .range(0, PAGE_SIZE - 1);
+        .order('created_at', { ascending: false });
 
-      if (jobsError) {
-        console.error('Erro ao carregar job_postings:', jobsError);
-      } else {
-        setJobPostings(jobs || []);
-        setHasMoreJobs((jobs || []).length === PAGE_SIZE);
-      }
-
-      // Buscar primeira página de worker_services do usuário
-      const { data: services, error: servicesError } = await supabase
-        .from('worker_services')
-        .select(`
-          id, title, description, active, created_at, price,
-          category:categories(name)
-        `)
-        .eq('user_id', userData.id)
-        .order('created_at', { ascending: false })
-        .range(0, PAGE_SIZE - 1);
-
-      if (servicesError) {
-        console.error('Erro ao carregar worker_services:', servicesError);
-      } else {
-        setWorkerServices(services || []);
-        setHasMoreServices((services || []).length === PAGE_SIZE);
-      }
-
-    } catch (error) {
-      console.error('Erro ao carregar anúncios:', error);
-      toast({
-        title: "Erro ao carregar anúncios",
-        description: "Tente novamente mais tarde.",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+      return jobs || [];
+    },
+    enabled: !!user,
+    staleTime: 0,
+    gcTime: 0
+  });
 
   const handleDelete = async () => {
     if (!deleteDialog) return;
@@ -151,10 +127,8 @@ export function MyAdsTab() {
 
         if (error) throw error;
 
-        setJobPostings(prev => prev.filter(j => j.id !== deleteDialog.id));
-
-        // Dispatch custom event to notify other pages to refresh
-        window.dispatchEvent(new CustomEvent('jobDeleted'));
+        // SINGLE SOURCE: Only invalidate query, no setState
+        await queryClient.invalidateQueries({ queryKey: ['job_postings', user?.id] });
 
         toast({
           title: "Trabalho excluído",
@@ -168,10 +142,8 @@ export function MyAdsTab() {
 
         if (error) throw error;
 
-        setWorkerServices(prev => prev.filter(s => s.id !== deleteDialog.id));
-
-        // Dispatch custom event to notify other pages to refresh
-        window.dispatchEvent(new CustomEvent('serviceDeleted'));
+        // SINGLE SOURCE: Only invalidate query, no setState
+        await queryClient.invalidateQueries({ queryKey: ['worker_services', user?.id] });
 
         toast({
           title: "Serviço excluído",
@@ -179,7 +151,6 @@ export function MyAdsTab() {
         });
       }
     } catch (error: any) {
-      console.error('Erro ao excluir:', error);
       toast({
         title: "Erro ao excluir",
         description: error.message || "Tente novamente mais tarde.",
@@ -191,92 +162,7 @@ export function MyAdsTab() {
     }
   };
 
-  // Load more helpers for pagination
-  const loadMoreJobs = async () => {
-    if (!user || !hasMoreJobs) return;
-    setJobsLoadingMore(true);
-
-    try {
-      const { data: userData } = await supabase
-        .from('users')
-        .select('id')
-        .eq('auth_id', user.id)
-        .single();
-
-      if (!userData) return;
-
-      const nextPage = jobsPage + 1;
-      const start = nextPage * PAGE_SIZE;
-      const end = start + PAGE_SIZE - 1;
-
-      const { data: jobs, error } = await supabase
-        .from('job_postings')
-        .select(`
-          id, title, description, status, created_at, neighborhood, urgent,
-          city:cities(name),
-          category:categories(name)
-        `)
-        .eq('user_id', userData.id)
-        .order('created_at', { ascending: false })
-        .range(start, end);
-
-      if (error) {
-        console.error('Erro ao carregar mais job_postings:', error);
-      } else {
-        setJobPostings(prev => [...prev, ...(jobs || [])]);
-        setJobsPage(nextPage);
-        setHasMoreJobs((jobs || []).length === PAGE_SIZE);
-      }
-    } catch (e) {
-      console.error('Erro ao carregar mais job_postings:', e);
-    } finally {
-      setJobsLoadingMore(false);
-    }
-  };
-
-  const loadMoreServices = async () => {
-    if (!user || !hasMoreServices) return;
-    setServicesLoadingMore(true);
-
-    try {
-      const { data: userData } = await supabase
-        .from('users')
-        .select('id')
-        .eq('auth_id', user.id)
-        .single();
-
-      if (!userData) return;
-
-      const nextPage = servicesPage + 1;
-      const start = nextPage * PAGE_SIZE;
-      const end = start + PAGE_SIZE - 1;
-
-      const { data: services, error } = await supabase
-        .from('worker_services')
-        .select(`
-          id, title, description, active, created_at, price,
-          category:categories(name)
-        `)
-        .eq('user_id', userData.id)
-        .order('created_at', { ascending: false })
-        .range(start, end);
-
-      if (error) {
-        console.error('Erro ao carregar mais worker_services:', error);
-      } else {
-        setWorkerServices(prev => [...prev, ...(services || [])]);
-        setServicesPage(nextPage);
-        setHasMoreServices((services || []).length === PAGE_SIZE);
-      }
-    } catch (e) {
-      console.error('Erro ao carregar mais worker_services:', e);
-    } finally {
-      setServicesLoadingMore(false);
-    }
-  };
-
-
-  if (loading) {
+  if (servicesLoading || jobsLoading) {
     return (
       <Card>
         <CardHeader>
@@ -380,14 +266,6 @@ export function MyAdsTab() {
                       </div>
                     </div>
                   ))}
-
-                  {hasMoreJobs && (
-                    <div className="text-center">
-                      <Button onClick={loadMoreJobs} disabled={jobsLoadingMore} variant="outline">
-                        {jobsLoadingMore ? 'Carregando...' : 'Carregar mais'}
-                      </Button>
-                    </div>
-                  )}
                 </div>
               </div>
             )}
@@ -453,14 +331,6 @@ export function MyAdsTab() {
                       </div>
                     </div>
                   ))}
-
-                  {hasMoreServices && (
-                    <div className="text-center">
-                      <Button onClick={loadMoreServices} disabled={servicesLoadingMore} variant="outline">
-                        {servicesLoadingMore ? 'Carregando...' : 'Carregar mais'}
-                      </Button>
-                    </div>
-                  )}
                 </div>
               </div>
             )}
