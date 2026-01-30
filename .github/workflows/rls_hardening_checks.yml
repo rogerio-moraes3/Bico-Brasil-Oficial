@@ -1,0 +1,179 @@
+name: RLS Hardening — Static + Read-only Checks
+
+on:
+  pull_request:
+    paths:
+      - "docs/supabase/**"
+      - "docs/pull_request_templates/**"
+      - ".github/workflows/rls_hardening_checks.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  static-scan:
+    runs-on: ubuntu-latest
+    outputs:
+      static_fail: ${{ steps.scan.outputs.static_fail }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static scan — detect non-commented DDL (docs + .sql.review only)
+        id: scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILES="$(git diff --name-only origin/main...HEAD || true)"
+          TARGETS="$(echo "$FILES" | grep -E '^docs/|\.sql\.review$' || true)"
+          echo "Targets:"
+          echo "$TARGETS"
+          STATIC_FAIL=0
+          if [ -n "$TARGETS" ]; then
+            for f in $TARGETS; do
+              if grep -nE '^\s*(ALTER|CREATE|DROP|GRANT|REVOKE)\b' "$f" >/dev/null 2>&1; then
+                echo "Found potential non-commented DDL in $f"
+                grep -nE '^\s*(ALTER|CREATE|DROP|GRANT|REVOKE)\b' "$f" || true
+                STATIC_FAIL=1
+              fi
+            done
+          fi
+          echo "static_fail=$STATIC_FAIL" >> "$GITHUB_OUTPUT"
+      - name: Fail if static scan found non-commented DDL
+        if: steps.scan.outputs.static_fail == '1'
+        run: |
+          echo "Static scan failed: found non-commented DDL."
+          exit 1
+
+  db-readonly-checks:
+    needs: static-scan
+    if: needs.static-scan.outputs.static_fail == '0'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install psycopg2-binary
+
+      - name: Guardrail — validate DB host allowlist
+        env:
+          STAGING_DB_URL: ${{ secrets.STAGING_DB_URL }}
+          STAGING_DB_HOST_ALLOWLIST: ${{ secrets.STAGING_DB_HOST_ALLOWLIST }}
+        run: |
+          set -euo pipefail
+          : "${STAGING_DB_URL:?missing STAGING_DB_URL}"
+          : "${STAGING_DB_HOST_ALLOWLIST:?missing STAGING_DB_HOST_ALLOWLIST}"
+          HOST="$(python - <<'PY'
+import os, urllib.parse as up
+u = up.urlparse(os.environ["STAGING_DB_URL"])
+print(u.hostname or "")
+PY
+)"
+          echo "Detected host: $HOST"
+          echo "$STAGING_DB_HOST_ALLOWLIST" | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | grep -x "$HOST" >/dev/null
+          echo "Host allowed."
+
+      - name: Run read-only checks (generate artifacts)
+        env:
+          STAGING_DB_URL: ${{ secrets.STAGING_DB_URL }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+import os, csv, urllib.parse as up
+import psycopg2
+
+dsn = os.environ["STAGING_DB_URL"]
+p = up.urlparse(dsn)
+conn = psycopg2.connect(
+  dbname=p.path.lstrip("/"),
+  user=p.username,
+  password=p.password,
+  host=p.hostname,
+  port=p.port or 5432,
+  sslmode="prefer",
+)
+cur = conn.cursor()
+
+tables = ['payments','plans','ads_highlight','user_credits','payments_backup','signup_errors','job_applications','users','profiles','logs_busca','registrations']
+admin_views = ['admin_user_full','admin_user_list','admin_dashboard_stats']
+
+cur.execute("""
+  SELECT n.nspname, c.relname, c.relrowsecurity, c.relforcerowsecurity
+  FROM pg_class c JOIN pg_namespace n ON c.relnamespace=n.oid
+  WHERE n.nspname='public' AND c.relname = ANY(%s)
+""",(tables,))
+with open("rls_status.csv","w",newline="") as f:
+  w=csv.writer(f); w.writerow(["schema","table","relrowsecurity","relforcerowsecurity"]); w.writerows(cur.fetchall())
+
+cur.execute("""
+  SELECT schemaname, tablename, policyname, perm, roles, qual::text, with_check::text
+  FROM pg_catalog.pg_policies
+  WHERE schemaname='public' AND tablename = ANY(%s)
+  ORDER BY tablename, policyname
+""",(tables,))
+pol_rows = cur.fetchall()
+with open("policies_after.csv","w",newline="") as f:
+  w=csv.writer(f); w.writerow(["schemaname","tablename","policyname","perm","roles","qual","with_check"]); w.writerows(pol_rows)
+
+cur.execute("""
+  SELECT table_schema, table_name, grantee, privilege_type
+  FROM information_schema.role_table_grants
+  WHERE table_name = ANY(%s)
+""",(admin_views,))
+with open("views_grants.csv","w",newline="") as f:
+  w=csv.writer(f); w.writerow(["schema","table","grantee","privilege_type"]); w.writerows(cur.fetchall())
+
+cur.execute("""
+  SELECT n.nspname, p.proname
+  FROM pg_proc p JOIN pg_namespace n ON p.pronamespace=n.oid
+  WHERE pg_get_functiondef(p.oid) ILIKE '%SECURITY DEFINER%'
+""")
+with open("security_definer_list.txt","w") as f:
+  for r in cur.fetchall(): f.write(f"{r[0]},{r[1]}\n")
+
+cur.execute("""
+  SELECT n.nspname, p.proname
+  FROM pg_proc p JOIN pg_namespace n ON p.pronamespace=n.oid
+  WHERE pg_get_functiondef(p.oid) ILIKE '%search_path%'
+""")
+with open("search_path_functions.txt","w") as f:
+  for r in cur.fetchall(): f.write(f"{r[0]},{r[1]}\n")
+
+# detect permissive policies
+permissive=[]
+for schemaname, tablename, policyname, perm, roles, qual, with_check in pol_rows:
+  if (with_check or "").strip().lower() == "true":
+    permissive.append((schemaname, tablename, policyname, "with_check_true"))
+  rolelist=[]
+  if roles:
+    rolelist=[x.strip().lower() for x in roles.strip("{}").split(",") if x.strip()]
+  if "public" in rolelist and perm.upper() in ("INSERT","UPDATE","DELETE"):
+    permissive.append((schemaname, tablename, policyname, "public_write"))
+with open("permissive_policies.txt","w") as f:
+  for r in permissive: f.write(",".join(r)+"\n")
+
+cur.close(); conn.close()
+print("Artifacts generated.")
+PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rls-hardening-artifacts
+          path: |
+            rls_status.csv
+            policies_after.csv
+            views_grants.csv
+            security_definer_list.txt
+            search_path_functions.txt
+            permissive_policies.txt
+
+      - name: Fail if permissive policies detected
+        run: |
+          if [ -s permissive_policies.txt ]; then
+            echo "Permissive policies detected:"
+            cat permissive_policies.txt
+            exit 1
+          fi
+          echo "No permissive policies detected."
