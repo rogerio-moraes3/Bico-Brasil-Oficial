@@ -13,6 +13,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'chapa-carga-descarga';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'chapa', public.normalize_busca_texto('chapa'), 'oficial', 10),
@@ -33,6 +38,11 @@ BEGIN
   VALUES ('ajudante-pedreiro', 'Ajudante de pedreiro', 'Auxiliar em obras de construção civil', 'construção', 'braçal', 'baixa')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
+  
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'ajudante-pedreiro';
+  END IF;
   
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
@@ -55,6 +65,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'pintor';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'pintor', public.normalize_busca_texto('pintor'), 'oficial', 10),
@@ -73,6 +88,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'eletricista';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'eletricista', public.normalize_busca_texto('eletricista'), 'oficial', 10),
@@ -90,6 +110,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'encanador';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'encanador', public.normalize_busca_texto('encanador'), 'oficial', 10),
@@ -106,6 +131,11 @@ BEGIN
   VALUES ('faxineira-diarista', 'Faxineira / Diarista', 'Fazer limpeza de residências e escritórios', 'limpeza', 'braçal', 'baixa')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
+  
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'faxineira-diarista';
+  END IF;
   
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
@@ -125,6 +155,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'jardineiro';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'jardineiro', public.normalize_busca_texto('jardineiro'), 'oficial', 10),
@@ -139,6 +174,11 @@ BEGIN
   VALUES ('montador-moveis', 'Montador de móveis', 'Montar e desmontar móveis planejados e modulares', 'montagem', 'técnico', 'media')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
+  
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'montador-moveis';
+  END IF;
   
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
@@ -155,6 +195,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'carpinteiro';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'carpinteiro', public.normalize_busca_texto('carpinteiro'), 'oficial', 10),
@@ -168,6 +213,11 @@ BEGIN
   VALUES ('azulejista', 'Azulejista', 'Instalar azulejos, pisos e revestimentos', 'construção', 'técnico', 'media')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
+  
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'azulejista';
+  END IF;
   
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
@@ -185,6 +235,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'gesseiro';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'gesseiro', public.normalize_busca_texto('gesseiro'), 'oficial', 10),
@@ -200,6 +255,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'marceneiro';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'marceneiro', public.normalize_busca_texto('marceneiro'), 'oficial', 10),
@@ -213,6 +273,11 @@ BEGIN
   VALUES ('serralheiro', 'Serralheiro', 'Trabalhar com metal: portões, grades, estruturas', 'construção', 'técnico', 'media')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
+  
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'serralheiro';
+  END IF;
   
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
@@ -229,6 +294,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'soldador';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'soldador', public.normalize_busca_texto('soldador'), 'oficial', 10),
@@ -242,6 +312,11 @@ BEGIN
   VALUES ('tecnico-refrigeracao', 'Técnico de refrigeração', 'Instalar e consertar ar-condicionado e geladeiras', 'manutenção', 'técnico', 'alta')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
+  
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'tecnico-refrigeracao';
+  END IF;
   
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
@@ -258,6 +333,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'motorista-aplicativo';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'motorista de aplicativo', public.normalize_busca_texto('motorista de aplicativo'), 'oficial', 10),
@@ -273,6 +353,11 @@ BEGIN
   VALUES ('entregador', 'Entregador', 'Entregar comida e encomendas de app ou empresa', 'transporte', 'braçal', 'baixa')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
+  
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'entregador';
+  END IF;
   
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
@@ -291,6 +376,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'cozinheiro';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'cozinheiro', public.normalize_busca_texto('cozinheiro'), 'oficial', 10),
@@ -307,6 +397,11 @@ BEGIN
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
   
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'garcom';
+  END IF;
+  
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
       (v_ocupacao_id, 'garçom', public.normalize_busca_texto('garçom'), 'oficial', 10),
@@ -322,6 +417,11 @@ BEGIN
   VALUES ('seguranca', 'Segurança', 'Proteger pessoas e patrimônios em eventos e locais', 'segurança', 'braçal', 'media')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_ocupacao_id;
+  
+  -- Se já existe, buscar ID
+  IF v_ocupacao_id IS NULL THEN
+    SELECT id INTO v_ocupacao_id FROM public.ocupacoes WHERE slug = 'seguranca';
+  END IF;
   
   IF v_ocupacao_id IS NOT NULL THEN
     INSERT INTO public.ocupacao_termos_busca (ocupacao_id, termo, termo_norm, tipo_termo, peso_relevancia) VALUES
