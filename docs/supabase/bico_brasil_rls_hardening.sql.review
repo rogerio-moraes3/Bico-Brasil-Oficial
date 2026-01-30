@@ -1,0 +1,269 @@
+/*
+FILE: docs/supabase/bico_brasil_rls_hardening.sql.review
+PROJECT: Bico Brasil
+TYPE: Review-only SQL proposals (ALL CONTENT COMMENTED — DO NOT EXECUTE)
+PURPOSE: Proposed RLS enablement and policy hardening suggestions.
+WARNING: This file is for review only. All SQL below is commented. DO NOT EXECUTE.
+*/
+
+/* =========================================================================
+PRELIMINARY READ-ONLY QUERIES (run manually)
+- Check RLS status:
+-- SELECT n.nspname AS schema, c.relname AS table, c.relrowsecurity AS rls_enabled, c.relforcerowsecurity AS rls_forced
+-- FROM pg_class c
+-- JOIN pg_namespace n ON c.relnamespace = n.oid
+-- WHERE n.nspname = 'public'
+-- AND c.relname IN ('payments','plans','ads_highlight','user_credits','payments_backup','signup_errors','job_applications');
+
+- List policies for a table:
+-- SELECT schemaname, tablename, policyname, perm, roles, qual, with_check
+-- FROM pg_catalog.pg_policies
+-- WHERE schemaname = 'public' AND tablename = 'payments';
+======================================================================== */
+
+/* =========================================================================
+BLOCK: public.payments
+PURPOSE: Enable RLS and restrict read/write to owners or admin/service.
+NOTE: Replace <ADMIN_CHECK_EXPRESSION> with existing function/expr (e.g., is_admin(auth.uid()))
+MAPPING: If public.users stores auth ID in 'auth_id', map auth.uid() -> public.users.auth_id -> public.users.id
+DO NOT EXECUTE: All SQL is commented
+========================================================================
+-- ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
+
+-- DROP POLICY IF EXISTS payments_select_owner_or_admin ON public.payments;
+-- CREATE POLICY payments_select_owner_or_admin
+-- ON public.payments
+-- FOR SELECT
+-- TO authenticated
+-- USING (
+--   (
+--     (SELECT auth.uid()) IS NOT NULL
+--     AND ((SELECT id FROM public.users WHERE auth_id = (SELECT auth.uid())) = public.payments.user_id)
+--   )
+--   OR (<ADMIN_CHECK_EXPRESSION>)
+-- );
+
+-- DROP POLICY IF EXISTS payments_insert_owner ON public.payments;
+-- CREATE POLICY payments_insert_owner
+-- ON public.payments
+-- FOR INSERT
+-- TO authenticated
+-- WITH CHECK (
+--   (SELECT auth.uid()) IS NOT NULL
+--   AND ((SELECT id FROM public.users WHERE auth_id = (SELECT auth.uid())) = public.payments.user_id)
+-- );
+
+-- ROLLBACK SUGGESTION:
+-- ALTER TABLE public.payments DISABLE ROW LEVEL SECURITY;
+-- Recreate previous policies from backup DDL.
+======================================================================== */
+
+/* =========================================================================
+BLOCK: public.plans
+PURPOSE: Make plans readable via a controlled view or explicit public policy.
+DO NOT EXECUTE
+========================================================================
+-- ALTER TABLE public.plans ENABLE ROW LEVEL SECURITY;
+
+-- Preferred: public read via a dedicated view (instead of exposing the table)
+-- CREATE OR REPLACE VIEW public.plans_public_view AS
+-- SELECT id, name, price, active FROM public.plans;
+-- GRANT SELECT ON public.plans_public_view TO public;
+
+-- ROLLBACK SUGGESTION:
+-- ALTER TABLE public.plans DISABLE ROW LEVEL SECURITY;
+======================================================================== */
+
+/* =========================================================================
+BLOCK: public.ads_highlight
+PURPOSE: Restrict inserts/updates to the owner or service role.
+DO NOT EXECUTE
+========================================================================
+-- ALTER TABLE public.ads_highlight ENABLE ROW LEVEL SECURITY;
+
+-- DROP POLICY IF EXISTS ads_highlight_insert_owner ON public.ads_highlight;
+-- CREATE POLICY ads_highlight_insert_owner
+-- ON public.ads_highlight
+-- FOR INSERT
+-- TO authenticated
+-- WITH CHECK (
+--   auth.uid() IS NOT NULL
+--   AND user_id = (SELECT id FROM public.users WHERE auth_id = auth.uid())
+-- );
+
+-- ROLLBACK SUGGESTION:
+-- ALTER TABLE public.ads_highlight DISABLE ROW LEVEL SECURITY;
+======================================================================== */
+
+/* =========================================================================
+BLOCK: public.user_credits
+PURPOSE: Protect credit balances from unauthorized updates.
+DO NOT EXECUTE
+========================================================================
+-- ALTER TABLE public.user_credits ENABLE ROW LEVEL SECURITY;
+
+-- DROP POLICY IF EXISTS user_credits_select_owner ON public.user_credits;
+-- CREATE POLICY user_credits_select_owner
+-- ON public.user_credits
+-- FOR SELECT
+-- TO authenticated
+-- USING (
+--   user_id = (SELECT id FROM public.users WHERE auth_id = auth.uid())
+--   OR (<ADMIN_CHECK_EXPRESSION>)
+-- );
+
+-- DROP POLICY IF EXISTS user_credits_update_owner ON public.user_credits;
+-- CREATE POLICY user_credits_update_owner
+-- ON public.user_credits
+-- FOR UPDATE
+-- TO authenticated
+-- USING (user_id = (SELECT id FROM public.users WHERE auth_id = auth.uid()))
+-- WITH CHECK (user_id = (SELECT id FROM public.users WHERE auth_id = auth.uid()));
+
+-- ROLLBACK SUGGESTION:
+-- ALTER TABLE public.user_credits DISABLE ROW LEVEL SECURITY;
+======================================================================== */
+
+/* =========================================================================
+BLOCK: public.payments_backup
+PURPOSE: Restrict backup/history access to admins/service.
+DO NOT EXECUTE
+========================================================================
+-- ALTER TABLE public.payments_backup ENABLE ROW LEVEL SECURITY;
+
+-- DROP POLICY IF EXISTS payments_backup_admin_only ON public.payments_backup;
+-- CREATE POLICY payments_backup_admin_only
+-- ON public.payments_backup
+-- FOR ALL
+-- TO authenticated
+-- USING (<ADMIN_CHECK_EXPRESSION>);
+
+-- ROLLBACK SUGGESTION:
+-- ALTER TABLE public.payments_backup DISABLE ROW LEVEL SECURITY;
+======================================================================== */
+
+/* =========================================================================
+BLOCK: public.signup_errors
+PURPOSE: Prevent anonymous clients from writing arbitrary signup logs.
+DO NOT EXECUTE
+========================================================================
+-- ALTER TABLE public.signup_errors ENABLE ROW LEVEL SECURITY;
+
+-- DROP POLICY IF EXISTS signup_errors_insert_authenticated ON public.signup_errors;
+-- CREATE POLICY signup_errors_insert_authenticated
+-- ON public.signup_errors
+-- FOR INSERT
+-- TO authenticated
+-- WITH CHECK (
+--   auth.uid() IS NOT NULL
+--   OR ((auth.jwt() ->> 'allow_signup_error_insert') = 'true') -- placeholder alternative
+-- );
+
+-- ROLLBACK SUGGESTION:
+-- ALTER TABLE public.signup_errors DISABLE ROW LEVEL SECURITY;
+======================================================================== */
+
+/* =========================================================================
+BLOCK: public.job_applications
+PURPOSE: Limit visibility to applicant, posting owner, or admin.
+DO NOT EXECUTE
+========================================================================
+-- ALTER TABLE public.job_applications ENABLE ROW LEVEL SECURITY;
+
+-- DROP POLICY IF EXISTS job_applications_insert_authenticated ON public.job_applications;
+-- CREATE POLICY job_applications_insert_authenticated
+-- ON public.job_applications
+-- FOR INSERT
+-- TO authenticated
+-- WITH CHECK (
+--   auth.uid() IS NOT NULL
+--   AND applicant_id = (SELECT id FROM public.users WHERE auth_id = auth.uid())
+-- );
+
+-- DROP POLICY IF EXISTS job_applications_select_owner_or_posting_owner ON public.job_applications;
+-- CREATE POLICY job_applications_select_owner_or_posting_owner
+-- ON public.job_applications
+-- FOR SELECT
+-- TO authenticated
+-- USING (
+--   (applicant_id = (SELECT id FROM public.users WHERE auth_id = auth.uid()))
+--   OR (EXISTS (
+--     SELECT 1 FROM public.job_postings jp
+--     WHERE jp.id = public.job_applications.job_posting_id
+--     AND jp.user_id = (SELECT id FROM public.users WHERE auth_id = auth.uid())
+--   ))
+--   OR (<ADMIN_CHECK_EXPRESSION>)
+-- );
+
+-- ROLLBACK SUGGESTION:
+-- ALTER TABLE public.job_applications DISABLE ROW LEVEL SECURITY;
+======================================================================== */
+
+/* =========================================================================
+BLOCK: permissive policies (users, profiles, logs_busca, registrations)
+PURPOSE: Replace WITH CHECK = true policies with auth.uid()-based checks.
+DO NOT EXECUTE
+========================================================================
+-- USERS: require auth_id = auth.uid() on INSERT
+-- DROP POLICY IF EXISTS "Allow individual insert" ON public.users;
+-- CREATE POLICY users_insert_own
+-- ON public.users
+-- FOR INSERT
+-- TO authenticated
+-- WITH CHECK (auth.uid() IS NOT NULL AND auth_id = auth.uid());
+
+-- PROFILES: require id = auth.uid() on INSERT
+-- DROP POLICY IF EXISTS "Inserção de perfil via trigger" ON public.profiles;
+-- CREATE POLICY profiles_insert_owner
+-- ON public.profiles
+-- FOR INSERT
+-- TO authenticated
+-- WITH CHECK (auth.uid() IS NOT NULL AND id = auth.uid());
+
+-- LOGS_BUSCA: restrict INSERT to authenticated
+-- DROP POLICY IF EXISTS "Inserção pública de logs" ON public.logs_busca;
+-- CREATE POLICY logs_busca_insert_auth
+-- ON public.logs_busca
+-- FOR INSERT
+-- TO authenticated
+-- WITH CHECK (auth.uid() IS NOT NULL);
+
+-- REGISTRATIONS: require auth.uid() or claim (prefer Edge Function)
+-- DROP POLICY IF EXISTS "Public insert registrations" ON public.registrations;
+-- CREATE POLICY registrations_insert_validated
+-- ON public.registrations
+-- FOR INSERT
+-- TO public
+-- WITH CHECK (
+--   (auth.uid() IS NOT NULL)
+--   OR ((auth.jwt() ->> 'allow_registration') = 'true') -- placeholder, prefer Edge Function alternative
+-- );
+
+-- ROLLBACK SUGGESTION:
+-- Recreate previous permissive policies from backup DDL.
+======================================================================== */
+
+/* =========================================================================
+BLOCK: VIEWS & FUNCTIONS
+PURPOSE: Revoke public access to admin views and prefer public views exposing limited fields.
+DO NOT EXECUTE
+========================================================================
+-- REVOKE SELECT ON public.admin_user_full FROM public, authenticated;
+-- REVOKE SELECT ON public.admin_user_list FROM public, authenticated;
+-- REVOKE SELECT ON public.admin_dashboard_stats FROM public, authenticated;
+
+-- CREATE OR REPLACE VIEW public.users_public_view AS
+-- SELECT id, display_name, avatar_url, city, rating_avg, rating_count, type, category
+-- FROM public.users;
+-- GRANT SELECT ON public.users_public_view TO public;
+
+-- NOTE: Do not create/replace functions in this review file.
+======================================================================== */
+
+/* =========================================================================
+FINAL NOTES:
+- This file is only for review and must NOT be executed.
+- Replace placeholders before any execution:
+  <ADMIN_CHECK_EXPRESSION>, <TEST_USER_ID>, <VIEW_NAMES>, <TABLE_LIST>, <EDGE_FUNCTION_NAMES>,
+  <SERVICE_ROLE_SECRET_LOCATION>, <ALLOW_REGISTRATION_CLAIM>
+======================================================================== */
