@@ -26,7 +26,7 @@ export const Header = () => {
   const { mode, setMode } = useUserMode();
   const [open, setOpen] = useState(false);
   // Show back button on internal routes (public paths excluded) or when there is a history stack
-  const publicPaths = ['/', '/landing', '/auth', '/install', '/download', '/pre-launch', '/prelaunch'];
+  const publicPaths = ['/', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch'];
   const hasHistory = typeof window !== 'undefined' && window.history && window.history.length > 1;
   const showBackButton = hasHistory || !publicPaths.some(p => location.pathname.startsWith(p));
 
@@ -207,7 +207,7 @@ export const Header = () => {
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-10 w-10 flex items-center justify-center">
-                  <Menu className="h-5 w-5 text-foreground" />
+                  <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
@@ -215,7 +215,7 @@ export const Header = () => {
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 mt-6">
-                  <div className="absolute top-0 right-0 bg-slate-800 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
+                  <div className="absolute top-0 right-0 bg-slate-700 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
                     POPULAR
                   </div>{user && (
                     <div className="flex items-center gap-3 p-3 border rounded-lg mb-2">

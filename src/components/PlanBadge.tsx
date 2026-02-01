@@ -8,7 +8,7 @@ interface PlanBadgeProps {
 export const PlanBadge = ({ variant, className }: PlanBadgeProps) => {
     const variants = {
         popular: {
-            bg: "bg-slate-800",
+            bg: "bg-slate-700",
             text: "text-white",
             label: "POPULAR"
         },

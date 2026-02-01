@@ -76,7 +76,7 @@ export default function Premium() {
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold text-foreground">Premium</CardTitle>
-                  <div className="absolute top-0 right-0 bg-slate-800 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
+                  <div className="absolute top-0 right-0 bg-slate-700 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
                     POPULAR
                   </div>
                 </div>

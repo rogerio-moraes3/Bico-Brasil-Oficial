@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ProfileCompletionGuard } from "./components/ProfileCompletionGuard";
 import { AccessGuard } from "./components/AccessGuard";
 import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
+import { ServiceWorkerUpdatePrompt } from "./components/ServiceWorkerUpdatePrompt";
 import { MobileAppBanner } from "./components/MobileAppBanner";
 import { BottomNav } from "./components/BottomNav";
 import { NotificationPrompt } from "./components/NotificationPrompt";
@@ -109,6 +110,7 @@ function App() {
             <Toaster />
             <Sonner />
             <PWAInstallPrompt />
+            <ServiceWorkerUpdatePrompt />
             <MobileAppBanner />
             <NotificationPrompt />
             <AdminIcon />

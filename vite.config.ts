@@ -8,6 +8,14 @@ import { componentTagger } from "lovable-tagger";
 const CACHE_VERSION = 8;
 
 export default defineConfig(({ mode }) => ({
+  define: {
+    'import.meta.env.VITE_APP_BUILD_ID': JSON.stringify(
+      process.env.VERCEL_GIT_COMMIT_SHA
+        || process.env.GITHUB_SHA
+        || process.env.COMMIT_SHA
+        || `local-${CACHE_VERSION}`
+    ),
+  },
   plugins: [
     react(),
     mode === 'development' && componentTagger(),

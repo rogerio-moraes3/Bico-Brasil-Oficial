@@ -6,25 +6,38 @@ import { Button } from '@/components/ui/button';
 import { Download, Smartphone, Bell, Zap, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+};
+
 export default function InstallApp() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    const handler = (e: Event) => {
+    const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
     };
 
+    const onInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    };
     window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', onInstalled);
 
     // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
     }
 
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('appinstalled', onInstalled);
+    };
   }, []);
 
   const handleInstall = async () => {
@@ -70,6 +83,7 @@ export default function InstallApp() {
   ];
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isIOSBrowser = isIOS && !window.matchMedia('(display-mode: standalone)').matches;
   const isAndroid = /android/i.test(navigator.userAgent);
 
   return (
@@ -120,15 +134,13 @@ export default function InstallApp() {
           )}
 
           {/* Nota para iOS */}
-          {isIOS && (
+          {isIOSBrowser && (
             <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
               <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
                 📱 Nota para iPhone/iPad
               </h4>
               <p className="text-sm text-amber-700 dark:text-amber-300">
-                O iOS não permite baixar apps via URL (.ipa) fora da App Store. 
-                Para usar o Bico Brasil no seu dispositivo iOS, adicione este site à Tela de Início 
-                usando o Safari - ele funcionará como um aplicativo nativo!
+                No iOS, instale pelo Safari: toque em Compartilhar e escolha “Adicionar à Tela de Início”.
               </p>
             </div>
           )}
@@ -152,7 +164,7 @@ export default function InstallApp() {
               <CardTitle>Como Instalar</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {isIOS ? (
+              {isIOSBrowser ? (
                 <>
                   <div className="flex gap-3">
                     <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
@@ -161,7 +173,7 @@ export default function InstallApp() {
                     <div>
                       <h4 className="font-semibold mb-1">Abra o menu de compartilhar</h4>
                       <p className="text-sm text-muted-foreground">
-                        Toque no ícone de compartilhar (⎋) na barra inferior do Safari.
+                        Toque no ícone de compartilhar (quadrado com seta) na barra inferior do Safari.
                       </p>
                     </div>
                   </div>
@@ -173,7 +185,7 @@ export default function InstallApp() {
                     <div>
                       <h4 className="font-semibold mb-1">Adicionar à Tela de Início</h4>
                       <p className="text-sm text-muted-foreground">
-                        Role para baixo e toque em "Adicionar à Tela de Início".
+                        Role para baixo e toque em “Adicionar à Tela de Início”.
                       </p>
                     </div>
                   </div>

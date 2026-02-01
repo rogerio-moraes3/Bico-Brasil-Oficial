@@ -8,6 +8,7 @@ import logo from '@/assets/logo.png';
 export default function DownloadPage() {
   const isAndroid = /android/i.test(navigator.userAgent);
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isIOSBrowser = isIOS && !window.matchMedia('(display-mode: standalone)').matches;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -67,15 +68,13 @@ export default function DownloadPage() {
           </div>
 
           {/* Nota para iOS */}
-          {isIOS && (
+          {isIOSBrowser && (
             <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
               <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
                 📱 Nota para iPhone/iPad
               </h4>
               <p className="text-sm text-amber-700 dark:text-amber-300">
-                O iOS não permite baixar apps fora da App Store. 
-                Para usar o Bico Brasil no seu iPhone, adicione à Tela de Início 
-                pelo Safari - funciona como um app nativo!
+                No iOS, instale pelo Safari: toque em Compartilhar e escolha “Adicionar à Tela de Início”.
               </p>
             </div>
           )}
@@ -91,7 +90,7 @@ export default function DownloadPage() {
                 <li>Confirme e pronto! O app estará na sua tela inicial</li>
               </ol>
             )}
-            {isIOS && (
+            {isIOSBrowser && (
               <ol className="list-decimal list-inside space-y-2 text-sm">
                 <li>Abra este site no Safari</li>
                 <li>Toque no ícone de compartilhar (□↑)</li>

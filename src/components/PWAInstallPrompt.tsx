@@ -3,12 +3,22 @@ import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { X, Download } from 'lucide-react';
 
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+};
+
 export const PWAInstallPrompt = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
 
   useEffect(() => {
-    const handler = (e: Event) => {
+    let timeoutId: number | undefined;
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setShowPrompt(false);
+      return;
+    }
+    const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
       
@@ -20,18 +30,25 @@ export const PWAInstallPrompt = () => {
       // Show if never dismissed or dismissed more than 7 days ago
       if (!dismissedDate || (now.getTime() - dismissedDate.getTime()) > 7 * 24 * 60 * 60 * 1000) {
         // Show after 3 seconds
-        setTimeout(() => setShowPrompt(true), 3000);
+        timeoutId = window.setTimeout(() => setShowPrompt(true), 3000);
       }
+    };
+    const handleInstalled = () => {
+      setShowPrompt(false);
+      setDeferredPrompt(null);
+      localStorage.removeItem('pwa-dismissed');
     };
 
     window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', handleInstalled);
 
-    // Check if already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setShowPrompt(false);
-    }
-
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    return () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('appinstalled', handleInstalled);
+    };
   }, []);
 
   const handleInstall = async () => {

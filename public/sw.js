@@ -20,6 +20,13 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Listen for explicit skip waiting requests from the app
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 // Fetch: PASS THROUGH - no caching, no interception
 self.addEventListener('fetch', (event) => {
   // Let all requests go directly to network

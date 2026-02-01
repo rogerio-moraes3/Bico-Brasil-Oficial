@@ -26,7 +26,6 @@
   <link rel="shortcut icon" href="/favicon.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
   <link rel="apple-touch-icon" sizes="192x192" href="/favicon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#FF7A00" />
 
   <link rel="manifest" href="/manifest.json" />
@@ -174,13 +173,6 @@
         console.log('✅ Cache cleared, reloading...');
         window.location.reload(true);
         return;
-      }
-
-      // Register service worker normally
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js');
-        });
       }
     })();
   </script>
