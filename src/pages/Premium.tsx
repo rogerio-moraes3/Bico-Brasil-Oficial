@@ -49,7 +49,7 @@ export default function Premium() {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8 overflow-y-auto max-h-[calc(100vh-150px)]">
+      <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <Button
           variant="ghost"
           size="sm"
