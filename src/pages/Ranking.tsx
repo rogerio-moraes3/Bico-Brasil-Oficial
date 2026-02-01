@@ -171,7 +171,7 @@ export default function Ranking() {
       <Header />
 
       <main className="flex-grow container mx-auto px-4 py-8 pb-24">
-        <div className="text-center mb-8 animate-fade-in">
+        <div className="text-center mb-8 animate-fade-in max-w-4xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Trophy className="h-8 w-8 text-yellow-500" />
             <h1 className="text-3xl font-bold">Rankings em Tempo Real</h1>
@@ -187,7 +187,7 @@ export default function Ranking() {
         </div>
 
         <Tabs defaultValue="jobs" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
+          <TabsList className="grid w-full grid-cols-3 mb-6 rounded-2xl border border-border bg-card shadow-sm">
             <TabsTrigger value="jobs" className="flex items-center gap-2">
               <Briefcase className="h-4 w-4" />
               <span className="hidden sm:inline">Oportunidades</span>
@@ -205,17 +205,17 @@ export default function Ranking() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="jobs" className="space-y-4">
+          <TabsContent value="jobs" className="space-y-5">
             {topJobs.length === 0 ? (
               <div className="text-center py-12">
                 <Briefcase className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground">Nenhuma oportunidade encontrada</p>
               </div>
             ) : (
-              topJobs.map((job, index) => (
-                <Card key={job.id} className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer animate-fade-in">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
+                topJobs.map((job, index) => (
+                  <Card key={job.id} className="hover:shadow-lg transition-all hover:scale-[1.01] cursor-pointer animate-fade-in rounded-2xl border border-border">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
                       <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold ${getMedalColor(index)}`}>
                         {index + 1}
                       </div>
@@ -256,13 +256,13 @@ export default function Ranking() {
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))
+                    </CardContent>
+                  </Card>
+                ))
             )}
           </TabsContent>
 
-          <TabsContent value="workers" className="space-y-4">
+          <TabsContent value="workers" className="space-y-5">
             {topWorkers.length === 0 ? (
               <div className="text-center py-12">
                 <Users className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -272,7 +272,7 @@ export default function Ranking() {
               topWorkers.map((worker, index) => (
                 <Card
                   key={worker.id}
-                  className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer animate-fade-in"
+                  className="hover:shadow-lg transition-all hover:scale-[1.01] cursor-pointer animate-fade-in rounded-2xl border border-border"
                   onClick={() => navigate(`/worker/${worker.id}`)}
                 >
                   <CardContent className="p-6">
@@ -342,7 +342,7 @@ export default function Ranking() {
             )}
           </TabsContent>
 
-          <TabsContent value="contractors" className="space-y-4">
+          <TabsContent value="contractors" className="space-y-5">
             {topContractors.length === 0 ? (
               <div className="text-center py-12">
                 <TrendingUp className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -350,7 +350,7 @@ export default function Ranking() {
               </div>
             ) : (
               topContractors.map((contractor, index) => (
-                <Card key={contractor.id} className="hover:shadow-lg transition-all hover:scale-[1.02] animate-fade-in">
+                <Card key={contractor.id} className="hover:shadow-lg transition-all hover:scale-[1.01] animate-fade-in rounded-2xl border border-border">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold ${getMedalColor(index)}`}>
