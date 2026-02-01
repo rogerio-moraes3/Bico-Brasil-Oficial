@@ -18,6 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { EmptyState } from "@/components/EmptyState";
+import { SkeletonGrid } from "@/components/SkeletonGrid";
 import { useToast } from "@/hooks/use-toast";
 import { Search, Briefcase, Grid, List, MapPin, Clock, DollarSign, AlertCircle, Loader2, Edit, Trash, Share2 } from "lucide-react";
 import { WhatsAppContactButton } from "@/components/WhatsAppContactButton";
@@ -509,30 +511,23 @@ const ProcurarBicos = () => {
 
         {/* Resultados */}
         {loading ? (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 py-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="animate-pulse border border-border rounded-2xl">
-                <CardContent className="pt-6 space-y-3">
-                  <div className="h-5 bg-muted rounded w-2/3" />
-                  <div className="h-4 bg-muted rounded w-1/2" />
-                  <div className="h-4 bg-muted rounded w-full" />
-                  <div className="h-4 bg-muted rounded w-5/6" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <SkeletonGrid count={6} columnsClassName="sm:grid-cols-2 xl:grid-cols-3" className="py-6" />
         ) : jobs.length === 0 ? (
-          <div className="text-center py-12">
-            <Briefcase className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Nenhum bico encontrado</h3>
-            <p className="text-muted-foreground mb-6">
-              Quer oferecer seus serviços e aparecer nas buscas? Cadastre-se como profissional!
-            </p>
-            <div className="flex gap-3 justify-center">
-              <Button onClick={handleClearFilters} variant="outline">Limpar Filtros</Button>
-              <Button onClick={() => navigate('/offer-services')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-border dark:text-foreground">Oferecer Serviços</Button>
-            </div>
-          </div>
+          <EmptyState
+            icon={<Briefcase className="h-16 w-16 text-muted-foreground" />}
+            title="Nenhum bico encontrado"
+            description="Quer oferecer seus serviços e aparecer nas buscas? Cadastre-se como profissional!"
+            actions={[
+              { label: "Limpar Filtros", onClick: handleClearFilters, variant: "outline" },
+              {
+                label: "Oferecer Serviços",
+                onClick: () => navigate('/offer-services'),
+                variant: "outline",
+                size: "lg",
+                className: "border-orange-600 text-orange-600 dark:border-border dark:text-foreground"
+              }
+            ]}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {jobs.map((job) => (

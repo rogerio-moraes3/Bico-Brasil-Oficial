@@ -19,6 +19,8 @@ import { useAccessControl } from '@/hooks/useAccessControl';
 import { useCities } from '@/hooks/useCities';
 import CitySelect from '@/components/CitySelect';
 import { Label } from '@/components/ui/label';
+import { EmptyState } from "@/components/EmptyState";
+import { SkeletonGrid } from "@/components/SkeletonGrid";
 
 interface Worker {
   id: string;
@@ -291,40 +293,17 @@ const Jobs = () => {
 
         {/* Results */}
         {loading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="animate-pulse rounded-2xl border border-border">
-                <CardHeader>
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-muted rounded-full" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-muted rounded w-3/4" />
-                      <div className="h-3 bg-muted rounded w-1/2" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="h-3 bg-muted rounded w-full" />
-                  <div className="h-3 bg-muted rounded w-5/6" />
-                  <div className="flex gap-2">
-                    <div className="h-6 bg-muted rounded w-16" />
-                    <div className="h-6 bg-muted rounded w-16" />
-                  </div>
-                </CardContent>
-                  <CardFooter>
-                    <div className="h-10 bg-muted rounded-xl w-full" />
-                  </CardFooter>
-                </Card>
-            ))}
-          </div>
+          <SkeletonGrid count={6} columnsClassName="md:grid-cols-2 lg:grid-cols-3" />
         ) : workers.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              {selectedCityId
+          <EmptyState
+            icon={<MapPin className="h-16 w-16 text-muted-foreground" />}
+            title="Nenhum profissional encontrado"
+            description={
+              selectedCityId
                 ? "Nenhum profissional encontrado nesta cidade."
-                : "Selecione uma cidade para ver os profissionais."}
-            </p>
-          </div>
+                : "Selecione uma cidade para ver os profissionais."
+            }
+          />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {workers.map((worker, index) => (
