@@ -12,10 +12,15 @@ export const PWAInstallButton = () => {
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setShowButton(false);
-      return;
-    }
+    const mediaQuery = window.matchMedia('(display-mode: standalone)');
+    const updateDisplayMode = () => {
+      setShowButton(!mediaQuery.matches);
+      if (mediaQuery.matches) {
+        setDeferredPrompt(null);
+      }
+    };
+    updateDisplayMode();
+
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -28,10 +33,12 @@ export const PWAInstallButton = () => {
     };
     window.addEventListener('beforeinstallprompt', handler);
     window.addEventListener('appinstalled', handleInstalled);
+    mediaQuery.addEventListener('change', updateDisplayMode);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
       window.removeEventListener('appinstalled', handleInstalled);
+      mediaQuery.removeEventListener('change', updateDisplayMode);
     };
   }, []);
 
