@@ -9,12 +9,12 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     const [isFadingOut, setIsFadingOut] = useState(false);
 
     useEffect(() => {
-        // Após 1.5 segundos, iniciar fade-out
+        // After 1.5 seconds, start fade-out
         const fadeTimer = setTimeout(() => {
             setIsFadingOut(true);
         }, 1500);
 
-        // Após 1.8 segundos, chamar onComplete
+        // After 1.8 seconds, call onComplete
         const completeTimer = setTimeout(() => {
             setIsVisible(false);
             onComplete();
