@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Trophy, TrendingUp, Briefcase, Users, Eye, MessageCircle, Star, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { EmptyState } from '@/components/EmptyState';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface TopJob {
   id: string;
@@ -155,10 +157,21 @@ export default function Ranking() {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-grow flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Carregando rankings...</p>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="max-w-3xl mx-auto text-center space-y-4">
+            <Skeleton className="h-10 w-1/2 mx-auto" />
+            <Skeleton className="h-4 w-2/3 mx-auto" />
+            <div className="grid gap-4 sm:grid-cols-2 pt-6">
+              {[1, 2, 3, 4].map((i) => (
+                <Card key={i} className="rounded-2xl border border-border animate-pulse">
+                  <CardContent className="p-6 space-y-3">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                    <Skeleton className="h-3 w-full" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </main>
         <Footer />
@@ -171,7 +184,7 @@ export default function Ranking() {
       <Header />
 
       <main className="flex-grow container mx-auto px-4 py-8 pb-24">
-        <div className="text-center mb-8 animate-fade-in">
+        <div className="text-center mb-8 animate-fade-in max-w-4xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Trophy className="h-8 w-8 text-yellow-500" />
             <h1 className="text-3xl font-bold">Rankings em Tempo Real</h1>
@@ -187,7 +200,7 @@ export default function Ranking() {
         </div>
 
         <Tabs defaultValue="jobs" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
+          <TabsList className="grid w-full grid-cols-3 mb-6 rounded-2xl border border-border bg-card shadow-sm">
             <TabsTrigger value="jobs" className="flex items-center gap-2">
               <Briefcase className="h-4 w-4" />
               <span className="hidden sm:inline">Oportunidades</span>
@@ -205,17 +218,17 @@ export default function Ranking() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="jobs" className="space-y-4">
+          <TabsContent value="jobs" className="space-y-5">
             {topJobs.length === 0 ? (
-              <div className="text-center py-12">
-                <Briefcase className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Nenhuma oportunidade encontrada</p>
-              </div>
+              <EmptyState
+                icon={<Briefcase className="h-16 w-16 text-muted-foreground" />}
+                description="Nenhuma oportunidade encontrada"
+              />
             ) : (
-              topJobs.map((job, index) => (
-                <Card key={job.id} className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer animate-fade-in">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
+                topJobs.map((job, index) => (
+                  <Card key={job.id} className="hover:shadow-lg transition-all hover:scale-[1.01] cursor-pointer animate-fade-in rounded-2xl border border-border">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
                       <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold ${getMedalColor(index)}`}>
                         {index + 1}
                       </div>
@@ -256,23 +269,23 @@ export default function Ranking() {
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))
+                    </CardContent>
+                  </Card>
+                ))
             )}
           </TabsContent>
 
-          <TabsContent value="workers" className="space-y-4">
+          <TabsContent value="workers" className="space-y-5">
             {topWorkers.length === 0 ? (
-              <div className="text-center py-12">
-                <Users className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Nenhum prestador encontrado</p>
-              </div>
+              <EmptyState
+                icon={<Users className="h-16 w-16 text-muted-foreground" />}
+                description="Nenhum prestador encontrado"
+              />
             ) : (
               topWorkers.map((worker, index) => (
                 <Card
                   key={worker.id}
-                  className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer animate-fade-in"
+                  className="hover:shadow-lg transition-all hover:scale-[1.01] cursor-pointer animate-fade-in rounded-2xl border border-border"
                   onClick={() => navigate(`/worker/${worker.id}`)}
                 >
                   <CardContent className="p-6">
@@ -342,15 +355,15 @@ export default function Ranking() {
             )}
           </TabsContent>
 
-          <TabsContent value="contractors" className="space-y-4">
+          <TabsContent value="contractors" className="space-y-5">
             {topContractors.length === 0 ? (
-              <div className="text-center py-12">
-                <TrendingUp className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Nenhum contratante encontrado</p>
-              </div>
+              <EmptyState
+                icon={<TrendingUp className="h-16 w-16 text-muted-foreground" />}
+                description="Nenhum contratante encontrado"
+              />
             ) : (
               topContractors.map((contractor, index) => (
-                <Card key={contractor.id} className="hover:shadow-lg transition-all hover:scale-[1.02] animate-fade-in">
+                <Card key={contractor.id} className="hover:shadow-lg transition-all hover:scale-[1.01] animate-fade-in rounded-2xl border border-border">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold ${getMedalColor(index)}`}>

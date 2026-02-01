@@ -18,6 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { EmptyState } from "@/components/EmptyState";
+import { SkeletonGrid } from "@/components/SkeletonGrid";
 import { useToast } from "@/hooks/use-toast";
 import { Search, Briefcase, Grid, List, MapPin, Clock, DollarSign, AlertCircle, Loader2, Edit, Trash, Share2 } from "lucide-react";
 import { WhatsAppContactButton } from "@/components/WhatsAppContactButton";
@@ -396,7 +398,7 @@ const ProcurarBicos = () => {
           </div>
         )}
 
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 max-w-5xl">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Procurar Bicos</h1>
             <p className="text-muted-foreground">Encontre oportunidades de trabalho na sua região</p>
@@ -408,12 +410,12 @@ const ProcurarBicos = () => {
         </div>
 
         {/* Filtros */}
-        <Card className="mb-6 container-outline bg-card shadow-sm">
-          <CardContent className="pt-6 space-y-4">
+        <Card className="mb-6 bg-card shadow-sm border border-border rounded-2xl">
+          <CardContent className="pt-6 space-y-5">
             {/* Linha 1 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Digite o tipo de bico..."
                   value={searchQuery}
@@ -462,7 +464,7 @@ const ProcurarBicos = () => {
                 </SelectContent>
               </Select>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 rounded-2xl border border-border bg-[hsl(var(--xp-surface))] px-4 py-3 shadow-sm">
                 <Checkbox
                   id="urgent"
                   checked={filters.urgent}
@@ -471,7 +473,7 @@ const ProcurarBicos = () => {
                 <Label htmlFor="urgent" className="cursor-pointer">Apenas urgentes</Label>
               </div>
 
-              <div className="flex gap-2 md:col-span-3">
+                <div className="flex gap-2 md:col-span-3">
                 <Button onClick={handleSearch} className="flex-1">
                   <Search className="h-4 w-4 mr-2" />
                   Buscar
@@ -492,7 +494,7 @@ const ProcurarBicos = () => {
         </Card>
 
         {/* CTA sempre visível - Oferecer Serviços */}
-        <Card className="p-6 bg-gradient-to-br from-green-500 to-green-600 border-green-400/30 text-white">
+        <Card className="p-6 bg-gradient-to-br from-green-500 to-green-600 border-green-400/30 text-white rounded-2xl shadow-md">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <h3 className="font-semibold text-lg mb-2">Quer oferecer seus serviços?</h3>
@@ -509,26 +511,28 @@ const ProcurarBicos = () => {
 
         {/* Resultados */}
         {loading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
+          <SkeletonGrid count={6} columnsClassName="sm:grid-cols-2 xl:grid-cols-3" className="py-6" />
         ) : jobs.length === 0 ? (
-          <div className="text-center py-12">
-            <Briefcase className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Nenhum bico encontrado</h3>
-            <p className="text-muted-foreground mb-6">
-              Quer oferecer seus serviços e aparecer nas buscas? Cadastre-se como profissional!
-            </p>
-            <div className="flex gap-3 justify-center">
-              <Button onClick={handleClearFilters} variant="outline">Limpar Filtros</Button>
-              <Button onClick={() => navigate('/offer-services')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-border dark:text-foreground">Oferecer Serviços</Button>
-            </div>
-          </div>
+          <EmptyState
+            icon={<Briefcase className="h-16 w-16 text-muted-foreground" />}
+            title="Nenhum bico encontrado"
+            description="Quer oferecer seus serviços e aparecer nas buscas? Cadastre-se como profissional!"
+            actions={[
+              { label: "Limpar Filtros", onClick: handleClearFilters, variant: "outline" },
+              {
+                label: "Oferecer Serviços",
+                onClick: () => navigate('/offer-services'),
+                variant: "outline",
+                size: "lg",
+                className: "border-orange-600 text-orange-600 dark:border-border dark:text-foreground"
+              }
+            ]}
+          />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {jobs.map((job) => (
-              <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-xl border-2 border-border bg-card-light dark:bg-card w-full" onClick={() => handleViewJob(job)}>
-                <CardContent className="p-4">
+              <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-2xl border border-border bg-card w-full" onClick={() => handleViewJob(job)}>
+                <CardContent className="p-5">
                   <div className="space-y-3">
                     {/* Header */}
                     <div className="space-y-2">
@@ -550,7 +554,7 @@ const ProcurarBicos = () => {
                     <p className="text-sm text-muted-foreground line-clamp-2">{job.description}</p>
 
                     {/* Price and Time */}
-                    <div className="flex items-center justify-between pt-2 border-t">
+                    <div className="flex items-center justify-between pt-2 border-t border-border/60">
                       <div className="flex items-center gap-2">
                         <DollarSign className="h-4 w-4 text-primary" />
                         <span className="text-base font-bold">{formatCurrency(job.price)}</span>

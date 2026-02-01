@@ -35,13 +35,8 @@ export const BottomNav = () => {
   const isActive = (path: string) => location.pathname === path;
 
   // Cor dinâmica baseada no modo
-  const activeColor = mode === 'contractor'
-    ? 'text-blue-500'
-    : 'text-green-500';
-
-  const indicatorColor = mode === 'contractor'
-    ? 'bg-blue-500'
-    : 'bg-green-500';
+  const activeColor = 'text-primary';
+  const indicatorColor = 'bg-primary';
 
   // 5 itens: Voltar + 4 itens fixos para navegação principal
   const navItems = [
@@ -74,7 +69,10 @@ export const BottomNav = () => {
   ];
 
   return (
-    <nav style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 shadow-lg transition-transform duration-300 ${hidden ? 'translate-y-full' : 'translate-y-0'}`}>
+    <nav
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className={`md:hidden fixed bottom-0 left-0 right-0 bg-background/85 border-t border-border/70 z-50 shadow-[0_-12px_30px_-20px_hsl(var(--xp-primary-glow))] backdrop-blur-xl transition-transform duration-300 ${hidden ? 'translate-y-full' : 'translate-y-0'}`}
+    >
       {/* Indicador de modo */}
       <div className={`h-1 ${indicatorColor} transition-colors duration-300`} />
 
@@ -85,7 +83,7 @@ export const BottomNav = () => {
               <button
                 key="back"
                 onClick={() => safeGoBack(navigate)}
-                className="flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-lg text-muted-foreground dark:text-white/90 hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-2xl text-muted-foreground hover:text-foreground hover:bg-muted/60"
               >
                 <Icon className="h-6 w-6 stroke-2" />
                 <span className="text-xs font-medium">{label}</span>
@@ -97,13 +95,13 @@ export const BottomNav = () => {
             <Link
               key={path}
               to={path}
-              className={`flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-lg ${isActive(path)
-                ? `${activeColor} scale-105`
-                : "text-muted-foreground dark:text-white/90 hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
+              className={`flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-2xl ${isActive(path)
+                ? `${activeColor} scale-[1.04]`
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                 }`}
             >
               <Icon className={`h-6 w-6 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />
-              <span className={`text-xs font-medium ${isActive(path) ? 'font-semibold' : ''}`}>
+              <span className={`text-[11px] font-medium ${isActive(path) ? 'font-semibold' : ''}`}>
                 {label}
               </span>
             </Link>

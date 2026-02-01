@@ -19,6 +19,8 @@ import { useAccessControl } from '@/hooks/useAccessControl';
 import { useCities } from '@/hooks/useCities';
 import CitySelect from '@/components/CitySelect';
 import { Label } from '@/components/ui/label';
+import { EmptyState } from "@/components/EmptyState";
+import { SkeletonGrid } from "@/components/SkeletonGrid";
 
 interface Worker {
   id: string;
@@ -185,15 +187,15 @@ const Jobs = () => {
 
       <main className="flex-grow container mx-auto px-4 py-8 overflow-y-auto max-h-[calc(100vh-150px)]">
         <Breadcrumbs />
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Buscar Profissionais</h1>
+        <div className="mb-8 max-w-3xl">
+          <h1 className="text-4xl font-bold mb-3">Buscar Profissionais</h1>
           <p className="text-lg text-muted-foreground">
             Encontre trabalhadores qualificados na sua cidade
           </p>
         </div>
 
         {/* Filters */}
-        <div className="bg-card p-6 rounded-lg container-outline mb-8">
+        <div className="bg-card p-6 rounded-2xl border border-border shadow-sm mb-8">
           <div className="grid md:grid-cols-3 gap-4 mb-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Buscar</label>
@@ -202,12 +204,12 @@ const Jobs = () => {
                   placeholder="Nome, profissão, bairro..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pr-10"
+                  className="pr-12"
                 />
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute right-0 top-0 h-full"
+                  className="absolute right-2 top-1/2 h-9 w-9 -translate-y-1/2"
                   onClick={handleSearch}
                   disabled={isSearching}
                 >
@@ -291,46 +293,23 @@ const Jobs = () => {
 
         {/* Results */}
         {loading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="animate-pulse">
-                <CardHeader>
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-muted rounded-full" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-muted rounded w-3/4" />
-                      <div className="h-3 bg-muted rounded w-1/2" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="h-3 bg-muted rounded w-full" />
-                  <div className="h-3 bg-muted rounded w-5/6" />
-                  <div className="flex gap-2">
-                    <div className="h-6 bg-muted rounded w-16" />
-                    <div className="h-6 bg-muted rounded w-16" />
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <div className="h-10 bg-muted rounded w-full" />
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+          <SkeletonGrid count={6} columnsClassName="md:grid-cols-2 lg:grid-cols-3" />
         ) : workers.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              {selectedCityId
+          <EmptyState
+            icon={<MapPin className="h-16 w-16 text-muted-foreground" />}
+            title="Nenhum profissional encontrado"
+            description={
+              selectedCityId
                 ? "Nenhum profissional encontrado nesta cidade."
-                : "Selecione uma cidade para ver os profissionais."}
-            </p>
-          </div>
+                : "Selecione uma cidade para ver os profissionais."
+            }
+          />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {workers.map((worker, index) => (
               <Card
                 key={worker.id}
-                className="hover:shadow-lg transition-all cursor-pointer stagger-fade max-w-sm w-full mx-auto"
+                className="hover:shadow-lg transition-all cursor-pointer stagger-fade max-w-sm w-full mx-auto rounded-2xl border border-border"
                 style={{ ['--stagger-delay' as any]: `${index * 0.1}s` }}
               >
                 <CardHeader>

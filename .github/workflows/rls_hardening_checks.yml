@@ -6,6 +6,7 @@ on:
       - "docs/supabase/**"
       - "docs/pull_request_templates/**"
       - ".github/workflows/rls_hardening_checks.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -45,7 +46,10 @@ jobs:
 
   db-readonly-checks:
     needs: static-scan
-    if: needs.static-scan.outputs.static_fail == '0'
+    if: needs.static-scan.outputs.static_fail == '0' && env.STAGING_DB_URL != '' && env.STAGING_DB_HOST_ALLOWLIST != ''
+    env:
+      STAGING_DB_URL: ${{ secrets.STAGING_DB_URL }}
+      STAGING_DB_HOST_ALLOWLIST: ${{ secrets.STAGING_DB_HOST_ALLOWLIST }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

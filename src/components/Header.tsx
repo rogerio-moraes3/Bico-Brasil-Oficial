@@ -26,7 +26,7 @@ export const Header = () => {
   const { mode, setMode } = useUserMode();
   const [open, setOpen] = useState(false);
   // Show back button on internal routes (public paths excluded) or when there is a history stack
-  const publicPaths = ['/', '/landing', '/auth', '/install', '/download', '/pre-launch', '/prelaunch'];
+  const publicPaths = ['/', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch'];
   const hasHistory = typeof window !== 'undefined' && window.history && window.history.length > 1;
   const showBackButton = hasHistory || !publicPaths.some(p => location.pathname.startsWith(p));
 
@@ -70,7 +70,7 @@ export const Header = () => {
         Ir para conteúdo principal
       </a>
 
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background text-foreground" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/80 text-foreground backdrop-blur-xl shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="container flex h-16 items-center justify-between px-2 md:px-4">
           <div className="flex items-center gap-2">
             {showBackButton && (
@@ -79,14 +79,14 @@ export const Header = () => {
                 size="icon"
                 onClick={() => safeGoBack(navigate)}
                 aria-label="Voltar"
-                className="text-[var(--nav-link)] shadow-md font-bold shrink-0 h-10 w-10 flex items-center justify-center"
+                className="text-[var(--nav-link)] shadow-md font-bold shrink-0 h-11 w-11 rounded-full flex items-center justify-center bg-card/70 backdrop-blur"
               >
                 <ArrowLeft className="h-6 w-6" />
               </Button>
             )}
 
             <Link to={user ? "/app" : "/"} className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
-              <img src={logo} alt="Bico Brasil" className="h-10 w-10 md:h-12 md:w-12 shrink-0" />
+              <img src={logo} alt="Bico Brasil" className="h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-2xl shadow-sm" />
               <div className="flex flex-col justify-center">
                 <span className="text-base md:text-lg font-bold leading-tight whitespace-nowrap text-foreground">
                   Bico Brasil
@@ -99,24 +99,24 @@ export const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-4 z-40">
+          <nav className="hidden md:flex items-center gap-5 z-40">
             <Link
               to="/app"
-              className={`text-xs font-bold uppercase tracking-wider transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/' || location.pathname === '/app' ? 'text-primary' : 'text-[var(--nav-link)]'
+              className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/' || location.pathname === '/app' ? 'text-primary' : 'text-[var(--nav-link)]'
                 }`}
             >
               Início
             </Link>
             <Link
               to="/premium"
-              className={`text-xs font-bold uppercase tracking-wider transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/premium' ? 'text-primary' : 'text-[var(--nav-link)]'
+              className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/premium' ? 'text-primary' : 'text-[var(--nav-link)]'
                 }`}
             >
               Planos
             </Link>
             <Link
               to="/download"
-              className="text-sm font-medium transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-1 text-[var(--nav-link)]"
+              className="text-sm font-medium transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-2 text-[var(--nav-link)]"
             >
               <Download className="h-4 w-4" />
               <span className="hidden lg:inline">Baixar App</span>
@@ -125,8 +125,14 @@ export const Header = () => {
 
           {/* Right Section */}
           <div className="flex items-center gap-2 md:gap-3">
-            <ThemeToggle />
-            <PWAInstallButton />
+            <div className="hidden md:flex items-center gap-2 bg-card/70 border border-border/60 rounded-full px-2 py-1 shadow-sm backdrop-blur">
+              <ThemeToggle />
+              <PWAInstallButton />
+            </div>
+            <div className="md:hidden flex items-center gap-2">
+              <ThemeToggle />
+              <PWAInstallButton />
+            </div>
             {/* Badge de Publicações Grátis */}
             {user && (
               <FreePostsBadge />
@@ -136,7 +142,7 @@ export const Header = () => {
             {user && (
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
+                  <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-full bg-card/70 backdrop-blur shadow-sm">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <Badge
@@ -158,7 +164,7 @@ export const Header = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex">
+                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex rounded-full bg-card/70 backdrop-blur shadow-sm">
                     <Avatar className="h-6 w-6">
                       <AvatarImage
                         src={
@@ -189,14 +195,14 @@ export const Header = () => {
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
                   size="sm"
-                  className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-card hover:bg-muted border border-border text-foreground"
+                  className="hidden md:flex text-xs font-semibold uppercase tracking-[0.2em] bg-card/80 hover:bg-muted border border-border text-foreground"
                 >
                   Cadastre-se
                 </Button>
                 <Button
                   onClick={() => navigate('/auth')}
                   size="sm"
-                  className="hidden md:flex text-xs font-bold uppercase tracking-wider bg-card hover:bg-muted border border-border text-foreground"
+                  className="hidden md:flex text-xs font-semibold uppercase tracking-[0.2em] bg-card/80 hover:bg-muted border border-border text-foreground"
                 >
                   Entrar
                 </Button>
@@ -206,8 +212,8 @@ export const Header = () => {
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-10 w-10 flex items-center justify-center">
-                  <Menu className="h-5 w-5 text-foreground" />
+                <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-11 w-11 flex items-center justify-center rounded-full bg-card/70 backdrop-blur shadow-sm">
+                  <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">

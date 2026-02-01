@@ -5,11 +5,11 @@
 /* Bico Brasil - Padrão Visual Global */
 :root {
   /* Cores Principais */
-  --bb-primary-blue: #1E6FFF;
+  --bb-primary-blue: #0F5BD6;
   --bb-white: #FFFFFF;
-  --bb-text-dark: #333333;
-  --bb-border-gray: #E0E0E0;
-  --bb-border-gray-alt: #DADADA;
+  --bb-text-dark: #0F172A;
+  --bb-border-gray: #D5DEE8;
+  --bb-border-gray-alt: #C9D4E3;
 
   /* Botões */
   --bb-button-bg: var(--bb-primary-blue);
@@ -27,19 +27,19 @@
   --bb-toggle-inactive: #D1D5DB;
 
   /* Modern switch tokens (H, S, L components for hsl var usage) */
-  --switch-on: 218 100% 56%;
+  --switch-on: var(--xp-primary);
   /* matches internal primary */
-  --switch-off: 0 0% 86%;
+  --switch-off: var(--xp-border);
   --switch-thumb: 0 0% 100%;
 
   /* Theme navigation color tokens */
-  --nav-link: #1E2A5A;
+  --nav-link: #0F1F3A;
   /* Navy for light mode */
-  --nav-link-hover: #162042;
+  --nav-link-hover: #0A162B;
   /* Slightly darker hover */
 
   /* Container border color (moved to :root so outlines are available app-wide) */
-  --container-border: #1E2A5A;
+  --container-border: hsl(var(--xp-border));
 }
 
 
@@ -108,113 +108,92 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Modo Claro - Cores Pastel Suaves */
-    --background: 220 20% 97%;
-    /* #F6F7F9 - pastel suave */
-    --foreground: 0 0% 9%;
-    /* #161616 - texto escuro */
+    /* XP Premium Tokens (Light) */
+    --xp-primary: 212 88% 45%;
+    --xp-primary-hover: 212 88% 40%;
+    --xp-primary-pressed: 212 88% 34%;
+    --xp-primary-foreground: 0 0% 100%;
+    --xp-primary-glow: 212 88% 45% / 0.28;
 
-    --card: 0 0% 100%;
-    /* #FFFFFF - cards brancos */
-    --card-foreground: 0 0% 16%;
-    /* #2A2A2A - texto dos cards */
+    --xp-background: 216 33% 97%;
+    --xp-surface: 0 0% 100%;
+    --xp-surface-muted: 220 23% 94%;
+    --xp-border: 220 16% 86%;
+    --xp-ring: 212 88% 45%;
+    --xp-foreground: 222 35% 12%;
+    --xp-foreground-muted: 222 15% 38%;
 
-    --popover: 0 0% 100%;
-    /* #FFFFFF */
-    --popover-foreground: 0 0% 16%;
-    /* #2A2A2A */
-
-    --primary: 29 100% 50%;
-    /* #FF7A00 - laranja */
-    --primary-foreground: 0 0% 100%;
-    /* branco */
-
-    --secondary: 209 72% 53%;
-    /* #2E86DE - azul secundário */
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 220 14% 96%;
-    /* cinza claro pastel */
-    --muted-foreground: 0 0% 45%;
-    /* texto secundário */
-
-    --accent: 29 100% 50%;
-    /* #FF7A00 - laranja */
-    --accent-foreground: 0 0% 100%;
-
+    /* shadcn tokens mapped to XP */
+    --background: var(--xp-background);
+    --foreground: var(--xp-foreground);
+    --card: var(--xp-surface);
+    --card-foreground: var(--xp-foreground);
+    --popover: var(--xp-surface);
+    --popover-foreground: var(--xp-foreground);
+    --primary: var(--xp-primary);
+    --primary-foreground: var(--xp-primary-foreground);
+    --secondary: var(--xp-surface-muted);
+    --secondary-foreground: var(--xp-foreground);
+    --muted: var(--xp-surface-muted);
+    --muted-foreground: var(--xp-foreground-muted);
+    --accent: var(--xp-primary);
+    --accent-foreground: var(--xp-primary-foreground);
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
-
-    --border: 220 15% 80%;
-    /* #C4C9D4 - borda visível */
-    --input: 0 0% 95%;
-    /* #F2F2F2 - inputs */
-    --ring: 29 100% 50%;
+    --border: var(--xp-border);
+    --input: var(--xp-surface);
+    --ring: var(--xp-ring);
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(29 100% 50%), hsl(35 100% 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(209 72% 53%), hsl(215 70% 60%));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--xp-primary)), hsl(var(--xp-primary-hover)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--xp-primary)), hsl(var(--xp-primary-pressed)));
 
-    --shadow-glow: 0 10px 40px -10px hsl(29 100% 50% / 0.3);
+    --shadow-glow: 0 16px 40px -16px hsl(var(--xp-primary-glow));
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --sidebar-background: 220 20% 97%;
-    --sidebar-foreground: 0 0% 16%;
-    --sidebar-primary: 0 0% 9%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 0 0% 9%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 29 100% 50%;
+    --sidebar-background: var(--xp-background);
+    --sidebar-foreground: var(--xp-foreground);
+    --sidebar-primary: var(--xp-primary);
+    --sidebar-primary-foreground: var(--xp-primary-foreground);
+    --sidebar-accent: var(--xp-surface-muted);
+    --sidebar-accent-foreground: var(--xp-foreground);
+    --sidebar-border: var(--xp-border);
+    --sidebar-ring: var(--xp-ring);
   }
 
   .dark {
-    /* Modo Escuro - Azul Terracota Escuro #001F3F */
-    --background: 209 100% 12%;
-    /* #001F3F - azul terracota escuro */
-    --foreground: 0 0% 100%;
-    /* #FFFFFF - texto branco */
+    /* XP Premium Tokens (Dark) */
+    --xp-primary: 212 92% 58%;
+    --xp-primary-hover: 212 92% 64%;
+    --xp-primary-pressed: 212 92% 52%;
+    --xp-primary-foreground: 222 47% 11%;
+    --xp-primary-glow: 212 92% 58% / 0.35;
 
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --xp-background: 222 45% 10%;
+    --xp-surface: 222 38% 14%;
+    --xp-surface-muted: 222 30% 18%;
+    --xp-border: 222 20% 26%;
+    --xp-ring: 212 92% 58%;
+    --xp-foreground: 210 40% 96%;
+    --xp-foreground-muted: 215 20% 70%;
+
+    --nav-link: hsl(var(--xp-foreground));
+    --nav-link-hover: hsl(0 0% 100%);
+
+    --sidebar-background: var(--xp-background);
+    --sidebar-foreground: var(--xp-foreground);
+    --sidebar-primary: var(--xp-primary);
+    --sidebar-primary-foreground: var(--xp-primary-foreground);
+    --sidebar-accent: var(--xp-surface-muted);
+    --sidebar-accent-foreground: var(--xp-foreground);
+    --sidebar-border: var(--xp-border);
+    --sidebar-ring: var(--xp-ring);
 
     /* Switch tokens for dark mode */
-    --switch-on: 217.2 91.2% 59.8%;
-    --switch-off: 217.2 32.6% 17.5%;
+    --switch-on: var(--xp-primary);
+    --switch-off: var(--xp-border);
     --switch-thumb: 210 40% 98%;
-
-    /* Navigation link colors for dark mode */
-    --nav-link: hsl(210 40% 98%);
-    /* Light text for dark mode */
-    --nav-link-hover: hsl(0 0% 100%);
-    /* Pure white on hover */
-
-    --sidebar-background: 209 100% 12%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 29 100% 50%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 209 100% 18%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 209 80% 22%;
-    --sidebar-ring: 29 100% 50%;
   }
 
   /* Internal app theme (applied only inside authenticated/protected screens).

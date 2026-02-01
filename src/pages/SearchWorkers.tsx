@@ -21,6 +21,8 @@ import { expandSearchTerms } from '@/lib/searchSynonyms';
 import { GeolocationSearch } from '@/components/GeolocationSearch';
 import { WhatsAppContactButton } from '@/components/WhatsAppContactButton';
 import { useCities } from '@/hooks/useCities';
+import { EmptyState } from '@/components/EmptyState';
+import { SkeletonGrid } from '@/components/SkeletonGrid';
 
 export default function SearchWorkers() {
   const { toast } = useToast();
@@ -532,25 +534,35 @@ export default function SearchWorkers() {
           </div>
         </Card>
 
-        {searched && (
+        {loading && (
+          <SkeletonGrid count={6} columnsClassName="md:grid-cols-2 lg:grid-cols-3" className="py-6" />
+        )}
+
+        {searched && !loading && (
           <div className="space-y-6 mt-8">
             {error && (
-              <Card className="p-8 text-center">
-                <p className="text-muted-foreground">{error}</p>
-              </Card>
+              <EmptyState
+                icon={<Briefcase className="h-16 w-16 text-muted-foreground" />}
+                title="Nenhum profissional encontrado"
+                description={error}
+              />
             )}
 
             {!error && workers.length === 0 && (
-              <Card className="p-8 text-center">
-                <Briefcase className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Nenhum profissional encontrado</h3>
-                <p className="text-muted-foreground mb-6">
-                  Não encontrou o profissional que precisa? Publique uma vaga e deixe que eles venham até você!
-                </p>
-                <Button onClick={() => navigate('/post-job')} variant="outline" size="lg" className="border-orange-600 text-orange-600 dark:border-border dark:text-foreground">
-                  Publicar Vaga
-                </Button>
-              </Card>
+              <EmptyState
+                icon={<Briefcase className="h-16 w-16 text-muted-foreground" />}
+                title="Nenhum profissional encontrado"
+                description="Não encontrou o profissional que precisa? Publique uma vaga e deixe que eles venham até você!"
+                actions={[
+                  {
+                    label: "Publicar Vaga",
+                    onClick: () => navigate('/post-job'),
+                    variant: "outline",
+                    size: "lg",
+                    className: "border-orange-600 text-orange-600 dark:border-border dark:text-foreground"
+                  }
+                ]}
+              />
             )}
 
             {workers.length > 0 && (

@@ -37,6 +37,9 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--xp-primary-hover))",
+          pressed: "hsl(var(--xp-primary-pressed))",
+          glow: "hsl(var(--xp-primary-glow))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -61,6 +64,20 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        xp: {
+          primary: "hsl(var(--xp-primary))",
+          "primary-hover": "hsl(var(--xp-primary-hover))",
+          "primary-pressed": "hsl(var(--xp-primary-pressed))",
+          "primary-foreground": "hsl(var(--xp-primary-foreground))",
+          "primary-glow": "hsl(var(--xp-primary-glow))",
+          background: "hsl(var(--xp-background))",
+          surface: "hsl(var(--xp-surface))",
+          "surface-muted": "hsl(var(--xp-surface-muted))",
+          border: "hsl(var(--xp-border))",
+          ring: "hsl(var(--xp-ring))",
+          foreground: "hsl(var(--xp-foreground))",
+          "foreground-muted": "hsl(var(--xp-foreground-muted))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

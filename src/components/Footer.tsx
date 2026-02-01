@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
@@ -10,6 +10,13 @@ export const Footer = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
+  const buildId = useMemo(() => import.meta.env.VITE_APP_BUILD_ID || 'local', []);
+
+  useEffect(() => {
+    if (buildId) {
+      console.info(`Bico Brasil build: ${buildId}`);
+    }
+  }, [buildId]);
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -191,6 +198,9 @@ export const Footer = () => {
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-card-foreground/60">
           <p>© {new Date().getFullYear()} Bico Brasil. Todos os direitos reservados.</p>
           <p className="mt-2">Contato para LGPD: privacidade@bicobrasil.com.br</p>
+          <p className="mt-2 text-[10px] uppercase tracking-wider text-card-foreground/40">
+            Build {buildId}
+          </p>
 
           {/* Link discreto para Admin - SEMPRE VISÍVEL */}
           <Link
