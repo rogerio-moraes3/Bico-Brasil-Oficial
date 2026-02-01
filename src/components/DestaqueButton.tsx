@@ -116,7 +116,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
       }
 
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const url = `${supabaseUrl}/functions/v1/create-pix-payment`;
+      const url = `${supabaseUrl}/functions/v1/create-destaque-payment`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -125,9 +125,6 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
           Authorization: `Bearer ${session.access_token}`
         },
         body: JSON.stringify({
-          paymentMethod: 'pix',
-          planType: 'basico', // Using 'basico' as base type for custom pricing
-          amount: totalPrice,
           days,
           payer: {
             name: payerName.trim(),
