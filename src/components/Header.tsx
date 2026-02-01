@@ -1,10 +1,9 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Menu, ArrowLeft, User as UserIcon, Download, Bell } from "lucide-react";
+import { Menu, ArrowLeft, User as UserIcon, Download, Bell, ChevronRight, Home, CreditCard, LogOut } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { ThemeToggle } from "./ThemeToggle";
 import { CitySelector } from "./CitySelector";
-import { PWAInstallButton } from "./PWAInstallButton";
 import { FreePostsBadge } from "./FreePostsBadge";
 import { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "./ui/sheet";
@@ -17,6 +16,12 @@ import { Badge } from "./ui/badge";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { useUserMode } from "@/contexts/UserModeContext";
 import { ModeToggle } from "./ModeToggle";
+import { Separator } from "./ui/separator";
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+};
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -25,14 +30,69 @@ export const Header = () => {
   const { unreadCount } = useNotifications();
   const { mode, setMode } = useUserMode();
   const [open, setOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
+  
   // Show back button on internal routes (public paths excluded) or when there is a history stack
   const publicPaths = ['/', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch'];
   const hasHistory = typeof window !== 'undefined' && window.history && window.history.length > 1;
   const showBackButton = hasHistory || !publicPaths.some(p => location.pathname.startsWith(p));
+  
+  // PWA Install Detection
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(display-mode: standalone)');
+    const updateDisplayMode = () => {
+      setShowInstallButton(!mediaQuery.matches);
+      if (mediaQuery.matches) {
+        setDeferredPrompt(null);
+      }
+    };
+    updateDisplayMode();
+
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    };
+
+    const handleInstalled = () => {
+      setShowInstallButton(false);
+      setDeferredPrompt(null);
+    };
+    
+    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', handleInstalled);
+    mediaQuery.addEventListener('change', updateDisplayMode);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('appinstalled', handleInstalled);
+      mediaQuery.removeEventListener('change', updateDisplayMode);
+    };
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) {
+      // Fallback: navigate to install page
+      navigate('/install-app');
+      setOpen(false);
+      return;
+    }
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      setShowInstallButton(false);
+    }
+    
+    setDeferredPrompt(null);
+    setOpen(false);
+  };
 
   const navItems = [
-    { path: "/", label: "Início" },
-    { path: "/premium", label: "Planos" },
+    { path: "/", label: "Início", icon: Home },
+    { path: "/premium", label: "Planos", icon: CreditCard },
   ];
 
   const handleNavClick = (path: string) => {
@@ -127,11 +187,9 @@ export const Header = () => {
           <div className="flex items-center gap-2 md:gap-3">
             <div className="hidden md:flex items-center gap-2 bg-card/70 border border-border/60 rounded-full px-2 py-1 shadow-sm backdrop-blur">
               <ThemeToggle />
-              <PWAInstallButton />
             </div>
             <div className="md:hidden flex items-center gap-2">
               <ThemeToggle />
-              <PWAInstallButton />
             </div>
             {/* Badge de Publicações Grátis */}
             {user && (
@@ -181,9 +239,6 @@ export const Header = () => {
                     <UserIcon className="h-4 w-4 mr-2" />
                     Meu Perfil
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/post-job')}>
-                    Publicar Trabalho
-                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()}>
                     Sair
@@ -216,56 +271,126 @@ export const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right">
-                <SheetHeader>
-                  <SheetTitle>Menu</SheetTitle>
-                </SheetHeader>
-                <nav className="flex flex-col gap-4 mt-6">
-                  <div className="absolute top-0 right-0 bg-slate-800 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-bl-lg shadow-lg">
-                    POPULAR
-                  </div>{user && (
-                    <div className="flex items-center gap-3 p-3 border rounded-lg mb-2">
-                      <Avatar className="h-10 w-10">
+              <SheetContent side="right" className="w-[320px] p-0">
+                <div className="flex flex-col h-full">
+                  {/* Header do Menu */}
+                  {user && (
+                    <div className="flex items-center gap-3 p-4 border-b border-border">
+                      <Avatar className="h-12 w-12">
                         <AvatarImage src={user.user_metadata?.avatar_url} />
-                        <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                          {getUserInitials()}
+                        </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm">{getUserDisplayName()}</p>
-                        <p className="text-xs text-muted-foreground break-words whitespace-normal">{user.email}</p>
+                        <p className="font-semibold text-sm text-foreground truncate">
+                          {getUserDisplayName()}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {user.email}
+                        </p>
                       </div>
                     </div>
                   )}
-                  {navItems.map((item) => (
-                    <Button
-                      key={item.path}
-                      variant="ghost"
-                      className="justify-start"
-                      onClick={() => handleNavClick(item.path)}
-                    >
-                      {item.label}
-                    </Button>
-                  ))}
-                  {user ? (
-                    <Button
-                      variant="outline"
-                      className="justify-start"
-                      onClick={() => {
-                        signOut();
-                        setOpen(false);
-                      }}
-                    >
-                      Sair
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="default"
-                      className="justify-start"
-                      onClick={() => handleNavClick('/auth?mode=login')}
-                    >
-                      Entrar / Cadastrar
-                    </Button>
-                  )}
-                </nav>
+                  
+                  {/* Menu Items - ListGroup Style */}
+                  <nav className="flex-1 overflow-y-auto py-2">
+                    {user ? (
+                      <div className="space-y-1 px-2">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start gap-3 h-12 px-3"
+                          onClick={() => handleNavClick('/profile')}
+                        >
+                          <UserIcon className="h-5 w-5 text-muted-foreground" />
+                          <span className="flex-1 text-left">Meu Perfil</span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                        
+                        {navItems.map((item) => (
+                          <Button
+                            key={item.path}
+                            variant="ghost"
+                            className="w-full justify-start gap-3 h-12 px-3"
+                            onClick={() => handleNavClick(item.path)}
+                          >
+                            <item.icon className="h-5 w-5 text-muted-foreground" />
+                            <span className="flex-1 text-left">{item.label}</span>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                        ))}
+                        
+                        <Separator className="my-2" />
+                        
+                        {showInstallButton && (
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-start gap-3 h-12 px-3"
+                            onClick={handleInstallApp}
+                          >
+                            <Download className="h-5 w-5 text-muted-foreground" />
+                            <span className="flex-1 text-left">Instalar App</span>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                        )}
+                        
+                        <Separator className="my-2" />
+                        
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start gap-3 h-12 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => {
+                            signOut();
+                            setOpen(false);
+                          }}
+                        >
+                          <LogOut className="h-5 w-5" />
+                          <span className="flex-1 text-left">Sair</span>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-1 px-2">
+                        {navItems.map((item) => (
+                          <Button
+                            key={item.path}
+                            variant="ghost"
+                            className="w-full justify-start gap-3 h-12 px-3"
+                            onClick={() => handleNavClick(item.path)}
+                          >
+                            <item.icon className="h-5 w-5 text-muted-foreground" />
+                            <span className="flex-1 text-left">{item.label}</span>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                        ))}
+                        
+                        {showInstallButton && (
+                          <>
+                            <Separator className="my-2" />
+                            <Button
+                              variant="ghost"
+                              className="w-full justify-start gap-3 h-12 px-3"
+                              onClick={handleInstallApp}
+                            >
+                              <Download className="h-5 w-5 text-muted-foreground" />
+                              <span className="flex-1 text-left">Instalar App</span>
+                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                            </Button>
+                          </>
+                        )}
+                        
+                        <Separator className="my-2" />
+                        
+                        <Button
+                          variant="default"
+                          className="w-full justify-center h-12 mx-2"
+                          onClick={() => handleNavClick('/auth?mode=login')}
+                        >
+                          Entrar / Cadastrar
+                        </Button>
+                      </div>
+                    )}
+                  </nav>
+                </div>
               </SheetContent>
             </Sheet>
           </div>
