@@ -687,6 +687,10 @@ All colors MUST be HSL.
     animation: slideUp 0.5s ease-out;
   }
 
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+
   .animate-scale-in {
     animation: scaleIn 0.4s ease-out;
   }
@@ -710,6 +714,18 @@ All colors MUST be HSL.
   @keyframes slideUp {
     from {
       transform: translateY(20px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
       opacity: 0;
     }
 

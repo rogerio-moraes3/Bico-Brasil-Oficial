@@ -55,9 +55,9 @@ export const Footer = () => {
   return (
     <footer className="bg-card text-card-foreground mt-12 border-t border-border">
       <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 divide-y md:divide-y-0 md:divide-x divide-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {/* Coluna 1: Ajuda */}
-          <div className="pb-3 md:pb-0 md:pr-6">
+          <div className="pb-3 md:pb-0">
             <h3 className="font-semibold text-card-foreground mb-3 text-sm md:text-base">Ajuda</h3>
             <ul className="space-y-2 text-sm text-card-foreground/80">
               <li>
@@ -72,16 +72,24 @@ export const Footer = () => {
               </li>
               <li>
                 <Link to="/faq" onClick={scrollToTop} className="hover:text-foreground transition-colors">
-                  Tire sua dúvida
+                  Tire suas dúvidas
                 </Link>
+              </li>
+              <li className="pt-2">
+                <a 
+                  href="mailto:contato.bicobrasil@gmail.com"
+                  className="text-sm text-primary hover:underline"
+                >
+                  contato.bicobrasil@gmail.com
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Coluna 2: Redes Sociais */}
-          <div className="pt-3 pb-3 md:pt-0 md:pb-0 md:px-6">
+          {/* Coluna 2: Redes Sociais (2 colunas no mobile) */}
+          <div className="pt-3 pb-3 md:pt-0 md:pb-0">
             <h3 className="font-semibold text-card-foreground mb-3 text-sm md:text-base">Redes Sociais</h3>
-            <ul className="space-y-2 text-sm text-card-foreground/80">
+            <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-2 text-sm text-card-foreground/80">
               <li>
                 <a href="https://www.instagram.com/bicobrasil_" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
                   Instagram
@@ -110,23 +118,9 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Coluna 3: Atendimento */}
-          <div className="pt-3 pb-3 md:pt-0 md:pb-0 md:px-6">
-            <h3 className="font-semibold text-card-foreground mb-3 text-sm md:text-base">Atendimento</h3>
-            <p className="text-sm text-card-foreground/80 mb-2">Segunda a sexta, 9h às 18h</p>
-            <p className="text-sm text-card-foreground/80 mb-3">Ainda está com dúvidas?</p>
-            <Link
-              to="/faq"
-              onClick={scrollToTop}
-              className="inline-block px-6 py-2 border-2 border-card-foreground/50 text-card-foreground rounded-full hover:bg-card-foreground/10 transition-colors text-sm font-medium"
-            >
-              TIRE SUAS DÚVIDAS AQUI!
-            </Link>
-          </div>
-
-          {/* Coluna 4: Legal */}
-          <div className="pt-4 md:pt-0 md:pl-6">
-            <h3 className="font-semibold text-card-foreground mb-4">Legal</h3>
+          {/* Coluna 3: Legal */}
+          <div className="pt-4 md:pt-0">
+            <h3 className="font-semibold text-card-foreground mb-4 text-sm md:text-base">Legal</h3>
             <ul className="space-y-2 text-sm text-card-foreground/80">
               <li>
                 <Link to="/terms" onClick={scrollToTop} className="hover:text-foreground transition-colors">
@@ -198,9 +192,6 @@ export const Footer = () => {
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-card-foreground/60">
           <p>© {new Date().getFullYear()} Bico Brasil. Todos os direitos reservados.</p>
           <p className="mt-2">Contato para LGPD: privacidade@bicobrasil.com.br</p>
-          <p className="mt-2 text-[10px] uppercase tracking-wider text-card-foreground/40">
-            Build {buildId}
-          </p>
 
           {/* Link discreto para Admin - SEMPRE VISÍVEL */}
           <Link
