@@ -72,11 +72,9 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { days, paymentMethod, payer } = await req.json();
+    const { days, payer } = await req.json();
 
-    if (paymentMethod !== 'pix') {
-      throw new Error('Apenas pagamentos via PIX são aceitos');
-    }
+    // PIX é o único método de pagamento aceito (hardcoded no payment_method_id abaixo)
 
     if (!payer?.cpf) {
       throw new Error('CPF é obrigatório');
