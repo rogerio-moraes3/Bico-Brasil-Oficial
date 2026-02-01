@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export const CTASection = () => {
   return (
     <section
-      className="py-14 bg-gradient-to-r from-[#0838C7] to-[#0D9E52] relative z-10"
+      className="py-14 bg-gradient-to-r from-primary to-primary/80 relative z-10"
       aria-labelledby="cta-title"
     >
       <div className="container mx-auto px-4">
@@ -27,7 +27,7 @@ export const CTASection = () => {
               asChild
               size="lg"
               variant="outline"
-              className="border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold"
+              className="border-white bg-white/10 text-white hover:bg-white/20 font-semibold backdrop-blur-sm"
             >
               <Link to="/search-workers" className="flex items-center gap-2">
                 Encontrar Profissionais
@@ -39,7 +39,7 @@ export const CTASection = () => {
               asChild
               size="lg"
               variant="outline"
-              className="border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold"
+              className="border-white bg-white/10 text-white hover:bg-white/20 font-semibold backdrop-blur-sm"
             >
               <Link to="/offer-services">
                 Oferecer Serviços

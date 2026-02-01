@@ -126,7 +126,7 @@ export function FavoritesTab() {
                   <div className="flex gap-2 mt-2 flex-wrap">
                     {worker.rating_avg > 0 && (
                       <Badge variant="outline" className="gap-1">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <Star className="h-3 w-3 fill-primary text-primary" />
                         {worker.rating_avg && typeof worker.rating_avg === 'number' && !isNaN(worker.rating_avg) ? worker.rating_avg.toFixed(1) : '0.0'} ({worker.rating_count || 0})
                       </Badge>
                     )}

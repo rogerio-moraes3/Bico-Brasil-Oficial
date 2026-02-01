@@ -33,7 +33,7 @@ export function FreePostsBadge() {
   }
 
   return (
-    <Badge variant="default" className="hidden md:flex items-center gap-1 bg-gradient-to-r from-primary to-orange-500">
+    <Badge variant="default" className="hidden md:flex items-center gap-1 bg-primary">
       <Gift className="h-3 w-3" />
       <span className="text-xs font-bold">{freePostsRemaining} grátis</span>
     </Badge>

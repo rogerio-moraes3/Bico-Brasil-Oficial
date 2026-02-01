@@ -92,29 +92,29 @@ export const ModeStats = () => {
     // Modo Trabalhador
     return (
         <div className="grid grid-cols-2 gap-4 px-4 py-6">
-            <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-200 dark:border-green-800">
+            <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-green-900 dark:text-green-100 flex items-center gap-2">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
                         <DollarSign className="h-4 w-4" />
                         Bicos Feitos
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                    <p className="text-3xl font-bold text-primary">
                         {stats.completedJobs}
                     </p>
                 </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-200 dark:border-green-800">
+            <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-green-900 dark:text-green-100 flex items-center gap-2">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
                         <FileText className="h-4 w-4" />
                         Propostas
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                    <p className="text-3xl font-bold text-primary">
                         {stats.proposals}
                     </p>
                 </CardContent>

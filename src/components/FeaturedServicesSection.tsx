@@ -97,7 +97,7 @@ export const FeaturedServicesSection = () => {
 
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center gap-1" aria-label={`Avaliação: ${worker.rating_avg?.toFixed(1) || '0'} de 5 estrelas`}>
-                      <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" aria-hidden="true" />
+                      <Star className="h-4 w-4 text-primary fill-primary" aria-hidden="true" />
                       <span className="text-sm font-medium text-foreground">
                         {worker.rating_avg?.toFixed(1) || '0.0'}
                       </span>

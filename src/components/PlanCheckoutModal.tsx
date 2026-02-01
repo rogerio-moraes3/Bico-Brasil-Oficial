@@ -240,9 +240,9 @@ export function PlanCheckoutModal({
                 variant={mpValidation.badge === 'error' ? 'destructive' : 'default'}
                 className={
                   mpValidation.badge === 'success'
-                    ? 'bg-green-50 dark:bg-green-950/20 border-green-500'
+                    ? 'bg-primary/10 border-primary'
                     : mpValidation.badge === 'warning'
-                      ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-500'
+                      ? 'bg-secondary border-secondary-foreground/20'
                       : ''
                 }
               >
@@ -258,9 +258,9 @@ export function PlanCheckoutModal({
                     )}
                     <AlertDescription className={
                       mpValidation.badge === 'success'
-                        ? 'text-green-800 dark:text-green-200'
+                        ? 'text-primary'
                         : mpValidation.badge === 'warning'
-                          ? 'text-yellow-800 dark:text-yellow-200'
+                          ? 'text-muted-foreground'
                           : ''
                     }>
                       {planType === 'basico'
