@@ -26,26 +26,26 @@ export default function OfferServices() {
 
   const [formData, setFormData] = useState({
     service_title: '',
-    category: '',
-    subcategory: '',
+    profession_raw: '',
     description: '',
     price: '',
-    location: '',
     city_id: '',
     neighborhood: '',
     address: '',
     phone: '',
     availability: 'todos_os_dias',
     available_today: false,
-    customCategory: '',
-    isCustomCategory: false
+    occupation_id: null as number | null,
+    confidence_score: null as number | null,
+    occupation_category: ''
   });
 
   const { cities, loading: citiesLoading } = useCities();
   const [categories, setCategories] = useState<any[]>([]);
-  const [subcategories, setSubcategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOnline, setIsOnline] = useState<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -77,7 +77,13 @@ export default function OfferServices() {
       supabase.from('users').select('phone, city_id, neighborhood').eq('auth_id', user!.id).single()
     ]);
 
-    setCategories(categoriesRes.data || []);
+    const cats = categoriesRes.data || [];
+    setCategories(cats);
+
+    // Cache categories in localStorage
+    if (cats.length > 0) {
+      localStorage.setItem('offer_services_categories_cache', JSON.stringify(cats));
+    }
 
     if (profileRes.data) {
       setFormData(prev => ({
@@ -108,31 +114,113 @@ export default function OfferServices() {
     };
   }, []);
 
-  const handleCategoryChange = async (categoryId: string) => {
-    if (categoryId === 'outros') {
-      setFormData({
-        ...formData,
-        category: categoryId,
-        subcategory: '',
-        isCustomCategory: true
-      });
-      setSubcategories([]);
-    } else {
-      setFormData({
-        ...formData,
-        category: categoryId,
-        subcategory: '',
-        isCustomCategory: false,
-        customCategory: ''
-      });
+  // Autocomplete for profession
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!formData.profession_raw.trim() || formData.profession_raw.length < 2) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
 
-      const { data } = await supabase
-        .from('subcategories')
-        .select('*')
-        .eq('category_id', categoryId);
+      try {
+        const { data, error } = await supabase.rpc('search_ocupacoes', {
+          q: formData.profession_raw,
+          lim: 8,
+          min_sim: 0.3
+        });
 
-      setSubcategories(data || []);
+        if (!error && data) {
+          setSuggestions(data);
+          setShowSuggestions(data.length > 0);
+        }
+      } catch (err) {
+        // Silently fail if RPC doesn't exist
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    };
+
+    const timer = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timer);
+  }, [formData.profession_raw]);
+
+  const handleSuggestionClick = (suggestion: any) => {
+    setFormData({
+      ...formData,
+      profession_raw: suggestion.nome_oficial,
+      occupation_id: suggestion.ocupacao_id,
+      confidence_score: suggestion.similarity_score,
+      occupation_category: suggestion.categoria_principal || ''
+    });
+    setShowSuggestions(false);
+  };
+
+  const normalizeCategoryName = (name: string): string => {
+    return name.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  };
+
+  const CATEGORY_NAME_TO_SLUG: { [key: string]: string } = {
+    'construcao e reforma': 'construcao-reforma',
+    'construção e reforma': 'construcao-reforma',
+    'limpeza': 'limpeza',
+    'montagem e reparos': 'montagem-reparos',
+    'montagem & reparos': 'montagem-reparos',
+    'jardinagem e externos': 'jardinagem-externos',
+    'jardinagem & externos': 'jardinagem-externos',
+    'transporte e ajuda': 'transporte-ajuda',
+    'transporte & ajuda': 'transporte-ajuda'
+  };
+
+  const fallbackCategoryId = (): string | null => {
+    // Try from state
+    let cat = categories.find(c => c.slug === 'outros' || c.slug === 'outros-servicos');
+    if (cat) return cat.id;
+
+    // Try from cache
+    try {
+      const cached = localStorage.getItem('offer_services_categories_cache');
+      if (cached) {
+        const cachedCats = JSON.parse(cached);
+        cat = cachedCats.find((c: any) => c.slug === 'outros' || c.slug === 'outros-servicos');
+        if (cat) return cat.id;
+      }
+    } catch { }
+
+    return null;
+  };
+
+  const inferCategoryId = (): string | null => {
+    // Only infer if confidence >= 0.3 and occupation_category exists
+    if (!formData.occupation_category || (formData.confidence_score !== null && formData.confidence_score < 0.3)) {
+      return fallbackCategoryId();
     }
+
+    const normalized = normalizeCategoryName(formData.occupation_category);
+    const slug = CATEGORY_NAME_TO_SLUG[normalized];
+
+    if (!slug) {
+      return fallbackCategoryId();
+    }
+
+    // Find in state
+    let cat = categories.find(c => c.slug === slug);
+    if (cat) return cat.id;
+
+    // Find in cache
+    try {
+      const cached = localStorage.getItem('offer_services_categories_cache');
+      if (cached) {
+        const cachedCats = JSON.parse(cached);
+        cat = cachedCats.find((c: any) => c.slug === slug);
+        if (cat) return cat.id;
+      }
+    } catch { }
+
+    return fallbackCategoryId();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,15 +228,9 @@ export default function OfferServices() {
     setLoading(true);
 
     try {
-      // Validações
-      if (!formData.service_title.trim()) {
-        throw new Error('Título do serviço é obrigatório');
-      }
-      if (!formData.category) {
-        throw new Error('Categoria é obrigatória');
-      }
-      if (!formData.description.trim()) {
-        throw new Error('Descrição é obrigatória');
+      // Validações obrigatórias
+      if (!formData.profession_raw.trim()) {
+        throw new Error('Profissão/o que você faz é obrigatório');
       }
       if (!formData.city_id) {
         throw new Error('Cidade é obrigatória');
@@ -157,11 +239,28 @@ export default function OfferServices() {
         throw new Error('Telefone é obrigatório');
       }
 
+      // Resolved fields
+      const resolvedTitle = formData.service_title.trim() || formData.profession_raw.trim();
+      const resolvedDescription = formData.description.trim();
+
       // Offline handling
       if (!navigator.onLine) {
-        // Save to offline queue (include auth id for later processing)
         const { enqueue } = await import('@/lib/offlineQueue');
-        enqueue({ type: 'offerService', payload: { ...formData, _auth_id: user!.id } } as any);
+        const offlinePayload = {
+          service_title: resolvedTitle,
+          description: resolvedDescription,
+          profession_raw: formData.profession_raw,
+          occupation_id: formData.occupation_id,
+          confidence_score: formData.confidence_score,
+          category_id: inferCategoryId(),
+          city_id: formData.city_id,
+          neighborhood: formData.neighborhood,
+          phone: formData.phone,
+          availability: formData.availability,
+          price: formData.price,
+          _auth_id: user!.id
+        };
+        enqueue({ type: 'offerService', payload: offlinePayload } as any);
         localStorage.removeItem('offer_services_autosave');
         toast({ title: 'Sem internet', description: 'Vamos publicar assim que a conexão voltar' });
         navigate('/profile');
@@ -193,48 +292,74 @@ export default function OfferServices() {
         throw new Error('Usuário não encontrado');
       }
 
-      // 3. Criar registro na tabela worker_services
+      // 3. Try to fetch occupation data if not already set
+      let finalOccupationId = formData.occupation_id;
+      let finalConfidenceScore = formData.confidence_score;
+      let finalOccupationCategory = formData.occupation_category;
+
+      if (!finalOccupationId && formData.profession_raw.trim()) {
+        try {
+          const { data: occData } = await supabase.rpc('search_ocupacoes', {
+            q: formData.profession_raw,
+            lim: 1,
+            min_sim: 0.3
+          });
+
+          if (occData && occData.length > 0) {
+            finalOccupationId = occData[0].ocupacao_id;
+            finalConfidenceScore = occData[0].similarity_score;
+            finalOccupationCategory = occData[0].categoria_principal || '';
+          }
+        } catch { }
+      }
+
+      // 4. Infer category_id
+      const categoryId = inferCategoryId();
+
+      // 5. Check schema for optional columns
+      const { hasColumn } = await import('@/lib/schemaCheck');
+      const [availabilityExists, professionExists, occupationIdExists, confidenceExists] = await Promise.all([
+        hasColumn('worker_services', 'availability'),
+        hasColumn('worker_services', 'profession_raw'),
+        hasColumn('worker_services', 'occupation_id'),
+        hasColumn('worker_services', 'confidence_score')
+      ]);
+
+      // 6. Build payload
+      const payload: any = {
+        user_id: userData.id,
+        title: resolvedTitle,
+        description: resolvedDescription,
+        category_id: categoryId,
+        price: formData.price ? parseFloat(formData.price) : null,
+        active: true
+      };
+
+      if (availabilityExists) payload.availability = formData.availability;
+      if (professionExists) payload.profession_raw = formData.profession_raw;
+      if (occupationIdExists) payload.occupation_id = finalOccupationId;
+      if (confidenceExists) payload.confidence_score = finalConfidenceScore;
+
+      // 7. Insert worker_services
       let serviceResult: any = null;
       try {
-        // Check if availability exists in schema
-        const { hasColumn } = await import('@/lib/schemaCheck');
-        const availabilityExists = await hasColumn('worker_services', 'availability');
-
-        const payload: any = {
-          user_id: userData.id,
-          title: formData.service_title,
-          description: formData.description,
-          category_id: formData.isCustomCategory ? null : formData.category,
-          custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
-          subcategory_id: formData.subcategory || null,
-          price: formData.price ? parseFloat(formData.price) : null,
-          active: true
-        };
-
-        if (availabilityExists) payload.availability = formData.availability;
-
         const { data: sdata, error: serror } = await supabase.from('worker_services').insert(payload).select();
         if (serror) throw serror;
         serviceResult = sdata;
       } catch (serviceErr: any) {
-        if (serviceErr?.message?.toLowerCase?.().includes('availability')) {
-          try {
-            const payloadFallback: any = {
-              user_id: userData.id,
-              title: formData.service_title,
-              description: formData.description,
-              category_id: formData.isCustomCategory ? null : formData.category,
-              custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
-              subcategory_id: formData.subcategory || null,
-              price: formData.price ? parseFloat(formData.price) : null,
-              active: true
-            };
-            const { data: sdata2, error: serror2 } = await supabase.from('worker_services').insert(payloadFallback).select();
-            if (serror2) throw serror2;
-            serviceResult = sdata2;
-          } catch (e: any) {
-            throw e;
-          }
+        // Fallback without optional columns if error
+        if (serviceErr?.message?.toLowerCase?.().includes('column')) {
+          const payloadFallback: any = {
+            user_id: userData.id,
+            title: resolvedTitle,
+            description: resolvedDescription,
+            category_id: categoryId,
+            price: formData.price ? parseFloat(formData.price) : null,
+            active: true
+          };
+          const { data: sdata2, error: serror2 } = await supabase.from('worker_services').insert(payloadFallback).select();
+          if (serror2) throw serror2;
+          serviceResult = sdata2;
         } else {
           throw serviceErr;
         }
@@ -299,76 +424,62 @@ export default function OfferServices() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
 
-              {/* Título do Serviço */}
+              {/* Profissão / O que você faz */}
+              <div className="relative">
+                <Label htmlFor="profession_raw">Profissão / O que você faz *</Label>
+                <Input
+                  id="profession_raw"
+                  placeholder="Ex: Pedreiro, Eletricista, Pintor..."
+                  value={formData.profession_raw}
+                  onChange={(e) => setFormData({ ...formData, profession_raw: e.target.value })}
+                  onFocus={() => {
+                    if (suggestions.length > 0) setShowSuggestions(true);
+                  }}
+                  onBlur={() => {
+                    // Delay to allow click on suggestion
+                    setTimeout(() => setShowSuggestions(false), 200);
+                  }}
+                  required
+                />
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    {suggestions.map((sug, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleSuggestionClick(sug);
+                        }}
+                      >
+                        {sug.nome_oficial}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Título do Serviço (opcional) */}
               <div>
-                <Label htmlFor="service_title">Título do Serviço *</Label>
+                <Label htmlFor="service_title">Título do Serviço (opcional)</Label>
                 <Input
                   id="service_title"
                   placeholder="Ex: Sou pedreiro — Faço reboco, contrapiso, reformas"
                   value={formData.service_title}
                   onChange={(e) => setFormData({ ...formData, service_title: e.target.value })}
-                  required
                 />
               </div>
 
-              {/* Categoria */}
+              {/* Descrição (opcional) */}
               <div>
-                <Label>Categoria *</Label>
-                <Select value={formData.category} onValueChange={handleCategoryChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a categoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.sort((a, b) => a.name.localeCompare(b.name)).map(cat => (
-                      <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                    ))}
-                    <SelectItem value="outros">Outros</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Campo personalizado "Outros" */}
-              {formData.category === 'outros' && (
-                <div>
-                  <Label htmlFor="customCategory">Descreva sua especialidade *</Label>
-                  <Input
-                    id="customCategory"
-                    placeholder="Ex: Instalação de antenas, montagem de móveis planejados..."
-                    value={formData.customCategory}
-                    onChange={(e) => setFormData({ ...formData, customCategory: e.target.value })}
-                    required
-                    maxLength={100}
-                  />
-                </div>
-              )}
-
-              {/* Subcategoria */}
-              {formData.category && !formData.isCustomCategory && subcategories.length > 0 && (
-                <div>
-                  <Label>Subcategoria</Label>
-                  <Select value={formData.subcategory} onValueChange={(val) => setFormData({ ...formData, subcategory: val })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione a subcategoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {subcategories.map(sub => (
-                        <SelectItem key={sub.id} value={sub.id}>{sub.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {/* Descrição */}
-              <div>
-                <Label htmlFor="description">Descrição Detalhada *</Label>
+                <Label htmlFor="description">Descrição Detalhada (opcional)</Label>
                 <Textarea
                   id="description"
                   placeholder="Ex: Sou pedreiro com 8 anos de experiência. Faço reboco, contrapiso, colocação de pisos, reformas e manutenções gerais. Orçamentos sem compromisso."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={5}
-                  required
                 />
               </div>
 
