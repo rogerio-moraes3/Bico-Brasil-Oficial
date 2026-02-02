@@ -5,7 +5,6 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-const AMOUNT_TOLERANCE = 0.01; // allows minor rounding differences for BRL amounts
 const DEFAULT_GATEWAY_ERROR_STATUS = 502;
 
 function validateCPF(cpf: string): boolean {
@@ -61,6 +60,7 @@ function normalizePaymentMethod(input: unknown) {
     return input.trim().toLowerCase();
   }
   if (input == null) {
+    // default to pix for backwards compatibility with older clients
     return "pix";
   }
   return "";
@@ -159,7 +159,10 @@ serve(async (req) => {
       });
     }
 
-    if (typeof amount === "number" && Math.abs(amount - expectedAmount) > AMOUNT_TOLERANCE) {
+    if (typeof amount === "number") {
+      const expectedCents = Math.round(expectedAmount * 100);
+      const amountCents = Math.round(amount * 100);
+      if (amountCents !== expectedCents) {
       console.warn("Valor divergente no pagamento de destaque", {
         request_id: requestId,
         amount,
@@ -169,6 +172,7 @@ serve(async (req) => {
         code: "AMOUNT_MISMATCH",
         message: "Valor informado não corresponde ao plano selecionado.",
       });
+      }
     }
 
     console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${expectedAmount}`);
