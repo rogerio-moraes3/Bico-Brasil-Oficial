@@ -89,6 +89,13 @@ serve(async (req) => {
     const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID();
     const paymentMethod = (payment_method ?? "pix").toString().trim().toLowerCase();
 
+    if (amount !== undefined && typeof amount !== "number") {
+      return jsonResponse(400, {
+        code: "AMOUNT_INVALID",
+        message: "Valor inválido.",
+      });
+    }
+
     console.debug("📥 Solicitação create-destaque-payment", {
       request_id: requestId,
       user_id: user.id,
@@ -148,6 +155,10 @@ serve(async (req) => {
         user_id: user.id,
         amount,
         expectedAmount,
+      });
+      return jsonResponse(400, {
+        code: "AMOUNT_MISMATCH",
+        message: "Valor informado não corresponde ao plano selecionado.",
       });
     }
 
@@ -227,7 +238,7 @@ serve(async (req) => {
         .update({ status: 'failed' })
         .eq('id', order.id);
 
-      const errorStatus = response.status >= 400 && response.status < 500 ? response.status : 502;
+      const errorStatus = response.status >= 400 && response.status < 600 ? response.status : 502;
       return jsonResponse(errorStatus, {
         code: "GATEWAY_ERROR",
         message: mpData?.message || 'Erro ao criar pagamento no Mercado Pago',
