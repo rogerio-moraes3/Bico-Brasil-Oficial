@@ -179,7 +179,6 @@ serve(async (req) => {
       return jsonResponse(500, {
         code: "CONFIG_MISSING",
         message: "Configuração de pagamento ausente.",
-        details: { secret: "MERCADOPAGO_ACCESS_TOKEN" },
       });
     }
 
@@ -228,7 +227,8 @@ serve(async (req) => {
         .update({ status: 'failed' })
         .eq('id', order.id);
 
-      return jsonResponse(response.status >= 400 && response.status < 500 ? response.status : 502, {
+      const errorStatus = response.status >= 400 && response.status < 500 ? response.status : 502;
+      return jsonResponse(errorStatus, {
         code: "GATEWAY_ERROR",
         message: mpData?.message || 'Erro ao criar pagamento no Mercado Pago',
       });
