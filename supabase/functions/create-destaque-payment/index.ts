@@ -5,6 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+const AMOUNT_TOLERANCE = 0.01;
+const DEFAULT_GATEWAY_ERROR_STATUS = 502;
 
 function validateCPF(cpf: string): boolean {
   const numbers = cpf.replace(/\D/g, "");
@@ -149,7 +151,7 @@ serve(async (req) => {
       });
     }
 
-    if (typeof amount === "number" && Math.abs(amount - expectedAmount) > 0.01) {
+    if (typeof amount === "number" && Math.abs(amount - expectedAmount) > AMOUNT_TOLERANCE) {
       console.warn("Valor divergente no pagamento de destaque", {
         request_id: requestId,
         user_id: user.id,
@@ -238,7 +240,10 @@ serve(async (req) => {
         .update({ status: 'failed' })
         .eq('id', order.id);
 
-      const errorStatus = response.status >= 400 && response.status < 600 ? response.status : 502;
+      const errorStatus =
+        response.status >= 400 && response.status < 600
+          ? response.status
+          : DEFAULT_GATEWAY_ERROR_STATUS;
       return jsonResponse(errorStatus, {
         code: "GATEWAY_ERROR",
         message: mpData?.message || 'Erro ao criar pagamento no Mercado Pago',
