@@ -57,6 +57,16 @@ type ErrorResponse = {
   details?: Record<string, unknown>;
 };
 
+function normalizePaymentMethod(input: unknown) {
+  if (typeof input === "string") {
+    return input.trim().toLowerCase();
+  }
+  if (input == null) {
+    return "pix";
+  }
+  return "";
+}
+
 function jsonResponse(status: number, body: Record<string, unknown>) {
   return new Response(JSON.stringify(body), {
     headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -89,9 +99,7 @@ serve(async (req) => {
 
     const { days, payer, payment_method, amount } = await req.json();
     const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID();
-    const rawPaymentMethod =
-      typeof payment_method === "string" ? payment_method : payment_method == null ? "pix" : "";
-    const paymentMethod = rawPaymentMethod.trim().toLowerCase();
+    const paymentMethod = normalizePaymentMethod(payment_method);
 
     console.debug("📥 Solicitação create-destaque-payment", {
       request_id: requestId,
@@ -145,13 +153,6 @@ serve(async (req) => {
       });
     }
 
-    if (amount !== undefined && typeof amount !== "number") {
-      return jsonResponse(400, {
-        code: "AMOUNT_INVALID",
-        message: "Valor inválido.",
-      });
-    }
-
     if (typeof amount === "number" && Math.abs(amount - expectedAmount) > AMOUNT_TOLERANCE) {
       console.warn("Valor divergente no pagamento de destaque", {
         request_id: requestId,
@@ -161,6 +162,12 @@ serve(async (req) => {
       return jsonResponse(400, {
         code: "AMOUNT_MISMATCH",
         message: "Valor informado não corresponde ao plano selecionado.",
+      });
+    }
+    if (amount !== undefined && typeof amount !== "number") {
+      return jsonResponse(400, {
+        code: "AMOUNT_INVALID",
+        message: "Valor inválido.",
       });
     }
 
