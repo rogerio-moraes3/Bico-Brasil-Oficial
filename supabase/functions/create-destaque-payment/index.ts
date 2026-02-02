@@ -55,33 +55,44 @@ serve(async (req) => {
   }
 
   try {
+    const body = await req.json();
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      { auth: { persistSession: false } }
     );
 
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      throw new Error('Authorization header missing');
+      throw new Error('Token não enviado (Authorization header faltando)');
     }
 
     const token = authHeader.replace('Bearer ', '');
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
 
     if (authError || !user) {
-      throw new Error('Unauthorized');
+      throw new Error('Usuário não autenticado');
     }
 
-    const { days, payer } = await req.json();
+    const days = Number(body.days);
+    const { amount: requestAmount, payer } = body;
+    const paymentMethod = body.payment_method ?? body.paymentMethod;
 
-    // PIX é o único método de pagamento aceito (hardcoded no payment_method_id abaixo)
+    if (paymentMethod !== 'pix') {
+      throw new Error('Método de pagamento inválido');
+    }
 
     if (!payer?.cpf) {
       throw new Error('CPF é obrigatório');
     }
 
-    if (!validateCPF(payer.cpf)) {
+    const payerCPF = payer.cpf.replace(/\D/g, "");
+    if (!validateCPF(payerCPF)) {
       throw new Error('CPF inválido');
+    }
+
+    if (!payer?.email) {
+      throw new Error('Email é obrigatório');
     }
 
     // Tabela de preços fixa
@@ -98,12 +109,34 @@ serve(async (req) => {
       throw new Error('Plano inválido');
     }
 
+    const numericAmount = Number(requestAmount);
+    if (requestAmount === undefined || requestAmount === null || Number.isNaN(numericAmount)) {
+      throw new Error('Valor de plano inválido ou não informado');
+    }
+    if (numericAmount !== amount) {
+      throw new Error('Valor de plano não corresponde ao período selecionado');
+    }
+
     console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${amount}`);
+
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('users')
+      .select('id, email, name, phone')
+      .eq('auth_id', user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      throw profileError;
+    }
+
+    if (!profile) {
+      throw new Error('Perfil do usuário não encontrado');
+    }
 
     const { data: order, error: orderError } = await supabaseClient
       .from('destaque_orders')
       .insert({
-        user_id: user.id,
+        user_id: profile.id,
         days: days,
         amount: amount,
         status: 'pending'
@@ -127,19 +160,26 @@ serve(async (req) => {
     const isTestToken = accessToken.startsWith('TEST-');
     console.debug(`🔑 Usando token ${isTestToken ? 'de TESTE' : 'de PRODUÇÃO'}`);
 
+    const payerName = payer.name || profile.name || 'Nome não informado';
+    const payerEmail = payer.email;
+    const [firstName, ...lastNameParts] = payerName.split(' ');
+    const lastName = lastNameParts.join(' ') || payerName;
+
     const paymentData = {
       transaction_amount: amount,
       description: `Anúncio Destaque - ${days} dias`,
       payment_method_id: 'pix',
       external_reference: order.id,
       payer: {
-        email: user.email || 'cliente@exemplo.com',
-        first_name: payer.name || 'Cliente',
+        email: payerEmail,
+        first_name: firstName || payerName,
+        last_name: lastName,
         identification: {
           type: 'CPF',
-          number: payer.cpf
+          number: payerCPF
         }
-      }
+      },
+      notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/mercadopago-destaque-webhook`,
     };
 
     console.debug('📤 Enviando requisição para Mercado Pago...');
@@ -154,17 +194,32 @@ serve(async (req) => {
       body: JSON.stringify(paymentData),
     });
 
-    const mpData = await response.json();
+    const text = await response.text();
+    let mpData;
+    try {
+      mpData = JSON.parse(text);
+    } catch {
+      mpData = { raw: text };
+    }
 
     if (!response.ok) {
-      console.error('❌ Erro do Mercado Pago:', mpData);
+      console.error('❌ Erro do Mercado Pago:', text);
 
       await supabaseClient
         .from('destaque_orders')
         .update({ status: 'failed' })
         .eq('id', order.id);
 
-      throw new Error(mpData.message || 'Erro ao criar pagamento no Mercado Pago');
+      return new Response(
+        JSON.stringify({
+          error: mpData?.message || 'Erro ao criar pagamento no Mercado Pago',
+          details: mpData
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: response.status,
+        }
+      );
     }
 
     console.debug('✅ Pagamento criado com sucesso:', mpData.id);

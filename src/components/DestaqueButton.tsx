@@ -78,7 +78,8 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
       return;
     }
 
-    if (!payerPhone.trim() || payerPhone.length < 10) {
+    const phoneDigits = payerPhone.replace(/\D/g, "");
+    if (!phoneDigits || phoneDigits.length < 10) {
       toast({
         title: "Telefone inválido",
         description: "Por favor, preencha um telefone válido",
@@ -126,11 +127,13 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
         },
         body: JSON.stringify({
           days,
+          amount: totalPrice,
+          payment_method: "pix",
           payer: {
             name: payerName.trim(),
             cpf: cpfNumbers,
             email: payerEmail.trim(),
-            phone: payerPhone.trim()
+            phone: phoneDigits
           }
         })
       });
@@ -138,7 +141,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erro ao gerar QR Code PIX');
+        throw new Error(data.error || data.message || 'Erro ao criar pagamento PIX');
       }
 
       if (data.qr_code) {
@@ -196,7 +199,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
             Assinar
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto touch-pan-y overscroll-y-contain">
           <DialogHeader>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="default" className="bg-primary">
