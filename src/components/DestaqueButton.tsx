@@ -199,7 +199,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
             Assinar
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto touch-pan-y overscroll-y-contain">
           <DialogHeader>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="default" className="bg-primary">
