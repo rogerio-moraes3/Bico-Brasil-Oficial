@@ -100,13 +100,6 @@ serve(async (req) => {
     const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID();
     const paymentMethod = normalizePaymentMethod(payment_method);
 
-    console.debug("📥 Solicitação create-destaque-payment", {
-      request_id: requestId,
-      days,
-      amount: typeof amount === "number" ? amount : undefined,
-      payment_method: paymentMethod,
-    });
-
     if (paymentMethod !== "pix") {
       console.warn("Pagamento destaque rejeitado: método inválido", {
         request_id: requestId,
@@ -117,6 +110,13 @@ serve(async (req) => {
         message: "Apenas pagamentos via PIX são aceitos.",
       });
     }
+
+    console.debug("📥 Solicitação create-destaque-payment", {
+      request_id: requestId,
+      days,
+      amount: typeof amount === "number" ? amount : undefined,
+      payment_method: paymentMethod,
+    });
 
     // PIX é o único método de pagamento aceito (hardcoded no payment_method_id abaixo)
     // amount é opcional e serve apenas para validação de integridade do client
@@ -152,14 +152,14 @@ serve(async (req) => {
       });
     }
 
-    if (amount !== undefined && typeof amount !== "number") {
-      return jsonResponse(400, {
-        code: "AMOUNT_INVALID",
-        message: "Valor inválido.",
-      });
-    }
+    if (amount !== undefined) {
+      if (typeof amount !== "number") {
+        return jsonResponse(400, {
+          code: "AMOUNT_INVALID",
+          message: "Valor inválido.",
+        });
+      }
 
-    if (typeof amount === "number") {
       const expectedCents = Math.round(expectedAmount * 100);
       const amountCents = Math.round(amount * 100);
       if (amountCents !== expectedCents) {
