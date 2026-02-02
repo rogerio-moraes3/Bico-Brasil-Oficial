@@ -163,15 +163,15 @@ serve(async (req) => {
       const expectedCents = Math.round(expectedAmount * 100);
       const amountCents = Math.round(amount * 100);
       if (amountCents !== expectedCents) {
-      console.warn("Valor divergente no pagamento de destaque", {
-        request_id: requestId,
-        amount,
-        expectedAmount,
-      });
-      return jsonResponse(400, {
-        code: "AMOUNT_MISMATCH",
-        message: "Valor informado não corresponde ao plano selecionado.",
-      });
+        console.warn("Valor divergente no pagamento de destaque", {
+          request_id: requestId,
+          amount,
+          expectedAmount,
+        });
+        return jsonResponse(400, {
+          code: "AMOUNT_MISMATCH",
+          message: "Valor informado não corresponde ao plano selecionado.",
+        });
       }
     }
 
