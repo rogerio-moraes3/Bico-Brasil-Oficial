@@ -9,16 +9,16 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     const [isFadingOut, setIsFadingOut] = useState(false);
 
     useEffect(() => {
-        // After 1.5 seconds, start fade-out
+        // After 1.2 seconds, start fade-out (faster for better UX)
         const fadeTimer = setTimeout(() => {
             setIsFadingOut(true);
-        }, 1500);
+        }, 1200);
 
-        // After 1.8 seconds, call onComplete
+        // After 1.5 seconds, call onComplete (faster)
         const completeTimer = setTimeout(() => {
             setIsVisible(false);
             onComplete();
-        }, 1800);
+        }, 1500);
 
         return () => {
             clearTimeout(fadeTimer);
@@ -35,9 +35,9 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             style={{ backgroundColor: '#0E1424' }}
         >
             {/* Container centralizado com espaçamento consistente */}
-            <div className="flex flex-col items-center gap-6 px-4">
+            <div className="flex flex-col items-center gap-5 px-4">
                 {/* Logo/Mascote */}
-                <div className="w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
+                <div className="w-40 h-40 md:w-48 md:h-48 flex items-center justify-center">
                     <img
                         src="/worker-mascot.png"
                         alt="Bico Brasil"
@@ -49,12 +49,12 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 </div>
 
                 {/* Título - BICO BRASIL */}
-                <h1 className="text-3xl md:text-4xl font-bold text-white tracking-wide text-center leading-tight">
+                <h1 className="text-2xl md:text-3xl font-bold text-white tracking-wide text-center leading-tight">
                     BICO BRASIL
                 </h1>
 
                 {/* Slogan - Trabalhou, Tá Pago! */}
-                <p className="text-lg md:text-xl font-semibold text-primary tracking-wide text-center">
+                <p className="text-base md:text-lg font-semibold text-primary tracking-wide text-center">
                     Trabalhou, Tá Pago!
                 </p>
             </div>

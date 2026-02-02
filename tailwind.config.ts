@@ -5,19 +5,11 @@ export default {
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   safelist: [
-    'text-7xl',
-    'text-8xl',
-    'text-9xl',
-    'md:text-7xl',
-    'md:text-8xl',
-    'md:text-9xl',
     'text-[8px]',
     'text-[9px]',
     'text-[10px]',
     'text-[11px]',
     'md:text-[9px]',
-    'bg-blue-600',
-    'bg-green-600',
   ],
   theme: {
     container: {

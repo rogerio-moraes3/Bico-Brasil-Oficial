@@ -22,8 +22,8 @@ export const UpgradeModal = ({ open, onOpenChange, remainingViews }: UpgradeModa
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center justify-center mb-4">
-            <div className="bg-yellow-100 p-4 rounded-full">
-              <Crown className="h-12 w-12 text-yellow-600" />
+            <div className="bg-primary/10 p-4 rounded-full">
+              <Crown className="h-12 w-12 text-primary" />
             </div>
           </div>
           <DialogTitle className="text-center text-2xl">
@@ -40,19 +40,19 @@ export const UpgradeModal = ({ open, onOpenChange, remainingViews }: UpgradeModa
 
         <div className="space-y-3 my-4">
           <div className="flex items-start gap-2">
-            <Check className="h-5 w-5 text-green-600 mt-0.5" />
+            <Check className="h-5 w-5 text-primary mt-0.5" />
             <span className="text-sm">Visualizações ilimitadas de perfis</span>
           </div>
           <div className="flex items-start gap-2">
-            <Check className="h-5 w-5 text-green-600 mt-0.5" />
+            <Check className="h-5 w-5 text-primary mt-0.5" />
             <span className="text-sm">Acesso completo aos contatos (WhatsApp, telefone)</span>
           </div>
           <div className="flex items-start gap-2">
-            <Check className="h-5 w-5 text-green-600 mt-0.5" />
+            <Check className="h-5 w-5 text-primary mt-0.5" />
             <span className="text-sm">Aparece destacado nas buscas</span>
           </div>
           <div className="flex items-start gap-2">
-            <Check className="h-5 w-5 text-green-600 mt-0.5" />
+            <Check className="h-5 w-5 text-primary mt-0.5" />
             <span className="text-sm">Suporte prioritário</span>
           </div>
         </div>

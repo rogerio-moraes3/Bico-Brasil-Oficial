@@ -174,13 +174,6 @@ export const Header = () => {
             >
               Planos
             </Link>
-            <Link
-              to="/download"
-              className="text-sm font-medium transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-2 text-[var(--nav-link)]"
-            >
-              <Download className="h-4 w-4" />
-              <span className="hidden lg:inline">Baixar App</span>
-            </Link>
           </nav>
 
           {/* Right Section */}
@@ -239,8 +232,18 @@ export const Header = () => {
                     <UserIcon className="h-4 w-4 mr-2" />
                     Meu Perfil
                   </DropdownMenuItem>
+                  {showInstallButton && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleInstallApp}>
+                        <Download className="h-4 w-4 mr-2" />
+                        Instalar App
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </DropdownMenuItem>
                 </DropdownMenuContent>

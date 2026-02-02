@@ -43,7 +43,7 @@ export function ShareButtons({
         onClick={handleWhatsAppShare}
         className="gap-2"
       >
-        <MessageCircle className="h-4 w-4 text-green-600" />
+        <MessageCircle className="h-4 w-4" />
         <span className="hidden sm:inline">WhatsApp</span>
       </Button>
       <Button
