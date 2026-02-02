@@ -49,6 +49,19 @@ async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3)
   throw lastError;
 }
 
+type ErrorResponse = {
+  code: string;
+  message: string;
+  details?: Record<string, unknown>;
+};
+
+function jsonResponse(status: number, body: Record<string, unknown>) {
+  return new Response(JSON.stringify(body), {
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    status,
+  });
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -72,16 +85,36 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { days, payer } = await req.json();
+    const { days, payer, payment_method, amount } = await req.json();
+    const requestId = crypto.randomUUID();
+    const paymentMethod = (payment_method ?? "pix").toString().trim().toLowerCase();
+
+    if (paymentMethod !== "pix") {
+      console.warn("Pagamento destaque rejeitado: método inválido", {
+        request_id: requestId,
+        user_id: user.id,
+        payment_method: paymentMethod,
+      });
+      return jsonResponse(400, {
+        code: "PIX_ONLY",
+        message: "Apenas pagamentos via PIX são aceitos.",
+      });
+    }
 
     // PIX é o único método de pagamento aceito (hardcoded no payment_method_id abaixo)
 
     if (!payer?.cpf) {
-      throw new Error('CPF é obrigatório');
+      return jsonResponse(400, {
+        code: "CPF_REQUIRED",
+        message: "CPF é obrigatório.",
+      });
     }
 
     if (!validateCPF(payer.cpf)) {
-      throw new Error('CPF inválido');
+      return jsonResponse(400, {
+        code: "CPF_INVALID",
+        message: "CPF inválido.",
+      });
     }
 
     // Tabela de preços fixa
@@ -93,34 +126,53 @@ serve(async (req) => {
       30: 99.90
     };
 
-    const amount = priceTable[days];
-    if (!amount) {
-      throw new Error('Plano inválido');
+    const expectedAmount = priceTable[days];
+    if (!expectedAmount) {
+      return jsonResponse(400, {
+        code: "PLAN_INVALID",
+        message: "Plano inválido.",
+      });
     }
 
-    console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${amount}`);
+    if (typeof amount === "number" && Math.abs(amount - expectedAmount) > 0.01) {
+      console.warn("Valor divergente no pagamento de destaque", {
+        request_id: requestId,
+        user_id: user.id,
+        amount,
+        expectedAmount,
+      });
+    }
+
+    console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${expectedAmount}`);
 
     const { data: order, error: orderError } = await supabaseClient
       .from('destaque_orders')
       .insert({
         user_id: user.id,
         days: days,
-        amount: amount,
+        amount: expectedAmount,
         status: 'pending'
       })
       .select()
       .single();
 
     if (orderError || !order) {
-      console.error('Erro ao criar ordem:', orderError);
-      throw new Error('Erro ao criar ordem de pagamento');
+      console.error('Erro ao criar ordem:', { request_id: requestId, error: orderError?.message });
+      return jsonResponse(500, {
+        code: "ORDER_CREATE_FAILED",
+        message: "Erro ao criar ordem de pagamento.",
+      });
     }
 
     const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
 
     if (!accessToken) {
-      console.error('❌ MERCADOPAGO_ACCESS_TOKEN não configurado');
-      throw new Error('Configuração de pagamento ausente');
+      console.error('❌ MERCADOPAGO_ACCESS_TOKEN não configurado', { request_id: requestId });
+      return jsonResponse(500, {
+        code: "CONFIG_MISSING",
+        message: "Configuração de pagamento ausente.",
+        details: { secret: "MERCADOPAGO_ACCESS_TOKEN" },
+      });
     }
 
     // Log do tipo de token (produção ou teste)
@@ -128,7 +180,7 @@ serve(async (req) => {
     console.debug(`🔑 Usando token ${isTestToken ? 'de TESTE' : 'de PRODUÇÃO'}`);
 
     const paymentData = {
-      transaction_amount: amount,
+      transaction_amount: expectedAmount,
       description: `Anúncio Destaque - ${days} dias`,
       payment_method_id: 'pix',
       external_reference: order.id,
@@ -157,14 +209,21 @@ serve(async (req) => {
     const mpData = await response.json();
 
     if (!response.ok) {
-      console.error('❌ Erro do Mercado Pago:', mpData);
+      console.error('❌ Erro do Mercado Pago:', {
+        request_id: requestId,
+        status: response.status,
+        error: mpData?.message ?? mpData?.error,
+      });
 
       await supabaseClient
         .from('destaque_orders')
         .update({ status: 'failed' })
         .eq('id', order.id);
 
-      throw new Error(mpData.message || 'Erro ao criar pagamento no Mercado Pago');
+      return jsonResponse(response.status >= 400 && response.status < 500 ? response.status : 502, {
+        code: "GATEWAY_ERROR",
+        message: mpData?.message || 'Erro ao criar pagamento no Mercado Pago',
+      });
     }
 
     console.debug('✅ Pagamento criado com sucesso:', mpData.id);
@@ -179,29 +238,18 @@ serve(async (req) => {
 
     const pixData = mpData.point_of_interaction?.transaction_data;
 
-    return new Response(
-      JSON.stringify({
-        payment_id: mpData.id,
-        qr_code: pixData?.qr_code || '',
-        qr_code_base64: pixData?.qr_code_base64 || '',
-        ticket_url: pixData?.ticket_url || '',
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
-    );
+    return jsonResponse(200, {
+      payment_id: mpData.id,
+      qr_code: pixData?.qr_code || '',
+      qr_code_base64: pixData?.qr_code_base64 || '',
+      ticket_url: pixData?.ticket_url || '',
+    });
   } catch (error) {
     console.error('💥 Erro na edge function:', error);
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : 'Erro desconhecido',
-        details: error
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500,
-      }
-    );
+    const errorResponse: ErrorResponse = {
+      code: "INTERNAL_ERROR",
+      message: error instanceof Error ? error.message : 'Erro desconhecido',
+    };
+    return jsonResponse(500, errorResponse);
   }
 });
