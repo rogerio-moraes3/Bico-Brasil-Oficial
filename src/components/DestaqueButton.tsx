@@ -126,6 +126,8 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
         },
         body: JSON.stringify({
           days,
+          amount: totalPrice,
+          payment_method: "pix",
           payer: {
             name: payerName.trim(),
             cpf: cpfNumbers,
@@ -138,7 +140,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erro ao gerar QR Code PIX');
+        throw new Error(data.message || data.error || 'Erro ao gerar QR Code PIX');
       }
 
       if (data.qr_code) {

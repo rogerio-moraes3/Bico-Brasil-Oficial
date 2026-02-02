@@ -5,6 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+const DEFAULT_GATEWAY_ERROR_STATUS = 502;
 
 function validateCPF(cpf: string): boolean {
   const numbers = cpf.replace(/\D/g, "");
@@ -49,6 +50,29 @@ async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3)
   throw lastError;
 }
 
+type ErrorResponse = {
+  code: string;
+  message: string;
+};
+
+function normalizePaymentMethod(input: unknown) {
+  if (typeof input === "string") {
+    return input.trim().toLowerCase();
+  }
+  if (input == null) {
+    // default to pix for backwards compatibility with older clients
+    return "pix";
+  }
+  return "";
+}
+
+function jsonResponse(status: number, body: Record<string, unknown>) {
+  return new Response(JSON.stringify(body), {
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    status,
+  });
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -72,16 +96,43 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { days, payer } = await req.json();
+    const { days, payer, payment_method, amount } = await req.json();
+    const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID();
+    const paymentMethod = normalizePaymentMethod(payment_method);
+
+    if (paymentMethod !== "pix") {
+      console.warn("Pagamento destaque rejeitado: método inválido", {
+        request_id: requestId,
+        payment_method: paymentMethod,
+      });
+      return jsonResponse(400, {
+        code: "PIX_ONLY",
+        message: "Apenas pagamentos via PIX são aceitos.",
+      });
+    }
+
+    console.debug("📥 Solicitação create-destaque-payment", {
+      request_id: requestId,
+      days,
+      amount: typeof amount === "number" ? amount : undefined,
+      payment_method: paymentMethod,
+    });
 
     // PIX é o único método de pagamento aceito (hardcoded no payment_method_id abaixo)
+    // amount é opcional e serve apenas para validação de integridade do client
 
     if (!payer?.cpf) {
-      throw new Error('CPF é obrigatório');
+      return jsonResponse(400, {
+        code: "CPF_REQUIRED",
+        message: "CPF é obrigatório.",
+      });
     }
 
     if (!validateCPF(payer.cpf)) {
-      throw new Error('CPF inválido');
+      return jsonResponse(400, {
+        code: "CPF_INVALID",
+        message: "CPF inválido.",
+      });
     }
 
     // Tabela de preços fixa
@@ -93,34 +144,66 @@ serve(async (req) => {
       30: 99.90
     };
 
-    const amount = priceTable[days];
-    if (!amount) {
-      throw new Error('Plano inválido');
+    const expectedAmount = priceTable[days];
+    if (!expectedAmount) {
+      return jsonResponse(400, {
+        code: "PLAN_INVALID",
+        message: "Plano inválido.",
+      });
     }
 
-    console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${amount}`);
+    if (amount !== undefined) {
+      if (typeof amount !== "number") {
+        return jsonResponse(400, {
+          code: "AMOUNT_INVALID",
+          message: "Valor inválido.",
+        });
+      }
+
+      const expectedCents = Math.round(expectedAmount * 100);
+      const amountCents = Math.round(amount * 100);
+      if (amountCents !== expectedCents) {
+        console.warn("Valor divergente no pagamento de destaque", {
+          request_id: requestId,
+          amount,
+          expectedAmount,
+        });
+        return jsonResponse(400, {
+          code: "AMOUNT_MISMATCH",
+          message: "Valor informado não corresponde ao plano selecionado.",
+        });
+      }
+    }
+
+    console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${expectedAmount}`);
 
     const { data: order, error: orderError } = await supabaseClient
       .from('destaque_orders')
       .insert({
         user_id: user.id,
         days: days,
-        amount: amount,
+        amount: expectedAmount,
         status: 'pending'
       })
       .select()
       .single();
 
     if (orderError || !order) {
-      console.error('Erro ao criar ordem:', orderError);
-      throw new Error('Erro ao criar ordem de pagamento');
+      console.error('Erro ao criar ordem:', { request_id: requestId, error: orderError?.message });
+      return jsonResponse(500, {
+        code: "ORDER_CREATE_FAILED",
+        message: "Erro ao criar ordem de pagamento.",
+      });
     }
 
     const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
 
     if (!accessToken) {
-      console.error('❌ MERCADOPAGO_ACCESS_TOKEN não configurado');
-      throw new Error('Configuração de pagamento ausente');
+      console.error('❌ MERCADOPAGO_ACCESS_TOKEN não configurado', { request_id: requestId });
+      return jsonResponse(500, {
+        code: "CONFIG_MISSING",
+        message: "Configuração de pagamento ausente.",
+      });
     }
 
     // Log do tipo de token (produção ou teste)
@@ -128,7 +211,7 @@ serve(async (req) => {
     console.debug(`🔑 Usando token ${isTestToken ? 'de TESTE' : 'de PRODUÇÃO'}`);
 
     const paymentData = {
-      transaction_amount: amount,
+      transaction_amount: expectedAmount,
       description: `Anúncio Destaque - ${days} dias`,
       payment_method_id: 'pix',
       external_reference: order.id,
@@ -157,14 +240,25 @@ serve(async (req) => {
     const mpData = await response.json();
 
     if (!response.ok) {
-      console.error('❌ Erro do Mercado Pago:', mpData);
+      console.error('❌ Erro do Mercado Pago:', {
+        request_id: requestId,
+        status: response.status,
+        error: mpData?.message ?? mpData?.error,
+      });
 
       await supabaseClient
         .from('destaque_orders')
         .update({ status: 'failed' })
         .eq('id', order.id);
 
-      throw new Error(mpData.message || 'Erro ao criar pagamento no Mercado Pago');
+      const errorStatus =
+        response.status >= 400 && response.status < 500
+          ? response.status
+          : DEFAULT_GATEWAY_ERROR_STATUS;
+      return jsonResponse(errorStatus, {
+        code: "GATEWAY_ERROR",
+        message: mpData?.message || 'Erro ao criar pagamento no Mercado Pago',
+      });
     }
 
     console.debug('✅ Pagamento criado com sucesso:', mpData.id);
@@ -179,29 +273,18 @@ serve(async (req) => {
 
     const pixData = mpData.point_of_interaction?.transaction_data;
 
-    return new Response(
-      JSON.stringify({
-        payment_id: mpData.id,
-        qr_code: pixData?.qr_code || '',
-        qr_code_base64: pixData?.qr_code_base64 || '',
-        ticket_url: pixData?.ticket_url || '',
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
-    );
+    return jsonResponse(200, {
+      payment_id: mpData.id,
+      qr_code: pixData?.qr_code || '',
+      qr_code_base64: pixData?.qr_code_base64 || '',
+      ticket_url: pixData?.ticket_url || '',
+    });
   } catch (error) {
     console.error('💥 Erro na edge function:', error);
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : 'Erro desconhecido',
-        details: error
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500,
-      }
-    );
+    const errorResponse: ErrorResponse = {
+      code: "INTERNAL_ERROR",
+      message: error instanceof Error ? error.message : 'Erro desconhecido',
+    };
+    return jsonResponse(500, errorResponse);
   }
 });
