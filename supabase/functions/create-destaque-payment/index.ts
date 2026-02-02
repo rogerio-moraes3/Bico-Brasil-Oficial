@@ -86,8 +86,16 @@ serve(async (req) => {
     }
 
     const { days, payer, payment_method, amount } = await req.json();
-    const requestId = crypto.randomUUID();
+    const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID();
     const paymentMethod = (payment_method ?? "pix").toString().trim().toLowerCase();
+
+    console.debug("📥 Solicitação create-destaque-payment", {
+      request_id: requestId,
+      user_id: user.id,
+      days,
+      amount: typeof amount === "number" ? amount : undefined,
+      payment_method: paymentMethod,
+    });
 
     if (paymentMethod !== "pix") {
       console.warn("Pagamento destaque rejeitado: método inválido", {
