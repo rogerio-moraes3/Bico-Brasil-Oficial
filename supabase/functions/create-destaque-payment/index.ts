@@ -54,7 +54,6 @@ async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3)
 type ErrorResponse = {
   code: string;
   message: string;
-  details?: Record<string, unknown>;
 };
 
 function normalizePaymentMethod(input: unknown) {
@@ -153,6 +152,13 @@ serve(async (req) => {
       });
     }
 
+    if (amount !== undefined && typeof amount !== "number") {
+      return jsonResponse(400, {
+        code: "AMOUNT_INVALID",
+        message: "Valor inválido.",
+      });
+    }
+
     if (typeof amount === "number" && Math.abs(amount - expectedAmount) > AMOUNT_TOLERANCE) {
       console.warn("Valor divergente no pagamento de destaque", {
         request_id: requestId,
@@ -162,12 +168,6 @@ serve(async (req) => {
       return jsonResponse(400, {
         code: "AMOUNT_MISMATCH",
         message: "Valor informado não corresponde ao plano selecionado.",
-      });
-    }
-    if (amount !== undefined && typeof amount !== "number") {
-      return jsonResponse(400, {
-        code: "AMOUNT_INVALID",
-        message: "Valor inválido.",
       });
     }
 
