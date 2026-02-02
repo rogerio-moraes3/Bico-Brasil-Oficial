@@ -5,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-const AMOUNT_TOLERANCE = 0.01;
+const AMOUNT_TOLERANCE = 0.01; // allows minor rounding differences for BRL amounts
 const DEFAULT_GATEWAY_ERROR_STATUS = 502;
 
 function validateCPF(cpf: string): boolean {
@@ -100,7 +100,6 @@ serve(async (req) => {
 
     console.debug("📥 Solicitação create-destaque-payment", {
       request_id: requestId,
-      user_id: user.id,
       days,
       amount: typeof amount === "number" ? amount : undefined,
       payment_method: paymentMethod,
@@ -109,7 +108,6 @@ serve(async (req) => {
     if (paymentMethod !== "pix") {
       console.warn("Pagamento destaque rejeitado: método inválido", {
         request_id: requestId,
-        user_id: user.id,
         payment_method: paymentMethod,
       });
       return jsonResponse(400, {
@@ -154,7 +152,6 @@ serve(async (req) => {
     if (typeof amount === "number" && Math.abs(amount - expectedAmount) > AMOUNT_TOLERANCE) {
       console.warn("Valor divergente no pagamento de destaque", {
         request_id: requestId,
-        user_id: user.id,
         amount,
         expectedAmount,
       });
@@ -241,7 +238,7 @@ serve(async (req) => {
         .eq('id', order.id);
 
       const errorStatus =
-        response.status >= 400 && response.status < 600
+        response.status >= 400 && response.status < 500
           ? response.status
           : DEFAULT_GATEWAY_ERROR_STATUS;
       return jsonResponse(errorStatus, {
