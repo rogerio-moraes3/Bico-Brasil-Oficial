@@ -89,14 +89,9 @@ serve(async (req) => {
 
     const { days, payer, payment_method, amount } = await req.json();
     const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID();
-    const paymentMethod = (payment_method ?? "pix").toString().trim().toLowerCase();
-
-    if (amount !== undefined && typeof amount !== "number") {
-      return jsonResponse(400, {
-        code: "AMOUNT_INVALID",
-        message: "Valor inválido.",
-      });
-    }
+    const rawPaymentMethod =
+      typeof payment_method === "string" ? payment_method : payment_method == null ? "pix" : "";
+    const paymentMethod = rawPaymentMethod.trim().toLowerCase();
 
     console.debug("📥 Solicitação create-destaque-payment", {
       request_id: requestId,
@@ -117,6 +112,7 @@ serve(async (req) => {
     }
 
     // PIX é o único método de pagamento aceito (hardcoded no payment_method_id abaixo)
+    // amount é opcional e serve apenas para validação de integridade do client
 
     if (!payer?.cpf) {
       return jsonResponse(400, {
@@ -146,6 +142,13 @@ serve(async (req) => {
       return jsonResponse(400, {
         code: "PLAN_INVALID",
         message: "Plano inválido.",
+      });
+    }
+
+    if (amount !== undefined && typeof amount !== "number") {
+      return jsonResponse(400, {
+        code: "AMOUNT_INVALID",
+        message: "Valor inválido.",
       });
     }
 
