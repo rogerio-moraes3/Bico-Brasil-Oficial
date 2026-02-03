@@ -115,7 +115,7 @@ serve(async (req) => {
 
     if (paymentError || !payment) {
       console.error('Erro ao criar pagamento:', paymentError);
-      throw new Error('Erro ao criar ordem de pagamento');
+      throw new Error('Erro ao criar pagamento');
     }
 
     const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
