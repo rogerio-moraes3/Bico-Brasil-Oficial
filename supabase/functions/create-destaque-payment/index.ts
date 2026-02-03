@@ -173,7 +173,7 @@ serve(async (req) => {
 
     const pixData = mpData.point_of_interaction?.transaction_data;
 
-    const { error: updateError } = await supabaseClient
+    await supabaseClient
       .from('payments')
       .update({
         mercadopago_payment_id: mpData.id,
@@ -183,11 +183,6 @@ serve(async (req) => {
         qr_code_base64: pixData?.qr_code_base64 || null,
       })
       .eq('id', payment.id);
-
-    if (updateError) {
-      console.error('Erro ao atualizar pagamento:', updateError);
-      throw new Error('Erro ao atualizar pagamento');
-    }
 
     return new Response(
       JSON.stringify({
