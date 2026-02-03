@@ -100,20 +100,22 @@ serve(async (req) => {
 
     console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${amount}`);
 
-    const { data: order, error: orderError } = await supabaseClient
-      .from('destaque_orders')
+    const { data: payment, error: paymentError } = await supabaseClient
+      .from('payments')
       .insert({
         user_id: user.id,
-        days: days,
         amount: amount,
-        status: 'pending'
+        method: 'pix',
+        status: 'pending',
+        gateway: 'mercadopago',
+        raw: null,
       })
       .select()
       .single();
 
-    if (orderError || !order) {
-      console.error('Erro ao criar ordem:', orderError);
-      throw new Error('Erro ao criar ordem de pagamento');
+    if (paymentError || !payment) {
+      console.error('Erro ao criar pagamento:', paymentError);
+      throw new Error('Erro ao criar pagamento');
     }
 
     const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
@@ -131,7 +133,7 @@ serve(async (req) => {
       transaction_amount: amount,
       description: `Anúncio Destaque - ${days} dias`,
       payment_method_id: 'pix',
-      external_reference: order.id,
+      external_reference: payment.id,
       payer: {
         email: user.email || 'cliente@exemplo.com',
         first_name: payer.name || 'Cliente',
@@ -160,24 +162,27 @@ serve(async (req) => {
       console.error('❌ Erro do Mercado Pago:', mpData);
 
       await supabaseClient
-        .from('destaque_orders')
-        .update({ status: 'failed' })
-        .eq('id', order.id);
+        .from('payments')
+        .update({ status: 'failed', raw: mpData })
+        .eq('id', payment.id);
 
       throw new Error(mpData.message || 'Erro ao criar pagamento no Mercado Pago');
     }
 
     console.debug('✅ Pagamento criado com sucesso:', mpData.id);
 
-    await supabaseClient
-      .from('destaque_orders')
-      .update({
-        payment_id: mpData.id,
-        status: 'in_process'
-      })
-      .eq('id', order.id);
-
     const pixData = mpData.point_of_interaction?.transaction_data;
+
+    await supabaseClient
+      .from('payments')
+      .update({
+        mercadopago_payment_id: mpData.id,
+        status: 'in_process',
+        raw: mpData,
+        qr_code: pixData?.qr_code || null,
+        qr_code_base64: pixData?.qr_code_base64 || null,
+      })
+      .eq('id', payment.id);
 
     return new Response(
       JSON.stringify({
