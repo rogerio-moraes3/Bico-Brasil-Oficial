@@ -144,12 +144,17 @@ serve(async (req) => {
 
     console.debug('📤 Enviando requisição para Mercado Pago...');
 
+    const idemKey =
+      (typeof crypto !== 'undefined' && (crypto as any).randomUUID)
+        ? (crypto as any).randomUUID()
+        : `${order.id}-${Date.now()}`;
+
     const response = await fetchWithRetry('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
-        'X-Idempotency-Key': crypto.randomUUID(),
+        'X-Idempotency-Key': idemKey,
       },
       body: JSON.stringify(paymentData),
     });
