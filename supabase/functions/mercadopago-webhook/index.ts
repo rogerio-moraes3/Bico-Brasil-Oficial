@@ -95,13 +95,28 @@ serve(async (req) => {
     console.debug('🔔 ========== WEBHOOK MERCADO PAGO ==========');
 
     const body = await req.json();
-    const paymentId = body.data?.id || body.id;
+    const url = new URL(req.url);
     const topic = body.topic || body.type;
+    let mpId: string | null = null;
 
-    if (!paymentId || topic !== 'payment') {
+    if (topic === 'payment') {
+      if (body.topic) {
+        mpId = url.searchParams.get('id');
+      } else if (body.type) {
+        mpId = url.searchParams.get('data.id');
+      }
+    }
+
+    if (!mpId) {
+      mpId = body?.data?.id ?? null;
+    }
+
+    if (!mpId || topic !== 'payment') {
       console.debug('⚠️ Notificação ignorada');
       return new Response('OK', { status: 200, headers: corsHeaders });
     }
+
+    console.debug('🔔 MP ID recebido:', mpId);
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -131,7 +146,7 @@ serve(async (req) => {
     }
 
     // Validar assinatura HMAC
-    const isValid = await validateWebhookSignature(xSignature, xRequestId, paymentId.toString(), webhookSecret);
+    const isValid = await validateWebhookSignature(xSignature, xRequestId, mpId.toString(), webhookSecret);
     if (!isValid) {
       console.error("❌ ASSINATURA INVÁLIDA!");
       return new Response(JSON.stringify({ error: "Invalid signature" }), {
@@ -150,7 +165,7 @@ serve(async (req) => {
     // Fetch payment details from Mercado Pago
     console.debug('📡 Buscando detalhes do pagamento no MP...');
     const mpResponse = await fetch(
-      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      `https://api.mercadopago.com/v1/payments/${mpId}`,
       {
         headers: {
           'Authorization': `Bearer ${mpToken}`,
@@ -168,251 +183,101 @@ serve(async (req) => {
     console.debug('💳 Status MP:', mpData.status);
     console.debug('💰 Valor:', mpData.transaction_amount);
     console.debug('📧 Email:', mpData.payer?.email);
+    if (mpData.status !== 'approved') {
+      console.debug('ℹ️ Pagamento não aprovado:', mpData.status);
+      return new Response('OK', { status: 200, headers: corsHeaders });
+    }
 
-    // Find payment in our database using mercadopago_payment_id
-    const { data: payment, error: paymentError } = await supabase
-      .from('payments')
+    const { data: order, error: orderError } = await supabase
+      .from('destaque_orders')
       .select('*')
-      .eq('mercadopago_payment_id', paymentId.toString())
-      .single();
+      .eq('mercadopago_payment_id', mpId.toString())
+      .maybeSingle();
 
-    if (paymentError || !payment) {
-      console.error('❌ Pagamento não encontrado no banco:', paymentId);
+    if (orderError || !order) {
+      console.error('❌ Pedido de destaque não encontrado:', mpId);
       return new Response('OK', { status: 200, headers: corsHeaders });
     }
 
-    console.debug('✅ Pagamento encontrado:', payment.id);
+    console.debug('✅ Pedido de destaque encontrado:', order.id);
+    console.debug('👤 Usuário ID:', order.user_id);
 
-    // Map Mercado Pago status to our status
-    let newStatus: "paid" | "failed" | "pending" | "in_process" = "pending";
-    const mpStatus = mpData.status;
+    if (order.status === 'approved') {
+      console.debug('✅ Pedido já aprovado (idempotente):', order.id);
+      return new Response('OK', { status: 200, headers: corsHeaders });
+    }
 
-    if (mpStatus === "approved") newStatus = "paid";
-    else if (["rejected", "cancelled", "refunded", "charged_back"].includes(mpStatus)) newStatus = "failed";
-    else if (["in_process", "pending", "authorized"].includes(mpStatus)) newStatus = "in_process";
-    else newStatus = "pending";
+    const now = new Date();
+    const endsAt = new Date(now);
+    endsAt.setDate(endsAt.getDate() + (order.days || 0));
 
-    console.debug('🔄 Atualizando status:', payment.status, '->', newStatus);
-
-    // Update payment status
-    const { error: updateError } = await supabase
-      .from('payments')
+    const { error: orderUpdateError } = await supabase
+      .from('destaque_orders')
       .update({
-        status: newStatus,
-        webhook_response: mpData,
-        updated_at: new Date().toISOString()
+        status: 'approved',
+        updated_at: now.toISOString()
       })
-      .eq('id', payment.id);
+      .eq('id', order.id)
+      .neq('status', 'approved');
 
-    if (updateError) {
-      console.error('❌ Erro ao atualizar pagamento:', updateError);
-      return new Response('OK', { status: 200, headers: corsHeaders });
+    if (orderUpdateError) {
+      console.error('❌ Erro ao aprovar pedido de destaque:', orderUpdateError);
+    } else {
+      console.debug('✅ Pedido aprovado no banco:', order.id);
     }
 
-    // If payment approved, activate user plan
-    if (newStatus === 'paid' && payment.user_id) {
-      console.debug('🎉 ========== PAGAMENTO APROVADO ==========');
-      console.debug('👤 Usuário ID:', payment.user_id);
-      console.debug('💰 Valor:', mpData.transaction_amount);
-      console.debug('📦 Plano:', payment.plan_type || 'basico');
+    const { data: activeHighlight, error: highlightError } = await supabase
+      .from('ads_highlight')
+      .select('id, ends_at')
+      .eq('user_id', order.user_id)
+      .gt('ends_at', now.toISOString())
+      .order('ends_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-      const planType = payment.plan_type || 'basico';
-      const now = new Date();
+    if (highlightError) {
+      console.error('❌ Erro ao buscar destaque ativo:', highlightError);
+    }
 
-      // Calcular duração baseada no plano
-      const duration = planType === 'anual' ? 365 : 30;
-      const subscriptionEnd = new Date();
-      subscriptionEnd.setDate(subscriptionEnd.getDate() + duration);
-
-      const { error: updateUserError } = await supabase
-        .from("users")
+    if (activeHighlight?.id) {
+      const currentEnd = new Date(activeHighlight.ends_at);
+      const finalEnd = currentEnd > endsAt ? currentEnd : endsAt;
+      const { error: highlightUpdateError } = await supabase
+        .from('ads_highlight')
         .update({
-          plan_active: true,
-          plan_type: planType,
-          subscription_start: now.toISOString(),
-          subscription_end: subscriptionEnd.toISOString(),
+          ends_at: finalEnd.toISOString(),
+          price: order.amount
         })
-        .eq("id", payment.user_id);
+        .eq('id', activeHighlight.id);
 
-      if (updateUserError) {
-        console.error("❌ Erro ao ativar plano:", updateUserError);
+      if (highlightUpdateError) {
+        console.error('❌ Erro ao atualizar destaque:', highlightUpdateError);
       } else {
-        console.debug("✅ Plano ativado com sucesso!");
-        console.debug(`   Tipo: ${planType}`);
-        console.debug(`   Válido de: ${now.toISOString()}`);
-        console.debug(`   Válido até: ${subscriptionEnd.toISOString()}`);
+        console.debug('✅ Destaque atualizado:', {
+          highlightId: activeHighlight.id,
+          userId: order.user_id,
+          ends_at: finalEnd.toISOString()
+        });
       }
-
-      const { error: subError } = await supabase
-        .from("payments")
-        .update({
-          subscription_start: now.toISOString(),
-          subscription_end: subscriptionEnd.toISOString(),
-        })
-        .eq("id", payment.id);
-
-      if (subError) console.error("Erro ao atualizar subscription dates:", subError);
-
-      // Buscar dados do usuário para email
-      const { data: userData } = await supabase
-        .from("users")
-        .select("email, name")
-        .eq("id", payment.user_id)
-        .single();
-
-      // Enviar sequência completa de emails transacionais
-      if (userData?.email) {
-        try {
-          const appUrl = Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '.lovable.app') || 'https://bicobrasil.com.br';
-          const emailBaseUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`;
-          const emailHeaders = {
-            "Content-Type": "application/json",
-            "apikey": Deno.env.get("SUPABASE_ANON_KEY") || "",
-          };
-
-          // 1. Confirmação de Pagamento Aprovado (imediato)
-          console.debug("📧 [1/4] Enviando confirmação de pagamento...");
-          await fetch(emailBaseUrl, {
-            method: "POST",
-            headers: emailHeaders,
-            body: JSON.stringify({
-              to: userData.email,
-              subject: "✅ Pagamento Aprovado - Bico Brasil",
-              type: "payment_approved",
-              data: {
-                userName: userData.name || 'Usuário',
-                planName: planType === 'basico' ? 'Plano Básico' : planType === 'vip' ? 'Plano VIP' : 'Plano Anual',
-                amount: mpData.transaction_amount || payment.amount,
-                subscriptionStart: now.toLocaleDateString('pt-BR'),
-                subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-                profileUrl: `${appUrl}/profile`,
-              },
-            }),
-          });
-          console.debug("✅ [1/4] Email de confirmação enviado");
-
-          // 2. Recibo Profissional (após 3 segundos)
-          setTimeout(async () => {
-            try {
-              console.debug("📧 [2/4] Enviando recibo...");
-              await fetch(emailBaseUrl, {
-                method: "POST",
-                headers: emailHeaders,
-                body: JSON.stringify({
-                  to: userData.email,
-                  subject: "🧾 Recibo de Pagamento - Bico Brasil",
-                  type: "payment_receipt",
-                  data: {
-                    name: userData.name || 'Usuário',
-                    planName: planType === 'basico' ? 'Plano Básico' : planType === 'vip' ? 'Plano VIP' : 'Plano Anual',
-                    amount: mpData.transaction_amount || payment.amount,
-                    paymentId: mpData.id || paymentId,
-                    paymentDate: now.toLocaleDateString('pt-BR'),
-                    subscriptionStart: now.toLocaleDateString('pt-BR'),
-                    subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-                    profileUrl: `${appUrl}/profile`,
-                  },
-                }),
-              });
-              console.debug("✅ [2/4] Recibo enviado");
-            } catch (err) {
-              console.error("⚠️ Erro ao enviar recibo (não fatal):", err);
-            }
-          }, 3000);
-
-          // 3. Liberação de Acesso (após 6 segundos)
-          setTimeout(async () => {
-            try {
-              console.debug("📧 [3/4] Enviando liberação de acesso...");
-              await fetch(emailBaseUrl, {
-                method: "POST",
-                headers: emailHeaders,
-                body: JSON.stringify({
-                  to: userData.email,
-                  subject: "🎉 Seu Plano Foi Ativado - Bico Brasil",
-                  type: "plan_activated",
-                  data: {
-                    name: userData.name || 'Usuário',
-                    planName: planType === 'basico' ? 'Plano Básico' : planType === 'vip' ? 'Plano VIP' : 'Plano Anual',
-                    subscriptionStart: now.toLocaleDateString('pt-BR'),
-                    subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-                    profileUrl: `${appUrl}/profile`,
-                  },
-                }),
-              });
-              console.debug("✅ [3/4] Email de liberação enviado");
-            } catch (err) {
-              console.error("⚠️ Erro ao enviar liberação (não fatal):", err);
-            }
-          }, 6000);
-
-          // 4. Boas-Vindas (após 10 segundos)
-          setTimeout(async () => {
-            try {
-              console.debug("📧 [4/4] Enviando boas-vindas...");
-              await fetch(emailBaseUrl, {
-                method: "POST",
-                headers: emailHeaders,
-                body: JSON.stringify({
-                  to: userData.email,
-                  subject: "👋 Bem-vindo ao Bico Brasil - Comece Agora!",
-                  type: "welcome",
-                  data: {
-                    name: userData.name || 'Usuário',
-                    profileUrl: `${appUrl}/profile`,
-                  },
-                }),
-              });
-              console.debug("✅ [4/4] Email de boas-vindas enviado");
-            } catch (err) {
-              console.error("⚠️ Erro ao enviar boas-vindas (não fatal):", err);
-            }
-          }, 10000);
-
-        } catch (emailErr) {
-          console.error("⚠️ Erro geral no envio de emails (não fatal):", emailErr);
-        }
-      }
-
-      // Criar notificação para o usuário
-      const { error: notifUserError } = await supabase
-        .from("notifications")
+    } else {
+      const { error: highlightInsertError } = await supabase
+        .from('ads_highlight')
         .insert({
-          user_id: payment.user_id,
-          type: "payment_approved",
-          title: "Pagamento Aprovado! 🎉",
-          message: `Seu plano foi ativado com sucesso! Válido até ${subscriptionEnd.toLocaleDateString('pt-BR')}`,
-          link: "/profile",
+          user_id: order.user_id,
+          starts_at: now.toISOString(),
+          ends_at: endsAt.toISOString(),
+          price: order.amount
         });
 
-      if (notifUserError) console.error("Erro ao criar notificação usuário:", notifUserError);
-      else console.debug("✅ Notificação criada para o usuário:", payment.user_id);
-
-      // Buscar admin e criar notificação
-      const { data: adminRoles } = await supabase
-        .from("user_roles")
-        .select("user_id")
-        .eq("role", "admin")
-        .limit(1);
-
-      if (adminRoles && adminRoles.length > 0) {
-        const { error: notifAdminError } = await supabase
-          .from("notifications")
-          .insert({
-            user_id: adminRoles[0].user_id,
-            type: "new_payment",
-            title: "Novo Pagamento Recebido 💰",
-            message: `Pagamento de R$ ${payment.amount.toFixed(2)} aprovado`,
-            link: "/admin",
-          });
-
-        if (notifAdminError) console.error("Erro ao criar notificação admin:", notifAdminError);
-        else console.debug("✅ Notificação criada para admin");
+      if (highlightInsertError) {
+        console.error('❌ Erro ao inserir destaque:', highlightInsertError);
+      } else {
+        console.debug('✅ Destaque criado:', {
+          userId: order.user_id,
+          starts_at: now.toISOString(),
+          ends_at: endsAt.toISOString()
+        });
       }
-
-      console.debug('🎊 ========== PROCESSO COMPLETO ==========');
-    } else {
-      console.debug('ℹ️ Status:', newStatus, '- Nenhuma ação adicional necessária');
     }
 
     console.debug('✅ Webhook processado com sucesso');
