@@ -169,13 +169,20 @@ serve(async (req) => {
 
     console.debug('✅ Pagamento criado com sucesso:', mpData.id);
 
-    await supabaseClient
+    const mpId = mpData.id;
+    const { error: updateOrderError } = await supabaseClient
       .from('destaque_orders')
       .update({
-        payment_id: mpData.id,
+        mercadopago_payment_id: String(mpId),
         status: 'in_process'
       })
       .eq('id', order.id);
+
+    if (updateOrderError) {
+      console.error('❌ Erro ao atualizar ordem com pagamento MP:', updateOrderError);
+    } else {
+      console.debug('✅ Ordem atualizada com ID do pagamento MP:', order.id);
+    }
 
     const pixData = mpData.point_of_interaction?.transaction_data;
 
