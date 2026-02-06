@@ -34,8 +34,8 @@ npm i -g supabase
 2) Ou configure prefix do npm (sem admin):
 
 ```powershell
-npm config set prefix "$env:USERPROFILE\\npm-global"
-[Environment]::SetEnvironmentVariable("Path", $env:Path + ";$env:USERPROFILE\\npm-global", "User")
+npm config set prefix "$env:USERPROFILE\npm-global"
+[Environment]::SetEnvironmentVariable("Path", $env:Path + ";$env:USERPROFILE\npm-global", "User")
 ```
 
 Depois feche e reabra o terminal.
