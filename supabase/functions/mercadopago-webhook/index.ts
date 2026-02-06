@@ -169,11 +169,164 @@ serve(async (req) => {
     console.debug('💰 Valor:', mpData.transaction_amount);
     console.debug('📧 Email:', mpData.payer?.email);
 
+    const paymentIdString = paymentId.toString();
+    const externalReference = mpData.external_reference?.toString?.() ?? mpData.external_reference;
+
+    const findDestaqueOrder = async () => {
+      if (externalReference) {
+        const { data: destaqueByReference, error: destaqueReferenceError } = await supabase
+          .from('destaque_orders')
+          .select('*')
+          .eq('id', externalReference)
+          .maybeSingle();
+
+        if (destaqueReferenceError) {
+          console.error('❌ Erro ao buscar destaque por external_reference:', destaqueReferenceError);
+        }
+
+        if (destaqueByReference) return destaqueByReference;
+      }
+
+      for (const column of ['mercadopago_payment_id', 'payment_id']) {
+        const { data: destaqueByPayment, error: destaquePaymentError } = await supabase
+          .from('destaque_orders')
+          .select('*')
+          .eq(column, paymentIdString)
+          .maybeSingle();
+
+        if (destaquePaymentError) {
+          console.error(`❌ Erro ao buscar destaque por ${column}:`, destaquePaymentError);
+          continue;
+        }
+
+        if (destaqueByPayment) return destaqueByPayment;
+      }
+
+      return null;
+    };
+
+    const destaqueOrder = await findDestaqueOrder();
+
+    if (destaqueOrder) {
+      console.debug('✅ Destaque encontrado:', destaqueOrder.id);
+
+      let destaqueStatus: "paid" | "failed" | "pending" | "in_process" = "pending";
+      const destaqueMpStatus = mpData.status;
+
+      if (destaqueMpStatus === "approved") destaqueStatus = "paid";
+      else if (["rejected", "cancelled", "refunded", "charged_back"].includes(destaqueMpStatus)) destaqueStatus = "failed";
+      else if (["in_process", "pending", "authorized"].includes(destaqueMpStatus)) destaqueStatus = "in_process";
+      else destaqueStatus = "pending";
+
+      const paidAt = destaqueStatus === "paid"
+        ? destaqueOrder.paid_at || new Date().toISOString()
+        : destaqueOrder.paid_at;
+
+      const { error: destaqueUpdateError } = await supabase
+        .from('destaque_orders')
+        .update({
+          status: destaqueStatus,
+          payment_id: paymentIdString,
+          mercadopago_payment_id: paymentIdString,
+          paid_at: paidAt,
+        })
+        .eq('id', destaqueOrder.id);
+
+      if (destaqueUpdateError) {
+        console.error('❌ Erro ao atualizar destaque:', destaqueUpdateError);
+        return new Response('OK', { status: 200, headers: corsHeaders });
+      }
+
+      const shouldActivateDestaque = destaqueStatus === 'paid' && destaqueOrder.status !== 'paid';
+
+      if (shouldActivateDestaque) {
+        console.debug('🎉 ========== DESTAQUE APROVADO ==========');
+        console.debug('👤 Usuário ID:', destaqueOrder.user_id);
+
+        const now = new Date();
+        const { data: highlightData, error: highlightError } = await supabase
+          .from('ads_highlight')
+          .select('id, expires_at')
+          .eq('user_id', destaqueOrder.user_id)
+          .maybeSingle();
+
+        if (highlightError) {
+          console.error('❌ Erro ao buscar ads_highlight:', highlightError);
+        }
+
+        const currentExpiry = highlightData?.expires_at ? new Date(highlightData.expires_at) : null;
+        const baseDate = currentExpiry && currentExpiry > now ? currentExpiry : now;
+        const newExpiry = new Date(baseDate);
+        newExpiry.setDate(newExpiry.getDate() + Number(destaqueOrder.days));
+
+        if (highlightData?.id) {
+          const { error: highlightUpdateError } = await supabase
+            .from('ads_highlight')
+            .update({ expires_at: newExpiry.toISOString() })
+            .eq('id', highlightData.id);
+
+          if (highlightUpdateError) {
+            console.error('❌ Erro ao estender ads_highlight:', highlightUpdateError);
+          }
+        } else {
+          const { error: highlightInsertError } = await supabase
+            .from('ads_highlight')
+            .insert({
+              user_id: destaqueOrder.user_id,
+              expires_at: newExpiry.toISOString(),
+            });
+
+          if (highlightInsertError) {
+            console.error('❌ Erro ao criar ads_highlight:', highlightInsertError);
+          }
+        }
+
+        const { data: userData } = await supabase
+          .from("users")
+          .select("email, name")
+          .eq("id", destaqueOrder.user_id)
+          .maybeSingle();
+
+        if (userData?.email) {
+          const appUrl = Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '.lovable.app') || 'https://bicobrasil.com.br';
+          const emailBaseUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`;
+          const emailHeaders = {
+            "Content-Type": "application/json",
+            "apikey": Deno.env.get("SUPABASE_ANON_KEY") || "",
+          };
+          const destaqueAmount = Number(destaqueOrder.amount);
+
+          void fetch(emailBaseUrl, {
+            method: "POST",
+            headers: emailHeaders,
+            body: JSON.stringify({
+              to: userData.email,
+              subject: "✅ Destaque ativado - Bico Brasil",
+              type: "payment_approved",
+              data: {
+                userName: userData.name || 'Usuário',
+                planName: "Anúncio Destaque",
+                amount: destaqueAmount,
+                subscriptionStart: now.toLocaleDateString('pt-BR'),
+                subscriptionEnd: newExpiry.toLocaleDateString('pt-BR'),
+                profileUrl: `${appUrl}/profile`,
+              },
+            }),
+          }).catch((err) => {
+            console.error("⚠️ Erro ao enviar email de destaque (não fatal):", err);
+          });
+        }
+      }
+
+      console.debug('✅ Destaque processado com sucesso');
+      return new Response('OK', { status: 200, headers: corsHeaders });
+    }
+
     // Find payment in our database using mercadopago_payment_id
     const { data: payment, error: paymentError } = await supabase
       .from('payments')
       .select('*')
-      .eq('mercadopago_payment_id', paymentId.toString())
+      .eq('mercadopago_payment_id', paymentIdString)
       .single();
 
     if (paymentError || !payment) {
