@@ -187,15 +187,15 @@ serve(async (req) => {
         if (destaqueByReference) return destaqueByReference;
       }
 
-      for (const column of ['mercadopago_payment_id', 'payment_id']) {
+      for (const paymentIdColumn of ['mercadopago_payment_id', 'payment_id']) {
         const { data: destaqueByPayment, error: destaquePaymentError } = await supabase
           .from('destaque_orders')
           .select('*')
-          .eq(column, paymentIdString)
+          .eq(paymentIdColumn, paymentIdString)
           .maybeSingle();
 
         if (destaquePaymentError) {
-          console.error(`❌ Erro ao buscar destaque por ${column}:`, destaquePaymentError);
+          console.error(`❌ Erro ao buscar destaque por ${paymentIdColumn}:`, destaquePaymentError);
           continue;
         }
 
@@ -222,7 +222,7 @@ serve(async (req) => {
         ? destaqueOrder.paid_at || new Date().toISOString()
         : destaqueOrder.paid_at;
 
-      const { error: destaqueUpdateError } = await supabase
+      const { data: updatedDestaque, error: destaqueUpdateError } = await supabase
         .from('destaque_orders')
         .update({
           status: destaqueStatus,
@@ -230,14 +230,17 @@ serve(async (req) => {
           mercadopago_payment_id: paymentIdString,
           paid_at: paidAt,
         })
-        .eq('id', destaqueOrder.id);
+        .eq('id', destaqueOrder.id)
+        .eq('status', destaqueOrder.status)
+        .select()
+        .maybeSingle();
 
       if (destaqueUpdateError) {
         console.error('❌ Erro ao atualizar destaque:', destaqueUpdateError);
         return new Response('OK', { status: 200, headers: corsHeaders });
       }
 
-      const shouldActivateDestaque = destaqueStatus === 'paid' && destaqueOrder.status !== 'paid';
+      const shouldActivateDestaque = destaqueStatus === 'paid' && destaqueOrder.status !== 'paid' && !!updatedDestaque;
 
       if (shouldActivateDestaque) {
         console.debug('🎉 ========== DESTAQUE APROVADO ==========');
@@ -254,10 +257,16 @@ serve(async (req) => {
           console.error('❌ Erro ao buscar ads_highlight:', highlightError);
         }
 
+        const destaqueDays = Number(destaqueOrder.days);
+        if (!Number.isFinite(destaqueDays) || destaqueDays <= 0) {
+          console.error('❌ Quantidade de dias inválida para destaque:', destaqueOrder.days);
+          return new Response('OK', { status: 200, headers: corsHeaders });
+        }
+
         const currentExpiry = highlightData?.expires_at ? new Date(highlightData.expires_at) : null;
         const baseDate = currentExpiry && currentExpiry > now ? currentExpiry : now;
         const newExpiry = new Date(baseDate);
-        newExpiry.setDate(newExpiry.getDate() + Number(destaqueOrder.days));
+        newExpiry.setDate(newExpiry.getDate() + destaqueDays);
 
         if (highlightData?.id) {
           const { error: highlightUpdateError } = await supabase
@@ -296,7 +305,7 @@ serve(async (req) => {
           };
           const destaqueAmount = Number(destaqueOrder.amount);
 
-          void fetch(emailBaseUrl, {
+          fetch(emailBaseUrl, {
             method: "POST",
             headers: emailHeaders,
             body: JSON.stringify({
