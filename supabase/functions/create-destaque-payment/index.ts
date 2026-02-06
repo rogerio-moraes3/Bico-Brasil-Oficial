@@ -169,10 +169,13 @@ serve(async (req) => {
 
     console.debug('✅ Pagamento criado com sucesso:', mpData.id);
 
+    const mpPaymentId = String(mpData.id);
+
     await supabaseClient
       .from('destaque_orders')
       .update({
-        payment_id: mpData.id,
+        payment_id: mpPaymentId,
+        mercadopago_payment_id: mpPaymentId,
         status: 'in_process'
       })
       .eq('id', order.id);
@@ -181,7 +184,7 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({
-        payment_id: mpData.id,
+        payment_id: mpPaymentId,
         qr_code: pixData?.qr_code || '',
         qr_code_base64: pixData?.qr_code_base64 || '',
         ticket_url: pixData?.ticket_url || '',
