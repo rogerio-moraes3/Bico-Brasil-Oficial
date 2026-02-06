@@ -94,9 +94,13 @@ serve(async (req) => {
   try {
     console.debug('🔔 ========== WEBHOOK MERCADO PAGO ==========');
 
+    const url = new URL(req.url);
+    const queryPaymentId = url.searchParams.get("id") ?? url.searchParams.get("data.id");
+    const queryTopic = url.searchParams.get("topic") ?? url.searchParams.get("type");
+
     const body = await req.json();
-    const paymentId = body.data?.id || body.id;
-    const topic = body.topic || body.type;
+    const paymentId = queryPaymentId ?? body.data?.id ?? body.id;
+    const topic = queryTopic || body.topic || body.type;
 
     if (!paymentId || topic !== 'payment') {
       console.debug('⚠️ Notificação ignorada');
@@ -116,7 +120,7 @@ serve(async (req) => {
     if (!webhookSecret) {
       console.error("❌ MERCADOPAGO_WEBHOOK_SECRET não configurado - rejeitando webhook");
       return new Response(JSON.stringify({ error: "Webhook secret not configured" }), {
-        status: 500,
+        status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -131,7 +135,8 @@ serve(async (req) => {
     }
 
     // Validar assinatura HMAC
-    const isValid = await validateWebhookSignature(xSignature, xRequestId, paymentId.toString(), webhookSecret);
+    const paymentIdString = paymentId.toString();
+    const isValid = await validateWebhookSignature(xSignature, xRequestId, paymentIdString, webhookSecret);
     if (!isValid) {
       console.error("❌ ASSINATURA INVÁLIDA!");
       return new Response(JSON.stringify({ error: "Invalid signature" }), {
@@ -150,7 +155,7 @@ serve(async (req) => {
     // Fetch payment details from Mercado Pago
     console.debug('📡 Buscando detalhes do pagamento no MP...');
     const mpResponse = await fetch(
-      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      `https://api.mercadopago.com/v1/payments/${paymentIdString}`,
       {
         headers: {
           'Authorization': `Bearer ${mpToken}`,
@@ -169,15 +174,155 @@ serve(async (req) => {
     console.debug('💰 Valor:', mpData.transaction_amount);
     console.debug('📧 Email:', mpData.payer?.email);
 
+    const destaqueReference = mpData.external_reference?.toString();
+    const destaqueFilters = [
+      destaqueReference ? `id.eq.${destaqueReference}` : null,
+      paymentIdString ? `mercadopago_payment_id.eq.${paymentIdString}` : null,
+      paymentIdString ? `payment_id.eq.${paymentIdString}` : null,
+    ].filter(Boolean).join(',');
+
+    if (destaqueFilters) {
+      const { data: destaqueOrder, error: destaqueError } = await supabase
+        .from('destaque_orders')
+        .select('id, user_id, days, status, amount')
+        .or(destaqueFilters)
+        .maybeSingle();
+
+      if (destaqueError) {
+        console.error('❌ Erro ao buscar ordem de destaque:', destaqueError);
+      }
+
+      if (destaqueOrder) {
+        if (mpData.status !== 'approved') {
+          console.debug('ℹ️ Pagamento de destaque ainda não aprovado');
+          return new Response('OK', { status: 200, headers: corsHeaders });
+        }
+
+        const approvedAt = new Date();
+        const { data: updatedOrders, error: updateOrderError } = await supabase
+          .from('destaque_orders')
+          .update({
+            status: 'approved',
+            mercadopago_payment_id: paymentIdString,
+            paid_at: approvedAt.toISOString(),
+          })
+          .eq('id', destaqueOrder.id)
+          .neq('status', 'approved')
+          .select('id, user_id, days, amount');
+
+        if (updateOrderError) {
+          console.error('❌ Erro ao atualizar ordem de destaque:', updateOrderError);
+          return new Response('OK', { status: 200, headers: corsHeaders });
+        }
+
+        const updatedOrder = updatedOrders?.[0];
+        if (!updatedOrder) {
+          console.debug('ℹ️ Ordem de destaque já aprovada, ignorando');
+          return new Response('OK', { status: 200, headers: corsHeaders });
+        }
+
+        const now = new Date();
+        const nowIso = now.toISOString();
+        let highlightEnd = new Date(now);
+
+        const { data: activeHighlight, error: highlightError } = await supabase
+          .from('ads_highlight')
+          .select('id, ends_at')
+          .eq('user_id', updatedOrder.user_id)
+          .gt('ends_at', nowIso)
+          .order('ends_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (highlightError) {
+          console.error('❌ Erro ao buscar destaque ativo:', highlightError);
+        }
+
+        if (activeHighlight?.ends_at) {
+          highlightEnd = new Date(activeHighlight.ends_at);
+          highlightEnd.setDate(highlightEnd.getDate() + updatedOrder.days);
+
+          const { error: extendError } = await supabase
+            .from('ads_highlight')
+            .update({ ends_at: highlightEnd.toISOString() })
+            .eq('id', activeHighlight.id);
+
+          if (extendError) {
+            console.error('❌ Erro ao estender destaque:', extendError);
+          } else {
+            console.debug('✅ Destaque estendido até:', highlightEnd.toISOString());
+          }
+        } else {
+          highlightEnd.setDate(highlightEnd.getDate() + updatedOrder.days);
+
+          const { error: insertError } = await supabase
+            .from('ads_highlight')
+            .insert({
+              user_id: updatedOrder.user_id,
+              starts_at: nowIso,
+              ends_at: highlightEnd.toISOString(),
+            });
+
+          if (insertError) {
+            console.error('❌ Erro ao criar destaque:', insertError);
+          } else {
+            console.debug('✅ Destaque criado até:', highlightEnd.toISOString());
+          }
+        }
+
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('email, name')
+          .eq('id', updatedOrder.user_id)
+          .maybeSingle();
+
+        if (userError) {
+          console.error('❌ Erro ao buscar usuário do destaque:', userError);
+        }
+
+        if (userData?.email) {
+          const appUrl = Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '.lovable.app') || 'https://bicobrasil.com.br';
+          const emailBaseUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`;
+          const emailHeaders = {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || ""}`,
+          };
+
+          void fetch(emailBaseUrl, {
+            method: "POST",
+            headers: emailHeaders,
+            body: JSON.stringify({
+              to: userData.email,
+              subject: "✅ Destaque ativado - Bico Brasil",
+              type: "payment_approved",
+              data: {
+                userName: userData.name || 'Usuário',
+                planName: 'Destaque',
+                amount: updatedOrder.amount ?? mpData.transaction_amount ?? 0,
+                subscriptionStart: now.toLocaleDateString('pt-BR'),
+                subscriptionEnd: highlightEnd.toLocaleDateString('pt-BR'),
+                profileUrl: `${appUrl}/profile`,
+              },
+            }),
+          }).catch((error) => {
+            console.error("⚠️ Erro ao enviar email de destaque (não fatal):", error);
+          });
+        }
+
+        console.debug('✅ Webhook de destaque processado com sucesso');
+        return new Response('OK', { status: 200, headers: corsHeaders });
+      }
+    }
+
     // Find payment in our database using mercadopago_payment_id
     const { data: payment, error: paymentError } = await supabase
       .from('payments')
       .select('*')
-      .eq('mercadopago_payment_id', paymentId.toString())
+      .eq('mercadopago_payment_id', paymentIdString)
       .single();
 
     if (paymentError || !payment) {
-      console.error('❌ Pagamento não encontrado no banco:', paymentId);
+      console.error('❌ Pagamento não encontrado no banco:', paymentIdString);
       return new Response('OK', { status: 200, headers: corsHeaders });
     }
 
