@@ -240,6 +240,11 @@ serve(async (req) => {
         return new Response('OK', { status: 200, headers: corsHeaders });
       }
 
+      if (!updatedDestaque) {
+        console.debug('ℹ️ Destaque já atualizado por outra requisição');
+        return new Response('OK', { status: 200, headers: corsHeaders });
+      }
+
       const shouldActivateDestaque = destaqueStatus === 'paid'
         && destaqueOrder.status !== 'paid'
         && updatedDestaque?.status === 'paid';
@@ -265,7 +270,8 @@ serve(async (req) => {
           return new Response('OK', { status: 200, headers: corsHeaders });
         }
 
-        const currentExpiry = highlightData?.expires_at ? new Date(highlightData.expires_at) : null;
+        const parsedExpiry = highlightData?.expires_at ? new Date(highlightData.expires_at) : null;
+        const currentExpiry = parsedExpiry && !Number.isNaN(parsedExpiry.getTime()) ? parsedExpiry : null;
         const baseDate = currentExpiry && currentExpiry > now ? currentExpiry : now;
         const newExpiry = new Date(baseDate);
         newExpiry.setDate(newExpiry.getDate() + destaqueDays);
@@ -306,28 +312,31 @@ serve(async (req) => {
             "apikey": Deno.env.get("SUPABASE_ANON_KEY") || "",
           };
           const destaqueAmount = Number(destaqueOrder.amount);
-
-          fetch(emailBaseUrl, {
-            method: "POST",
-            headers: emailHeaders,
-            body: JSON.stringify({
-              to: userData.email,
-              subject: "✅ Destaque ativado - Bico Brasil",
-              type: "payment_approved",
-              data: {
-                userName: userData.name || 'Usuário',
-                planName: "Anúncio Destaque",
-                amount: destaqueAmount,
-                subscriptionStart: now.toLocaleDateString('pt-BR'),
-                subscriptionEnd: newExpiry.toLocaleDateString('pt-BR'),
-                profileUrl: `${appUrl}/profile`,
-              },
-            }),
-          }).then(() => {
-            console.debug("✅ Email de destaque enviado com sucesso");
-          }).catch((err) => {
-            console.error("⚠️ Erro ao enviar email de destaque (não fatal):", err);
-          });
+          if (!Number.isFinite(destaqueAmount) || destaqueAmount <= 0) {
+            console.error('❌ Valor inválido para destaque:', destaqueOrder.amount);
+          } else {
+            fetch(emailBaseUrl, {
+              method: "POST",
+              headers: emailHeaders,
+              body: JSON.stringify({
+                to: userData.email,
+                subject: "✅ Destaque ativado - Bico Brasil",
+                type: "payment_approved",
+                data: {
+                  userName: userData.name || 'Usuário',
+                  planName: "Anúncio Destaque",
+                  amount: destaqueAmount,
+                  subscriptionStart: now.toLocaleDateString('pt-BR'),
+                  subscriptionEnd: newExpiry.toLocaleDateString('pt-BR'),
+                  profileUrl: `${appUrl}/profile`,
+                },
+              }),
+            }).then(() => {
+              console.debug("✅ Email de destaque enviado com sucesso");
+            }).catch((err) => {
+              console.error("⚠️ Erro ao enviar email de destaque (não fatal):", err);
+            });
+          }
         }
       }
 
