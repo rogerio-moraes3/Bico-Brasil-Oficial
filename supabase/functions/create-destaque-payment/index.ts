@@ -167,12 +167,20 @@ serve(async (req) => {
       throw new Error(mpData.message || 'Erro ao criar pagamento no Mercado Pago');
     }
 
-    console.debug('✅ Pagamento criado com sucesso:', mpData.id);
+    const mpId = mpData?.id ? String(mpData.id) : '';
+
+    if (!mpId) {
+      console.error('❌ Pagamento criado sem ID do Mercado Pago:', mpData);
+      throw new Error('Pagamento sem ID do Mercado Pago');
+    }
+
+    console.debug('✅ Pagamento criado com sucesso:', mpId);
 
     await supabaseClient
       .from('destaque_orders')
       .update({
-        payment_id: mpData.id,
+        payment_id: mpId,
+        mercadopago_payment_id: mpId,
         status: 'in_process'
       })
       .eq('id', order.id);
@@ -181,7 +189,7 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({
-        payment_id: mpData.id,
+        payment_id: mpId,
         qr_code: pixData?.qr_code || '',
         qr_code_base64: pixData?.qr_code_base64 || '',
         ticket_url: pixData?.ticket_url || '',
