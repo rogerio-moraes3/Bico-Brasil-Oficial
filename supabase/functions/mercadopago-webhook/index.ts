@@ -181,7 +181,11 @@ serve(async (req) => {
           .maybeSingle();
 
         if (destaqueReferenceError) {
-          console.error('❌ Erro ao buscar destaque por external_reference:', destaqueReferenceError);
+          console.error(
+            '❌ Erro ao buscar destaque por external_reference:',
+            externalReference,
+            destaqueReferenceError
+          );
         }
 
         if (destaqueByReference) return destaqueByReference;
@@ -221,6 +225,17 @@ serve(async (req) => {
       const paidAt = destaqueStatus === "paid"
         ? destaqueOrder.paid_at || new Date().toISOString()
         : destaqueOrder.paid_at;
+
+      const hasSamePaymentId = destaqueOrder.payment_id === paymentIdString
+        || destaqueOrder.mercadopago_payment_id === paymentIdString;
+      const alreadySynced = destaqueOrder.status === destaqueStatus
+        && hasSamePaymentId
+        && (destaqueStatus !== 'paid' || destaqueOrder.paid_at);
+
+      if (alreadySynced) {
+        console.debug('ℹ️ Destaque já sincronizado:', destaqueOrder.id);
+        return new Response('OK', { status: 200, headers: corsHeaders });
+      }
 
       const { data: updatedDestaque, error: destaqueUpdateError } = await supabase
         .from('destaque_orders')
@@ -266,7 +281,7 @@ serve(async (req) => {
 
         const destaqueDays = Number(destaqueOrder.days);
         if (!Number.isFinite(destaqueDays) || destaqueDays <= 0) {
-          console.error('❌ Quantidade de dias inválida para destaque:', destaqueOrder.days);
+          console.error('❌ Quantidade de dias inválida para destaque:', destaqueOrder.id, destaqueOrder.days);
           return new Response('OK', { status: 200, headers: corsHeaders });
         }
 
@@ -305,7 +320,9 @@ serve(async (req) => {
           .maybeSingle();
 
         if (userData?.email) {
-          const appUrl = Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '.lovable.app') || 'https://bicobrasil.com.br';
+          const appUrl = Deno.env.get("APP_URL")
+            || Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '.lovable.app')
+            || 'https://bicobrasil.com.br';
           const emailBaseUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`;
           const emailHeaders = {
             "Content-Type": "application/json",
@@ -313,7 +330,8 @@ serve(async (req) => {
           };
           const destaqueAmount = Number(destaqueOrder.amount);
           if (!Number.isFinite(destaqueAmount) || destaqueAmount <= 0) {
-            console.error('❌ Valor inválido para destaque:', destaqueOrder.amount);
+            console.error('❌ Valor inválido para destaque:', destaqueOrder.id, destaqueOrder.amount);
+            console.debug('ℹ️ Email de destaque não enviado por valor inválido');
           } else {
             fetch(emailBaseUrl, {
               method: "POST",
