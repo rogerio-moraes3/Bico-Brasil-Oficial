@@ -240,7 +240,9 @@ serve(async (req) => {
         return new Response('OK', { status: 200, headers: corsHeaders });
       }
 
-      const shouldActivateDestaque = destaqueStatus === 'paid' && destaqueOrder.status !== 'paid' && !!updatedDestaque;
+      const shouldActivateDestaque = destaqueStatus === 'paid'
+        && destaqueOrder.status !== 'paid'
+        && updatedDestaque?.status === 'paid';
 
       if (shouldActivateDestaque) {
         console.debug('🎉 ========== DESTAQUE APROVADO ==========');
@@ -321,6 +323,8 @@ serve(async (req) => {
                 profileUrl: `${appUrl}/profile`,
               },
             }),
+          }).then(() => {
+            console.debug("✅ Email de destaque enviado com sucesso");
           }).catch((err) => {
             console.error("⚠️ Erro ao enviar email de destaque (não fatal):", err);
           });
