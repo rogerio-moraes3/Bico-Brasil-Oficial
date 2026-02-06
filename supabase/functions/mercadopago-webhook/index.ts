@@ -100,7 +100,7 @@ serve(async (req) => {
 
     const body = await req.json();
     const paymentId = queryPaymentId ?? body.data?.id ?? body.id;
-    const topic = queryTopic || body.topic || body.type;
+    const topic = queryTopic ?? body.topic ?? body.type;
 
     if (!paymentId || topic !== 'payment') {
       console.debug('⚠️ Notificação ignorada');
@@ -175,24 +175,52 @@ serve(async (req) => {
     console.debug('📧 Email:', mpData.payer?.email);
 
     const destaqueReference = mpData.external_reference?.toString();
-    const destaqueFilters = [
-      destaqueReference ? `id.eq.${destaqueReference}` : null,
-      paymentIdString ? `mercadopago_payment_id.eq.${paymentIdString}` : null,
-      paymentIdString ? `payment_id.eq.${paymentIdString}` : null,
-    ].filter(Boolean).join(',');
+    const destaqueSelect = 'id, user_id, days, status, amount';
+    let destaqueOrder = null;
 
-    if (destaqueFilters) {
-      const { data: destaqueOrder, error: destaqueError } = await supabase
+    if (destaqueReference) {
+      const { data, error } = await supabase
         .from('destaque_orders')
-        .select('id, user_id, days, status, amount')
-        .or(destaqueFilters)
+        .select(destaqueSelect)
+        .eq('id', destaqueReference)
         .maybeSingle();
 
-      if (destaqueError) {
-        console.error('❌ Erro ao buscar ordem de destaque:', destaqueError);
+      if (error) {
+        console.error('❌ Erro ao buscar ordem de destaque por referência:', error);
+      } else {
+        destaqueOrder = data;
       }
+    }
 
-      if (destaqueOrder) {
+    if (!destaqueOrder && paymentIdString) {
+      const { data, error } = await supabase
+        .from('destaque_orders')
+        .select(destaqueSelect)
+        .eq('mercadopago_payment_id', paymentIdString)
+        .maybeSingle();
+
+      if (error) {
+        console.error('❌ Erro ao buscar ordem de destaque por MP ID:', error);
+      } else {
+        destaqueOrder = data;
+      }
+    }
+
+    if (!destaqueOrder && paymentIdString) {
+      const { data, error } = await supabase
+        .from('destaque_orders')
+        .select(destaqueSelect)
+        .eq('payment_id', paymentIdString)
+        .maybeSingle();
+
+      if (error) {
+        console.error('❌ Erro ao buscar ordem de destaque por payment_id:', error);
+      } else {
+        destaqueOrder = data;
+      }
+    }
+
+    if (destaqueOrder) {
         if (mpData.status !== 'approved') {
           console.debug('ℹ️ Pagamento de destaque ainda não aprovado');
           return new Response('OK', { status: 200, headers: corsHeaders });
@@ -287,6 +315,7 @@ serve(async (req) => {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || ""}`,
           };
+          const emailAmount = updatedOrder.amount ?? mpData.transaction_amount;
 
           void fetch(emailBaseUrl, {
             method: "POST",
@@ -298,7 +327,7 @@ serve(async (req) => {
               data: {
                 userName: userData.name || 'Usuário',
                 planName: 'Destaque',
-                amount: updatedOrder.amount ?? mpData.transaction_amount ?? 0,
+                amount: emailAmount ?? 0,
                 subscriptionStart: now.toLocaleDateString('pt-BR'),
                 subscriptionEnd: highlightEnd.toLocaleDateString('pt-BR'),
                 profileUrl: `${appUrl}/profile`,

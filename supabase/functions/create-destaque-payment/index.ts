@@ -171,7 +171,7 @@ serve(async (req) => {
 
     if (!mpId) {
       console.error('❌ Mercado Pago não retornou ID de pagamento:', mpData);
-      throw new Error('Pagamento criado sem identificador');
+      throw new Error('Mercado Pago não retornou ID de pagamento');
     }
 
     console.debug('✅ Pagamento criado com sucesso:', mpId);
