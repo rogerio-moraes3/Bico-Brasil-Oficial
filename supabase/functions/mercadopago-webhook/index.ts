@@ -87,7 +87,7 @@ async function validateWebhookSignature(
 }
 
 function isUuid(value: string): boolean {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 }
 
 serve(async (req) => {
@@ -267,6 +267,11 @@ serve(async (req) => {
 
     const highlightDays = Number(order.days ?? 0);
     const durationDays = Number.isFinite(highlightDays) && highlightDays > 0 ? highlightDays : 0;
+
+    if (durationDays <= 0) {
+      console.error('❌ Dias inválidos para destaque:', order.days);
+      return new Response('OK', { status: 200, headers: corsHeaders });
+    }
 
     const { data: activeHighlights, error: highlightError } = await supabase
       .from('ads_highlight')
