@@ -500,8 +500,7 @@ serve(async (req) => {
             paid_at: nowIso,
             mercadopago_payment_id: paymentIdStr,
           })
-          .eq('id', destaqueOrder.id)
-          .neq('status', 'approved');
+          .eq('id', destaqueOrder.id);
 
         if (destaqueUpdateError) {
           console.error('❌ Erro ao atualizar destaque:', destaqueUpdateError);
