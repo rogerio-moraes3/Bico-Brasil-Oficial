@@ -82,7 +82,12 @@ serve(async (req) => {
       .eq('auth_id', user.id)
       .maybeSingle();
 
-    if (profileError || !profile) {
+    if (profileError) {
+      console.error('Erro ao buscar perfil:', profileError);
+      throw new Error('Erro ao buscar perfil');
+    }
+
+    if (!profile) {
       throw new Error('Perfil não encontrado');
     }
 
