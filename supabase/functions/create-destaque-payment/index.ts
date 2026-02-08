@@ -88,7 +88,7 @@ serve(async (req) => {
     }
 
     if (!profile) {
-      throw new Error('Perfil não encontrado');
+      throw new Error(`Perfil não encontrado para auth_id: ${user.id}`);
     }
 
     if (!payer?.cpf) {
