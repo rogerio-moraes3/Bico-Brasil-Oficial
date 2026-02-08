@@ -84,7 +84,7 @@ serve(async (req) => {
 
     if (profileError) {
       console.error('Erro ao buscar perfil:', profileError);
-      throw new Error('Erro ao buscar perfil');
+      throw new Error(`Erro ao buscar perfil: ${profileError.message}`);
     }
 
     if (!profile) {

@@ -128,12 +128,14 @@ serve(async (req) => {
         return new Response('OK', { status: 200 });
       }
 
-      if (order.status === 'paid' && payment.status === 'approved') {
+      const isApproved = payment.status === 'approved';
+
+      if (order.status === 'paid' && isApproved) {
         console.debug('🔁 Ordem já processada, ignorando webhook duplicado');
         return new Response('OK', { status: 200 });
       }
 
-      if (payment.status === 'approved') {
+      if (isApproved) {
         // Ativar destaque
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + order.days);
