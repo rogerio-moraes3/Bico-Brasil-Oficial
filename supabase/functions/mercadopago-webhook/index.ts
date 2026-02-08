@@ -183,7 +183,7 @@ serve(async (req) => {
 
     console.debug('✅ Pagamento encontrado:', payment.id);
 
-    const isAlreadyPaid = payment.status === 'paid';
+    const paymentWasPreviouslyPaid = payment.status === 'paid';
 
     // Map Mercado Pago status to our status
     let newStatus: "paid" | "failed" | "pending" | "in_process" = "pending";
@@ -212,7 +212,7 @@ serve(async (req) => {
     }
 
     // If payment approved, activate user plan
-    if (newStatus === 'paid' && payment.user_id && !isAlreadyPaid) {
+    if (newStatus === 'paid' && payment.user_id && !paymentWasPreviouslyPaid) {
       console.debug('🎉 ========== PAGAMENTO APROVADO ==========');
       console.debug('👤 Usuário ID:', payment.user_id);
       console.debug('💰 Valor:', mpData.transaction_amount);
@@ -413,7 +413,7 @@ serve(async (req) => {
       }
 
       console.debug('🎊 ========== PROCESSO COMPLETO ==========');
-    } else if (newStatus === 'paid' && isAlreadyPaid) {
+    } else if (newStatus === 'paid' && paymentWasPreviouslyPaid) {
       console.debug('🔁 Pagamento já processado, ignorando ações pós-pagamento');
     } else {
       console.debug('ℹ️ Status:', newStatus, '- Nenhuma ação adicional necessária');
