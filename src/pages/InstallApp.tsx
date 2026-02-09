@@ -16,15 +16,22 @@ export default function InstallApp() {
   const [isInstalled, setIsInstalled] = useState(false);
   const { toast } = useToast();
 
+  const getStoredPrompt = () =>
+    (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt ?? null;
+
   useEffect(() => {
+    setDeferredPrompt(getStoredPrompt());
+
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = e;
     };
 
     const onInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
+      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
     };
     window.addEventListener('beforeinstallprompt', handler);
     window.addEventListener('appinstalled', onInstalled);
@@ -41,7 +48,8 @@ export default function InstallApp() {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) {
+    const promptEvent = deferredPrompt ?? getStoredPrompt();
+    if (!promptEvent) {
       toast({
         title: "App já instalado ou navegador não suportado",
         description: "Use Chrome, Edge ou Safari para instalar o app.",
@@ -50,8 +58,8 @@ export default function InstallApp() {
       return;
     }
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
     
     if (outcome === 'accepted') {
       setIsInstalled(true);
@@ -62,6 +70,7 @@ export default function InstallApp() {
     }
     
     setDeferredPrompt(null);
+    (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
   };
 
   const features = [

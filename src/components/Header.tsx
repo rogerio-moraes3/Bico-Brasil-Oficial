@@ -45,19 +45,22 @@ export const Header = () => {
       setShowInstallButton(!mediaQuery.matches);
       if (mediaQuery.matches) {
         setDeferredPrompt(null);
+        (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
       }
     };
     updateDisplayMode();
 
-    const handler = (e: any) => {
+    const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
       setShowInstallButton(true);
+      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = e;
     };
 
     const handleInstalled = () => {
       setShowInstallButton(false);
       setDeferredPrompt(null);
+      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
     };
     
     window.addEventListener('beforeinstallprompt', handler);
@@ -72,21 +75,23 @@ export const Header = () => {
   }, []);
 
   const handleInstallApp = async () => {
-    if (!deferredPrompt) {
+    const promptEvent = deferredPrompt ?? (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt;
+    if (!promptEvent) {
       // Fallback: navigate to install page
       navigate('/install-app');
       setOpen(false);
       return;
     }
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
     
     if (outcome === 'accepted') {
       setShowInstallButton(false);
     }
     
     setDeferredPrompt(null);
+    (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
     setOpen(false);
   };
 

@@ -21,6 +21,7 @@ export const PWAInstallPrompt = () => {
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = e;
       
       // Check if user dismissed before
       const dismissed = localStorage.getItem('pwa-dismissed');
@@ -37,6 +38,7 @@ export const PWAInstallPrompt = () => {
       setShowPrompt(false);
       setDeferredPrompt(null);
       localStorage.removeItem('pwa-dismissed');
+      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
     };
 
     window.addEventListener('beforeinstallprompt', handler);
@@ -52,10 +54,11 @@ export const PWAInstallPrompt = () => {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
+    const promptEvent = deferredPrompt ?? (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt;
+    if (!promptEvent) return;
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
     
     if (outcome === 'accepted') {
       setShowPrompt(false);
@@ -63,6 +66,7 @@ export const PWAInstallPrompt = () => {
     }
     
     setDeferredPrompt(null);
+    (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
   };
 
   const handleDismiss = () => {
