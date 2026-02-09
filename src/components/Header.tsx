@@ -41,7 +41,7 @@ export const Header = () => {
       setShowInstallButton(!mediaQuery.matches);
       if (mediaQuery.matches) {
         setDeferredPrompt(null);
-        // Defensive cleanup: avoid reusing any stored prompt when running in standalone mode.
+        // defensive cleanup: avoid reusing any stored prompt when running in standalone mode.
         setDeferredPwaPrompt(null);
       }
     };
