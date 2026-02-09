@@ -5,33 +5,26 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Smartphone, Bell, Zap, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { getDeferredPwaPrompt, setDeferredPwaPrompt, type BeforeInstallPromptEvent } from '@/lib/pwaInstallPrompt';
 
 export default function InstallApp() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const { toast } = useToast();
 
-  const getStoredPrompt = () =>
-    (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt ?? null;
-
   useEffect(() => {
-    setDeferredPrompt(getStoredPrompt());
+    setDeferredPrompt(getDeferredPwaPrompt());
 
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = e;
+      setDeferredPwaPrompt(e);
     };
 
     const onInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
-      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
+      setDeferredPwaPrompt(null);
     };
     window.addEventListener('beforeinstallprompt', handler);
     window.addEventListener('appinstalled', onInstalled);
@@ -48,7 +41,7 @@ export default function InstallApp() {
   }, []);
 
   const handleInstall = async () => {
-    const promptEvent = deferredPrompt ?? getStoredPrompt();
+    const promptEvent = deferredPrompt ?? getDeferredPwaPrompt();
     if (!promptEvent) {
       toast({
         title: "App já instalado ou navegador não suportado",
@@ -70,7 +63,7 @@ export default function InstallApp() {
     }
     
     setDeferredPrompt(null);
-    (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
+    setDeferredPwaPrompt(null);
   };
 
   const features = [

@@ -17,11 +17,7 @@ import { NotificationsPanel } from "./NotificationsPanel";
 import { useUserMode } from "@/contexts/UserModeContext";
 import { ModeToggle } from "./ModeToggle";
 import { Separator } from "./ui/separator";
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { getDeferredPwaPrompt, setDeferredPwaPrompt, type BeforeInstallPromptEvent } from "@/lib/pwaInstallPrompt";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -45,7 +41,7 @@ export const Header = () => {
       setShowInstallButton(!mediaQuery.matches);
       if (mediaQuery.matches) {
         setDeferredPrompt(null);
-        (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
+        setDeferredPwaPrompt(null);
       }
     };
     updateDisplayMode();
@@ -54,13 +50,13 @@ export const Header = () => {
       e.preventDefault();
       setDeferredPrompt(e);
       setShowInstallButton(true);
-      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = e;
+      setDeferredPwaPrompt(e);
     };
 
     const handleInstalled = () => {
       setShowInstallButton(false);
       setDeferredPrompt(null);
-      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
+      setDeferredPwaPrompt(null);
     };
     
     window.addEventListener('beforeinstallprompt', handler);
@@ -75,7 +71,7 @@ export const Header = () => {
   }, []);
 
   const handleInstallApp = async () => {
-    const promptEvent = deferredPrompt ?? (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt;
+    const promptEvent = deferredPrompt ?? getDeferredPwaPrompt();
     if (!promptEvent) {
       // Fallback: navigate to install page
       navigate('/install-app');
@@ -91,7 +87,7 @@ export const Header = () => {
     }
     
     setDeferredPrompt(null);
-    (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
+    setDeferredPwaPrompt(null);
     setOpen(false);
   };
 

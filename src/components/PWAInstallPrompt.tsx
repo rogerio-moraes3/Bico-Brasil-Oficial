@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { X, Download } from 'lucide-react';
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { getDeferredPwaPrompt, setDeferredPwaPrompt, type BeforeInstallPromptEvent } from '@/lib/pwaInstallPrompt';
 
 export const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -21,7 +17,7 @@ export const PWAInstallPrompt = () => {
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = e;
+      setDeferredPwaPrompt(e);
       
       // Check if user dismissed before
       const dismissed = localStorage.getItem('pwa-dismissed');
@@ -38,7 +34,7 @@ export const PWAInstallPrompt = () => {
       setShowPrompt(false);
       setDeferredPrompt(null);
       localStorage.removeItem('pwa-dismissed');
-      (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
+      setDeferredPwaPrompt(null);
     };
 
     window.addEventListener('beforeinstallprompt', handler);
@@ -54,7 +50,7 @@ export const PWAInstallPrompt = () => {
   }, []);
 
   const handleInstall = async () => {
-    const promptEvent = deferredPrompt ?? (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt;
+    const promptEvent = deferredPrompt ?? getDeferredPwaPrompt();
     if (!promptEvent) return;
 
     promptEvent.prompt();
@@ -66,7 +62,7 @@ export const PWAInstallPrompt = () => {
     }
     
     setDeferredPrompt(null);
-    (window as Window & { deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null }).deferredPWAInstallPrompt = null;
+    setDeferredPwaPrompt(null);
   };
 
   const handleDismiss = () => {
