@@ -4,12 +4,12 @@ export type BeforeInstallPromptEvent = Event & {
 };
 
 type PromptWindow = Window & {
-  deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null;
+  deferredPwaPrompt?: BeforeInstallPromptEvent | null;
 };
 
 export const getDeferredPwaPrompt = () =>
-  (window as PromptWindow).deferredPWAInstallPrompt ?? null;
+  (window as PromptWindow).deferredPwaPrompt ?? null;
 
 export const setDeferredPwaPrompt = (prompt: BeforeInstallPromptEvent | null) => {
-  (window as PromptWindow).deferredPWAInstallPrompt = prompt;
+  (window as PromptWindow).deferredPwaPrompt = prompt;
 };
