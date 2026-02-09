@@ -5,11 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Smartphone, Bell, Zap, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { getDeferredPwaPrompt, setDeferredPwaPrompt, type BeforeInstallPromptEvent } from '@/lib/pwaInstallPrompt';
 
 export default function InstallApp() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -20,11 +16,13 @@ export default function InstallApp() {
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      setDeferredPwaPrompt(e);
     };
 
     const onInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
+      setDeferredPwaPrompt(null);
     };
     window.addEventListener('beforeinstallprompt', handler);
     window.addEventListener('appinstalled', onInstalled);
@@ -41,7 +39,8 @@ export default function InstallApp() {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) {
+    const promptEvent = deferredPrompt ?? getDeferredPwaPrompt();
+    if (!promptEvent) {
       toast({
         title: "App já instalado ou navegador não suportado",
         description: "Use Chrome, Edge ou Safari para instalar o app.",
@@ -50,8 +49,8 @@ export default function InstallApp() {
       return;
     }
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
     
     if (outcome === 'accepted') {
       setIsInstalled(true);
@@ -62,6 +61,7 @@ export default function InstallApp() {
     }
     
     setDeferredPrompt(null);
+    setDeferredPwaPrompt(null);
   };
 
   const features = [

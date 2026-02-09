@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { X, Download } from 'lucide-react';
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { getDeferredPwaPrompt, setDeferredPwaPrompt, type BeforeInstallPromptEvent } from '@/lib/pwaInstallPrompt';
 
 export const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -21,6 +17,7 @@ export const PWAInstallPrompt = () => {
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      setDeferredPwaPrompt(e);
       
       // Check if user dismissed before
       const dismissed = localStorage.getItem('pwa-dismissed');
@@ -37,6 +34,7 @@ export const PWAInstallPrompt = () => {
       setShowPrompt(false);
       setDeferredPrompt(null);
       localStorage.removeItem('pwa-dismissed');
+      setDeferredPwaPrompt(null);
     };
 
     window.addEventListener('beforeinstallprompt', handler);
@@ -52,10 +50,11 @@ export const PWAInstallPrompt = () => {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
+    const promptEvent = deferredPrompt ?? getDeferredPwaPrompt();
+    if (!promptEvent) return;
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
     
     if (outcome === 'accepted') {
       setShowPrompt(false);
@@ -63,6 +62,7 @@ export const PWAInstallPrompt = () => {
     }
     
     setDeferredPrompt(null);
+    setDeferredPwaPrompt(null);
   };
 
   const handleDismiss = () => {

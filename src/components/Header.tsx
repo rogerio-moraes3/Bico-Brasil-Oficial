@@ -17,11 +17,7 @@ import { NotificationsPanel } from "./NotificationsPanel";
 import { useUserMode } from "@/contexts/UserModeContext";
 import { ModeToggle } from "./ModeToggle";
 import { Separator } from "./ui/separator";
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { getDeferredPwaPrompt, setDeferredPwaPrompt, type BeforeInstallPromptEvent } from "@/lib/pwaInstallPrompt";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -45,19 +41,23 @@ export const Header = () => {
       setShowInstallButton(!mediaQuery.matches);
       if (mediaQuery.matches) {
         setDeferredPrompt(null);
+        // defensive cleanup: avoid reusing any stored prompt when running in standalone mode.
+        setDeferredPwaPrompt(null);
       }
     };
     updateDisplayMode();
 
-    const handler = (e: any) => {
+    const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
       setShowInstallButton(true);
+      setDeferredPwaPrompt(e);
     };
 
     const handleInstalled = () => {
       setShowInstallButton(false);
       setDeferredPrompt(null);
+      setDeferredPwaPrompt(null);
     };
     
     window.addEventListener('beforeinstallprompt', handler);
@@ -72,21 +72,23 @@ export const Header = () => {
   }, []);
 
   const handleInstallApp = async () => {
-    if (!deferredPrompt) {
+    const promptEvent = deferredPrompt ?? getDeferredPwaPrompt();
+    if (!promptEvent) {
       // Fallback: navigate to install page
       navigate('/install-app');
       setOpen(false);
       return;
     }
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
     
     if (outcome === 'accepted') {
       setShowInstallButton(false);
     }
     
     setDeferredPrompt(null);
+    setDeferredPwaPrompt(null);
     setOpen(false);
   };
 
