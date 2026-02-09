@@ -8,13 +8,13 @@ import { useToast } from '@/hooks/use-toast';
 import { getDeferredPwaPrompt, setDeferredPwaPrompt, type BeforeInstallPromptEvent } from '@/lib/pwaInstallPrompt';
 
 export default function InstallApp() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(() =>
+    getDeferredPwaPrompt()
+  );
   const [isInstalled, setIsInstalled] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    setDeferredPrompt(getDeferredPwaPrompt());
-
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
