@@ -12,6 +12,20 @@ export const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
 
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+      setShowPrompt(false);
+      localStorage.removeItem('pwa-dismissed');
+    }
+
+    setDeferredPrompt(null);
+  };
+
   useEffect(() => {
     let timeoutId: number | undefined;
     if (window.matchMedia('(display-mode: standalone)').matches) {
@@ -21,12 +35,12 @@ export const PWAInstallPrompt = () => {
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      
+
       // Check if user dismissed before
       const dismissed = localStorage.getItem('pwa-dismissed');
       const dismissedDate = dismissed ? new Date(dismissed) : null;
       const now = new Date();
-      
+
       // Show if never dismissed or dismissed more than 7 days ago
       if (!dismissedDate || (now.getTime() - dismissedDate.getTime()) > 7 * 24 * 60 * 60 * 1000) {
         // Show after 3 seconds
@@ -39,8 +53,19 @@ export const PWAInstallPrompt = () => {
       localStorage.removeItem('pwa-dismissed');
     };
 
+    // Custom event listener for manual trigger from footer button
+    const handleCustomPrompt = () => {
+      if (deferredPrompt) {
+        handleInstall();
+      } else {
+        // Fallback: navigate to install page with instructions
+        window.location.href = '/install-app';
+      }
+    };
+
     window.addEventListener('beforeinstallprompt', handler);
     window.addEventListener('appinstalled', handleInstalled);
+    window.addEventListener('show-pwa-prompt', handleCustomPrompt);
 
     return () => {
       if (timeoutId) {
@@ -48,22 +73,9 @@ export const PWAInstallPrompt = () => {
       }
       window.removeEventListener('beforeinstallprompt', handler);
       window.removeEventListener('appinstalled', handleInstalled);
+      window.removeEventListener('show-pwa-prompt', handleCustomPrompt);
     };
-  }, []);
-
-  const handleInstall = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      setShowPrompt(false);
-      localStorage.removeItem('pwa-dismissed');
-    }
-    
-    setDeferredPrompt(null);
-  };
+  }, [deferredPrompt]);
 
   const handleDismiss = () => {
     setShowPrompt(false);
@@ -82,7 +94,7 @@ export const PWAInstallPrompt = () => {
           >
             <X className="h-4 w-4" />
           </button>
-          
+
           <div className="flex items-start gap-3">
             <div className="bg-primary/10 p-2 rounded-lg">
               <Download className="h-6 w-6 text-primary" />
