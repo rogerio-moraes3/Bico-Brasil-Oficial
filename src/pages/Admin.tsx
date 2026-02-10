@@ -154,6 +154,7 @@ export default function Admin() {
   // Detailed data for modals
   const [paymentDetails, setPaymentDetails] = useState<any[]>([]);
   const [annualRevenue, setAnnualRevenue] = useState<any[]>([]);
+  const [modalUserTypeFilter, setModalUserTypeFilter] = useState<'all' | 'prestador' | 'empregador'>('all');
 
   useEffect(() => {
     checkAdminAccess();
@@ -979,56 +980,177 @@ export default function Admin() {
             />
           </div>
 
-          {/* User List - 5 items with scroll */}
-          <div className="flex-1 overflow-y-auto space-y-3 pr-2">
-            {filteredLeads.slice(0, 5).map((lead) => (
-              <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
-                <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                  <div>
-                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Nome:</span>
-                    <p className="text-foreground mt-0.5">{lead.name || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">CPF/Email:</span>
-                    <p className="text-foreground mt-0.5 truncate">{lead.email || lead.cpf || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Celular:</span>
-                    <p className="text-foreground mt-0.5">{lead.phone || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Cidade:</span>
-                    <p className="text-foreground mt-0.5">{lead.city || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Bairro:</span>
-                    <p className="text-foreground mt-0.5">{lead.neighborhood || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-bold text-foreground text-xs uppercase tracking-wide">Tipo:</span>
-                    <p className="text-foreground mt-0.5">
-                      <Badge className={`text-xs ${lead.type === 'fazer_bico' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'
-                        }`}>
-                        {lead.type === 'fazer_bico' ? 'Prestador' : 'Contratante'}
-                      </Badge>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {filteredLeads.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">Nenhum usuário encontrado</p>
-              </div>
-            )}
-          </div>
+          {/* User Type Filter Tabs */}
+          <Tabs value={modalUserTypeFilter} onValueChange={(val) => setModalUserTypeFilter(val as any)} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-slate-900 mb-4">
+              <TabsTrigger value="all" className="text-xs font-bold">
+                Todos ({filteredLeads.length})
+              </TabsTrigger>
+              <TabsTrigger value="prestador" className="text-xs font-bold">
+                Trabalhadores ({filteredLeads.filter(u => u.user_role === 'prestador').length})
+              </TabsTrigger>
+              <TabsTrigger value="empregador" className="text-xs font-bold">
+                Contratantes ({filteredLeads.filter(u => u.user_role === 'empregador').length})
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Pagination Info */}
-          <div className="mt-4 pt-4 border-t border-border text-center text-xs text-muted-foreground">
-            Mostrando {Math.min(5, filteredLeads.length)} de {filteredLeads.length} usuários
-            {searchTerm && ` (filtrado de ${leads.length} total)`}
-          </div>
+            <TabsContent value="all" className="mt-0">
+              {/* User List - All filtered users with scroll */}
+              <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[500px]">
+                {filteredLeads.map((lead) => (
+                  <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Nome:</span>
+                        <p className="text-foreground mt-0.5">{lead.name || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">CPF/Email:</span>
+                        <p className="text-foreground mt-0.5 truncate">{lead.email || lead.cpf || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Celular:</span>
+                        <p className="text-foreground mt-0.5">{lead.phone || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Cidade:</span>
+                        <p className="text-foreground mt-0.5">{lead.city || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Bairro:</span>
+                        <p className="text-foreground mt-0.5">{lead.neighborhood || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Tipo:</span>
+                        <p className="text-foreground mt-0.5">
+                          <Badge className={`text-xs ${lead.user_role === 'prestador' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'
+                            }`}>
+                            {lead.user_role === 'prestador' ? 'Trabalhador' : 'Contratante'}
+                          </Badge>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {filteredLeads.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">Nenhum usuário encontrado</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Pagination Info */}
+              <div className="mt-4 pt-4 border-t border-border text-center text-xs text-muted-foreground">
+                Mostrando {filteredLeads.length} usuários
+                {searchTerm && ` (filtrado de ${leads.length} total)`}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="prestador" className="mt-0">
+              {/* User List - Workers only */}
+              <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[500px]">
+                {filteredLeads.filter(u => u.user_role === 'prestador').map((lead) => (
+                  <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Nome:</span>
+                        <p className="text-foreground mt-0.5">{lead.name || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">CPF/Email:</span>
+                        <p className="text-foreground mt-0.5 truncate">{lead.email || lead.cpf || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Celular:</span>
+                        <p className="text-foreground mt-0.5">{lead.phone || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Cidade:</span>
+                        <p className="text-foreground mt-0.5">{lead.city || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Bairro:</span>
+                        <p className="text-foreground mt-0.5">{lead.neighborhood || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Tipo:</span>
+                        <p className="text-foreground mt-0.5">
+                          <Badge className="text-xs bg-blue-500/10 text-blue-400">
+                            Trabalhador
+                          </Badge>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {filteredLeads.filter(u => u.user_role === 'prestador').length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">Nenhum trabalhador encontrado</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Pagination Info */}
+              <div className="mt-4 pt-4 border-t border-border text-center text-xs text-muted-foreground">
+                Mostrando {filteredLeads.filter(u => u.user_role === 'prestador').length} trabalhadores
+                {searchTerm && ` (filtrado de ${leads.filter(u => u.user_role === 'prestador').length} total)`}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="empregador" className="mt-0">
+              {/* User List - Contractors only */}
+              <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[500px]">
+                {filteredLeads.filter(u => u.user_role === 'empregador').map((lead) => (
+                  <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Nome:</span>
+                        <p className="text-foreground mt-0.5">{lead.name || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">CPF/Email:</span>
+                        <p className="text-foreground mt-0.5 truncate">{lead.email || lead.cpf || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Celular:</span>
+                        <p className="text-foreground mt-0.5">{lead.phone || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Cidade:</span>
+                        <p className="text-foreground mt-0.5">{lead.city || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Bairro:</span>
+                        <p className="text-foreground mt-0.5">{lead.neighborhood || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-foreground text-xs uppercase tracking-wide">Tipo:</span>
+                        <p className="text-foreground mt-0.5">
+                          <Badge className="text-xs bg-amber-500/10 text-amber-400">
+                            Contratante
+                          </Badge>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {filteredLeads.filter(u => u.user_role === 'empregador').length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">Nenhum contratante encontrado</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Pagination Info */}
+              <div className="mt-4 pt-4 border-t border-border text-center text-xs text-muted-foreground">
+                Mostrando {filteredLeads.filter(u => u.user_role === 'empregador').length} contratantes
+                {searchTerm && ` (filtrado de ${leads.filter(u => u.user_role === 'empregador').length} total)`}
+              </div>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
 
