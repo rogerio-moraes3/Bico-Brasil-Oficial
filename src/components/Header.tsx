@@ -17,11 +17,7 @@ import { NotificationsPanel } from "./NotificationsPanel";
 import { useUserMode } from "@/contexts/UserModeContext";
 import { ModeToggle } from "./ModeToggle";
 import { Separator } from "./ui/separator";
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { BeforeInstallPromptEvent, getDeferredPwaPrompt, setDeferredPwaPrompt, clearDeferredPwaPrompt } from "@/lib/pwaPrompt";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -32,12 +28,12 @@ export const Header = () => {
   const [open, setOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
-  
+
   // Show back button on internal routes (public paths excluded) or when there is a history stack
   const publicPaths = ['/', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch'];
   const hasHistory = typeof window !== 'undefined' && window.history && window.history.length > 1;
   const showBackButton = hasHistory || !publicPaths.some(p => location.pathname.startsWith(p));
-  
+
   // PWA Install Detection
   useEffect(() => {
     const mediaQuery = window.matchMedia('(display-mode: standalone)');
@@ -45,12 +41,14 @@ export const Header = () => {
       setShowInstallButton(!mediaQuery.matches);
       if (mediaQuery.matches) {
         setDeferredPrompt(null);
+        clearDeferredPwaPrompt(); // Clear global
       }
     };
     updateDisplayMode();
 
     const handler = (e: any) => {
       e.preventDefault();
+      setDeferredPwaPrompt(e); // Save globally
       setDeferredPrompt(e);
       setShowInstallButton(true);
     };
@@ -58,8 +56,9 @@ export const Header = () => {
     const handleInstalled = () => {
       setShowInstallButton(false);
       setDeferredPrompt(null);
+      clearDeferredPwaPrompt(); // Clear global
     };
-    
+
     window.addEventListener('beforeinstallprompt', handler);
     window.addEventListener('appinstalled', handleInstalled);
     mediaQuery.addEventListener('change', updateDisplayMode);
@@ -81,12 +80,13 @@ export const Header = () => {
 
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    
+
     if (outcome === 'accepted') {
       setShowInstallButton(false);
     }
-    
+
     setDeferredPrompt(null);
+    clearDeferredPwaPrompt(); // Clear global
     setOpen(false);
   };
 
@@ -292,7 +292,7 @@ export const Header = () => {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Menu Items - ListGroup Style */}
                   <nav className="flex-1 overflow-y-auto py-2">
                     {user ? (
@@ -306,7 +306,7 @@ export const Header = () => {
                           <span className="flex-1 text-left">Meu Perfil</span>
                           <ChevronRight className="h-4 w-4 text-muted-foreground" />
                         </Button>
-                        
+
                         {navItems.map((item) => (
                           <Button
                             key={item.path}
@@ -319,9 +319,9 @@ export const Header = () => {
                             <ChevronRight className="h-4 w-4 text-muted-foreground" />
                           </Button>
                         ))}
-                        
+
                         <Separator className="my-2" />
-                        
+
                         {showInstallButton && (
                           <Button
                             variant="ghost"
@@ -333,9 +333,9 @@ export const Header = () => {
                             <ChevronRight className="h-4 w-4 text-muted-foreground" />
                           </Button>
                         )}
-                        
+
                         <Separator className="my-2" />
-                        
+
                         <Button
                           variant="ghost"
                           className="w-full justify-start gap-3 h-12 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
@@ -362,7 +362,7 @@ export const Header = () => {
                             <ChevronRight className="h-4 w-4 text-muted-foreground" />
                           </Button>
                         ))}
-                        
+
                         {showInstallButton && (
                           <>
                             <Separator className="my-2" />
@@ -377,9 +377,9 @@ export const Header = () => {
                             </Button>
                           </>
                         )}
-                        
+
                         <Separator className="my-2" />
-                        
+
                         <Button
                           variant="default"
                           className="w-full justify-center h-12 mx-2"

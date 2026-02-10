@@ -5,26 +5,24 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Smartphone, Bell, Zap, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { BeforeInstallPromptEvent, getDeferredPwaPrompt, setDeferredPwaPrompt, clearDeferredPwaPrompt } from '@/lib/pwaPrompt';
 
 export default function InstallApp() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(getDeferredPwaPrompt());
   const [isInstalled, setIsInstalled] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
+      setDeferredPwaPrompt(e); // Save globally
       setDeferredPrompt(e);
     };
 
     const onInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
+      clearDeferredPwaPrompt(); // Clear global
     };
     window.addEventListener('beforeinstallprompt', handler);
     window.addEventListener('appinstalled', onInstalled);
@@ -52,7 +50,7 @@ export default function InstallApp() {
 
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    
+
     if (outcome === 'accepted') {
       setIsInstalled(true);
       toast({
@@ -60,8 +58,9 @@ export default function InstallApp() {
         description: "Agora você pode acessar o Bico Brasil direto da sua tela inicial."
       });
     }
-    
+
     setDeferredPrompt(null);
+    clearDeferredPwaPrompt();
   };
 
   const features = [
@@ -89,7 +88,7 @@ export default function InstallApp() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -98,7 +97,7 @@ export default function InstallApp() {
             </div>
             <h1 className="text-4xl font-bold mb-4">Instale o App Bico Brasil</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Tenha acesso rápido aos melhores profissionais da sua região. 
+              Tenha acesso rápido aos melhores profissionais da sua região.
               Instale nosso PWA e aproveite todos os benefícios!
             </p>
           </div>
@@ -118,9 +117,9 @@ export default function InstallApp() {
           ) : (
             <Card className="mb-8">
               <CardContent className="pt-6">
-                <Button 
-                  onClick={handleInstall} 
-                  size="lg" 
+                <Button
+                  onClick={handleInstall}
+                  size="lg"
                   className="w-full text-lg h-14"
                 >
                   <Download className="mr-2 h-5 w-5" />
