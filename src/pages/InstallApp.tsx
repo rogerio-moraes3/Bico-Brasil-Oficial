@@ -50,6 +50,25 @@ export default function InstallApp() {
       return;
     }
 
+    // Check if app is installed via Chrome API (even if not in standalone)
+    if ('getInstalledRelatedApps' in navigator) {
+      try {
+        const relatedApps = await (navigator as any).getInstalledRelatedApps();
+        if (relatedApps && relatedApps.length > 0) {
+          toast({
+            title: "App já instalado (detectado pelo Chrome)",
+            description: "O Chrome detectou que o app está instalado. Procure o ícone 'Bico Brasil' na sua tela inicial ou desinstale completamente e reinstale.",
+            variant: "default",
+            duration: 8000
+          });
+          setIsInstalled(true);
+          return;
+        }
+      } catch (e) {
+        console.log('getInstalledRelatedApps failed:', e);
+      }
+    }
+
     // Check if prompt is available
     if (!deferredPrompt) {
       // Check browser support
@@ -73,8 +92,9 @@ export default function InstallApp() {
       } else {
         toast({
           title: "Instalação não disponível no momento",
-          description: "Tente recarregar a página ou volte mais tarde. O navegador pode ter critérios de engajamento.",
-          variant: "destructive"
+          description: "Se o Chrome diz que o app já está instalado: 1) Procure o ícone na tela inicial, 2) Ou vá em Configurações → Apps → Bico Brasil e desinstale completamente, depois volte aqui. 3) Ou limpe os dados do site nas configurações do Chrome.",
+          variant: "destructive",
+          duration: 10000
         });
       }
       return;
