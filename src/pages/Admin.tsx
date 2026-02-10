@@ -205,14 +205,26 @@ export default function Admin() {
 
   const loadAllData = async () => {
     setLoading(true);
+    console.log('📊 Loading all admin data...');
+
     try {
-      await Promise.all([
+      // Add 30 second timeout to prevent infinite loading
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout: Data loading took too long')), 30000)
+      );
+
+      const dataPromise = Promise.all([
         loadGeneralMetrics(),
         loadRecentActivity(),
         loadLeads()
       ]);
+
+      await Promise.race([dataPromise, timeout]);
+      console.log('✅ All data loaded successfully');
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error('❌ Error loading admin data:', error);
+      toast.error('Erro ao carregar dados - alguns dados podem estar incompletos');
+      // Don't rethrow - allow partial data to be shown
     } finally {
       setLoading(false);
     }
@@ -247,138 +259,150 @@ export default function Admin() {
   };
 
   const loadGeneralMetrics = async () => {
-    const { data: usersData } = await supabase.from('users').select('*');
-    const { count: totalJobs } = await supabase.from('job_postings').select('*', { count: 'exact', head: true });
-    const { count: totalServices } = await supabase.from('worker_services').select('*', { count: 'exact', head: true });
-    const { data: allPayments } = await supabase.from('payments').select('amount, status, created_at, user_id');
+    try {
+      console.log('📈 Loading general metrics...');
 
-    if (!usersData) return;
+      const { data: usersData } = await supabase.from('users').select('*');
+      const { count: totalJobs } = await supabase.from('job_postings').select('*', { count: 'exact', head: true });
+      const { count: totalServices } = await supabase.from('worker_services').select('*', { count: 'exact', head: true });
+      const { data: allPayments } = await supabase.from('payments').select('amount, status, created_at, user_id');
 
-    const { startDate, endDate } = getDateRange();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-    const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+      if (!usersData) {
+        console.warn('No users data returned');
+        return;
+      }
 
-    // User metrics
-    const totalLeads = usersData.length;
-    const leadsToday = usersData.filter(u => new Date(u.created_at) >= today).length;
-    const leadsThisMonth = usersData.filter(u => new Date(u.created_at) >= thisMonthStart).length;
-    const leadsLastMonth = usersData.filter(u => {
-      const d = new Date(u.created_at);
-      return d >= lastMonthStart && d <= lastMonthEnd;
-    }).length;
+      const { startDate, endDate } = getDateRange();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
 
-    // Payment metrics
-    const approvedPayments = allPayments?.filter(p => p.status === 'paid') || [];
-    const pendingPayments = allPayments?.filter(p => p.status === 'pending') || [];
-    const totalRevenue = approvedPayments.reduce((acc, p) => acc + (p.amount || 0), 0);
-    const pendingRevenue = pendingPayments.reduce((acc, p) => acc + (p.amount || 0), 0);
+      // User metrics
+      const totalLeads = usersData.length;
+      const leadsToday = usersData.filter(u => new Date(u.created_at) >= today).length;
+      const leadsThisMonth = usersData.filter(u => new Date(u.created_at) >= thisMonthStart).length;
+      const leadsLastMonth = usersData.filter(u => {
+        const d = new Date(u.created_at);
+        return d >= lastMonthStart && d <= lastMonthEnd;
+      }).length;
 
-    // Conversion rate: users with payments / total users
-    const paidUserIds = new Set(approvedPayments.map(p => p.user_id).filter(Boolean));
-    const conversionRate = totalLeads > 0 ? (paidUserIds.size / totalLeads) * 100 : 0;
+      // Payment metrics
+      const approvedPayments = allPayments?.filter(p => p.status === 'paid') || [];
+      const pendingPayments = allPayments?.filter(p => p.status === 'pending') || [];
+      const totalRevenue = approvedPayments.reduce((acc, p) => acc + (p.amount || 0), 0);
+      const pendingRevenue = pendingPayments.reduce((acc, p) => acc + (p.amount || 0), 0);
 
-    // Growth rate: (this month - last month) / last month * 100
-    const growthRate = leadsLastMonth > 0 ? ((leadsThisMonth - leadsLastMonth) / leadsLastMonth) * 100 : 0;
+      // Conversion rate: users with payments / total users
+      const paidUserIds = new Set(approvedPayments.map(p => p.user_id).filter(Boolean));
+      const conversionRate = totalLeads > 0 ? (paidUserIds.size / totalLeads) * 100 : 0;
 
-    // Revenue trend (last 30 days)
-    const revenueTrend: any[] = [];
-    for (let i = 29; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-      const dayRevenue = approvedPayments
-        .filter(p => p.created_at?.startsWith(dateStr))
-        .reduce((acc, p) => acc + (p.amount || 0), 0);
-      revenueTrend.push({
-        date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-        revenue: dayRevenue
-      });
-    }
+      // Growth rate: (this month - last month) / last month * 100
+      const growthRate = leadsLastMonth > 0 ? ((leadsThisMonth - leadsLastMonth) / leadsLastMonth) * 100 : 0;
 
-    // City distribution
-    const cityCounts: any = {};
-    usersData.forEach(u => {
-      const city = u.city || 'Outros';
-      cityCounts[city] = (cityCounts[city] || 0) + 1;
-    });
-
-    // Annual revenue calculation
-    const currentYear = new Date().getFullYear();
-    const annualRevenueData = [];
-
-    for (let year = 2024; year <= currentYear + 1; year++) {
-      const yearStart = new Date(year, 0, 1);
-      const yearEnd = new Date(year, 11, 31, 23, 59, 59);
-
-      if (year <= currentYear) {
-        // Historical data
-        const yearRevenue = approvedPayments
-          .filter(p => {
-            const pDate = new Date(p.created_at);
-            return pDate >= yearStart && pDate <= yearEnd;
-          })
+      // Revenue trend (last 30 days)
+      const revenueTrend: any[] = [];
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+        const dayRevenue = approvedPayments
+          .filter(p => p.created_at?.startsWith(dateStr))
           .reduce((acc, p) => acc + (p.amount || 0), 0);
-
-        annualRevenueData.push({
-          year,
-          revenue: yearRevenue,
-          isProjection: false
-        });
-      } else {
-        // Projection for next year
-        const avgMonthlyRevenue = totalRevenue / Math.max(1, new Date().getMonth() + 1);
-        const projection = avgMonthlyRevenue * 12 * 1.3; // 30% growth estimate
-
-        annualRevenueData.push({
-          year,
-          revenue: projection,
-          isProjection: true
+        revenueTrend.push({
+          date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+          revenue: dayRevenue
         });
       }
+
+      // City distribution
+      const cityCounts: any = {};
+      usersData.forEach(u => {
+        const city = u.city || 'Outros';
+        cityCounts[city] = (cityCounts[city] || 0) + 1;
+      });
+
+      // Annual revenue calculation
+      const currentYear = new Date().getFullYear();
+      const annualRevenueData = [];
+
+      for (let year = 2024; year <= currentYear + 1; year++) {
+        const yearStart = new Date(year, 0, 1);
+        const yearEnd = new Date(year, 11, 31, 23, 59, 59);
+
+        if (year <= currentYear) {
+          // Historical data
+          const yearRevenue = approvedPayments
+            .filter(p => {
+              const pDate = new Date(p.created_at);
+              return pDate >= yearStart && pDate <= yearEnd;
+            })
+            .reduce((acc, p) => acc + (p.amount || 0), 0);
+
+          annualRevenueData.push({
+            year,
+            revenue: yearRevenue,
+            isProjection: false
+          });
+        } else {
+          // Projection for next year
+          const avgMonthlyRevenue = totalRevenue / Math.max(1, new Date().getMonth() + 1);
+          const projection = avgMonthlyRevenue * 12 * 1.3; // 30% growth estimate
+
+          annualRevenueData.push({
+            year,
+            revenue: projection,
+            isProjection: true
+          });
+        }
+      }
+
+      setAnnualRevenue(annualRevenueData);
+
+      // Store detailed payment data for modal
+      const detailedPayments = await supabase
+        .from('payments')
+        .select(`
+          *,
+          users:user_id (
+            name,
+            email
+          )
+        `)
+        .order('created_at', { ascending: false });
+
+      if (detailedPayments.data) {
+        setPaymentDetails(detailedPayments.data);
+      }
+
+      setMetrics(prev => ({
+        ...prev,
+        totalLeads,
+        leadsToday,
+        leadsThisMonth,
+        leadsLastMonth,
+        totalRevenue,
+        pendingRevenue,
+        approvedPayments: approvedPayments.length,
+        totalPayments: allPayments?.length || 0,
+        conversionRate,
+        growthRate,
+        revenueTrend,
+        leadsByType: {
+          fazer_bico: usersData.filter(u => u.user_role === 'prestador').length,
+          anunciar_servico: usersData.filter(u => u.user_role === 'empregador').length
+        },
+        leadsByCity: Object.entries(cityCounts).map(([name, value]) => ({ name, value })),
+        totalJobs: totalJobs || 0,
+        totalServices: totalServices || 0
+      }));
+
+      console.log('✅ General metrics loaded');
+    } catch (error) {
+      console.error('❌ Error loading general metrics:', error);
+      // Don't rethrow - allow page to load with partial data
     }
-
-    setAnnualRevenue(annualRevenueData);
-
-    // Store detailed payment data for modal
-    const detailedPayments = await supabase
-      .from('payments')
-      .select(`
-        *,
-        users:user_id (
-          name,
-          email
-        )
-      `)
-      .order('created_at', { ascending: false });
-
-    if (detailedPayments.data) {
-      setPaymentDetails(detailedPayments.data);
-    }
-
-    setMetrics(prev => ({
-      ...prev,
-      totalLeads,
-      leadsToday,
-      leadsThisMonth,
-      leadsLastMonth,
-      totalRevenue,
-      pendingRevenue,
-      approvedPayments: approvedPayments.length,
-      totalPayments: allPayments?.length || 0,
-      conversionRate,
-      growthRate,
-      revenueTrend,
-      leadsByType: {
-        fazer_bico: usersData.filter(u => u.user_role === 'prestador').length,
-        anunciar_servico: usersData.filter(u => u.user_role === 'empregador').length
-      },
-      leadsByCity: Object.entries(cityCounts).map(([name, value]) => ({ name, value })),
-      totalJobs: totalJobs || 0,
-      totalServices: totalServices || 0
-    }));
   };
 
   const loadRecentActivity = async () => {
@@ -386,17 +410,38 @@ export default function Admin() {
   };
 
   const loadLeads = async () => {
+    console.log('🔄 Loading users...');
+
+    // Try admin_user_list view first
     const { data, error } = await supabase
       .from('admin_user_list')
       .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Erro ao buscar usuários:', error);
-      toast.error('Erro ao buscar usuários');
+      console.warn('admin_user_list view failed, falling back to users table:', error);
+
+      // Fallback: query users table directly
+      const { data: usersData, error: usersError } = await supabase
+        .from('users')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (usersError) {
+        console.error('CRITICAL: Failed to load users:', usersError);
+        toast.error('Erro ao buscar usuários - verifique sua conexão');
+        setLeads([]);
+        setFilteredLeads([]);
+        return;
+      }
+
+      console.log('✅ Loaded from users table:', usersData?.length, 'users');
+      setLeads(usersData || []);
+      setFilteredLeads(usersData || []);
       return;
     }
 
+    console.log('✅ Loaded from admin_user_list:', data?.length, 'users');
     setLeads(data || []);
     setFilteredLeads(data || []);
   };
