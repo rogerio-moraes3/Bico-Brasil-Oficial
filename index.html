@@ -146,38 +146,39 @@
   <script type="module" src="/src/main.tsx"></script>
 
   <script>
-    // 🔥 FORCE CACHE CLEAR - Remove old service workers and caches
-    (async function forceCacheClear() {
-      const CURRENT_VERSION = 12;
-      const VERSION_KEY = 'bico_sw_version';
-      const storedVersion = parseInt(localStorage.getItem(VERSION_KEY) || '0');
+    // 🔥 CACHE CLEAR DISABLED TEMPORARILY - Debugging infinite loop
+    // (async function forceCacheClear() {
+    //   const CURRENT_VERSION = 12;
+    //   const VERSION_KEY = 'bico_sw_version';
+    //   const storedVersion = parseInt(localStorage.getItem(VERSION_KEY) || '0');
 
-      if (storedVersion < CURRENT_VERSION) {
-        console.debug('🔄 Updating app... clearing old caches');
+    //   if (storedVersion < CURRENT_VERSION) {
+    //     console.debug('🔄 Updating app... clearing old caches');
 
-        // CRITICAL: Set version FIRST to prevent reload loop
-        localStorage.setItem(VERSION_KEY, CURRENT_VERSION.toString());
+    //     // CRITICAL: Set version FIRST to prevent reload loop
+    //     localStorage.setItem(VERSION_KEY, CURRENT_VERSION.toString());
 
-        // Unregister all service workers
-        if ('serviceWorker' in navigator) {
-          const registrations = await navigator.serviceWorker.getRegistrations();
-          for (const registration of registrations) {
-            await registration.unregister();
-          }
-        }
+    //     // Unregister all service workers
+    //     if ('serviceWorker' in navigator) {
+    //       const registrations = await navigator.serviceWorker.getRegistrations();
+    //       for (const registration of registrations) {
+    //         await registration.unregister();
+    //       }
+    //     }
 
-        // Delete all caches
-        if ('caches' in window) {
-          const cacheNames = await caches.keys();
-          await Promise.all(cacheNames.map(name => caches.delete(name)));
-        }
+    //     // Delete all caches
+    //     if ('caches' in window) {
+    //       const cacheNames = await caches.keys();
+    //       await Promise.all(cacheNames.map(name => caches.delete(name)));
+    //     }
 
-        console.log('✅ Cache cleared, reloading...');
-        // Use modern reload method
-        window.location.href = window.location.href;
-        return;
-      }
-    })();
+    //     console.log('✅ Cache cleared, reloading...');
+    //     // Use modern reload method
+    //     window.location.href = window.location.href;
+    //     return;
+    //   }
+    // })();
+    console.log('🐛 Cache clear script disabled - debugging mode');
   </script>
 </body>
 
