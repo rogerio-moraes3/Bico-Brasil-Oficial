@@ -39,12 +39,44 @@ export default function InstallApp() {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) {
+    // Check if already in standalone mode
+    if (window.matchMedia('(display-mode: standalone)').matches) {
       toast({
-        title: "App já instalado ou navegador não suportado",
-        description: "Use Chrome, Edge ou Safari para instalar o app.",
-        variant: "destructive"
+        title: "App já está instalado!",
+        description: "Você já está usando o app instalado. Encontre o ícone na sua tela inicial.",
+        variant: "default"
       });
+      setIsInstalled(true);
+      return;
+    }
+
+    // Check if prompt is available
+    if (!deferredPrompt) {
+      // Check browser support
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isChrome = /Chrome/.test(navigator.userAgent);
+      const isEdge = /Edg/.test(navigator.userAgent);
+      const isSafari = /Safari/.test(navigator.userAgent) && !isChrome && !isEdge;
+
+      if (isIOS && isSafari) {
+        toast({
+          title: "Instalação manual no iOS",
+          description: "No Safari, toque em Compartilhar (⎙) e depois 'Adicionar à Tela de Início'.",
+          variant: "default"
+        });
+      } else if (!isChrome && !isEdge) {
+        toast({
+          title: "Navegador não suportado",
+          description: "Use Chrome ou Edge para instalar o app automaticamente.",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Instalação não disponível no momento",
+          description: "Tente recarregar a página ou volte mais tarde. O navegador pode ter critérios de engajamento.",
+          variant: "destructive"
+        });
+      }
       return;
     }
 
@@ -60,7 +92,7 @@ export default function InstallApp() {
     }
 
     setDeferredPrompt(null);
-    clearDeferredPwaPrompt();
+    clearDeferredPwaPrompt(); // Clear global
   };
 
   const features = [

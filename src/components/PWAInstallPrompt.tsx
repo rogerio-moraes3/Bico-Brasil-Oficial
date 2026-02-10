@@ -31,6 +31,7 @@ export const PWAInstallPrompt = () => {
     }
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
+      console.log('✅ PWA Install Prompt captured!', e);
       setDeferredPwaPrompt(e); // Save globally
       setDeferredPrompt(e);
 
