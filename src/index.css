@@ -176,7 +176,8 @@ All colors MUST be HSL.
     --xp-border: 222 20% 26%;
     --xp-ring: 212 92% 58%;
     --xp-foreground: 210 40% 96%;
-    --xp-foreground-muted: 215 20% 70%;
+    --xp-foreground-muted: 215 20% 85%;
+    /* 🔧 CONTRAST FIX: was 70%, now 85% for better visibility */
 
     --nav-link: hsl(var(--xp-foreground));
     --nav-link-hover: hsl(0 0% 100%);
@@ -194,6 +195,18 @@ All colors MUST be HSL.
     --switch-on: var(--xp-primary);
     --switch-off: var(--xp-border);
     --switch-thumb: 210 40% 98%;
+
+    /* 🔧 CONTRAST FIX: Force readable text in dark mode */
+  }
+
+  .dark .text-muted-foreground,
+  .dark [class*="text-muted"] {
+    color: hsl(215 20% 85%) !important;
+  }
+
+  /* Ensure all foreground text has sufficient contrast */
+  .dark .text-foreground {
+    color: hsl(210 40% 96%) !important;
   }
 
   /* Internal app theme (applied only inside authenticated/protected screens).
