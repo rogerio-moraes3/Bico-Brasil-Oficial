@@ -162,14 +162,18 @@ export const Header = () => {
           <nav className="hidden md:flex items-center gap-5 z-40">
             <Link
               to="/app"
-              className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/' || location.pathname === '/app' ? 'text-primary' : 'text-[var(--nav-link)]'
+              className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/' || location.pathname === '/app'
+                ? 'text-[var(--nav-link-hover)] dark:text-primary'
+                : 'text-[var(--nav-link)]'
                 }`}
             >
               Início
             </Link>
             <Link
               to="/premium"
-              className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/premium' ? 'text-primary' : 'text-[var(--nav-link)]'
+              className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/premium'
+                ? 'text-[var(--nav-link-hover)] dark:text-primary'
+                : 'text-[var(--nav-link)]'
                 }`}
             >
               Planos
