@@ -32,14 +32,20 @@
   --switch-off: var(--xp-border);
   --switch-thumb: 0 0% 100%;
 
-  /* Theme navigation color tokens */
+  /* Theme navigation color tokens (light mode) */
   --nav-link: #0F1F3A;
-  /* Navy for light mode */
   --nav-link-hover: #0A162B;
-  /* Slightly darker hover */
+}
+
+/* 🔧 CRITICAL: Dark mode nav-link override MUST be outside @layer base.
+   CSS without a layer ALWAYS beats @layer base, so .dark inside @layer
+   was being overridden by the :root above. This fixes invisible nav text. */
+.dark {
+  --nav-link: hsl(210 40% 96%);
+  --nav-link-hover: hsl(0 0% 100%);
 
   /* Container border color (moved to :root so outlines are available app-wide) */
-  --container-border: hsl(var(--xp-border));
+  --container-border: hsl(222 20% 26%);
 }
 
 
