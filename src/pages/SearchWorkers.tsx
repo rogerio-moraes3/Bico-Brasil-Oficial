@@ -376,7 +376,7 @@ export default function SearchWorkers() {
         </div>
       )}
 
-      <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
+      <main id="main-content" className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <h1 className="text-3xl font-bold mb-8">Buscar Profissionais</h1>
 
         <Card className="mb-8">
@@ -519,11 +519,11 @@ export default function SearchWorkers() {
           </div>
         )}
 
-        <Card className="p-6 bg-gradient-to-br from-blue-600 to-blue-700 border-blue-500/30 text-white">
+        <Card className="p-6 bg-primary border-primary/20 text-primary-foreground">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <h3 className="font-semibold text-lg mb-2">Não encontrou o profissional ideal?</h3>
-              <p className="text-white/80">
+              <p className="text-primary-foreground/80">
                 Publique sua vaga e deixe que os profissionais venham até você!
               </p>
             </div>
@@ -571,7 +571,7 @@ export default function SearchWorkers() {
                   const isOwner = user?.id === worker.id;
 
                   return (
-                    <Card key={worker.id} className="h-full hover:shadow-lg transition-shadow max-w-sm w-full mx-auto">
+                    <Card key={worker.id} className="h-full hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-shadow max-w-sm w-full mx-auto">
                       <Link
                         to={`/worker/${worker.id}`}
                         onClick={(e) => {

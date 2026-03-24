@@ -318,7 +318,7 @@ export default function WorkerProfile() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-muted/30 py-8 pb-20 md:pb-8">
+      <main className="min-h-screen bg-muted/30 py-8 pb-20 md:pb-8" id="main-content">
         <div className="container mx-auto px-4 max-w-4xl">
           <Breadcrumbs workerName={worker.name} />
 
@@ -540,7 +540,7 @@ export default function WorkerProfile() {
             </Card>
           )}
         </div>
-      </div>
+      </main>
 
       <UpgradeModal
         open={showUpgradeModal}

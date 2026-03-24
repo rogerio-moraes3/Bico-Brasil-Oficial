@@ -259,14 +259,14 @@ export default function PostJob() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
 
-      <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
+      <main id="main-content" className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <Breadcrumbs />
 
-        <Card className="max-w-3xl mx-auto max-h-[80vh] overflow-y-auto container-outline">
+        <Card className="max-w-3xl mx-auto">
           <CardHeader>
             <div className="flex items-center gap-3">
               <Briefcase className="h-6 w-6 text-primary" />

@@ -154,6 +154,7 @@ export const Footer = () => {
               Crie sua conta gratuitamente e comece a receber oportunidades de trabalho hoje mesmo.
             </p>
             <Button
+              variant="default"
               size="lg"
               onClick={() => {
                 navigate("/cadastro");
