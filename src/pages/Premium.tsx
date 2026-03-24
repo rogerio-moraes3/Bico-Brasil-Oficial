@@ -49,7 +49,7 @@ export default function Premium() {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
+      <main id="main-content" className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
         <Button
           variant="ghost"
           size="sm"
@@ -97,7 +97,7 @@ export default function Premium() {
                     </li>
                   ))}
                 </ul>
-                <Button variant="outline" size="lg" className="w-full text-base font-semibold border-2 border-primary text-primary hover:bg-primary/10 shadow-lg hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'basico', amount: 19.90, name: 'Premium' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button size="lg" className="w-full text-base font-semibold border-2 border-primary text-primary hover:bg-primary/10 hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'basico', amount: 19.90, name: 'Premium' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
 
@@ -124,7 +124,7 @@ export default function Premium() {
                     </li>
                   ))}
                 </ul>
-                <Button variant="outline" size="lg" className="w-full text-base font-semibold border-2 border-primary text-primary hover:bg-primary/10 shadow-lg hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'vip', amount: 29.90, name: 'VIP' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button size="lg" className="w-full text-base font-semibold border-2 border-primary text-primary hover:bg-primary/10 hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'vip', amount: 29.90, name: 'VIP' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
 
@@ -158,7 +158,7 @@ export default function Premium() {
                     <span className="text-sm font-semibold text-primary">Pague 1 ano e economize 30%!</span>
                   </li>
                 </ul>
-                <Button variant="outline" size="lg" className="w-full text-base font-semibold border-2 border-primary text-primary hover:bg-primary/10 shadow-lg hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
+                <Button size="lg" className="w-full text-base font-semibold border-2 border-primary text-primary hover:bg-primary/10 hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] hover:scale-[1.02] transition-all duration-300" onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}>Assinar</Button>
               </CardContent>
             </Card>
           </div>

@@ -434,7 +434,7 @@ export default function Profile() {
                           <Badge className="bg-primary/10 text-primary">Plano Pro</Badge>
                         )}
                         {profile.verified && (
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+                          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
                             ✓ Verificado
                           </Badge>
                         )}
@@ -813,7 +813,7 @@ export default function Profile() {
                 <CardContent>
                   {profile.plan_active ? (
                     <div className="space-y-2">
-                      <Badge className="bg-green-500">Plano Pro Ativo</Badge>
+                      <Badge className="bg-primary/15 text-primary border border-primary/30 font-semibold">Plano Pro Ativo</Badge>
                       <p className="text-sm text-muted-foreground">
                         Você tem acesso a todos os recursos premium
                       </p>
@@ -843,7 +843,7 @@ export default function Profile() {
                     <h3 className="font-semibold mb-2">Status Atual</h3>
                     {profile.plan_active ? (
                       <div className="space-y-2">
-                        <Badge className="bg-green-500">Plano Pro Ativo</Badge>
+                        <Badge className="bg-primary/15 text-primary border border-primary/30 font-semibold">Plano Pro Ativo</Badge>
                         <p className="text-sm text-muted-foreground">
                           Você tem acesso a todos os recursos premium
                         </p>

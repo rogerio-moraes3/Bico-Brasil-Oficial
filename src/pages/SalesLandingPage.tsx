@@ -30,7 +30,10 @@ const SalesLandingPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-9 w-9 border-2 border-border border-t-primary"></div>
+          <span className="text-sm text-muted-foreground">Carregando…</span>
+        </div>
       </div>
     );
   }
@@ -76,7 +79,7 @@ const SalesLandingPage = () => {
         </script>
       </Helmet>
 
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <Header />
         <SalesAnnouncementBar />
         <SalesHeroSection />
