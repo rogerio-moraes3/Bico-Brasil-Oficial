@@ -80,7 +80,12 @@ export const ServicesTab = ({ onSelectService }: ServicesTabProps) => {
     : [];
 
   if (loading) {
-    return <div className="p-4 text-center">Carregando serviços...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-16 gap-3">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-border border-t-primary" />
+        <span className="text-sm text-muted-foreground">Carregando serviços…</span>
+      </div>
+    );
   }
 
   return (
@@ -127,7 +132,7 @@ export const ServicesTab = ({ onSelectService }: ServicesTabProps) => {
           <h3 className="text-xl font-semibold mb-3">Serviços Disponíveis</h3>
           <div className="grid gap-3">
             {services.map(service => (
-              <Card key={service.id} className="p-4 hover:shadow-md transition-shadow">
+              <Card key={service.id} className="p-4 hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-all duration-200">
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
                     <h4 className="font-semibold text-lg">{service.service_title}</h4>

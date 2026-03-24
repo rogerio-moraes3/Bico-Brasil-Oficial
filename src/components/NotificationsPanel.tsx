@@ -123,9 +123,14 @@ export function NotificationsPanel() {
       <CardContent className="p-0">
         <ScrollArea className="h-[500px]">
           {notifications.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground">
-              <Bell className="h-12 w-12 mx-auto mb-4 opacity-20" />
-              <p>Nenhuma notificação ainda</p>
+            <div className="p-10 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="rounded-full bg-muted/60 p-4">
+                  <Bell className="h-9 w-9 text-muted-foreground" />
+                </div>
+              </div>
+              <p className="text-sm font-medium text-foreground mb-1">Nenhuma notificação</p>
+              <p className="text-sm text-muted-foreground">Você está em dia com tudo!</p>
             </div>
           ) : (
             <div className="divide-y">

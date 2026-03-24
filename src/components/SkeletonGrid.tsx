@@ -12,7 +12,7 @@ export const SkeletonGrid = ({ count = 6, columnsClassName, className }: Skeleto
   return (
     <div className={cn("grid gap-4 sm:grid-cols-2 xl:grid-cols-3", columnsClassName, className)}>
       {Array.from({ length: count }).map((_, index) => (
-        <Card key={index} className="animate-pulse rounded-2xl border border-border">
+        <Card key={index} className="rounded-2xl border border-border">
           <CardHeader>
             <div className="flex items-start gap-4">
               <Skeleton className="h-14 w-14 rounded-full" />

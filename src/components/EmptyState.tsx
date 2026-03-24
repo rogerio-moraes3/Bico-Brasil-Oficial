@@ -20,10 +20,16 @@ interface EmptyStateProps {
 
 export const EmptyState = ({ icon, title, description, actions = [], className }: EmptyStateProps) => {
   return (
-    <div className={cn("text-center py-12 px-4", className)}>
-      {icon && <div className="flex justify-center mb-4">{icon}</div>}
-      {title && <h3 className="text-lg font-semibold mb-2">{title}</h3>}
-      {description && <p className="text-muted-foreground mb-6">{description}</p>}
+    <div className={cn("text-center py-16 px-4", className)}>
+      {icon && (
+        <div className="flex justify-center mb-5">
+          <div className="rounded-full bg-muted/60 p-4">
+            {icon}
+          </div>
+        </div>
+      )}
+      {title && <h3 className="text-base font-semibold mb-2 text-foreground">{title}</h3>}
+      {description && <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">{description}</p>}
       {actions.length > 0 && (
         <div className="flex flex-wrap justify-center gap-3">
           {actions.map((action) => (
