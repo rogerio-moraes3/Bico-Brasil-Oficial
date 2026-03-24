@@ -35,6 +35,9 @@
   /* Theme navigation color tokens (light mode) */
   --nav-link: #0F1F3A;
   --nav-link-hover: #0A162B;
+
+  /* Container border — navy in light mode, overridden per theme scope */
+  --container-border: hsl(222 40% 28%);
 }
 
 /* 🔧 CRITICAL: Dark mode nav-link override MUST be outside @layer base.
@@ -129,6 +132,14 @@ All colors MUST be HSL.
     --xp-foreground: 222 35% 12%;
     --xp-foreground-muted: 222 15% 38%;
 
+    /* Premium gold accent tokens */
+    --xp-gold: 38 92% 50%;
+    --xp-gold-foreground: 30 60% 12%;
+
+    /* Named shadow scale */
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+    --shadow-card-hover: 0 4px 12px -2px rgb(0 0 0 / 0.12), 0 2px 6px -2px rgb(0 0 0 / 0.08);
+
     /* shadcn tokens mapped to XP */
     --background: var(--xp-background);
     --foreground: var(--xp-foreground);
@@ -154,6 +165,7 @@ All colors MUST be HSL.
 
     --gradient-primary: linear-gradient(135deg, hsl(var(--xp-primary)), hsl(var(--xp-primary-hover)));
     --gradient-secondary: linear-gradient(135deg, hsl(var(--xp-primary)), hsl(var(--xp-primary-pressed)));
+    --gradient-gold: linear-gradient(135deg, hsl(38 92% 50%), hsl(34 90% 44%));
 
     --shadow-glow: 0 16px 40px -16px hsl(var(--xp-primary-glow));
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -489,48 +501,6 @@ All colors MUST be HSL.
   textarea {
     font-size: 16px;
     /* Evita zoom automático no iOS */
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    color: hsl(var(--foreground));
-  }
-
-  /* Forçar contraste de headings no dark mode */
-  .dark h1,
-  .dark h2,
-  .dark h3,
-  .dark h4,
-  .dark h5,
-  .dark h6 {
-    color: hsl(var(--foreground)) !important;
-  }
-
-  .dark p,
-  .dark span,
-  .dark label {
-    color: hsl(var(--foreground));
-  }
-
-  .lucide {
-    stroke-width: 2;
   }
 }
 
