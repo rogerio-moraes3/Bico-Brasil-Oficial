@@ -38,7 +38,7 @@ export default function Index() {
       <div className="min-h-screen flex flex-col bg-background relative">
         <Header />
 
-        <main className="flex-1 container mx-auto px-4 py-12 flex flex-col items-center justify-center gap-6 container-outline">
+        <main id="main-content" className="flex-1 container mx-auto px-4 py-12 flex flex-col items-center justify-center gap-6 container-outline">
           <h1 className="text-2xl font-bold text-foreground">Bico Brasil</h1>
           <p className="text-lg text-foreground">O que você precisa agora?</p>
 

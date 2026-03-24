@@ -80,10 +80,10 @@ export default function Premium() {
                     POPULAR
                   </div>
                 </div>
-                <CardDescription className="text-base text-slate-700 dark:text-slate-300">Ideal para começar a receber trabalhos</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">Ideal para começar a receber trabalhos</CardDescription>
                 <div className="mt-6 mb-4">
                   <span className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg text-[2.5rem] leading-[1]">R$ 19,90</span>
-                  <span className="text-slate-400 text-xl font-medium">/mês</span>
+                  <span className="text-muted-foreground text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
@@ -93,7 +93,7 @@ export default function Premium() {
                       <div className="rounded-full bg-primary/10 p-1.5 mt-0.5 group-hover:bg-primary/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-sm text-slate-900 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{feature.text}</span>
+                      <span className="text-sm text-foreground transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -107,10 +107,10 @@ export default function Premium() {
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Plano VIP<Crown className="h-5 w-5 text-primary" /></CardTitle>
                 </div>
-                <CardDescription className="text-base text-slate-700 dark:text-slate-300">Destaque total e máxima visibilidade</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">Destaque total e máxima visibilidade</CardDescription>
                 <div className="mt-6 mb-4">
                   <span className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg text-[2.5rem] leading-[1]">R$ 29,90</span>
-                  <span className="text-slate-400 text-xl font-medium">/mês</span>
+                  <span className="text-muted-foreground text-xl font-medium">/mês</span>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
@@ -120,7 +120,7 @@ export default function Premium() {
                       <div className="rounded-full bg-primary/10 p-1.5 mt-0.5 group-hover:bg-primary/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-sm text-slate-900 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{feature.text}</span>
+                      <span className="text-sm text-foreground transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -134,11 +134,11 @@ export default function Premium() {
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Plano Anual<Trophy className="h-5 w-5 text-primary" /></CardTitle>
                 </div>
-                <CardDescription className="text-base text-slate-700 dark:text-slate-300">12 meses de Premium com 30% de desconto</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">12 meses de Premium com 30% de desconto</CardDescription>
                 <div className="mt-6 mb-4">
                   <span className="font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent drop-shadow-lg text-[2.5rem] leading-[1]">R$ 249,90</span>
-                  <span className="text-slate-400 text-xl font-medium">/ano</span>
-                  <p className="text-sm text-slate-400 mt-2 font-medium">Equivale a R$ 20,82/mês (economize R$ 108,90)</p>
+                  <span className="text-muted-foreground text-xl font-medium">/ano</span>
+                  <p className="text-sm text-muted-foreground mt-2 font-medium">Equivale a R$ 20,82/mês (economize R$ 108,90)</p>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
@@ -148,7 +148,7 @@ export default function Premium() {
                       <div className="rounded-full bg-primary/10 p-1.5 mt-0.5 group-hover:bg-primary/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-sm text-slate-900 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{feature.text}</span>
+                      <span className="text-sm text-foreground transition-colors">{feature.text}</span>
                     </li>
                   ))}
                   <li className="flex items-start gap-3 group border-t border-border pt-4 mt-4">
@@ -172,7 +172,7 @@ export default function Premium() {
                 <div className="flex items-center justify-between mb-2">
                   <CardTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">Anúncio Destaque<Star className="h-5 w-5 text-primary" /></CardTitle>
                 </div>
-                <CardDescription className="text-base text-slate-700 dark:text-slate-300">Apareça no topo da página inicial e aumente suas contratações</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">Apareça no topo da página inicial e aumente suas contratações</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col pt-0">
                 <ul className="space-y-4 mb-8 flex-grow">
@@ -181,7 +181,7 @@ export default function Premium() {
                       <div className="rounded-full bg-primary/10 p-1.5 mt-0.5 group-hover:bg-primary/20 transition-colors">
                         <feature.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-sm text-slate-900 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{feature.text}</span>
+                      <span className="text-sm text-foreground transition-colors">{feature.text}</span>
                     </li>
                   ))}
                 </ul>

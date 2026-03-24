@@ -648,7 +648,7 @@ export default function Auth() {
                     <Button
                       type="button"
                       variant="link"
-                      className="text-white hover:text-gray-200 underline p-0"
+                      className="text-muted-foreground hover:text-foreground underline p-0"
                       onClick={() => setShowResetPassword(true)}
                     >
                       Esqueci minha senha

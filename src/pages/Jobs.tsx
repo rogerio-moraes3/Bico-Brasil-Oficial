@@ -185,7 +185,7 @@ const Jobs = () => {
       <Header />
 
 
-      <main className="flex-grow container mx-auto px-4 py-8 overflow-y-auto max-h-[calc(100vh-150px)]">
+      <main className="flex-grow container mx-auto px-4 py-8 overflow-y-auto">
         <Breadcrumbs />
         <div className="mb-8 max-w-3xl">
           <h1 className="text-4xl font-bold mb-3">Buscar Profissionais</h1>
