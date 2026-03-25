@@ -7,6 +7,9 @@ import { Footer } from "@/components/Footer";
 import { FeaturedServicesSection } from "@/components/FeaturedServicesSection";
 import { CTASection } from "@/components/CTASection";
 import { PlatformStatsStrip } from "@/components/PlatformStatsStrip";
+import { ActivityFeedStrip } from "@/components/ActivityFeedStrip";
+import { PlatformAuthoritySection } from "@/components/PlatformAuthoritySection";
+import { RecentWorkersSection } from "@/components/RecentWorkersSection";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -43,6 +46,7 @@ export default function Index() {
       <div className="min-h-screen flex flex-col bg-background relative">
         <Header />
         <PlatformStatsStrip />
+        <ActivityFeedStrip />
 
         <main id="main-content" className="flex-1">
           {/* Hero CTA block */}
@@ -63,7 +67,8 @@ export default function Index() {
               {/* Primary: hire */}
               <button
                 onClick={handleContractorClick}
-                className="group flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-[0_6px_28px_-6px_hsl(var(--xp-primary)/0.2)] hover:-translate-y-0.5 transition-all duration-200"
+                className="group flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-[0_6px_28px_-6px_hsl(var(--xp-primary)/0.2)] hover:-translate-y-0.5 transition-all duration-200 stagger-fade"
+                style={{ ["--stagger-delay" as string]: "0ms" }}
               >
                 <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
                   <Search className="w-5 h-5 text-primary" aria-hidden="true" />
@@ -82,7 +87,8 @@ export default function Index() {
               {/* Secondary: work */}
               <button
                 onClick={handleProfessionalClick}
-                className="group flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-[0_6px_28px_-6px_hsl(var(--xp-primary)/0.2)] hover:-translate-y-0.5 transition-all duration-200"
+                className="group flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-[0_6px_28px_-6px_hsl(var(--xp-primary)/0.2)] hover:-translate-y-0.5 transition-all duration-200 stagger-fade"
+                style={{ ["--stagger-delay" as string]: "80ms" }}
               >
                 <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
                   <Briefcase className="w-5 h-5 text-primary" aria-hidden="true" />
@@ -118,7 +124,13 @@ export default function Index() {
           {/* Featured workers */}
           <FeaturedServicesSection />
 
-          {/* CTA for unauthenticated feel — still useful as content block */}
+          {/* Novos profissionais — horizontal strip */}
+          <RecentWorkersSection />
+
+          {/* Platform authority block */}
+          <PlatformAuthoritySection />
+
+          {/* Final CTA */}
           <CTASection />
         </main>
 

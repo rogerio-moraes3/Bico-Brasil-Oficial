@@ -162,25 +162,55 @@ export const Header = () => {
           <nav className="hidden md:flex items-center gap-5 z-40">
             <Link
               to="/app"
-              className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/' || location.pathname === '/app'
-                ? 'text-[var(--nav-link-hover)] dark:text-primary'
-                : 'text-[var(--nav-link)]'
-                }`}
+              className={cn(
+                "relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap pb-0.5",
+                location.pathname === '/' || location.pathname === '/app'
+                  ? "text-[var(--nav-link-hover)] dark:text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-primary"
+                  : "text-[var(--nav-link)]"
+              )}
             >
               Início
             </Link>
+            {!user && (
+              <Link
+                to="/search-workers"
+                className={cn(
+                  "relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap pb-0.5",
+                  location.pathname === '/search-workers'
+                    ? "text-[var(--nav-link-hover)] dark:text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-primary"
+                    : "text-[var(--nav-link)]"
+                )}
+              >
+                Buscar
+              </Link>
+            )}
+            {!user && (
+              <Link
+                to="/offer-services"
+                className={cn(
+                  "relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap pb-0.5",
+                  location.pathname === '/offer-services'
+                    ? "text-[var(--nav-link-hover)] dark:text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-primary"
+                    : "text-[var(--nav-link)]"
+                )}
+              >
+                Publicar
+              </Link>
+            )}
             <Link
               to="/premium"
-              className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap ${location.pathname === '/premium'
-                ? 'text-[var(--nav-link-hover)] dark:text-primary'
-                : 'text-[var(--nav-link)]'
-                }`}
+              className={cn(
+                "relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap pb-0.5",
+                location.pathname === '/premium'
+                  ? "text-[var(--nav-link-hover)] dark:text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-primary"
+                  : "text-[var(--nav-link)]"
+              )}
             >
               Planos
             </Link>
             <Link
               to="/download"
-              className="text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-2 text-[var(--nav-link)]"
+              className="relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-2 text-[var(--nav-link)]"
             >
               <Download className="h-4 w-4" />
               <span className="hidden lg:inline">Baixar App</span>
