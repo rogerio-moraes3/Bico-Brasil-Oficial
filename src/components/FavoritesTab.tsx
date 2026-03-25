@@ -77,14 +77,26 @@ export function FavoritesTab() {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Carregando...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-16 gap-3">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-border border-t-primary" />
+        <span className="text-sm text-muted-foreground">Carregando favoritos…</span>
+      </div>
+    );
   }
 
   if (favorites.length === 0) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
-        <Heart className="h-12 w-12 mx-auto mb-4 opacity-50" />
-        <p>Você ainda não tem profissionais favoritos</p>
+      <div className="text-center py-16 px-4">
+        <div className="flex justify-center mb-5">
+          <div className="rounded-full bg-muted/60 p-4">
+            <Heart className="h-10 w-10 text-muted-foreground" />
+          </div>
+        </div>
+        <h3 className="text-base font-semibold mb-2">Nenhum favorito ainda</h3>
+        <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+          Você ainda não tem profissionais favoritos
+        </p>
       </div>
     );
   }
@@ -97,7 +109,7 @@ export function FavoritesTab() {
         return (
           <Card
             key={worker.id}
-            className="hover:shadow-md transition-shadow cursor-pointer"
+            className="hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-all duration-200 cursor-pointer"
             onClick={(e) => {
               if (!(e.target as HTMLElement).closest('button')) {
                 window.location.href = `/worker/${worker.id}`;

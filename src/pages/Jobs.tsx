@@ -185,10 +185,10 @@ const Jobs = () => {
       <Header />
 
 
-      <main className="flex-grow container mx-auto px-4 py-8 overflow-y-auto max-h-[calc(100vh-150px)]">
+      <main id="main-content" className="flex-grow container mx-auto px-4 py-8 overflow-y-auto">
         <Breadcrumbs />
         <div className="mb-8 max-w-3xl">
-          <h1 className="text-4xl font-bold mb-3">Buscar Profissionais</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight">Buscar Profissionais</h1>
           <p className="text-lg text-muted-foreground">
             Encontre trabalhadores qualificados na sua cidade
           </p>
@@ -309,7 +309,7 @@ const Jobs = () => {
             {workers.map((worker, index) => (
               <Card
                 key={worker.id}
-                className="hover:shadow-lg transition-all cursor-pointer stagger-fade max-w-sm w-full mx-auto rounded-2xl border border-border"
+                className="hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-all cursor-pointer stagger-fade max-w-sm w-full mx-auto rounded-2xl border border-border"
                 style={{ ['--stagger-delay' as any]: `${index * 0.1}s` }}
               >
                 <CardHeader>

@@ -30,9 +30,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
     return (
         <div
-            className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-300 ${isFadingOut ? 'opacity-0' : 'opacity-100'
+            className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-300 bg-[#0E1424] ${isFadingOut ? 'opacity-0' : 'opacity-100'
                 }`}
-            style={{ backgroundColor: '#0E1424' }}
         >
             {/* Container centralizado com espaçamento consistente */}
             <div className="flex flex-col items-center gap-6 px-4">
@@ -57,6 +56,13 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 <p className="text-lg md:text-xl font-semibold text-primary tracking-wide text-center">
                     Trabalhou, Tá Pago!
                 </p>
+
+                {/* Loading dots */}
+                <div className="flex gap-1.5 mt-1">
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0ms]" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:150ms]" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:300ms]" />
+                </div>
             </div>
         </div>
     );

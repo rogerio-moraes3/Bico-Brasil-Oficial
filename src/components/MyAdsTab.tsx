@@ -168,10 +168,10 @@ export function MyAdsTab() {
         <CardHeader>
           <CardTitle>Meus Anúncios</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
+        <CardContent className="space-y-4 py-6">
+          <Skeleton className="h-20 w-full rounded-xl" />
+          <Skeleton className="h-20 w-full rounded-xl" />
+          <Skeleton className="h-20 w-full rounded-xl" />
         </CardContent>
       </Card>
     );
@@ -186,8 +186,14 @@ export function MyAdsTab() {
       </CardHeader>
       <CardContent>
         {hasNoAds ? (
-          <div className="text-center py-8">
-            <p className="text-muted-foreground mb-4">Você ainda não criou nenhum anúncio.</p>
+          <div className="text-center py-16 px-4">
+            <div className="flex justify-center mb-5">
+              <div className="rounded-full bg-muted/60 p-4">
+                <Briefcase className="h-10 w-10 text-muted-foreground" />
+              </div>
+            </div>
+            <h3 className="text-base font-semibold mb-2">Nenhum anúncio ainda</h3>
+            <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">Você ainda não criou nenhum anúncio.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button onClick={() => navigate('/post-job')} variant="default">
                 <Briefcase className="h-4 w-4 mr-2" />
@@ -274,7 +280,7 @@ export function MyAdsTab() {
             {workerServices.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                  <Wrench className="h-5 w-5 text-green-600" />
+                  <Wrench className="h-5 w-5 text-primary" />
                   Serviços Oferecidos ({workerServices.length})
                 </h3>
                 <div className="space-y-3">

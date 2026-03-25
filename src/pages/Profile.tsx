@@ -434,7 +434,7 @@ export default function Profile() {
                           <Badge className="bg-primary/10 text-primary">Plano Pro</Badge>
                         )}
                         {profile.verified && (
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+                          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
                             ✓ Verificado
                           </Badge>
                         )}
@@ -459,7 +459,7 @@ export default function Profile() {
 
           <Tabs defaultValue="info" className="animate-slide-up">
             <div className="w-full overflow-x-auto">
-              <TabsList className="inline-flex w-auto min-w-full gap-2 bg-slate-100 dark:bg-muted/50 p-2 rounded-lg border border-slate-200 dark:border-transparent shadow-sm">
+              <TabsList className="inline-flex w-auto min-w-full gap-2 bg-muted/50 p-2 rounded-lg border border-border/60 shadow-sm">
                 <TabsTrigger value="info" className="flex-shrink-0 text-xs md:text-sm whitespace-nowrap">
                   Info
                 </TabsTrigger>
@@ -813,7 +813,7 @@ export default function Profile() {
                 <CardContent>
                   {profile.plan_active ? (
                     <div className="space-y-2">
-                      <Badge className="bg-green-500">Plano Pro Ativo</Badge>
+                      <Badge className="bg-primary/15 text-primary border border-primary/30 font-semibold">Plano Pro Ativo</Badge>
                       <p className="text-sm text-muted-foreground">
                         Você tem acesso a todos os recursos premium
                       </p>
@@ -843,7 +843,7 @@ export default function Profile() {
                     <h3 className="font-semibold mb-2">Status Atual</h3>
                     {profile.plan_active ? (
                       <div className="space-y-2">
-                        <Badge className="bg-green-500">Plano Pro Ativo</Badge>
+                        <Badge className="bg-primary/15 text-primary border border-primary/30 font-semibold">Plano Pro Ativo</Badge>
                         <p className="text-sm text-muted-foreground">
                           Você tem acesso a todos os recursos premium
                         </p>

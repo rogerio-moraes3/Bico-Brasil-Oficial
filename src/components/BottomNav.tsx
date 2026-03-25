@@ -73,8 +73,8 @@ export const BottomNav = () => {
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       className={`md:hidden fixed bottom-0 left-0 right-0 bg-background/85 border-t border-border/70 z-50 shadow-[0_-12px_30px_-20px_hsl(var(--xp-primary-glow))] backdrop-blur-xl transition-transform duration-300 ${hidden ? 'translate-y-full' : 'translate-y-0'}`}
     >
-      {/* Indicador de modo */}
-      <div className={`h-1 ${indicatorColor} transition-colors duration-300`} />
+      {/* Gradient indicator line */}
+      <div className="h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent opacity-70" />
 
       <div className="flex items-center justify-around h-16 px-2">
         {navItems.map(({ path, icon: Icon, label, isBack }) => {
@@ -96,8 +96,8 @@ export const BottomNav = () => {
               key={path}
               to={path}
               className={`flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-2xl ${isActive(path)
-                ? `${activeColor} scale-[1.04]`
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                  ? `${activeColor} scale-[1.04] bg-primary/10`
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                 }`}
             >
               <Icon className={`h-6 w-6 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />

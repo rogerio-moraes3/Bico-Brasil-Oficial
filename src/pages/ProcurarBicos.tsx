@@ -384,7 +384,7 @@ const ProcurarBicos = () => {
       <Header />
 
 
-      <main className="flex-1 container mx-auto px-4 py-6 pb-20 md:pb-6 overflow-y-auto">
+      <main id="main-content" className="flex-1 container mx-auto px-4 py-6 pb-20 md:pb-6 overflow-y-auto">
         <Breadcrumbs />
 
         {(showingCached || !isOnline) && (
@@ -494,11 +494,11 @@ const ProcurarBicos = () => {
         </Card>
 
         {/* CTA sempre visível - Oferecer Serviços */}
-        <Card className="p-6 bg-gradient-to-br from-green-500 to-green-600 border-green-400/30 text-white rounded-2xl shadow-md">
+        <Card className="p-6 bg-primary text-primary-foreground border-primary/20 rounded-2xl shadow-md">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <h3 className="font-semibold text-lg mb-2">Quer oferecer seus serviços?</h3>
-              <p className="text-white/80">
+              <p className="text-primary-foreground/80">
                 Cadastre-se como profissional e apareça nas buscas para receber propostas de trabalho!
               </p>
             </div>
@@ -531,7 +531,7 @@ const ProcurarBicos = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {jobs.map((job) => (
-              <Card key={job.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 rounded-2xl border border-border bg-card w-full" onClick={() => handleViewJob(job)}>
+              <Card key={job.id} className="cursor-pointer hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-all duration-200 rounded-2xl border border-border bg-card w-full" onClick={() => handleViewJob(job)}>
                 <CardContent className="p-5">
                   <div className="space-y-3">
                     {/* Header */}

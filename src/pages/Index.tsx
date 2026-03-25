@@ -38,16 +38,16 @@ export default function Index() {
       <div className="min-h-screen flex flex-col bg-background relative">
         <Header />
 
-        <main className="flex-1 container mx-auto px-4 py-12 flex flex-col items-center justify-center gap-6 container-outline">
-          <h1 className="text-2xl font-bold text-foreground">Bico Brasil</h1>
-          <p className="text-lg text-foreground">O que você precisa agora?</p>
+        <main id="main-content" className="flex-1 container mx-auto px-4 py-16 flex flex-col items-center justify-center gap-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight text-center">Bico Brasil</h1>
+          <p className="text-lg text-muted-foreground text-center max-w-sm">O que você precisa agora?</p>
 
-          <div className="w-full max-w-md flex flex-col gap-4 mt-6">
-            <Button onClick={() => navigate('/want-to-work')} className="w-full h-12 font-semibold">Quero trabalhar</Button>
-            <Button onClick={() => navigate('/want-someone')} className="w-full h-12 font-semibold">Quero alguém pra trabalhar</Button>
+          <div className="w-full max-w-sm flex flex-col gap-3 mt-6">
+            <Button onClick={() => navigate('/want-to-work')} size="lg" className="w-full h-12 font-semibold rounded-xl">Quero trabalhar</Button>
+            <Button onClick={() => navigate('/want-someone')} size="lg" variant="outline" className="w-full h-12 font-semibold rounded-xl">Quero alguém pra trabalhar</Button>
           </div>
 
-          <p className="text-sm text-muted-foreground mt-4">Acesse rapidamente as opções para buscar ou publicar trabalhos.</p>
+          <p className="text-sm text-muted-foreground mt-2">Acesse rapidamente as opções para buscar ou publicar trabalhos.</p>
         </main>
 
         <Footer />

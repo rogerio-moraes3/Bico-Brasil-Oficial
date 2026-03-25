@@ -154,6 +154,7 @@ export const Footer = () => {
               Crie sua conta gratuitamente e comece a receber oportunidades de trabalho hoje mesmo.
             </p>
             <Button
+              variant="default"
               size="lg"
               onClick={() => {
                 navigate("/cadastro");
@@ -162,7 +163,7 @@ export const Footer = () => {
                   firstInput?.focus();
                 }, 150);
               }}
-              className="inline-block px-8 py-3 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-all duration-300 text-base font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="rounded-full text-base font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
             >
               Criar Conta Grátis
             </Button>

@@ -170,7 +170,7 @@ export default function EditService() {
     <div className="min-h-screen flex flex-col bg-background pb-20 md:pb-0">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main id="main-content" className="flex-grow container mx-auto px-4 py-8">
         <Breadcrumbs />
 
         <Button

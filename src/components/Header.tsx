@@ -130,7 +130,7 @@ export const Header = () => {
         Ir para conteúdo principal
       </a>
 
-      <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/80 text-foreground backdrop-blur-xl shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/85 text-foreground backdrop-blur-xl shadow-[0_2px_20px_-6px_hsl(var(--xp-primary)/0.08)]" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="container flex h-16 items-center justify-between px-2 md:px-4">
           <div className="flex items-center gap-2">
             {showBackButton && (
@@ -180,7 +180,7 @@ export const Header = () => {
             </Link>
             <Link
               to="/download"
-              className="text-sm font-medium transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-2 text-[var(--nav-link)]"
+              className="text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-2 text-[var(--nav-link)]"
             >
               <Download className="h-4 w-4" />
               <span className="hidden lg:inline">Baixar App</span>
@@ -261,7 +261,7 @@ export const Header = () => {
                 <Button
                   onClick={() => navigate('/auth')}
                   size="sm"
-                  className="hidden md:flex text-xs font-semibold uppercase tracking-[0.2em] bg-card/80 hover:bg-muted border border-border text-foreground"
+                  className="hidden md:flex text-xs font-semibold uppercase tracking-[0.2em] bg-primary text-primary-foreground hover:bg-primary/90 border-transparent"
                 >
                   Entrar
                 </Button>

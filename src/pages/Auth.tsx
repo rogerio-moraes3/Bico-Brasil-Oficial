@@ -482,7 +482,7 @@ export default function Auth() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted py-12 px-4 pb-20 md:pb-12">
+      <div className="min-h-screen bg-muted/30 py-12 px-4 pb-20 md:pb-12">
         <div className="container max-w-xl mx-auto">
           {/* Botão Voltar */}
           <Button
@@ -648,7 +648,7 @@ export default function Auth() {
                     <Button
                       type="button"
                       variant="link"
-                      className="text-white hover:text-gray-200 underline p-0"
+                      className="text-muted-foreground hover:text-foreground underline p-0"
                       onClick={() => setShowResetPassword(true)}
                     >
                       Esqueci minha senha

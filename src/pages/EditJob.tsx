@@ -129,11 +129,11 @@ export default function EditJob() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col pb-20 md:pb-0">
+    <div className="min-h-screen flex flex-col pb-20 md:pb-0 bg-background">
       <Header />
 
 
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main id="main-content" className="flex-grow container mx-auto px-4 py-8">
         <Breadcrumbs />
 
         <Card className="max-w-2xl mx-auto">
