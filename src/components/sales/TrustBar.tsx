@@ -58,7 +58,7 @@ export const TrustBar = () => {
   ];
 
   return (
-    <section className="py-14 bg-background border-y border-border/50">
+    <section className="py-12 bg-[#F1F5F9] dark:bg-background border-y border-border/50">
       <div className="container mx-auto px-4">
         <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-10">
           A escolha inteligente de quem precisa resolver rápido

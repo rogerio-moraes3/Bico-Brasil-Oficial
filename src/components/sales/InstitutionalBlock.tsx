@@ -2,7 +2,7 @@ import { MapPin, Ban, ShieldCheck } from "lucide-react";
 
 export const InstitutionalBlock = () => {
   return (
-    <section className="bg-background dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-blue-900 py-20 md:py-28 px-6 md:px-12">
+    <section className="bg-[#F8FAFC] dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-blue-900 py-14 md:py-24 px-6 md:px-12">
       <div className="max-w-6xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-6">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary dark:text-blue-300">Nossa proposta</span>
@@ -18,7 +18,7 @@ export const InstitutionalBlock = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-          <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
+          <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-6 shadow-sm hover:shadow-[0_4px_20px_-6px_hsl(var(--xp-primary)/.12)] hover:border-primary/25 transition-all duration-300 card-lift">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
               <MapPin className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>
@@ -30,7 +30,7 @@ export const InstitutionalBlock = () => {
             </p>
           </div>
 
-          <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
+          <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-6 shadow-sm hover:shadow-[0_4px_20px_-6px_hsl(var(--xp-primary)/.12)] hover:border-primary/25 transition-all duration-300 card-lift">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
               <Ban className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>
@@ -42,7 +42,7 @@ export const InstitutionalBlock = () => {
             </p>
           </div>
 
-          <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
+          <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-6 shadow-sm hover:shadow-[0_4px_20px_-6px_hsl(var(--xp-primary)/.12)] hover:border-primary/25 transition-all duration-300 card-lift">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
               <ShieldCheck className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>

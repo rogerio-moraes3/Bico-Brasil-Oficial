@@ -26,9 +26,9 @@ const steps = [
 
 export const HowItWorks = () => {
   return (
-    <section className="py-20 md:py-28 bg-muted/30">
+    <section className="py-14 md:py-24 bg-[#F1F5F9] dark:bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-14 max-w-3xl mx-auto">
+        <div className="text-center mb-10 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Como Funciona</span>
           </div>
@@ -48,7 +48,7 @@ export const HowItWorks = () => {
                 <div className="hidden md:block absolute top-[3.25rem] left-[calc(60%+1rem)] right-[-1rem] h-px bg-gradient-to-r from-border/80 to-transparent" aria-hidden="true" />
               )}
 
-              <div className="bg-card border border-border rounded-2xl p-7 shadow-sm hover:shadow-[0_4px_24px_-6px_hsl(var(--xp-primary)/0.14)] hover:border-primary/30 transition-all duration-300 relative overflow-hidden group">
+              <div className="bg-card border border-border rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-[0_4px_24px_-6px_hsl(var(--xp-primary)/0.14)] hover:border-primary/30 transition-all duration-300 relative overflow-hidden group card-lift">
                 {/* Background number */}
                 <span className="absolute right-4 top-2 text-7xl font-bold text-muted-foreground/10 group-hover:text-primary/10 transition-colors select-none" aria-hidden="true">
                   {step.number}

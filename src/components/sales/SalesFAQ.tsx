@@ -35,9 +35,9 @@ const faqs = [
 
 export const SalesFAQ = () => {
   return (
-    <section className="py-20 md:py-28 bg-muted/20">
+    <section className="py-14 md:py-24 bg-[#F8FAFC] dark:bg-muted/20">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-14 max-w-3xl mx-auto">
+        <div className="text-center mb-10 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
             <HelpCircle className="w-4 h-4 text-primary" aria-hidden="true" />
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">FAQ</span>

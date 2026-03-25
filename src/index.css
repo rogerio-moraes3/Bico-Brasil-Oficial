@@ -4,6 +4,11 @@
 
 /* Bico Brasil - Padrão Visual Global */
 :root {
+  /* Subtle section backgrounds (light mode — XP reference palette) */
+  --bb-section-a: #F8FAFC;
+  --bb-section-b: #F1F5F9;
+  --bb-section-c: #EEF2F7;
+
   /* Cores Principais */
   --bb-primary-blue: #0F5BD6;
   --bb-white: #FFFFFF;
@@ -463,32 +468,6 @@ All colors MUST be HSL.
     /* Base legível em mobile */
   }
 
-  h1 {
-    font-size: 1.5rem;
-    /* 24px - reduzido */
-    line-height: 1.2;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-    /* 20px - reduzido */
-    line-height: 1.3;
-  }
-
-  h3 {
-    font-size: 1.125rem;
-    /* 18px - reduzido */
-    line-height: 1.4;
-  }
-
-  p,
-  span,
-  div {
-    font-size: 0.875rem;
-    /* 14px - reduzido */
-    line-height: 1.5;
-  }
-
   button {
     font-size: 1rem;
     /* 16px - evita zoom no iOS */
@@ -502,6 +481,37 @@ All colors MUST be HSL.
     font-size: 16px;
     /* Evita zoom automático no iOS */
   }
+}
+
+/* Landing page — section rhythm & mobile spacing */
+.landing-section {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .landing-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+/* Subtle card lift on hover — premium feel */
+.card-lift {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px -6px hsl(var(--xp-primary) / 0.14);
+}
+
+/* Link / button micro-transition base */
+a,
+button {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer utilities {
