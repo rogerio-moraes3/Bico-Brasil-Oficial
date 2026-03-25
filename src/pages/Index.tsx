@@ -25,7 +25,8 @@ export default function Index() {
   };
 
   const greeting = (() => {
-    const name = user?.user_metadata?.name?.split(" ")[0] || user?.email?.split("@")[0];
+    const rawName = user?.user_metadata?.name?.split(" ")[0] || user?.email?.split("@")[0];
+    const name = rawName && rawName.length > 0 ? rawName : null;
     const hour = new Date().getHours();
     const period = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
     return name ? `${period}, ${name}` : period;

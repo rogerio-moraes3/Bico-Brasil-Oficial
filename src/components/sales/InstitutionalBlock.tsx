@@ -1,3 +1,5 @@
+import { MapPin, Ban, ShieldCheck } from "lucide-react";
+
 export const InstitutionalBlock = () => {
   return (
     <section className="bg-muted/30 dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-blue-900 py-20 px-6 md:px-12">
@@ -15,7 +17,7 @@ export const InstitutionalBlock = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-              <span className="text-primary font-bold text-lg">📍</span>
+              <MapPin className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>
             <h3 className="text-xl font-semibold text-foreground dark:text-white mb-3">
               Renda Local e Imediata
@@ -27,7 +29,7 @@ export const InstitutionalBlock = () => {
 
           <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-              <span className="text-primary font-bold text-lg">🚫</span>
+              <Ban className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>
             <h3 className="text-xl font-semibold text-foreground dark:text-white mb-3">
               Sem Leilão de Preços
@@ -39,7 +41,7 @@ export const InstitutionalBlock = () => {
 
           <div className="bg-card dark:bg-blue-900/60 border border-border dark:border-blue-700 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-              <span className="text-primary font-bold text-lg">✅</span>
+              <ShieldCheck className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>
             <h3 className="text-xl font-semibold text-foreground dark:text-white mb-3">
               Perfis Verificados
