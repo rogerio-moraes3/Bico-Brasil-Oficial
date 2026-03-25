@@ -16,7 +16,7 @@ export const SalesHeroSection = () => {
         <div className="hidden dark:block absolute bottom-0 right-0 w-[360px] h-[360px] rounded-full bg-orange-500/15 blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 py-20 md:py-28 relative z-10">
+      <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-primary/10 dark:bg-white/10 backdrop-blur-sm border border-primary/20 dark:border-white/20 rounded-full px-4 py-2 mb-8">
@@ -26,7 +26,7 @@ export const SalesHeroSection = () => {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight text-foreground dark:text-white">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-[1.12] tracking-tight text-foreground dark:text-white max-w-3xl mx-auto">
             Conecte-se a Quem Resolve:{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-400 dark:from-orange-400 dark:to-amber-300">
               Serviços Rápidos

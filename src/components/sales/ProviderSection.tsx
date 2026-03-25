@@ -21,7 +21,7 @@ export const ProviderSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
+    <section className="py-20 md:py-28 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl" />
@@ -38,7 +38,7 @@ export const ProviderSection = () => {
                 <span className="text-sm font-medium">Para Prestadores</span>
               </div>
 
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-[1.12] tracking-tight">
                 Faça do seu talento a sua{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
                   renda principal
