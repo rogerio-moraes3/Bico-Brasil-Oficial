@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { Briefcase, Search } from "lucide-react";
+import { Briefcase, Search, ArrowRight, Sparkles } from "lucide-react";
 import { useUserMode } from "@/contexts/UserModeContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FeaturedServicesSection } from "@/components/FeaturedServicesSection";
 import { CTASection } from "@/components/CTASection";
+import { PlatformStatsStrip } from "@/components/PlatformStatsStrip";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -41,40 +42,76 @@ export default function Index() {
 
       <div className="min-h-screen flex flex-col bg-background relative">
         <Header />
+        <PlatformStatsStrip />
 
         <main id="main-content" className="flex-1">
           {/* Hero CTA block */}
-          <section className="container mx-auto px-4 pt-12 pb-8 flex flex-col items-center text-center gap-3">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">{greeting}</p>
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">O que você precisa agora?</h1>
-            <p className="text-base text-muted-foreground max-w-sm">Escolha como usar o Bico Brasil hoje.</p>
+          <section className="container mx-auto px-4 pt-14 pb-10 flex flex-col items-center text-center gap-2">
+            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-3.5 py-1.5 mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{greeting}</span>
+            </div>
 
-            <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
-              <button
-                onClick={handleProfessionalClick}
-                className="group flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 text-left shadow-sm hover:border-primary/60 hover:shadow-[0_4px_20px_-4px_hsl(var(--xp-primary)/0.18)] transition-all duration-300"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <Briefcase className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">Quero trabalhar</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Encontre bicos na sua cidade</p>
-                </div>
-              </button>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight leading-[1.12]">
+              O que você precisa hoje?
+            </h1>
+            <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
+              Conecte-se ao trabalhador certo na sua cidade — ou encontre o próximo bico.
+            </p>
 
+            <div className="w-full max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-4 mt-7">
+              {/* Primary: hire */}
               <button
                 onClick={handleContractorClick}
-                className="group flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 text-left shadow-sm hover:border-primary/60 hover:shadow-[0_4px_20px_-4px_hsl(var(--xp-primary)/0.18)] transition-all duration-300"
+                className="group flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-[0_6px_28px_-6px_hsl(var(--xp-primary)/0.2)] hover:-translate-y-0.5 transition-all duration-200"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <Search className="w-6 h-6 text-primary" />
+                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
+                  <Search className="w-5 h-5 text-primary" aria-hidden="true" />
                 </div>
-                <div>
-                  <p className="font-semibold text-foreground">Preciso contratar</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Busque profissionais verificados</p>
+                <div className="flex-1 text-left">
+                  <p className="font-bold text-foreground text-base">Preciso contratar</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    Busque profissionais verificados perto de você
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-200">
+                  Buscar agora <ArrowRight className="w-3 h-3" aria-hidden="true" />
                 </div>
               </button>
+
+              {/* Secondary: work */}
+              <button
+                onClick={handleProfessionalClick}
+                className="group flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-[0_6px_28px_-6px_hsl(var(--xp-primary)/0.2)] hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
+                  <Briefcase className="w-5 h-5 text-primary" aria-hidden="true" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-bold text-foreground text-base">Quero trabalhar</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    Encontre bicos e ganhe renda extra hoje
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-200">
+                  Ver vagas <ArrowRight className="w-3 h-3" aria-hidden="true" />
+                </div>
+              </button>
+            </div>
+
+            {/* Quick-nav pills */}
+            <div className="flex flex-wrap justify-center gap-2 mt-5">
+              {["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor"].map((cat) => (
+                <Button
+                  key={cat}
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full h-8 px-4 text-xs font-medium border-border/70 hover:border-primary/50 hover:text-primary transition-colors duration-200"
+                  onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
+                >
+                  {cat}
+                </Button>
+              ))}
             </div>
           </section>
 
@@ -90,3 +127,4 @@ export default function Index() {
     </>
   );
 }
+
