@@ -75,7 +75,7 @@ export const FeaturedServicesSection = () => {
             featuredWorkers.map((worker) => (
               <Card
                 key={worker.id}
-                className="bg-card-light dark:bg-card border-2 border-border hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                className="bg-card border border-border hover:border-primary/40 shadow-sm hover:shadow-[0_4px_24px_-6px_hsl(var(--xp-primary)/0.18)] transition-all duration-300 hover:-translate-y-0.5"
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">

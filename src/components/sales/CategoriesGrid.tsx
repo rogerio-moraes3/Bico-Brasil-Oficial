@@ -111,7 +111,7 @@ export const CategoriesGrid = () => {
             <button
               key={index}
               onClick={() => handleCategoryClick(category.slug)}
-              className="group bg-background border border-border rounded-xl p-4 hover:border-primary hover:shadow-lg transition-all duration-300 text-left"
+              className="group bg-card border border-border rounded-xl p-4 hover:border-primary/60 hover:shadow-[0_4px_20px_-6px_hsl(var(--xp-primary)/0.18)] transition-all duration-300 text-left"
             >
               <div className={`w-12 h-12 rounded-xl ${category.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
                 <category.icon className="w-6 h-6 text-white" />

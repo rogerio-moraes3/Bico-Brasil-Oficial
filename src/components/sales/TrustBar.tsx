@@ -30,23 +30,23 @@ const trustItems = [
 
 export const TrustBar = () => {
   return (
-    <section className="py-12 bg-muted/50">
+    <section className="py-14 bg-background border-y border-border/50">
       <div className="container mx-auto px-4">
-        <p className="text-center text-muted-foreground mb-8 font-medium">
-          A escolha inteligente de quem precisa resolver rápido:
+        <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-10">
+          A escolha inteligente de quem precisa resolver rápido
         </p>
-        
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-4">
+
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-0 md:divide-x md:divide-border/50">
           {trustItems.map((item, index) => (
-            <div 
+            <div
               key={index}
-              className="flex flex-col items-center text-center p-4 rounded-xl bg-background shadow-sm hover:shadow-md transition-shadow"
+              className="flex flex-col items-center text-center px-4 py-2"
             >
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
-                <item.icon className="w-6 h-6 text-primary" />
+              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                <item.icon className="w-5 h-5 text-primary" />
               </div>
-              <span className="font-bold text-lg text-foreground">{item.label}</span>
-              <span className="text-sm text-muted-foreground">{item.description}</span>
+              <span className="text-2xl font-bold text-foreground tracking-tight">{item.label}</span>
+              <span className="text-xs text-muted-foreground mt-1 leading-snug">{item.description}</span>
             </div>
           ))}
         </div>
