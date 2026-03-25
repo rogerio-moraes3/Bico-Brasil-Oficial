@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Star, ArrowRight } from "lucide-react";
+import { Star, ArrowRight, BadgeCheck, MapPin, Briefcase } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import { Skeleton } from "./ui/skeleton";
+import { Badge } from "./ui/badge";
 
 export const FeaturedServicesSection = () => {
   const { data: featuredWorkers, isLoading } = useQuery({
@@ -27,7 +28,7 @@ export const FeaturedServicesSection = () => {
 
       return data || [];
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    staleTime: 5 * 60 * 1000,
   });
 
   const getInitials = (name: string | null) => {
@@ -36,38 +37,42 @@ export const FeaturedServicesSection = () => {
   };
 
   return (
-    <section className="py-16 bg-background relative z-10" aria-labelledby="featured-services-title">
+    <section className="py-20 bg-muted/20 relative z-10" aria-labelledby="featured-services-title">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h2
-            id="featured-services-title"
-            className="text-2xl md:text-3xl font-bold text-foreground"
-          >
-            Profissionais em Destaque
-          </h2>
-          <Button variant="ghost" asChild className="text-primary hover:text-primary/80">
-            <Link to="/search-workers" className="flex items-center gap-2">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-2">
+              Trabalhadores
+            </p>
+            <h2
+              id="featured-services-title"
+              className="text-2xl md:text-3xl font-bold text-foreground tracking-tight"
+            >
+              Profissionais em Destaque
+            </h2>
+          </div>
+          <Button variant="ghost" asChild className="text-primary hover:text-primary/80 shrink-0">
+            <Link to="/search-workers" className="flex items-center gap-1.5 text-sm">
               Ver todos
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {isLoading ? (
-            // Loading skeletons
             [...Array(6)].map((_, i) => (
               <Card key={i} className="bg-card border border-border">
-                <CardContent className="p-4">
+                <CardContent className="p-5">
                   <div className="flex items-center gap-3">
                     <Skeleton className="w-14 h-14 rounded-full" />
                     <div className="flex-1">
-                      <Skeleton className="h-5 w-32 mb-2" />
-                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-4 w-28 mb-2" />
+                      <Skeleton className="h-3 w-20" />
                     </div>
                   </div>
-                  <Skeleton className="h-4 w-full mt-3" />
-                  <Skeleton className="h-4 w-3/4 mt-2" />
+                  <Skeleton className="h-3 w-full mt-4" />
+                  <Skeleton className="h-3 w-2/3 mt-2" />
                 </CardContent>
               </Card>
             ))
@@ -75,30 +80,46 @@ export const FeaturedServicesSection = () => {
             featuredWorkers.map((worker) => (
               <Card
                 key={worker.id}
-                className="bg-card-light dark:bg-card border-2 border-border hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                className="bg-card border border-border hover:border-primary/40 shadow-sm hover:shadow-[0_6px_28px_-6px_hsl(var(--xp-primary)/0.18)] hover:-translate-y-0.5 transition-all duration-200 group"
               >
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-14 w-14">
-                      <AvatarImage src={worker.profile_photo || undefined} alt={worker.name || 'Profissional'} />
-                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                        {getInitials(worker.name)}
-                      </AvatarFallback>
-                    </Avatar>
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-3">
+                    <div className="relative shrink-0">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={worker.profile_photo || undefined} alt={worker.name || 'Profissional'} />
+                        <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
+                          {getInitials(worker.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      {worker.verified && (
+                        <BadgeCheck
+                          className="absolute -bottom-1 -right-1 w-5 h-5 text-primary drop-shadow-sm"
+                          aria-label="Perfil verificado"
+                        />
+                      )}
+                    </div>
+
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-foreground truncate">
+                      <h3 className="font-semibold text-foreground truncate text-sm">
                         {worker.name}
                       </h3>
-                      <p className="text-sm text-muted-foreground truncate">
-                        {worker.category || 'Serviços gerais'}
-                      </p>
+                      {worker.category && (
+                        <div className="mt-1">
+                          <Badge variant="secondary" className="text-[10px] px-2 py-0 h-5 font-medium">
+                            {worker.category}
+                          </Badge>
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  <div className="mt-3 flex items-center justify-between">
-                    <div className="flex items-center gap-1" aria-label={`Avaliação: ${worker.rating_avg?.toFixed(1) || '0'} de 5 estrelas`}>
-                      <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" aria-hidden="true" />
-                      <span className="text-sm font-medium text-foreground">
+                  <div className="mt-3.5 flex items-center justify-between">
+                    <div
+                      className="flex items-center gap-1"
+                      aria-label={`Avaliação: ${worker.rating_avg?.toFixed(1) || '0'} de 5 estrelas`}
+                    >
+                      <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" aria-hidden="true" />
+                      <span className="text-sm font-semibold text-foreground">
                         {worker.rating_avg?.toFixed(1) || '0.0'}
                       </span>
                       <span className="text-xs text-muted-foreground">
@@ -106,7 +127,12 @@ export const FeaturedServicesSection = () => {
                       </span>
                     </div>
 
-                    <Button variant="outline" size="sm" asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="h-8 px-3 text-xs font-semibold group-hover:border-primary/50 group-hover:text-primary transition-colors duration-200"
+                    >
                       <Link to={`/worker/${worker.id}`}>
                         Ver perfil
                       </Link>
@@ -114,18 +140,23 @@ export const FeaturedServicesSection = () => {
                   </div>
 
                   {worker.city && (
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      📍 {worker.neighborhood ? `${worker.neighborhood}, ` : ''}{worker.city}
+                    <p className="mt-2.5 flex items-center gap-1 text-xs text-muted-foreground">
+                      <MapPin className="w-3 h-3 shrink-0" aria-hidden="true" />
+                      {worker.neighborhood ? `${worker.neighborhood}, ` : ''}{worker.city}
                     </p>
                   )}
                 </CardContent>
               </Card>
             ))
           ) : (
-            <div className="col-span-full text-center py-12">
-              <p className="text-muted-foreground">Nenhum profissional cadastrado ainda.</p>
-              <Button asChild className="mt-4">
-                <Link to="/offer-services">Seja o primeiro!</Link>
+            <div className="col-span-full text-center py-16">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <Briefcase className="w-8 h-8 text-primary/50" aria-hidden="true" />
+              </div>
+              <p className="text-foreground font-semibold mb-1">Nenhum profissional em destaque ainda.</p>
+              <p className="text-sm text-muted-foreground mb-5">Seja o primeiro a aparecer aqui!</p>
+              <Button asChild>
+                <Link to="/offer-services">Cadastrar meu perfil</Link>
               </Button>
             </div>
           )}
@@ -134,3 +165,4 @@ export const FeaturedServicesSection = () => {
     </section>
   );
 };
+

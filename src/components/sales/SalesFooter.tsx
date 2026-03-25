@@ -8,30 +8,31 @@ export const SalesFooter = () => {
   return (
     <>
       {/* CTA Banner */}
-      <section className="py-10 md:py-16 bg-gradient-to-r from-primary to-blue-600 text-white">
+      <section className="py-16 md:py-20 bg-gradient-to-r from-primary to-blue-600 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-4xl font-bold mb-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 mb-3">Bico Brasil</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">
             Pronto para começar?
           </h2>
-          <p className="text-white/80 mb-6 max-w-xl mx-auto text-sm md:text-base">
+          <p className="text-white/80 mb-8 max-w-xl mx-auto text-base leading-relaxed">
             Junte-se a milhares de brasileiros que já usam o Bico Brasil para resolver e faturar.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
-              onClick={() => navigate("/app")}
-              variant="outline"
+              onClick={() => navigate("/auth?mode=signup")}
+              variant="secondary"
               size="lg"
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-8 font-bold rounded-xl shadow-md transition-all duration-300"
             >
-              Buscar Profissional
+              Criar Conta Grátis
             </Button>
             <Button
               onClick={() => navigate("/app")}
               variant="outline"
               size="lg"
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              className="h-12 w-full sm:w-auto px-8 border-white/60 text-white hover:bg-white/10 font-semibold rounded-xl"
             >
-              Oferecer Serviços
+              Entrar no App
             </Button>
           </div>
         </div>

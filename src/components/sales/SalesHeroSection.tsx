@@ -1,93 +1,107 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Briefcase, ArrowRight } from "lucide-react";
+import { Search, Briefcase, ArrowRight, Sparkles } from "lucide-react";
 
 export const SalesHeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="bg-[#d4fddf] text-[#1E2A5A] dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 dark:text-white overflow-hidden">
-      {/* Background pattern removed to prevent text overlap */}
+    <section className="relative bg-gradient-to-b from-background via-background to-primary/5 dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 text-foreground dark:text-white overflow-hidden">
+      {/* Decorative blobs — light mode only */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -top-32 -left-40 w-[480px] h-[480px] rounded-full bg-primary/8 blur-3xl dark:hidden" />
+        <div className="absolute top-10 right-0 w-[360px] h-[360px] rounded-full bg-primary/6 blur-3xl dark:hidden" />
+        {/* Dark mode blobs */}
+        <div className="hidden dark:block absolute -top-32 -left-40 w-[480px] h-[480px] rounded-full bg-blue-600/20 blur-3xl" />
+        <div className="hidden dark:block absolute bottom-0 right-0 w-[360px] h-[360px] rounded-full bg-orange-500/15 blur-3xl" />
+      </div>
 
-      <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+      <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            <span className="text-sm font-medium">+5.000 serviços realizados</span>
+          <div className="inline-flex items-center gap-2 bg-primary/10 dark:bg-white/10 backdrop-blur-sm border border-primary/20 dark:border-white/20 rounded-full px-4 py-2 mb-8">
+            <Sparkles className="w-3.5 h-3.5 text-primary dark:text-green-400" />
+            <span className="text-sm font-medium text-primary dark:text-white">+5.000 serviços realizados</span>
+            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
           </div>
 
           {/* Headline */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-[1.12] tracking-tight text-foreground dark:text-white max-w-3xl mx-auto">
             Conecte-se a Quem Resolve:{" "}
-            <span className="text-3xl md:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-400 dark:from-orange-400 dark:to-amber-300">
               Serviços Rápidos
             </span>{" "}
             e{" "}
-            <span className="text-3xl md:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500 dark:from-blue-400 dark:to-cyan-300">
               Renda Extra
             </span>{" "}
             na Sua Cidade.
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground dark:text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
             Encontre profissionais confiáveis em segundos ou ofereça seus serviços sem pagar comissões abusivas.
-            A plataforma leve, segura e feita para o Brasil que trabalha.
+            Plataforma leve, segura e feita para o Brasil que trabalha.
           </p>
 
-
-          {/* CTAs Secundários */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-6">
+          {/* Primary CTA */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
             <Button
-              onClick={() => navigate("/app")}
-              variant="outline"
+              onClick={() => navigate("/auth?mode=signup")}
               size="lg"
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              className="h-14 w-full sm:w-auto sm:min-w-[240px] px-8 text-base font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 group"
             >
-              <Search className="w-5 h-5" />
-              Buscar Profissional
+              Cadastrar Grátis
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
 
-            <span className="hidden sm:block text-slate-500 dark:text-slate-400">|</span>
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <Button
+                onClick={() => navigate("/app")}
+                variant="outline"
+                size="lg"
+                className="h-12 w-full sm:w-auto px-5 font-semibold rounded-xl flex items-center justify-center gap-2"
+              >
+                <Search className="w-4 h-4" />
+                Buscar Profissional
+              </Button>
 
-            <Button
-              onClick={() => navigate("/app")}
-              variant="outline"
-              size="lg"
-              className="h-12 w-full sm:w-auto sm:min-w-[200px] px-6 border-orange-600 text-orange-600 dark:border-white dark:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
-            >
-              <Briefcase className="w-5 h-5" />
-              Oferecer Serviços
-            </Button>
+              <Button
+                onClick={() => navigate("/app")}
+                variant="outline"
+                size="lg"
+                className="h-12 w-full sm:w-auto px-5 font-semibold rounded-xl flex items-center justify-center gap-2"
+              >
+                <Briefcase className="w-4 h-4" />
+                Oferecer Serviços
+              </Button>
+            </div>
           </div>
 
-          {/* Secondary CTA */}
-          <p className="mt-6 text-slate-500 dark:text-slate-400">
+          {/* Auth links — single line */}
+          <p className="text-sm text-muted-foreground dark:text-slate-400">
             Já tem conta?{" "}
             <button
               onClick={() => navigate("/auth")}
-              className="text-blue-400 hover:text-blue-300 underline font-medium"
+              className="font-semibold text-primary dark:text-blue-400 hover:underline"
             >
               Fazer login
             </button>
-          </p>
-          <p className="mt-2 text-slate-500 dark:text-slate-400">
-            Não tem uma conta?{" "}
+            {" "}·{" "}
             <button
               onClick={() => navigate("/auth?mode=signup")}
-              className="text-green-400 hover:text-green-300 underline font-medium"
+              className="font-semibold text-primary dark:text-green-400 hover:underline"
             >
-              Cadastre-se aqui
+              Criar conta grátis
             </button>
           </p>
         </div>
       </div>
 
       {/* Wave decoration */}
-      <div className="absolute bottom-0 left-0 right-0 -z-10">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
-          <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="currentColor" className="text-background" />
+      <div className="relative -z-0 mt-4">
+        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+          <path d="M0 80L60 70C120 60 240 40 360 30C480 20 600 20 720 25C840 30 960 40 1080 45C1200 50 1320 50 1380 50L1440 50V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0Z" fill="currentColor" className="text-background" />
         </svg>
       </div>
     </section>
