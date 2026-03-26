@@ -39,7 +39,7 @@ export const FeaturedServicesSection = () => {
   return (
     <section className="py-14 bg-muted/20 relative z-10" aria-labelledby="featured-services-title">
       <div className="container mx-auto px-4">
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex items-end justify-between mb-8 gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-2">
               Trabalhadores
@@ -51,7 +51,7 @@ export const FeaturedServicesSection = () => {
               Profissionais em Destaque
             </h2>
           </div>
-          <Button variant="ghost" asChild className="text-primary hover:text-primary/80 shrink-0">
+          <Button variant="ghost" asChild className="text-primary hover:text-primary/80 shrink-0 px-2">
             <Link to="/search-workers" className="flex items-center gap-1.5 text-sm">
               Ver todos
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -59,11 +59,11 @@ export const FeaturedServicesSection = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {isLoading ? (
             [...Array(6)].map((_, i) => (
-              <Card key={i} className="bg-card border border-border">
-                <CardContent className="p-5">
+                <Card key={i} className="bg-card border border-border rounded-2xl shadow-sm">
+                <CardContent className="p-4 md:p-5">
                   <div className="flex items-center gap-3">
                     <Skeleton className="w-14 h-14 rounded-full" />
                     <div className="flex-1">
@@ -80,12 +80,12 @@ export const FeaturedServicesSection = () => {
             featuredWorkers.map((worker) => (
               <Card
                 key={worker.id}
-                className="bg-card border border-border rounded-2xl hover:border-primary/40 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all duration-200 group"
+                className="bg-card border border-border/80 rounded-2xl hover:border-primary/40 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group"
               >
-                <CardContent className="p-5">
+                <CardContent className="p-4 md:p-5">
                   <div className="flex items-start gap-3">
                     <div className="relative shrink-0">
-                      <Avatar className="h-14 w-14">
+                      <Avatar className="h-16 w-16 ring-2 ring-primary/10">
                         <AvatarImage src={worker.profile_photo || undefined} alt={worker.name || 'Profissional'} />
                         <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
                           {getInitials(worker.name)}
@@ -100,7 +100,7 @@ export const FeaturedServicesSection = () => {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-foreground truncate text-sm">
+                      <h3 className="font-semibold text-foreground truncate text-base leading-tight">
                         {worker.name}
                       </h3>
                       {worker.category && (
@@ -113,13 +113,13 @@ export const FeaturedServicesSection = () => {
                     </div>
                   </div>
 
-                  <div className="mt-3.5 flex items-center justify-between">
+                    <div className="mt-4 flex items-center justify-between gap-2">
                     <div
                       className="flex items-center gap-1"
                       aria-label={`Avaliação: ${worker.rating_avg?.toFixed(1) || '0'} de 5 estrelas`}
                     >
                       <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" aria-hidden="true" />
-                      <span className="text-sm font-semibold text-foreground">
+                      <span className="text-base font-semibold text-foreground">
                         {worker.rating_avg?.toFixed(1) || '0.0'}
                       </span>
                       <span className="text-xs text-muted-foreground">
@@ -127,12 +127,12 @@ export const FeaturedServicesSection = () => {
                       </span>
                     </div>
 
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      asChild
-                      className="h-8 px-3 text-xs font-semibold group-hover:border-primary/50 group-hover:text-primary transition-colors duration-200"
-                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        asChild
+                        className="h-9 px-3 text-xs font-semibold rounded-xl group-hover:border-primary/50 group-hover:text-primary transition-colors duration-200"
+                      >
                       <Link to={`/worker/${worker.id}`}>
                         Ver perfil
                       </Link>
@@ -165,4 +165,3 @@ export const FeaturedServicesSection = () => {
     </section>
   );
 };
-

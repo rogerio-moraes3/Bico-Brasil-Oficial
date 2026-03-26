@@ -376,15 +376,15 @@ export default function SearchWorkers() {
         </div>
       )}
 
-      <main id="main-content" className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
+      <main id="main-content" className="flex-grow container mx-auto px-3 sm:px-4 py-6 md:py-8 pb-24 md:pb-8">
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Buscar Profissionais</h1>
           <p className="text-muted-foreground text-sm">Encontre o profissional certo para o seu projeto</p>
         </div>
 
-        <Card className="mb-8 rounded-2xl border border-border shadow-sm">
-          <CardContent className="p-6 pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <Card className="mb-6 md:mb-8 rounded-2xl border border-border/80 shadow-sm">
+          <CardContent className="p-4 md:p-6 pt-4 md:pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4">
               <div>
                 <Label>Categoria</Label>
                 <Select value={filters.category} onValueChange={handleCategoryChange}>
@@ -439,7 +439,7 @@ export default function SearchWorkers() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4">
               <div>
                 <Label>Bairro</Label>
                 <Input
@@ -474,7 +474,7 @@ export default function SearchWorkers() {
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap sm:flex-nowrap">
               <Button onClick={handleSearch} className="flex-1" disabled={loading}>
                 {loading ? (
                   <>
@@ -522,7 +522,7 @@ export default function SearchWorkers() {
           </div>
         )}
 
-        <Card className="p-6 bg-primary border-primary/20 text-primary-foreground rounded-2xl shadow-md mt-6">
+        <Card className="p-4 md:p-6 bg-primary border-primary/20 text-primary-foreground rounded-2xl shadow-md mt-6 w-full">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <h3 className="font-semibold text-lg mb-2">Não encontrou o profissional ideal?</h3>
@@ -569,12 +569,12 @@ export default function SearchWorkers() {
             )}
 
             {workers.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 place-items-center">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 place-items-stretch">
                 {workers.map((worker) => {
                   const isOwner = user?.id === worker.id;
 
                   return (
-                    <Card key={worker.id} className="h-full hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-shadow max-w-sm w-full mx-auto rounded-2xl border border-border">
+                    <Card key={worker.id} className="h-full w-full max-w-none md:max-w-sm md:mx-auto rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-all duration-200">
                       <Link
                         to={`/worker/${worker.id}`}
                         onClick={(e) => {
@@ -585,9 +585,9 @@ export default function SearchWorkers() {
                         }}
                         className="block"
                       >
-                        <CardContent className="p-4">
+                        <CardContent className="p-4 md:p-5">
                           <div className="flex flex-col items-center gap-3 mb-3">
-                            <div className="relative">
+                            <div className="relative rounded-full p-1 bg-primary/5 ring-1 ring-border/70">
                               <Avatar className="h-24 w-24">
                                 <AvatarImage
                                   src={worker.profile_photo || ''}
@@ -598,7 +598,7 @@ export default function SearchWorkers() {
                                 </AvatarFallback>
                               </Avatar>
                               {worker.verified && (
-                                <Badge className="absolute -top-1 -right-1 bg-blue-500">
+                                <Badge className="absolute -top-1 -right-1 bg-blue-500 shadow-sm">
                                   <Check className="h-3 w-3" />
                                 </Badge>
                               )}
@@ -699,7 +699,7 @@ export default function SearchWorkers() {
                       </Link>
 
                       {!isOwner && worker.phone && (
-                        <div className="px-6 pb-6 pt-2 border-t">
+                        <div className="px-4 md:px-6 pb-4 md:pb-6 pt-2 border-t">
                           <WhatsAppContactButton
                             phone={worker.phone}
                             workerName={worker.name}

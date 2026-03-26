@@ -384,7 +384,7 @@ const ProcurarBicos = () => {
       <Header />
 
 
-      <main id="main-content" className="flex-1 container mx-auto px-4 py-6 pb-20 md:pb-6 overflow-y-auto">
+      <main id="main-content" className="flex-1 container mx-auto px-3 sm:px-4 py-6 pb-24 md:pb-6 overflow-y-auto">
         <Breadcrumbs />
 
         {(showingCached || !isOnline) && (
@@ -410,10 +410,10 @@ const ProcurarBicos = () => {
         </div>
 
         {/* Filtros */}
-        <Card className="mb-6 bg-card shadow-sm border border-border rounded-2xl">
-          <CardContent className="pt-6 space-y-5">
+        <Card className="mb-6 bg-card shadow-sm border border-border/80 rounded-2xl">
+          <CardContent className="p-4 md:p-6 pt-4 md:pt-6 space-y-5">
             {/* Linha 1 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -451,7 +451,7 @@ const ProcurarBicos = () => {
             </div>
 
             {/* Linha 2 */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 items-end">
               <Select value={filters.dateFilter} onValueChange={(value) => setFilters(prev => ({ ...prev, dateFilter: value }))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Período" />
@@ -473,7 +473,7 @@ const ProcurarBicos = () => {
                 <Label htmlFor="urgent" className="cursor-pointer">Apenas urgentes</Label>
               </div>
 
-                <div className="flex gap-2 md:col-span-3">
+                <div className="flex gap-2 md:col-span-3 flex-wrap sm:flex-nowrap">
                 <Button onClick={handleSearch} className="flex-1">
                   <Search className="h-4 w-4 mr-2" />
                   Buscar
@@ -494,7 +494,7 @@ const ProcurarBicos = () => {
         </Card>
 
         {/* CTA sempre visível - Oferecer Serviços */}
-        <Card className="p-6 bg-primary text-primary-foreground border-primary/20 rounded-2xl shadow-md">
+        <Card className="p-4 md:p-6 bg-primary text-primary-foreground border-primary/20 rounded-2xl shadow-md w-full">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <h3 className="font-semibold text-lg mb-2">Quer oferecer seus serviços?</h3>
@@ -529,10 +529,10 @@ const ProcurarBicos = () => {
             ]}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {jobs.map((job) => (
-              <Card key={job.id} className="cursor-pointer hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-all duration-200 rounded-2xl border border-border bg-card w-full" onClick={() => handleViewJob(job)}>
-                <CardContent className="p-5">
+              <Card key={job.id} className="cursor-pointer hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-all duration-200 rounded-2xl border border-border/80 bg-card w-full shadow-sm" onClick={() => handleViewJob(job)}>
+                <CardContent className="p-4 md:p-5">
                   <div className="space-y-3">
                     {/* Header */}
                     <div className="space-y-2">
