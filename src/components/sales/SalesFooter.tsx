@@ -41,7 +41,7 @@ export const SalesFooter = () => {
       {/* Footer */}
       <footer className="bg-slate-900 text-white py-6 md:py-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
             {/* Logo & Description */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-3">

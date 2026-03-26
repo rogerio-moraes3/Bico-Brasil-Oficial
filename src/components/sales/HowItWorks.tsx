@@ -40,7 +40,7 @@ export const HowItWorks = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {steps.map((step, index) => (
             <div key={index} className="relative">
               {/* Connector dot trail */}
