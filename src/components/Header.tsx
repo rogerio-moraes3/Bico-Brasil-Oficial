@@ -218,13 +218,8 @@ export const Header = () => {
           </nav>
 
           {/* Right Section */}
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="hidden md:flex items-center gap-2 bg-card/70 border border-border/60 rounded-full px-2 py-1 shadow-sm backdrop-blur">
-              <ThemeToggle />
-            </div>
-            <div className="md:hidden flex items-center gap-2">
-              <ThemeToggle />
-            </div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle className="rounded-xl bg-card/70 backdrop-blur shadow-sm border border-border/60" />
             {/* Badge de Publicações Grátis */}
             {user && (
               <FreePostsBadge />
@@ -234,7 +229,7 @@ export const Header = () => {
             {user && (
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-full bg-card/70 backdrop-blur shadow-sm">
+                  <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-xl bg-card/70 backdrop-blur shadow-sm border border-border/60">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <Badge
@@ -256,7 +251,7 @@ export const Header = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex rounded-full bg-card/70 backdrop-blur shadow-sm">
+                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex rounded-xl bg-card/70 backdrop-blur shadow-sm border border-border/60 h-9 px-2.5">
                     <Avatar className="h-6 w-6">
                       <AvatarImage
                         src={
@@ -302,7 +297,7 @@ export const Header = () => {
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-11 w-11 flex items-center justify-center rounded-full bg-card/70 backdrop-blur shadow-sm">
+                <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-9 w-9 flex items-center justify-center rounded-xl bg-card/70 backdrop-blur shadow-sm border border-border/60">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>

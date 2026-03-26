@@ -377,9 +377,12 @@ export default function SearchWorkers() {
       )}
 
       <main id="main-content" className="flex-grow container mx-auto px-4 py-8 pb-20 md:pb-8">
-        <h1 className="text-3xl font-bold mb-8">Buscar Profissionais</h1>
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Buscar Profissionais</h1>
+          <p className="text-muted-foreground text-sm">Encontre o profissional certo para o seu projeto</p>
+        </div>
 
-        <Card className="mb-8">
+        <Card className="mb-8 rounded-2xl border border-border shadow-sm">
           <CardContent className="p-6 pt-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
@@ -519,7 +522,7 @@ export default function SearchWorkers() {
           </div>
         )}
 
-        <Card className="p-6 bg-primary border-primary/20 text-primary-foreground">
+        <Card className="p-6 bg-primary border-primary/20 text-primary-foreground rounded-2xl shadow-md mt-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <h3 className="font-semibold text-lg mb-2">Não encontrou o profissional ideal?</h3>
@@ -571,7 +574,7 @@ export default function SearchWorkers() {
                   const isOwner = user?.id === worker.id;
 
                   return (
-                    <Card key={worker.id} className="h-full hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-shadow max-w-sm w-full mx-auto">
+                    <Card key={worker.id} className="h-full hover:shadow-[0_0_20px_hsl(var(--xp-primary-glow))] transition-shadow max-w-sm w-full mx-auto rounded-2xl border border-border">
                       <Link
                         to={`/worker/${worker.id}`}
                         onClick={(e) => {
