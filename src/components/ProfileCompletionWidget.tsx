@@ -79,7 +79,7 @@ export const ProfileCompletionWidget = () => {
 
   return (
     <div className="container mx-auto px-4 pt-4 pb-0">
-      <div className="rounded-2xl border border-[rgba(15,23,42,0.08)] dark:border-primary/20 bg-[#fbfdff] dark:bg-primary/5 p-4 relative shadow-[0_2px_6px_rgba(0,0,0,0.04)] dark:shadow-none">
+      <div className="rounded-2xl border border-[rgba(15,23,42,0.12)] dark:border-primary/20 bg-white dark:bg-primary/5 p-4 relative shadow-[0_4px_16px_rgba(0,0,0,0.06)] dark:shadow-none">
         <button
           onClick={handleDismiss}
           aria-label="Fechar"
