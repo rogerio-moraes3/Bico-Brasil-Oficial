@@ -76,7 +76,7 @@ export default function Index() {
               {/* Primary: hire */}
               <button
                 onClick={handleContractorClick}
-                className="group flex flex-col items-start gap-3 rounded-3xl border border-border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-[0_8px_32px_-8px_hsl(var(--xp-primary)/0.25)] hover:-translate-y-1 transition-all duration-200 stagger-fade"
+                className="group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.08)] dark:border-border bg-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-sm hover:border-primary/50 hover:shadow-[0_8px_32px_-8px_hsl(var(--xp-primary)/0.25)] hover:-translate-y-1 transition-all duration-200 stagger-fade"
                 style={{ ["--stagger-delay" as string]: "0ms" }}
               >
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
@@ -96,7 +96,7 @@ export default function Index() {
               {/* Secondary: work */}
               <button
                 onClick={handleProfessionalClick}
-                className="group flex flex-col items-start gap-3 rounded-3xl border border-border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-[0_8px_32px_-8px_hsl(var(--xp-primary)/0.25)] hover:-translate-y-1 transition-all duration-200 stagger-fade"
+                className="group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.08)] dark:border-border bg-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-sm hover:border-primary/50 hover:shadow-[0_8px_32px_-8px_hsl(var(--xp-primary)/0.25)] hover:-translate-y-1 transition-all duration-200 stagger-fade"
                 style={{ ["--stagger-delay" as string]: "80ms" }}
               >
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">

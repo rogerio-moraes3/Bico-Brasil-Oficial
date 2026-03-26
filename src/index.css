@@ -1125,3 +1125,47 @@ button {
     padding-right: 1.5rem;
   }
 }
+
+/* ============================================================
+   LIGHT MODE SURFACE SYSTEM — Premium SaaS Visual Depth
+   All rules scoped to :root:not(.dark) to protect dark theme.
+   Target: XP Empresas / Stripe / Linear aesthetic.
+   ============================================================ */
+
+/* Level 0 — page background (applied to page wrapper divs) */
+:root:not(.dark) .bb-surface-muted {
+  background-color: #f8fafc;
+}
+
+/* Level 1 — soft surface (cards, widgets) */
+:root:not(.dark) .bb-surface-soft {
+  background-color: #fbfdff;
+}
+
+/* Level 2 — card with depth (border + shadow, hover lift) */
+:root:not(.dark) .bb-surface-card {
+  background-color: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+:root:not(.dark) .bb-surface-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Light mode hero gradient — replaces pure white */
+:root:not(.dark) .hero-bg {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+/* Light mode: Card depth applied via bb-surface-card utility class */
+:root:not(.dark) .bb-surface-card {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  transition: box-shadow 0.2s ease;
+}
+
+:root:not(.dark) .bb-surface-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+}
