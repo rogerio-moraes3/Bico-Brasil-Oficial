@@ -139,7 +139,7 @@ export const Header = () => {
                 size="icon"
                 onClick={() => safeGoBack(navigate)}
                 aria-label="Voltar"
-                className="text-[var(--nav-link)] shadow-md font-bold shrink-0 h-11 w-11 rounded-full flex items-center justify-center bg-card/70 backdrop-blur"
+                className="text-[var(--nav-link)] shrink-0 h-11 w-11 rounded-full flex items-center justify-center bg-card/70 backdrop-blur shadow-sm"
               >
                 <ArrowLeft className="h-6 w-6" />
               </Button>

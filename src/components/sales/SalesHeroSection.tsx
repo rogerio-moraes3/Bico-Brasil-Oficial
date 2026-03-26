@@ -6,7 +6,7 @@ export const SalesHeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative bg-gradient-to-b from-background via-background to-primary/5 dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 text-foreground dark:text-white overflow-hidden">
+    <section className="relative bg-gradient-to-b from-background via-background to-primary/5 dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 text-foreground dark:text-white overflow-x-hidden">
       {/* Decorative blobs — light mode only */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-32 -left-40 w-[480px] h-[480px] rounded-full bg-primary/8 blur-3xl dark:hidden" />
@@ -16,7 +16,7 @@ export const SalesHeroSection = () => {
         <div className="hidden dark:block absolute bottom-0 right-0 w-[360px] h-[360px] rounded-full bg-orange-500/15 blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
+      <div className="container mx-auto px-4 py-14 md:py-28 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-primary/10 dark:bg-white/10 backdrop-blur-sm border border-primary/20 dark:border-white/20 rounded-full px-4 py-2 mb-8">
@@ -26,7 +26,7 @@ export const SalesHeroSection = () => {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-[1.12] tracking-tight text-foreground dark:text-white max-w-3xl mx-auto">
+          <h1 className="text-[2rem] sm:text-5xl lg:text-6xl font-bold mb-5 leading-[1.1] tracking-tight text-foreground dark:text-white max-w-3xl mx-auto">
             Conecte-se a Quem Resolve:{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-400 dark:from-orange-400 dark:to-amber-300">
               Serviços Rápidos
@@ -39,7 +39,7 @@ export const SalesHeroSection = () => {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-muted-foreground dark:text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-muted-foreground dark:text-slate-300 mb-9 max-w-xl mx-auto leading-relaxed">
             Encontre profissionais confiáveis em segundos ou ofereça seus serviços sem pagar comissões abusivas.
             Plataforma leve, segura e feita para o Brasil que trabalha.
           </p>
