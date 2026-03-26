@@ -389,12 +389,12 @@ export default function Profile() {
     <>
 
       <Header />
-      <div className="min-h-screen bg-muted/30 py-8 pb-20 md:pb-8">
+      <div className="min-h-screen bg-[#f8fafc] dark:bg-muted/30 py-8 pb-20 md:pb-8">
         <div className="container mx-auto px-4 max-w-4xl">
           <Breadcrumbs />
 
           {/* Profile Header */}
-          <Card className="mb-6 animate-fade-in">
+          <Card className="mb-6 animate-fade-in bb-surface-card">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -488,7 +488,7 @@ export default function Profile() {
             </div>
 
             <TabsContent value="info">
-              <Card className="border-2 border-border dark:border-transparent shadow-md bg-card">
+              <Card className="border-2 border-[rgba(15,23,42,0.1)] dark:border-transparent shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-md bg-card bb-surface-card">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Dados Pessoais</CardTitle>
@@ -746,7 +746,7 @@ export default function Profile() {
 
             {/* History Tab */}
             <TabsContent value="history">
-              <Card>
+              <Card className="bb-surface-card">
                 <CardHeader>
                   <CardTitle>Histórico de Trabalhos</CardTitle>
                 </CardHeader>
@@ -833,7 +833,7 @@ export default function Profile() {
 
             {/* Subscription Tab */}
             <TabsContent value="subscription">
-              <Card>
+              <Card className="bb-surface-card">
                 <CardHeader>
                   <CardTitle>Gerenciar Assinatura</CardTitle>
                 </CardHeader>
@@ -929,7 +929,7 @@ export default function Profile() {
 
             {/* Security Tab */}
             <TabsContent value="security">
-              <Card>
+              <Card className="bb-surface-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <KeyRound className="h-5 w-5" />

@@ -45,7 +45,7 @@ export const ActivityFeedStrip = () => {
 
   return (
     <div
-      className="w-full border-b border-border/50 bg-background py-2 px-4 overflow-hidden"
+      className="w-full border-b border-border/50 bg-[#f1f5f9] dark:bg-background py-2 px-4 overflow-hidden"
       aria-label="Atividade recente na plataforma"
     >
       <div className="container mx-auto flex items-center gap-3">
