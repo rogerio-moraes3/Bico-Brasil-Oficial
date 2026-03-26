@@ -515,8 +515,8 @@ const ProcurarBicos = () => {
         ) : jobs.length === 0 ? (
           <EmptyState
             icon={<Briefcase className="h-16 w-16 text-muted-foreground" />}
-            title="Nenhum bico encontrado"
-            description="Quer oferecer seus serviços e aparecer nas buscas? Cadastre-se como profissional!"
+            title="Nenhum resultado encontrado"
+            description="Tente outra cidade ou outra categoria. Quer aparecer nas buscas? Cadastre-se como profissional!"
             actions={[
               { label: "Limpar Filtros", onClick: handleClearFilters, variant: "outline" },
               {
