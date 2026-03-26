@@ -131,8 +131,8 @@ export const Header = () => {
       </a>
 
       <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/90 text-foreground backdrop-blur-xl shadow-[0_2px_20px_-6px_hsl(var(--xp-primary)/0.08)] overflow-visible" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="container flex h-16 min-h-[64px] items-center justify-between px-3 md:px-4">
-          <div className="flex items-center gap-2">
+        <div className="container flex h-16 min-h-[64px] items-center justify-between px-2 md:px-4">
+          <div className="flex items-center gap-1.5">
             {showBackButton && (
               <Button
                 variant="ghost"
@@ -146,12 +146,12 @@ export const Header = () => {
             )}
 
             <Link to={user ? "/app" : "/"} className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
-              <img src={logo} alt="Bico Brasil" className="h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-2xl shadow-sm" />
+              <img src={logo} alt="Bico Brasil" className="h-9 w-9 md:h-12 md:w-12 shrink-0 rounded-2xl shadow-sm" />
               <div className="flex flex-col justify-center">
                 <span className="text-base md:text-lg font-semibold leading-tight whitespace-nowrap text-foreground">
                   Bico Brasil
                 </span>
-                <span className="text-xs text-muted-foreground/90 leading-tight font-semibold whitespace-nowrap uppercase tracking-wider">
+                <span className="hidden sm:block text-xs text-muted-foreground/90 leading-tight font-semibold whitespace-nowrap uppercase tracking-wider">
                   Trabalhou, Tá Pago.
                 </span>
               </div>
@@ -218,8 +218,8 @@ export const Header = () => {
           </nav>
 
           {/* Right Section */}
-          <div className="flex items-center gap-2">
-            <ThemeToggle className="bg-card/70 backdrop-blur shadow-sm border border-border/40 hover:bg-card/90" />
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle className="max-[360px]:hidden bg-card/70 backdrop-blur shadow-sm border border-border/40 hover:bg-card/90" />
             {/* Badge de Publicações Grátis */}
             {user && (
               <FreePostsBadge />
