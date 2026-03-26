@@ -1158,14 +1158,3 @@ button {
 :root:not(.dark) .hero-bg {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 }
-
-/* Light mode: Card depth applied via bb-surface-card utility class */
-:root:not(.dark) .bb-surface-card {
-  border-color: rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-  transition: box-shadow 0.2s ease;
-}
-
-:root:not(.dark) .bb-surface-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
-}
