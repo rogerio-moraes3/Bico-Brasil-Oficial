@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { Skeleton } from "./ui/skeleton";
 
 export const RecentWorkersSection = () => {
+  const stripCardWidthClass = "w-[44vw] min-w-[168px] max-w-[206px] sm:w-44";
+
   const { data: recentWorkers, isLoading } = useQuery({
     queryKey: ["recent-workers-home"],
     queryFn: async () => {
@@ -71,7 +73,7 @@ export const RecentWorkersSection = () => {
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
-                  className="shrink-0 w-[44vw] min-w-[168px] max-w-[206px] sm:w-44 snap-start rounded-2xl border border-border bg-card p-4 flex flex-col items-center gap-2"
+                  className={`shrink-0 ${stripCardWidthClass} snap-start rounded-2xl border border-border bg-card p-4 flex flex-col items-center gap-2`}
                 >
                   <Skeleton className="w-12 h-12 rounded-full" />
                   <Skeleton className="h-3 w-24" />
@@ -82,7 +84,7 @@ export const RecentWorkersSection = () => {
                 <Link
                   key={worker.id}
                   to={`/worker/${worker.id}`}
-                  className="group shrink-0 w-[44vw] min-w-[168px] max-w-[206px] sm:w-44 snap-start rounded-2xl border border-border bg-card p-4 flex flex-col items-center gap-2 hover:border-primary/40 hover:shadow-[0_4px_20px_-4px_hsl(var(--xp-primary)/0.15)] hover:-translate-y-0.5 transition-all duration-200 stagger-fade"
+                  className={`group shrink-0 ${stripCardWidthClass} snap-start rounded-2xl border border-border bg-card p-4 flex flex-col items-center gap-2 hover:border-primary/40 hover:shadow-[0_4px_20px_-4px_hsl(var(--xp-primary)/0.15)] hover:-translate-y-0.5 transition-all duration-200 stagger-fade`}
                   style={{ ["--stagger-delay" as string]: `${i * 40}ms` }}
                   aria-label={`Ver perfil de ${worker.name}`}
                 >

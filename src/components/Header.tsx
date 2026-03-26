@@ -151,7 +151,7 @@ export const Header = () => {
                 <span className="text-base md:text-lg font-semibold leading-tight whitespace-nowrap text-foreground">
                   Bico Brasil
                 </span>
-                <span className="hidden sm:block text-xs text-muted-foreground/90 leading-tight font-semibold whitespace-nowrap uppercase tracking-wider">
+                <span className="sr-only sm:not-sr-only text-xs text-muted-foreground/90 leading-tight font-semibold whitespace-nowrap uppercase tracking-wider">
                   Trabalhou, Tá Pago.
                 </span>
               </div>
