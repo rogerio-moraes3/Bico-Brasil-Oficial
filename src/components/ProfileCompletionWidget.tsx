@@ -21,7 +21,8 @@ export const ProfileCompletionWidget = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Only show once per session (reset on page reload is fine)
+    // Use sessionStorage so the widget reappears on next session if still incomplete,
+    // but doesn't nag the user repeatedly within the same browsing session.
     const key = `bb_pcw_dismissed_${user.id}`;
     if (sessionStorage.getItem(key)) {
       setDismissed(true);

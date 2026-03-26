@@ -130,8 +130,8 @@ export const Header = () => {
         Ir para conteúdo principal
       </a>
 
-      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/90 text-foreground backdrop-blur-xl shadow-[0_2px_20px_-6px_hsl(var(--xp-primary)/0.08)] overflow-visible" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="container flex h-16 min-h-[64px] items-center justify-between px-2 md:px-4">
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 text-foreground backdrop-blur-xl shadow-[0_1px_16px_-6px_hsl(var(--xp-primary)/0.07)] overflow-visible" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="container flex h-16 min-h-[64px] items-center justify-between px-3 md:px-5">
           <div className="flex items-center gap-1.5">
             {showBackButton && (
               <Button
@@ -139,9 +139,9 @@ export const Header = () => {
                 size="icon"
                 onClick={() => safeGoBack(navigate)}
                 aria-label="Voltar"
-                className="text-[var(--nav-link)] shrink-0 h-11 w-11 min-h-[44px] rounded-full flex items-center justify-center bg-card/70 backdrop-blur shadow-sm"
+                className="text-[var(--nav-link)] shrink-0 h-11 w-11 min-h-[44px] rounded-full flex items-center justify-center hover:bg-muted/60 transition-colors"
               >
-                <ArrowLeft className="h-6 w-6" />
+                <ArrowLeft className="h-5 w-5" />
               </Button>
             )}
 
@@ -218,8 +218,8 @@ export const Header = () => {
           </nav>
 
           {/* Right Section */}
-          <div className="flex items-center gap-1.5">
-            <ThemeToggle className="max-[360px]:hidden bg-card/70 backdrop-blur shadow-sm border border-border/40 hover:bg-card/90" />
+          <div className="flex items-center gap-1">
+            <ThemeToggle className="max-[360px]:hidden hover:bg-muted/60" />
             {/* Badge de Publicações Grátis */}
             {user && (
               <FreePostsBadge />
@@ -229,7 +229,7 @@ export const Header = () => {
             {user && (
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative h-11 w-11 min-h-[44px] rounded-full bg-card/70 backdrop-blur shadow-sm border border-border/40 hover:bg-card/90">
+                  <Button variant="ghost" size="icon" className="relative h-11 w-11 min-h-[44px] rounded-full hover:bg-muted/60 transition-colors">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <Badge
@@ -251,7 +251,7 @@ export const Header = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex rounded-xl bg-card/70 backdrop-blur shadow-sm border border-border/60 h-9 px-2.5">
+                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex rounded-full border border-border/60 h-9 px-2.5 hover:bg-muted/60 transition-colors">
                     <Avatar className="h-6 w-6">
                       <AvatarImage
                         src={
@@ -260,7 +260,7 @@ export const Header = () => {
                         }
                       />  <AvatarFallback>{getUserInitials()}</AvatarFallback>
                     </Avatar>
-                    <span className="hidden lg:inline">{getUserDisplayName()}</span>
+                    <span className="hidden lg:inline text-sm font-medium">{getUserDisplayName()}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -275,19 +275,19 @@ export const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex gap-2">
+              <div className="flex gap-1.5">
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
                   size="sm"
                   variant="ghost"
-                  className="hidden md:flex text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground"
+                  className="hidden md:flex text-xs font-semibold text-muted-foreground hover:text-foreground px-3 h-9"
                 >
                   Cadastre-se
                 </Button>
                 <Button
                   onClick={() => navigate('/auth')}
                   size="sm"
-                  className="hidden md:flex text-xs font-semibold uppercase tracking-[0.18em] shadow-sm shadow-primary/20 hover:shadow-primary/30 transition-shadow"
+                  className="hidden md:flex text-xs font-semibold px-4 h-9 rounded-full shadow-sm shadow-primary/15 hover:shadow-primary/25 transition-shadow"
                 >
                   Entrar
                 </Button>
@@ -297,7 +297,7 @@ export const Header = () => {
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
-                  <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-11 w-11 min-h-[44px] flex items-center justify-center rounded-full bg-card/70 backdrop-blur shadow-sm border border-border/40 hover:bg-card/90">
+                  <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-11 w-11 min-h-[44px] flex items-center justify-center rounded-full hover:bg-muted/60 transition-colors">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
