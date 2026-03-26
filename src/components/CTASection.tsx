@@ -5,7 +5,7 @@ import { ArrowRight, Search, Briefcase } from "lucide-react";
 export const CTASection = () => {
   return (
     <section
-      className="py-20 bg-gradient-to-br from-primary via-primary to-blue-600 dark:from-[#0838C7] dark:to-[#0D9E52] relative z-10 overflow-hidden"
+      className="py-16 bg-gradient-to-br from-primary via-primary to-blue-600 dark:from-[#0838C7] dark:to-[#0D9E52] relative z-10 overflow-hidden"
       aria-labelledby="cta-title"
     >
       {/* Decorative blob */}
@@ -25,7 +25,7 @@ export const CTASection = () => {
           >
             Pronto para encontrar seu próximo bico?
           </h2>
-          <p className="text-white/75 text-base mb-10 max-w-md mx-auto leading-relaxed">
+          <p className="text-white/75 text-base mb-8 max-w-md mx-auto leading-relaxed">
             Cadastre-se e comece a contratar ou oferecer serviços hoje mesmo. Sem comissões, sem burocracia.
           </p>
 

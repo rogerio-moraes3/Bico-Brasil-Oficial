@@ -401,7 +401,7 @@ const ProcurarBicos = () => {
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 max-w-5xl">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Procurar Bicos</h1>
-            <p className="text-muted-foreground">Encontre oportunidades de trabalho na sua região</p>
+            <p className="text-sm text-muted-foreground">Encontre oportunidades de trabalho na sua região</p>
           </div>
           <ShareButtons
             text="Procurando bicos? Encontre oportunidades de trabalho no Bico Brasil!"

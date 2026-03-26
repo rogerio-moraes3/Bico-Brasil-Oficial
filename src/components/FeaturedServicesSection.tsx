@@ -37,9 +37,9 @@ export const FeaturedServicesSection = () => {
   };
 
   return (
-    <section className="py-20 bg-muted/20 relative z-10" aria-labelledby="featured-services-title">
+    <section className="py-14 bg-muted/20 relative z-10" aria-labelledby="featured-services-title">
       <div className="container mx-auto px-4">
-        <div className="flex items-end justify-between mb-10">
+        <div className="flex items-end justify-between mb-8">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-2">
               Trabalhadores
@@ -80,12 +80,12 @@ export const FeaturedServicesSection = () => {
             featuredWorkers.map((worker) => (
               <Card
                 key={worker.id}
-                className="bg-card border border-border hover:border-primary/40 shadow-sm hover:shadow-[0_6px_28px_-6px_hsl(var(--xp-primary)/0.18)] hover:-translate-y-0.5 transition-all duration-200 group"
+                className="bg-card border border-border rounded-2xl hover:border-primary/40 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all duration-200 group"
               >
                 <CardContent className="p-5">
                   <div className="flex items-start gap-3">
                     <div className="relative shrink-0">
-                      <Avatar className="h-12 w-12">
+                      <Avatar className="h-14 w-14">
                         <AvatarImage src={worker.profile_photo || undefined} alt={worker.name || 'Profissional'} />
                         <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
                           {getInitials(worker.name)}

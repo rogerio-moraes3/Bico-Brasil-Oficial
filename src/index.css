@@ -496,6 +496,26 @@ All colors MUST be HSL.
   }
 }
 
+/* Hero background depth — subtle radial gradient for premium depth */
+.hero-bg {
+  position: relative;
+}
+
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, hsl(var(--xp-primary) / 0.07) 0%, transparent 70%);
+}
+
+.hero-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Subtle card lift on hover — premium feel */
 .card-lift {
   transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
@@ -503,7 +523,7 @@ All colors MUST be HSL.
 
 .card-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px -6px hsl(var(--xp-primary) / 0.14);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* Link / button micro-transition base */

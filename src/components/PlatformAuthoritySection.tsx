@@ -60,7 +60,7 @@ export const PlatformAuthoritySection = () => {
 
   return (
     <section
-      className="relative py-20 overflow-hidden bg-foreground dark:bg-card"
+      className="relative py-16 overflow-hidden bg-foreground dark:bg-card"
       aria-labelledby="authority-title"
     >
       {/* Decorative blobs */}
@@ -71,7 +71,7 @@ export const PlatformAuthoritySection = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 bg-primary/20 rounded-full px-3.5 py-1.5 mb-4">
               <Globe className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
@@ -94,7 +94,7 @@ export const PlatformAuthoritySection = () => {
         </div>
 
         {/* Pillar stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
           {pillars.map((p, i) => (
             <div
               key={i}
