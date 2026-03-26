@@ -45,7 +45,7 @@ export const RecentWorkersSection = () => {
   return (
     <section className="py-12 bg-background relative z-10" aria-labelledby="recent-workers-title">
       <div className="container mx-auto px-4">
-        <div className="flex items-end justify-between mb-6">
+        <div className="flex items-end justify-between mb-6 gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-2">
               Novidades
@@ -57,7 +57,7 @@ export const RecentWorkersSection = () => {
               Novos no Bico Brasil
             </h2>
           </div>
-          <Button variant="ghost" asChild className="text-primary hover:text-primary/80 shrink-0">
+          <Button variant="ghost" asChild className="text-primary hover:text-primary/80 shrink-0 px-2">
             <Link to="/search-workers" className="flex items-center gap-1.5 text-sm">
               Ver todos
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -66,12 +66,12 @@ export const RecentWorkersSection = () => {
         </div>
 
         {/* Horizontal scroll strip */}
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none snap-x snap-mandatory">
+        <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none snap-x snap-mandatory [scroll-padding-inline:1rem]">
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
-                  className="shrink-0 w-40 snap-start rounded-2xl border border-border bg-card p-4 flex flex-col items-center gap-2"
+                  className="shrink-0 w-[44vw] min-w-[168px] max-w-[206px] sm:w-44 snap-start rounded-2xl border border-border bg-card p-4 flex flex-col items-center gap-2"
                 >
                   <Skeleton className="w-12 h-12 rounded-full" />
                   <Skeleton className="h-3 w-24" />
@@ -82,7 +82,7 @@ export const RecentWorkersSection = () => {
                 <Link
                   key={worker.id}
                   to={`/worker/${worker.id}`}
-                  className="group shrink-0 w-40 snap-start rounded-2xl border border-border bg-card p-4 flex flex-col items-center gap-2 hover:border-primary/40 hover:shadow-[0_4px_20px_-4px_hsl(var(--xp-primary)/0.15)] hover:-translate-y-0.5 transition-all duration-200 stagger-fade"
+                  className="group shrink-0 w-[44vw] min-w-[168px] max-w-[206px] sm:w-44 snap-start rounded-2xl border border-border bg-card p-4 flex flex-col items-center gap-2 hover:border-primary/40 hover:shadow-[0_4px_20px_-4px_hsl(var(--xp-primary)/0.15)] hover:-translate-y-0.5 transition-all duration-200 stagger-fade"
                   style={{ ["--stagger-delay" as string]: `${i * 40}ms` }}
                   aria-label={`Ver perfil de ${worker.name}`}
                 >

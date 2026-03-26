@@ -130,8 +130,8 @@ export const Header = () => {
         Ir para conteúdo principal
       </a>
 
-      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/85 text-foreground backdrop-blur-xl shadow-[0_2px_20px_-6px_hsl(var(--xp-primary)/0.08)]" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="container flex h-16 items-center justify-between px-2 md:px-4">
+      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/90 text-foreground backdrop-blur-xl shadow-[0_2px_20px_-6px_hsl(var(--xp-primary)/0.08)] overflow-visible" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="container flex h-16 min-h-[64px] items-center justify-between px-3 md:px-4">
           <div className="flex items-center gap-2">
             {showBackButton && (
               <Button
@@ -139,7 +139,7 @@ export const Header = () => {
                 size="icon"
                 onClick={() => safeGoBack(navigate)}
                 aria-label="Voltar"
-                className="text-[var(--nav-link)] shrink-0 h-11 w-11 rounded-full flex items-center justify-center bg-card/70 backdrop-blur shadow-sm"
+                className="text-[var(--nav-link)] shrink-0 h-11 w-11 min-h-[44px] rounded-full flex items-center justify-center bg-card/70 backdrop-blur shadow-sm"
               >
                 <ArrowLeft className="h-6 w-6" />
               </Button>
@@ -148,10 +148,10 @@ export const Header = () => {
             <Link to={user ? "/app" : "/"} className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
               <img src={logo} alt="Bico Brasil" className="h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-2xl shadow-sm" />
               <div className="flex flex-col justify-center">
-                <span className="text-base md:text-lg font-bold leading-tight whitespace-nowrap text-foreground">
+                <span className="text-base md:text-lg font-semibold leading-tight whitespace-nowrap text-foreground">
                   Bico Brasil
                 </span>
-                <span className="text-xs text-muted-foreground leading-tight font-medium whitespace-nowrap uppercase tracking-wider">
+                <span className="text-xs text-muted-foreground/90 leading-tight font-semibold whitespace-nowrap uppercase tracking-wider">
                   Trabalhou, Tá Pago.
                 </span>
               </div>
@@ -219,7 +219,7 @@ export const Header = () => {
 
           {/* Right Section */}
           <div className="flex items-center gap-2">
-            <ThemeToggle className="rounded-xl bg-card/70 backdrop-blur shadow-sm border border-border/60" />
+            <ThemeToggle className="bg-card/70 backdrop-blur shadow-sm border border-border/40 hover:bg-card/90" />
             {/* Badge de Publicações Grátis */}
             {user && (
               <FreePostsBadge />
@@ -229,7 +229,7 @@ export const Header = () => {
             {user && (
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-xl bg-card/70 backdrop-blur shadow-sm border border-border/60">
+                  <Button variant="ghost" size="icon" className="relative h-11 w-11 min-h-[44px] rounded-full bg-card/70 backdrop-blur shadow-sm border border-border/40 hover:bg-card/90">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <Badge
@@ -297,10 +297,10 @@ export const Header = () => {
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-9 w-9 flex items-center justify-center rounded-xl bg-card/70 backdrop-blur shadow-sm border border-border/60">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
+                  <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-11 w-11 min-h-[44px] flex items-center justify-center rounded-full bg-card/70 backdrop-blur shadow-sm border border-border/40 hover:bg-card/90">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
               <SheetContent side="right" className="w-[320px] p-0">
                 <div className="flex flex-col h-full">
                   {/* Header do Menu */}

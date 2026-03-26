@@ -482,8 +482,8 @@ export default function Auth() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-muted/30 py-12 px-4 pb-20 md:pb-12">
-        <div className="container max-w-xl mx-auto">
+      <div className="min-h-screen bg-muted/30 py-8 md:py-12 px-3 sm:px-4 pb-24 md:pb-12">
+        <div className="container max-w-xl mx-auto px-0">
           {/* Botão Voltar */}
           <Button
             variant="ghost"
@@ -494,7 +494,7 @@ export default function Auth() {
             Voltar
           </Button>
           {showResetPassword ? (
-            <Card>
+            <Card className="w-full rounded-3xl border border-border/80 shadow-md">
               <CardHeader>
                 <CardTitle className="text-2xl">Recuperar Senha</CardTitle>
                 <CardDescription>
@@ -534,7 +534,7 @@ export default function Auth() {
               </CardContent>
             </Card>
           ) : mode === 'reset-password' ? (
-            <Card>
+            <Card className="w-full rounded-3xl border border-border/80 shadow-md">
               <CardHeader>
                 <CardTitle className="text-2xl">Nova Senha</CardTitle>
                 <CardDescription>
@@ -596,8 +596,8 @@ export default function Auth() {
               </CardContent>
             </Card>
           ) : (
-            <Card>
-              <CardHeader>
+            <Card className="w-full rounded-3xl border border-border/80 shadow-md">
+              <CardHeader className="p-5 md:p-6">
                 <CardTitle className="text-2xl">
                   {mode === 'login' ? 'Entrar' : 'Cadastrar'}
                 </CardTitle>
@@ -607,7 +607,7 @@ export default function Auth() {
                     : 'Crie sua conta no Bico Brasil'}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-5 md:p-6 pt-0">
                 {mode === 'login' ? (
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
