@@ -554,8 +554,8 @@ export default function SearchWorkers() {
             {!error && workers.length === 0 && (
               <EmptyState
                 icon={<Briefcase className="h-16 w-16 text-muted-foreground" />}
-                title="Nenhum profissional encontrado"
-                description="Não encontrou o profissional que precisa? Publique uma vaga e deixe que eles venham até você!"
+                title="Nenhum resultado encontrado"
+                description="Tente outra cidade, outra categoria ou uma busca diferente. Você também pode publicar uma vaga e deixar os profissionais virem até você!"
                 actions={[
                   {
                     label: "Publicar Vaga",

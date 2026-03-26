@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Star, ArrowRight, BadgeCheck, MapPin, Briefcase } from "lucide-react";
+import { Star, ArrowRight, BadgeCheck, MapPin, Briefcase, Phone } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import { Skeleton } from "./ui/skeleton";
@@ -104,10 +104,16 @@ export const FeaturedServicesSection = () => {
                         {worker.name}
                       </h3>
                       {worker.category && (
-                        <div className="mt-1">
+                        <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                           <Badge variant="secondary" className="text-[10px] px-2 py-0 h-5 font-medium">
                             {worker.category}
                           </Badge>
+                          {worker.verified && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-primary">
+                              <Phone className="w-2.5 h-2.5" aria-hidden="true" />
+                              Tel. verificado
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>

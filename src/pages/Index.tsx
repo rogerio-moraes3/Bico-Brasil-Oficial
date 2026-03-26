@@ -10,6 +10,9 @@ import { PlatformStatsStrip } from "@/components/PlatformStatsStrip";
 import { ActivityFeedStrip } from "@/components/ActivityFeedStrip";
 import { PlatformAuthoritySection } from "@/components/PlatformAuthoritySection";
 import { RecentWorkersSection } from "@/components/RecentWorkersSection";
+import { TrustStrip } from "@/components/TrustStrip";
+import { ProfileCompletionWidget } from "@/components/ProfileCompletionWidget";
+import { HowItWorks } from "@/components/sales/HowItWorks";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -49,6 +52,12 @@ export default function Index() {
         <ActivityFeedStrip />
 
         <main id="main-content" className="flex-1">
+          {/* Trust strip */}
+          <TrustStrip />
+
+          {/* Profile completion widget (logged in users only) */}
+          <ProfileCompletionWidget />
+
           {/* Hero CTA block */}
           <section className="hero-bg container mx-auto px-4 pt-10 pb-8 flex flex-col items-center text-center gap-2">
             <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-3.5 py-1.5 mb-1">
@@ -74,7 +83,7 @@ export default function Index() {
                   <Search className="w-5 h-5 text-primary" aria-hidden="true" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-bold text-foreground text-[15px] leading-snug">Preciso contratar</p>
+                  <p className="font-bold text-foreground text-[15px] leading-snug">Encontrar profissionais agora</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Busque profissionais verificados perto de você
                   </p>
@@ -94,7 +103,7 @@ export default function Index() {
                   <Briefcase className="w-5 h-5 text-primary" aria-hidden="true" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-bold text-foreground text-[15px] leading-snug">Quero trabalhar</p>
+                  <p className="font-bold text-foreground text-[15px] leading-snug">Começar a ganhar dinheiro</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Encontre bicos e ganhe renda extra hoje
                   </p>
@@ -126,6 +135,9 @@ export default function Index() {
 
           {/* Novos profissionais — horizontal strip */}
           <RecentWorkersSection />
+
+          {/* How it works */}
+          <HowItWorks />
 
           {/* Platform authority block */}
           <PlatformAuthoritySection />

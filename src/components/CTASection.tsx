@@ -38,7 +38,7 @@ export const CTASection = () => {
             >
               <Link to="/search-workers" className="flex items-center gap-2">
                 <Search className="h-4 w-4" aria-hidden="true" />
-                Encontrar Profissionais
+                Encontrar Profissionais Agora
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform duration-200" aria-hidden="true" />
               </Link>
             </Button>
@@ -51,7 +51,7 @@ export const CTASection = () => {
             >
               <Link to="/offer-services" className="flex items-center gap-2">
                 <Briefcase className="h-4 w-4" aria-hidden="true" />
-                Oferecer Serviços
+                Começar a Ganhar Dinheiro
               </Link>
             </Button>
           </div>

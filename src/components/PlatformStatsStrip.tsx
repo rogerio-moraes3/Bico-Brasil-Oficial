@@ -59,7 +59,7 @@ export const PlatformStatsStrip = () => {
         {items.map((item, i) => (
           <div key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <item.icon className="w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true" />
-            <span className="font-semibold text-foreground">{item.value}</span>
+            <span className="font-bold text-sm text-foreground">{item.value}</span>
             <span>{item.label}</span>
           </div>
         ))}
