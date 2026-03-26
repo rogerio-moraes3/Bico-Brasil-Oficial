@@ -1156,5 +1156,5 @@ button {
 
 /* Light mode hero gradient — replaces pure white */
 :root:not(.dark) .hero-bg {
-  background: linear-gradient(180deg, #f8fafc 0%, #f8fafc 100%);
+  background-color: #f8fafc;
 }
