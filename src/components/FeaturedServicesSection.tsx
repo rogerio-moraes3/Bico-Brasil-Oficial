@@ -37,7 +37,7 @@ export const FeaturedServicesSection = () => {
   };
 
   return (
-    <section className="py-14 bg-muted/20 relative z-10" aria-labelledby="featured-services-title">
+    <section className="py-14 bg-[#f8fafc] dark:bg-muted/20 relative z-10" aria-labelledby="featured-services-title">
       <div className="container mx-auto px-4">
         <div className="flex items-end justify-between mb-8 gap-3">
           <div>

@@ -45,7 +45,7 @@ export const RecentWorkersSection = () => {
   if (!isLoading && (!recentWorkers || recentWorkers.length === 0)) return null;
 
   return (
-    <section className="py-12 bg-background relative z-10" aria-labelledby="recent-workers-title">
+    <section className="py-12 bg-[#f8fafc] dark:bg-background relative z-10" aria-labelledby="recent-workers-title">
       <div className="container mx-auto px-4">
         <div className="flex items-end justify-between mb-6 gap-3">
           <div>
