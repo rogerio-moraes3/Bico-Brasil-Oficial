@@ -50,20 +50,20 @@ export default function Index() {
 
         <main id="main-content" className="flex-1">
           {/* Hero CTA block */}
-          <section className="container mx-auto px-4 pt-14 pb-10 flex flex-col items-center text-center gap-2">
-            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-3.5 py-1.5 mb-2">
+          <section className="hero-bg container mx-auto px-4 pt-10 pb-8 flex flex-col items-center text-center gap-2">
+            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-3.5 py-1.5 mb-1">
               <Sparkles className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
               <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{greeting}</span>
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight leading-[1.12]">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight leading-[1.1]">
               O que você precisa hoje?
             </h1>
-            <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
+            <p className="text-sm text-muted-foreground max-w-sm leading-relaxed mt-1">
               Conecte-se ao trabalhador certo na sua cidade — ou encontre o próximo bico.
             </p>
 
-            <div className="w-full max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-4 mt-7">
+            <div className="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
               {/* Primary: hire */}
               <button
                 onClick={handleContractorClick}
@@ -106,7 +106,7 @@ export default function Index() {
             </div>
 
             {/* Quick-nav pills */}
-            <div className="flex flex-wrap justify-center gap-2 mt-5">
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
               {["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor"].map((cat) => (
                 <Button
                   key={cat}
