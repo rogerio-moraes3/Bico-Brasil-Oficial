@@ -48,11 +48,11 @@ export const PlatformStatsStrip = () => {
   ];
 
   return (
-    <div className="w-full bg-[#f1f5f9] dark:bg-background py-2 px-4 shadow-sm">
+    <div className="w-full bg-slate-100 dark:bg-background py-2 px-4 shadow-sm">
       <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 gap-y-2">
         {/* Live indicator */}
         <div
-          className="flex items-center gap-1.5 text-xs text-[#9ca3af] dark:text-muted-foreground font-medium"
+          className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-muted-foreground font-medium"
           role="status"
           aria-live="polite"
         >
@@ -61,9 +61,9 @@ export const PlatformStatsStrip = () => {
         </div>
 
         {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-1.5 text-xs text-[#9ca3af] dark:text-muted-foreground">
-            <item.icon className="w-3.5 h-3.5 text-[#9ca3af] dark:text-muted-foreground shrink-0" aria-hidden="true" />
-            <span className="font-medium text-xs text-[#111827] dark:text-foreground">{item.value}</span>
+          <div key={i} className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-muted-foreground">
+            <item.icon className="w-3.5 h-3.5 text-slate-400 dark:text-muted-foreground shrink-0" aria-hidden="true" />
+            <span className="font-medium text-xs text-slate-900 dark:text-foreground">{item.value}</span>
             <span>{item.label}</span>
           </div>
         ))}

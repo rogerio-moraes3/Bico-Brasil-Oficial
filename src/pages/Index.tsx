@@ -48,7 +48,7 @@ export default function Index() {
         <Header />
         <PlatformStatsStrip />
 
-        <main id="main-content" className="flex-1 bg-[#f8fafc] dark:bg-transparent pt-6 md:pt-8">
+        <main id="main-content" className="flex-1 bg-slate-50 dark:bg-transparent pt-6 md:pt-8">
           {/* Profile completion widget (logged in users only) */}
           <ProfileCompletionWidget />
 
