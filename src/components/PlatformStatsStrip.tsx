@@ -51,7 +51,11 @@ export const PlatformStatsStrip = () => {
     <div className="w-full bg-[#f1f5f9] dark:bg-background py-2 px-4 shadow-sm">
       <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 gap-y-2">
         {/* Live indicator */}
-        <div className="flex items-center gap-1.5 text-xs text-[#9ca3af] dark:text-muted-foreground font-medium">
+        <div
+          className="flex items-center gap-1.5 text-xs text-[#9ca3af] dark:text-muted-foreground font-medium"
+          role="status"
+          aria-live="polite"
+        >
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="hidden sm:inline">Ao vivo</span>
         </div>
