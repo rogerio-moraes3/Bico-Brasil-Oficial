@@ -50,7 +50,7 @@ export const ActivityFeedStrip = () => {
     >
       <div className="container mx-auto flex items-center gap-3">
         {/* Label */}
-        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground shrink-0">
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground shrink-0">
           <Zap className="w-3.5 h-3.5" aria-hidden="true" />
           <span className="hidden sm:inline uppercase tracking-[0.18em]">Agora</span>
         </div>
@@ -63,7 +63,7 @@ export const ActivityFeedStrip = () => {
           aria-atomic="true"
         >
           {visible.map((item, i) => (
-            <span key={`${item.key}-${i}`} className="text-[11px] text-muted-foreground whitespace-nowrap">
+            <span key={`${item.key}-${i}`} className="text-xs text-muted-foreground whitespace-nowrap">
               <span className="font-medium text-foreground/90">{item.name}</span>{" "}
               {item.action}{" "}
               <span className="text-muted-foreground font-medium">em {item.city}</span>
