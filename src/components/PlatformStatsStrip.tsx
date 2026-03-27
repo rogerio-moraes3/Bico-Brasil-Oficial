@@ -48,18 +48,18 @@ export const PlatformStatsStrip = () => {
   ];
 
   return (
-    <div className="w-full bg-muted/40 border-b border-border/50 py-2.5 px-4">
-      <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5">
+    <div className="w-full bg-[#f1f5f9] dark:bg-background py-2.5 px-4">
+      <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">
         {/* Live indicator */}
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium" aria-hidden="true">
+        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/90 font-medium" aria-hidden="true">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="hidden sm:inline">Ao vivo</span>
         </div>
 
         {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <item.icon className="w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true" />
-            <span className="font-bold text-sm text-foreground">{item.value}</span>
+          <div key={i} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <item.icon className="w-3.5 h-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
+            <span className="font-semibold text-xs text-foreground/90">{item.value}</span>
             <span>{item.label}</span>
           </div>
         ))}

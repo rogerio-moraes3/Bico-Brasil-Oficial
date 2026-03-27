@@ -10,7 +10,6 @@ import { PlatformStatsStrip } from "@/components/PlatformStatsStrip";
 import { ActivityFeedStrip } from "@/components/ActivityFeedStrip";
 import { PlatformAuthoritySection } from "@/components/PlatformAuthoritySection";
 import { RecentWorkersSection } from "@/components/RecentWorkersSection";
-import { TrustStrip } from "@/components/TrustStrip";
 import { ProfileCompletionWidget } from "@/components/ProfileCompletionWidget";
 import { HowItWorks } from "@/components/sales/HowItWorks";
 import { Button } from "@/components/ui/button";
@@ -51,10 +50,7 @@ export default function Index() {
         <PlatformStatsStrip />
         <ActivityFeedStrip />
 
-        <main id="main-content" className="flex-1">
-          {/* Trust strip */}
-          <TrustStrip />
-
+        <main id="main-content" className="flex-1 bg-[#f8fafc] dark:bg-transparent">
           {/* Profile completion widget (logged in users only) */}
           <ProfileCompletionWidget />
 
