@@ -44,12 +44,12 @@ export const CitySelector = () => {
   };
 
   return (
-    <div className="w-full bg-[#f1f5f9] dark:bg-card py-3 md:py-3.5">
-      <div className="container mx-auto px-4">
+    <div className="w-full bg-[#f1f5f9] dark:bg-card py-4 shadow-sm">
+      <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-center md:justify-start gap-2 max-w-xs mx-auto md:mx-0">
-          <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+          <MapPin className="h-4 w-4 text-[#9ca3af] dark:text-muted-foreground flex-shrink-0" />
           <Select value={selectedCity} onValueChange={handleCityChange} disabled={loading}>
-            <SelectTrigger className="h-10 bg-white/90 dark:bg-background border border-slate-300/80 dark:border-border text-slate-700 dark:text-foreground shadow-[0_1px_8px_-6px_rgba(15,23,42,0.45)]">
+            <SelectTrigger className="h-10 bg-white/95 dark:bg-background border-0 text-[#6b7280] dark:text-foreground shadow-sm">
               <SelectValue placeholder={loading ? "Carregando cidades..." : "Selecione sua cidade"} />
             </SelectTrigger>
             <SelectContent className="max-h-[300px]">

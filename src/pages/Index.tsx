@@ -7,7 +7,6 @@ import { Footer } from "@/components/Footer";
 import { FeaturedServicesSection } from "@/components/FeaturedServicesSection";
 import { CTASection } from "@/components/CTASection";
 import { PlatformStatsStrip } from "@/components/PlatformStatsStrip";
-import { ActivityFeedStrip } from "@/components/ActivityFeedStrip";
 import { PlatformAuthoritySection } from "@/components/PlatformAuthoritySection";
 import { RecentWorkersSection } from "@/components/RecentWorkersSection";
 import { ProfileCompletionWidget } from "@/components/ProfileCompletionWidget";
@@ -48,9 +47,8 @@ export default function Index() {
       <div className="min-h-screen flex flex-col bg-background relative bb-surface-muted">
         <Header />
         <PlatformStatsStrip />
-        <ActivityFeedStrip />
 
-        <main id="main-content" className="flex-1 bg-[#f8fafc] dark:bg-transparent">
+        <main id="main-content" className="flex-1 bg-[#f8fafc] dark:bg-transparent pt-6 md:pt-8">
           {/* Profile completion widget (logged in users only) */}
           <ProfileCompletionWidget />
 

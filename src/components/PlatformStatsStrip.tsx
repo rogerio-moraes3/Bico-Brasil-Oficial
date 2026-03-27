@@ -48,18 +48,18 @@ export const PlatformStatsStrip = () => {
   ];
 
   return (
-    <div className="w-full bg-[#f1f5f9] dark:bg-background py-2.5 px-4">
-      <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">
+    <div className="w-full bg-[#f1f5f9] dark:bg-background py-2 px-4 shadow-sm">
+      <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 gap-y-2">
         {/* Live indicator */}
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground/90 font-medium">
+        <div className="flex items-center gap-1.5 text-xs text-[#9ca3af] dark:text-muted-foreground font-medium">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="hidden sm:inline">Ao vivo</span>
         </div>
 
         {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <item.icon className="w-3.5 h-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
-            <span className="font-semibold text-xs text-foreground/90">{item.value}</span>
+          <div key={i} className="flex items-center gap-1.5 text-xs text-[#9ca3af] dark:text-muted-foreground">
+            <item.icon className="w-3.5 h-3.5 text-[#9ca3af] dark:text-muted-foreground shrink-0" aria-hidden="true" />
+            <span className="font-medium text-xs text-[#111827] dark:text-foreground">{item.value}</span>
             <span>{item.label}</span>
           </div>
         ))}

@@ -130,8 +130,8 @@ export const Header = () => {
         Ir para conteúdo principal
       </a>
 
-      <header className="sticky top-0 z-50 w-full bg-[#ffffff]/96 dark:bg-background/95 text-foreground backdrop-blur-xl shadow-[0_8px_22px_-20px_rgba(15,23,42,0.45)] dark:shadow-sm overflow-visible" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="container flex h-16 min-h-[64px] items-center justify-between px-3 md:px-5">
+      <header className="sticky top-0 z-50 w-full bg-[#ffffff]/96 dark:bg-background/95 text-foreground backdrop-blur-xl shadow-sm md:shadow-md overflow-visible" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="container flex min-h-[72px] md:min-h-[80px] items-center justify-between px-4 md:px-6 py-4 md:py-5">
           <div className="flex items-center gap-1.5">
             {showBackButton && (
               <Button
