@@ -10,7 +10,7 @@ const TRUST_ITEMS = [
 export const TrustStrip = () => {
   return (
     <div
-      className="w-full bg-[#f8fafc] dark:bg-primary/5 border-y border-[rgba(15,23,42,0.08)] dark:border-border/40 py-2.5 px-4"
+      className="w-full bg-[#f8fafc] dark:bg-primary/5 py-3 px-4"
       aria-label="Diferenciais da plataforma"
     >
       <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">

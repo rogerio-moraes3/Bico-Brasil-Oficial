@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { MapPin } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useCities } from "@/hooks/useCities";
 import {
   Select,
@@ -44,7 +43,7 @@ export const CitySelector = () => {
   };
 
   return (
-    <div className="w-full bg-[#f8fafc] dark:bg-card border-b border-[rgba(15,23,42,0.06)] dark:border-border/40">
+    <div className="w-full bg-[#f8fafc] dark:bg-card/90 py-1">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-center md:justify-start gap-2 max-w-xs mx-auto md:mx-0">
           <MapPin className="h-4 w-4 text-primary flex-shrink-0" />

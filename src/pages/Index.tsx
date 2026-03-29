@@ -7,7 +7,6 @@ import { Footer } from "@/components/Footer";
 import { FeaturedServicesSection } from "@/components/FeaturedServicesSection";
 import { CTASection } from "@/components/CTASection";
 import { PlatformStatsStrip } from "@/components/PlatformStatsStrip";
-import { ActivityFeedStrip } from "@/components/ActivityFeedStrip";
 import { PlatformAuthoritySection } from "@/components/PlatformAuthoritySection";
 import { RecentWorkersSection } from "@/components/RecentWorkersSection";
 import { TrustStrip } from "@/components/TrustStrip";
@@ -49,7 +48,6 @@ export default function Index() {
       <div className="min-h-screen flex flex-col bg-background relative bb-surface-muted">
         <Header />
         <PlatformStatsStrip />
-        <ActivityFeedStrip />
 
         <main id="main-content" className="flex-1">
           {/* Trust strip */}
@@ -121,7 +119,7 @@ export default function Index() {
                   key={cat}
                   variant="outline"
                   size="sm"
-                  className="rounded-full h-8 px-4 text-xs font-medium border-border/70 hover:border-primary/50 hover:text-primary transition-colors duration-200"
+                  className="rounded-full h-8 px-4 text-xs font-medium border-border/70 hover:border-primary/50 hover:bg-primary/10 hover:text-primary transition-all duration-200"
                   onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
                 >
                   {cat}
