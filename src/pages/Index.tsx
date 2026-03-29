@@ -59,7 +59,7 @@ export default function Index() {
           <ProfileCompletionWidget />
 
           {/* Hero CTA block */}
-          <section className="hero-bg bb-surface-soft container mx-auto px-4 pt-10 pb-8 flex flex-col items-center text-center gap-2">
+          <section className="hero-bg bb-surface-soft container mx-auto px-4 pt-16 pb-14 md:pt-20 md:pb-16 flex flex-col items-center text-center gap-3 md:gap-4">
             <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-3.5 py-1.5 mb-1">
               <Sparkles className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
               <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{greeting}</span>
@@ -68,18 +68,18 @@ export default function Index() {
             <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight leading-[1.1]">
               O que você precisa hoje?
             </h1>
-            <p className="text-sm text-muted-foreground max-w-sm leading-relaxed mt-1">
+            <p className="text-sm text-muted-foreground max-w-sm leading-relaxed mt-1.5">
               Conecte-se ao trabalhador certo na sua cidade — ou encontre o próximo bico.
             </p>
 
-            <div className="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+            <div className="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 mt-7">
               {/* Primary: hire */}
               <button
                 onClick={handleContractorClick}
-                className="group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.12)] dark:border-border bg-card p-6 shadow-lg hover:shadow-xl dark:shadow-sm hover:border-primary/50 hover:-translate-y-1 transition-all duration-200 stagger-fade"
+                className="group flex flex-col items-start gap-3 rounded-3xl border border-primary/35 dark:border-primary/30 bg-primary/[0.06] dark:bg-primary/10 p-6 shadow-[0_10px_30px_rgba(15,91,214,0.20)] hover:shadow-[0_14px_34px_rgba(15,91,214,0.25)] hover:border-primary/60 hover:bg-primary/[0.1] hover:-translate-y-1 transition-all duration-200 stagger-fade"
                 style={{ ["--stagger-delay" as string]: "0ms" }}
               >
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
+                <div className="w-12 h-12 rounded-2xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors duration-200">
                   <Search className="w-5 h-5 text-primary" aria-hidden="true" />
                 </div>
                 <div className="flex-1 text-left">
@@ -96,7 +96,7 @@ export default function Index() {
               {/* Secondary: work */}
               <button
                 onClick={handleProfessionalClick}
-                className="group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.12)] dark:border-border bg-card p-6 shadow-lg hover:shadow-xl dark:shadow-sm hover:border-primary/50 hover:-translate-y-1 transition-all duration-200 stagger-fade"
+                className="group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.12)] dark:border-border bg-card p-6 shadow-md hover:shadow-lg dark:shadow-sm hover:border-primary/40 hover:bg-primary/[0.03] hover:-translate-y-1 transition-all duration-200 stagger-fade"
                 style={{ ["--stagger-delay" as string]: "80ms" }}
               >
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
@@ -115,7 +115,7 @@ export default function Index() {
             </div>
 
             {/* Quick-nav pills */}
-            <div className="flex flex-wrap justify-center gap-2 mt-4">
+            <div className="flex flex-wrap justify-center gap-2 mt-6">
               {["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor"].map((cat) => (
                 <Button
                   key={cat}
