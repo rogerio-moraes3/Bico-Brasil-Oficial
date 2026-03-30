@@ -58,9 +58,9 @@ export default function Index() {
 
           {/* Hero CTA block */}
           <section className="hero-bg bb-surface-soft container mx-auto px-4 pt-16 pb-14 md:pt-20 md:pb-16 flex flex-col items-center text-center gap-3 md:gap-4">
-            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-3.5 py-1.5 mb-1">
+            <div className="inline-flex items-center gap-2 bg-primary/[0.08] rounded-full px-3.5 py-1.5 mb-1">
               <Sparkles className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{greeting}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/85">{greeting}</span>
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight leading-[1.1]">
@@ -74,19 +74,19 @@ export default function Index() {
               {/* Primary: hire */}
               <button
                 onClick={handleContractorClick}
-                className="group flex flex-col items-start gap-3 rounded-3xl border border-primary/35 dark:border-primary/30 bg-primary/[0.06] dark:bg-primary/10 p-6 shadow-[0_10px_30px_rgba(15,91,214,0.20)] hover:shadow-[0_14px_34px_rgba(15,91,214,0.25)] hover:border-primary/60 hover:bg-primary/[0.1] hover:-translate-y-1 transition-all duration-200 stagger-fade"
+                className="group flex flex-col items-start gap-3 rounded-3xl border border-primary/55 dark:border-primary/35 bg-primary/[0.12] dark:bg-primary/12 p-6 shadow-[0_14px_34px_rgba(15,91,214,0.28)] hover:shadow-[0_18px_38px_rgba(15,91,214,0.30)] hover:border-primary/70 hover:bg-primary/[0.16] hover:scale-[1.02] transition-all duration-200 stagger-fade"
                 style={{ ["--stagger-delay" as string]: "0ms" }}
               >
-                <div className="w-12 h-12 rounded-2xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors duration-200">
-                  <Search className="w-5 h-5 text-primary" aria-hidden="true" />
+                <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors duration-200">
+                  <Search className="w-5 h-5 text-primary-foreground" aria-hidden="true" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-bold text-foreground text-[15px] leading-snug">Encontrar profissionais agora</p>
+                  <p className="font-extrabold text-foreground text-[17px] leading-snug">Encontrar profissionais agora</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Busque profissionais verificados perto de você
                   </p>
                 </div>
-                <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-200">
+                <div className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
                   Buscar agora <ArrowRight className="w-3 h-3" aria-hidden="true" />
                 </div>
               </button>
@@ -94,19 +94,19 @@ export default function Index() {
               {/* Secondary: work */}
               <button
                 onClick={handleProfessionalClick}
-                className="group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.12)] dark:border-border bg-card p-6 shadow-md hover:shadow-lg dark:shadow-sm hover:border-primary/40 hover:bg-primary/[0.03] hover:-translate-y-1 transition-all duration-200 stagger-fade"
+                className="group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.08)] dark:border-border/70 bg-card/90 p-6 shadow-sm hover:shadow-md hover:bg-card dark:shadow-sm hover:scale-[1.02] transition-all duration-200 stagger-fade"
                 style={{ ["--stagger-delay" as string]: "80ms" }}
               >
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
-                  <Briefcase className="w-5 h-5 text-primary" aria-hidden="true" />
+                <div className="w-12 h-12 rounded-2xl bg-muted/80 flex items-center justify-center group-hover:bg-muted transition-colors duration-200">
+                  <Briefcase className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-bold text-foreground text-[15px] leading-snug">Começar a ganhar dinheiro</p>
+                  <p className="font-semibold text-foreground text-[15px] leading-snug">Começar a ganhar dinheiro</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Encontre bicos e ganhe renda extra hoje
                   </p>
                 </div>
-                <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-200">
+                <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-200">
                   Ver vagas <ArrowRight className="w-3 h-3" aria-hidden="true" />
                 </div>
               </button>
