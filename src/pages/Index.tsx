@@ -38,6 +38,12 @@ export default function Index() {
     return name ? `${period}, ${name}` : period;
   })();
 
+  const primaryCardClassName =
+    "group flex flex-col items-start gap-3 rounded-3xl border border-primary/55 dark:border-primary/35 bg-primary/[0.12] dark:bg-primary/12 p-6 shadow-[0_14px_34px_rgba(15,91,214,0.28)] hover:shadow-[0_18px_38px_rgba(15,91,214,0.30)] hover:border-primary/70 hover:bg-primary/[0.16] hover:scale-[1.02] transition-all duration-200 stagger-fade";
+
+  const secondaryCardClassName =
+    "group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.08)] dark:border-border/70 bg-card/90 p-6 shadow-sm hover:shadow-md hover:bg-card dark:shadow-sm hover:scale-[1.02] transition-all duration-200 stagger-fade";
+
   return (
     <>
       <Helmet>
@@ -74,7 +80,7 @@ export default function Index() {
               {/* Primary: hire */}
               <button
                 onClick={handleContractorClick}
-                className="group flex flex-col items-start gap-3 rounded-3xl border border-primary/55 dark:border-primary/35 bg-primary/[0.12] dark:bg-primary/12 p-6 shadow-[0_14px_34px_rgba(15,91,214,0.28)] hover:shadow-[0_18px_38px_rgba(15,91,214,0.30)] hover:border-primary/70 hover:bg-primary/[0.16] hover:scale-[1.02] transition-all duration-200 stagger-fade"
+                className={primaryCardClassName}
                 style={{ ["--stagger-delay" as string]: "0ms" }}
               >
                 <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors duration-200">
@@ -86,15 +92,15 @@ export default function Index() {
                     Busque profissionais verificados perto de você
                   </p>
                 </div>
-                <div className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
                   Buscar agora <ArrowRight className="w-3 h-3" aria-hidden="true" />
-                </div>
+                </span>
               </button>
 
               {/* Secondary: work */}
               <button
                 onClick={handleProfessionalClick}
-                className="group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.08)] dark:border-border/70 bg-card/90 p-6 shadow-sm hover:shadow-md hover:bg-card dark:shadow-sm hover:scale-[1.02] transition-all duration-200 stagger-fade"
+                className={secondaryCardClassName}
                 style={{ ["--stagger-delay" as string]: "80ms" }}
               >
                 <div className="w-12 h-12 rounded-2xl bg-muted/80 flex items-center justify-center group-hover:bg-muted transition-colors duration-200">
