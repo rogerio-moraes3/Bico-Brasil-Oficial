@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Briefcase, Search, ArrowRight, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { fadeInUp } from "@/lib/animations";
 import { useUserMode } from "@/contexts/UserModeContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -53,9 +55,9 @@ export default function Index() {
 
       <div className="min-h-screen flex flex-col bg-background relative bb-surface-muted overflow-hidden">
         {/* Blurry blobs for depth */}
-        <div className="bb-blob bb-blob-1" aria-hidden="true" role="presentation" />
-        <div className="bb-blob bb-blob-2" aria-hidden="true" role="presentation" />
-        <div className="bb-blob bb-blob-3" aria-hidden="true" role="presentation" />
+        <div className="bb-blob bb-blob-1" aria-hidden="true" />
+        <div className="bb-blob bb-blob-2" aria-hidden="true" />
+        <div className="bb-blob bb-blob-3" aria-hidden="true" />
         <Header />
         <PlatformStatsStrip />
 
@@ -82,7 +84,8 @@ export default function Index() {
 
             <div className="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 mt-7">
               {/* Primary: hire */}
-              <button
+              <motion.button
+                {...fadeInUp({ duration: 0.38, distance: 14, delay: 0.04 })}
                 onClick={handleContractorClick}
                 className={primaryCardClassName}
                 style={{ ["--stagger-delay" as string]: "0ms" }}
@@ -99,10 +102,11 @@ export default function Index() {
                 <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
                   Buscar agora <ArrowRight className="w-3 h-3" aria-hidden="true" />
                 </span>
-              </button>
+              </motion.button>
 
               {/* Secondary: work */}
-              <button
+              <motion.button
+                {...fadeInUp({ duration: 0.38, distance: 14, delay: 0.12 })}
                 onClick={handleProfessionalClick}
                 className={secondaryCardClassName}
                 style={{ ["--stagger-delay" as string]: "80ms" }}
@@ -119,7 +123,7 @@ export default function Index() {
                 <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-200">
                   Ver vagas <ArrowRight className="w-3 h-3" aria-hidden="true" />
                 </div>
-              </button>
+              </motion.button>
             </div>
 
             {/* Quick-nav pills */}
