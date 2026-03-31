@@ -48,7 +48,7 @@ export const PlatformStatsStrip = () => {
   ];
 
   return (
-    <div className="w-full bg-muted/40 border-b border-border/50 py-2.5 px-4">
+    <div className="w-full bg-[#f3f7fc]/80 dark:bg-muted/35 py-3 px-4">
       <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5">
         {/* Live indicator */}
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium" aria-hidden="true">
