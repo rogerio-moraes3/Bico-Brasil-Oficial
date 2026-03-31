@@ -71,7 +71,7 @@ export const BottomNav = () => {
   return (
     <nav
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-      className={`md:hidden fixed bottom-0 left-0 right-0 bg-background/85 border-t border-border/70 z-50 shadow-[0_-12px_30px_-20px_hsl(var(--xp-primary-glow))] backdrop-blur-xl transition-transform duration-300 ${hidden ? 'translate-y-full' : 'translate-y-0'}`}
+      className={`md:hidden fixed bottom-0 left-0 right-0 bg-white/70 dark:bg-background/75 border-t border-slate-200/60 dark:border-border/50 z-50 shadow-[0_-12px_30px_-20px_hsl(var(--xp-primary-glow))] backdrop-blur-md transition-transform duration-300 ${hidden ? 'translate-y-full' : 'translate-y-0'}`}
     >
       {/* Gradient indicator line */}
       <div className="h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent opacity-70" />
@@ -85,7 +85,7 @@ export const BottomNav = () => {
                 onClick={() => safeGoBack(navigate)}
                 className="flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-2xl text-muted-foreground hover:text-foreground hover:bg-muted/60"
               >
-                <Icon className="h-6 w-6 stroke-2" />
+                <Icon className="h-[22px] w-[22px] stroke-[1.5]" />
                 <span className="text-xs font-medium">{label}</span>
               </button>
             );
@@ -100,7 +100,7 @@ export const BottomNav = () => {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                 }`}
             >
-              <Icon className={`h-6 w-6 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />
+              <Icon className={`h-[22px] w-[22px] ${isActive(path) ? 'stroke-2' : 'stroke-[1.5]'}`} />
               <span className={`text-[11px] font-medium ${isActive(path) ? 'font-semibold' : ''}`}>
                 {label}
               </span>

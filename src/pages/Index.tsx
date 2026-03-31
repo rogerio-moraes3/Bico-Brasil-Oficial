@@ -39,10 +39,10 @@ export default function Index() {
   })();
 
   const primaryCardClassName =
-    "group flex flex-col items-start gap-3 rounded-3xl border border-primary/55 dark:border-primary/35 bg-primary/[0.12] dark:bg-primary/12 p-6 shadow-[0_14px_34px_rgba(15,91,214,0.28)] hover:shadow-[0_18px_38px_rgba(15,91,214,0.30)] hover:border-primary/70 hover:bg-primary/[0.16] hover:scale-[1.02] transition-all duration-200 stagger-fade";
+    "group flex flex-col items-start gap-3 rounded-3xl border border-primary/50 dark:border-primary/35 bg-primary/[0.10] dark:bg-primary/12 p-6 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/70 hover:bg-primary/[0.15] hover:scale-[1.05] transition-all duration-300 stagger-fade";
 
   const secondaryCardClassName =
-    "group flex flex-col items-start gap-3 rounded-3xl border border-[rgba(15,23,42,0.08)] dark:border-border/70 bg-card/90 p-6 shadow-sm hover:shadow-md hover:bg-card dark:shadow-sm hover:scale-[1.02] transition-all duration-200 stagger-fade";
+    "group flex flex-col items-start gap-3 rounded-3xl border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 p-6 shadow-xl shadow-slate-200/60 dark:shadow-sm hover:shadow-2xl hover:shadow-slate-300/50 hover:bg-white dark:hover:bg-card hover:scale-[1.05] transition-all duration-300 stagger-fade backdrop-blur-sm";
 
   return (
     <>
@@ -51,7 +51,11 @@ export default function Index() {
         <meta name="description" content="Bico Brasil — O que você precisa agora?" />
       </Helmet>
 
-      <div className="min-h-screen flex flex-col bg-background relative bb-surface-muted">
+      <div className="min-h-screen flex flex-col bg-background relative bb-surface-muted overflow-hidden">
+        {/* Blurry blobs for depth */}
+        <div className="bb-blob bb-blob-1" aria-hidden="true" role="presentation" />
+        <div className="bb-blob bb-blob-2" aria-hidden="true" role="presentation" />
+        <div className="bb-blob bb-blob-3" aria-hidden="true" role="presentation" />
         <Header />
         <PlatformStatsStrip />
 
@@ -69,7 +73,7 @@ export default function Index() {
               <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/85">{greeting}</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight leading-[1.1]">
+            <h1 className="text-5xl md:text-6xl font-extrabold text-foreground tracking-tight leading-[1.05] gradient-text">
               O que você precisa hoje?
             </h1>
             <p className="text-sm text-muted-foreground max-w-sm leading-relaxed mt-1.5">
@@ -87,7 +91,7 @@ export default function Index() {
                   <Search className="w-5 h-5 text-primary-foreground" aria-hidden="true" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-extrabold text-foreground text-[17px] leading-snug">Encontrar profissionais agora</p>
+                  <p className="font-extrabold text-foreground text-[17px] leading-snug tracking-tight">Encontrar profissionais agora</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Busque profissionais verificados perto de você
                   </p>
@@ -103,11 +107,11 @@ export default function Index() {
                 className={secondaryCardClassName}
                 style={{ ["--stagger-delay" as string]: "80ms" }}
               >
-                <div className="w-12 h-12 rounded-2xl bg-muted/80 flex items-center justify-center group-hover:bg-muted transition-colors duration-200">
-                  <Briefcase className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-muted/80 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-muted transition-colors duration-200">
+                  <Briefcase className="w-5 h-5 text-slate-500 dark:text-muted-foreground" aria-hidden="true" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-semibold text-foreground text-[15px] leading-snug">Começar a ganhar dinheiro</p>
+                  <p className="font-extrabold text-foreground text-[15px] leading-snug tracking-tight">Começar a ganhar dinheiro</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Encontre bicos e ganhe renda extra hoje
                   </p>
@@ -125,7 +129,7 @@ export default function Index() {
                   key={cat}
                   variant="outline"
                   size="sm"
-                  className="rounded-full h-8 px-4 text-xs font-medium border-border/70 hover:border-primary/50 hover:bg-primary/10 hover:text-primary transition-all duration-200"
+                  className="rounded-full h-8 px-4 text-xs font-medium border-slate-200/80 dark:border-border/60 bg-transparent hover:bg-transparent hover:border-primary/60 hover:text-primary text-muted-foreground transition-all duration-200"
                   onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
                 >
                   {cat}

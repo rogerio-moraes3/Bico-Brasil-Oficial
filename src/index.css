@@ -137,6 +137,9 @@ All colors MUST be HSL.
     --xp-foreground: 222 35% 12%;
     --xp-foreground-muted: 222 15% 38%;
 
+    /* Premium gradient end stop (indigo) */
+    --xp-gradient-end: 232 88% 55%;
+
     /* Premium gold accent tokens */
     --xp-gold: 38 92% 50%;
     --xp-gold-foreground: 30 60% 12%;
@@ -201,6 +204,9 @@ All colors MUST be HSL.
     --xp-foreground: 210 40% 96%;
     --xp-foreground-muted: 215 20% 85%;
     /* 🔧 CONTRAST FIX: was 70%, now 85% for better visibility */
+
+    /* Premium gradient end stop (brighter indigo for dark mode) */
+    --xp-gradient-end: 240 85% 70%;
 
     --nav-link: hsl(var(--xp-foreground));
     --nav-link-hover: hsl(0 0% 100%);
@@ -458,6 +464,78 @@ All colors MUST be HSL.
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* ===== PREMIUM: Gradient text — applies a blue-to-indigo gradient on hero titles ===== */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--xp-primary)) 0%, hsl(var(--xp-primary-hover)) 50%, hsl(var(--xp-gradient-end, 232 88% 55%)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Dark mode: slightly brighter gradient */
+  .dark .gradient-text {
+    background: linear-gradient(135deg, hsl(212 92% 65%) 0%, hsl(225 90% 70%) 60%, hsl(240 85% 75%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ===== PREMIUM: Blurry blob orbs for background depth (XP-style) ===== */
+  .bb-blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bb-blob-1 {
+    width: 480px;
+    height: 480px;
+    background: hsl(var(--xp-primary) / 0.20);
+    top: -160px;
+    right: -120px;
+    animation: blobFloat 14s ease-in-out infinite alternate;
+  }
+
+  .bb-blob-2 {
+    width: 360px;
+    height: 360px;
+    background: hsl(232 88% 60% / 0.14);
+    bottom: 20%;
+    left: -100px;
+    animation: blobFloat 18s ease-in-out infinite alternate-reverse;
+  }
+
+  .bb-blob-3 {
+    width: 260px;
+    height: 260px;
+    background: hsl(var(--xp-primary) / 0.10);
+    top: 40%;
+    right: 10%;
+    animation: blobFloat 22s ease-in-out infinite alternate;
+  }
+
+  /* Dark mode blobs: more vibrant */
+  .dark .bb-blob-1 {
+    background: hsl(212 92% 58% / 0.22);
+    opacity: 0.30;
+  }
+  .dark .bb-blob-2 {
+    background: hsl(232 88% 65% / 0.16);
+  }
+  .dark .bb-blob-3 {
+    background: hsl(212 92% 58% / 0.12);
+  }
+
+  @keyframes blobFloat {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(20px, -24px) scale(1.06); }
   }
 }
 
