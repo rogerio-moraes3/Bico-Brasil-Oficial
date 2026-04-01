@@ -47,7 +47,7 @@ serve(async (req) => {
         message: "Edge function create-mercadopago-payment is working!",
         timestamp: new Date().toISOString(),
         secrets: {
-          mp_token_exists: !!Deno.env.get("MP_ACCESS_TOKEN"),
+          mp_token_exists: !!Deno.env.get("MERCADOPAGO_ACCESS_TOKEN"),
           supabase_url_exists: !!Deno.env.get("SUPABASE_URL"),
         },
       }),
@@ -134,8 +134,8 @@ serve(async (req) => {
     console.debug("✅ Registro de pagamento criado:", payment.id);
 
     // Token Mercado Pago
-    const mpToken = Deno.env.get("MP_ACCESS_TOKEN");
-    if (!mpToken) throw new Error("MP_ACCESS_TOKEN não configurado nos Secrets");
+    const mpToken = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN");
+    if (!mpToken) throw new Error("MERCADOPAGO_ACCESS_TOKEN não configurado nos Secrets");
 
     console.debug("🔐 Token MP encontrado");
 
