@@ -1,10 +1,9 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { Settings, Instagram, Facebook, Mail, ArrowRight, Sparkles, ShieldCheck, Zap, Globe, Youtube, Linkedin, Music2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import logo from "@/assets/logo.png";
+import { motion } from "framer-motion";
 
 export const Footer = () => {
   const navigate = useNavigate();
@@ -53,157 +52,117 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-card text-card-foreground mt-12 border-t border-border">
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {/* Coluna 1: Ajuda */}
-          <div className="pb-3 md:pb-0">
-            <h3 className="font-semibold text-card-foreground mb-3 text-sm md:text-base">Ajuda</h3>
-            <ul className="space-y-2 text-sm text-card-foreground/80">
-              <li>
-                <Link to="/about" onClick={scrollToTop} className="hover:text-foreground transition-colors">
-                  Sobre
-                </Link>
-              </li>
-              <li>
-                <Link to="/relacao-usuarios" onClick={scrollToTop} className="hover:text-foreground transition-colors">
-                  Relação com usuários
-                </Link>
-              </li>
-              <li>
-                <Link to="/faq" onClick={scrollToTop} className="hover:text-foreground transition-colors">
-                  Tire suas dúvidas
-                </Link>
-              </li>
-              <li className="pt-2">
-                <a 
-                  href="mailto:contato.bicobrasil@gmail.com"
-                  className="text-sm text-primary hover:underline"
-                >
-                  contato.bicobrasil@gmail.com
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Coluna 2: Redes Sociais (2 colunas no mobile) */}
-          <div className="pt-3 pb-3 md:pt-0 md:pb-0">
-            <h3 className="font-semibold text-card-foreground mb-3 text-sm md:text-base">Redes Sociais</h3>
-            <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-2 text-sm text-card-foreground/80">
-              <li>
-                <a href="https://www.instagram.com/bicobrasil_" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a href="https://www.facebook.com/profile.php?id=61584453683707" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
-                  Facebook
-                </a>
-              </li>
-              <li>
-                <a href="https://www.tiktok.com/@bicobrasil" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
-                  TikTok
-                </a>
-              </li>
-              <li>
-                <a href="https://www.youtube.com/@BicoBrasil-l8r" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
-                  YouTube
-                </a>
-              </li>
-              <li>
-                <a href="https://www.linkedin.com/in/bico-brasil-1bb190397/" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
-                  LinkedIn
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Coluna 3: Legal */}
-          <div className="pt-4 md:pt-0">
-            <h3 className="font-semibold text-card-foreground mb-4 text-sm md:text-base">Legal</h3>
-            <ul className="space-y-2 text-sm text-card-foreground/80">
-              <li>
-                <Link to="/terms" onClick={scrollToTop} className="hover:text-foreground transition-colors">
-                  Termos de Uso
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy" onClick={scrollToTop} className="hover:text-foreground transition-colors">
-                  Política de Privacidade
-                </Link>
-              </li>
-              <li>
-                <Link to="/faq" onClick={scrollToTop} className="hover:text-foreground transition-colors">
-                  Perguntas e respostas
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" onClick={scrollToTop} className="hover:text-foreground transition-colors">
-                  Contato
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* CTA de Cadastro - apenas para usuários não logados */}
-        {!user && (
-          <div className="mt-6 pt-6 border-t border-border text-center">
-            <h3 className="text-lg md:text-2xl font-bold text-card-foreground mb-2">Pronto para começar?</h3>
-            <p className="text-card-foreground/80 mb-4 max-w-md mx-auto text-sm md:text-base">
-              Crie sua conta gratuitamente e comece a receber oportunidades de trabalho hoje mesmo.
-            </p>
-            <Button
-              variant="default"
-              size="lg"
-              onClick={() => {
-                navigate("/cadastro");
-                setTimeout(() => {
-                  const firstInput = document.querySelector('input[type="text"], input[type="email"]') as HTMLInputElement;
-                  firstInput?.focus();
-                }, 150);
-              }}
-              className="rounded-full text-base font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+    <footer className="bg-[#080C14] text-zinc-400 relative overflow-hidden border-t border-white/5">
+      {/* Final CTA Section - Only for logged out users or as a general brand message */}
+      {!user && (
+        <section className="relative py-24 md:py-32 overflow-hidden border-b border-white/5">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(30,94,255,0.08),transparent_70%)] pointer-events-none" />
+          
+          <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 rounded-full px-4 py-2 mb-8 backdrop-blur-md"
             >
-              Criar Conta Grátis
-            </Button>
-          </div>
-        )}
+              <Sparkles className="w-4 h-4 text-blue-400" />
+              <span className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">Junte-se à revolução do bico</span>
+            </motion.div>
 
-        {/* Logo e descrição */}
-        <div className="mt-6 pt-6 border-t border-border">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <Link to="/" className="flex items-center gap-2">
-              <img src={logo} alt="Bico Brasil" className="h-10 w-10" />
-              <div className="flex flex-col justify-center">
-                <span className="font-bold text-lg md:text-xl text-card-foreground leading-tight w-[140px] inline-block">
-                  Bico Brasil
-                </span>
-                <span className="text-sm md:text-[16px] text-card-foreground/80 leading-tight font-medium w-[140px] inline-block">
-                  Trabalhou, Tá Pago.
-                </span>
-              </div>
-            </Link>
-            <p className="text-sm text-card-foreground/80 max-w-md text-center md:text-left">
-              Conectamos pessoas que precisam de ajuda urgente com profissionais qualificados. Rápido, fácil e seguro.
+            <h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tighter text-white leading-tight">
+              Pronto para <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">começar?</span>
+            </h2>
+            
+            <p className="text-lg md:text-xl text-blue-100/60 mb-10 max-w-2xl mx-auto font-medium">
+              Crie sua conta gratuitamente e comece a receber oportunidades de trabalho ou encontre quem resolva seus problemas hoje mesmo.
             </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button
+                onClick={() => navigate("/auth?mode=signup")}
+                className="group relative flex items-center gap-2 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-8 py-4 rounded-2xl font-black text-lg shadow-[0_20px_40px_rgba(255,92,53,0.2)] transition-all hover:scale-105 active:scale-95 w-full sm:w-auto justify-center"
+              >
+                Criar Conta Grátis
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Main Footer Links */}
+      <div className="max-w-7xl mx-auto px-6 py-24 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+          <div className="md:col-span-2 max-w-sm">
+            <Link to="/" onClick={scrollToTop} className="text-2xl font-black text-white mb-6 block tracking-tighter uppercase">BICO BRASIL</Link>
+            <p className="text-base leading-relaxed mb-8 text-blue-100/40 font-medium">
+              A maior rede de conexões diretas para serviços locais. Tecnologia de ponta unindo quem precisa a quem sabe fazer.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {[
+                { Icon: Instagram, href: "https://www.instagram.com/bicobrasil_" },
+                { Icon: Facebook, href: "https://www.facebook.com/profile.php?id=61584453683707" },
+                { Icon: Music2, href: "https://www.tiktok.com/@bicobrasil" },
+                { Icon: Youtube, href: "https://www.youtube.com/@BicoBrasil-l8r" },
+                { Icon: Linkedin, href: "https://www.linkedin.com/in/bico-brasil-1bb190397/" },
+                { Icon: Mail, href: "mailto:contato.bicobrasil@gmail.com" }
+              ].map((social, i) => (
+                <a key={i} href={social.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/40 hover:text-blue-400 transition-all duration-300">
+                  <social.Icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:col-span-2 gap-10">
+            <div>
+              <h4 className="text-white font-black mb-6 uppercase text-[10px] tracking-[0.2em] opacity-50">Ajuda & Plataforma</h4>
+              <ul className="space-y-4 text-sm font-bold">
+                <li><Link to="/about" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Sobre Nós</Link></li>
+                <li><Link to="/app" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Buscar Bicos</Link></li>
+                <li><Link to="/offer-services" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Anunciar Bico</Link></li>
+                <li><Link to="/premium" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Planos Profissionais</Link></li>
+                <li><Link to="/relacao-usuarios" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Relação Usuários</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-black mb-6 uppercase text-[10px] tracking-[0.2em] opacity-50">Legal & Suporte</h4>
+              <ul className="space-y-4 text-sm font-bold">
+                <li><Link to="/terms" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Termos de Uso</Link></li>
+                <li><Link to="/privacy" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Privacidade</Link></li>
+                <li><Link to="/faq" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Dúvidas Frequentes</Link></li>
+                <li><Link to="/contact" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Falar com Suporte</Link></li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-border mt-8 pt-8 text-center text-sm text-card-foreground/60">
-          <p>© {new Date().getFullYear()} Bico Brasil. Todos os direitos reservados.</p>
-          <p className="mt-2">Contato para LGPD: privacidade@bicobrasil.com.br</p>
+        <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/5 gap-8">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">
+              © {new Date().getFullYear()} Bico Brasil. Todos os direitos reservados.
+            </p>
+            <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest">
+              Contato LGPD: privacidade@bicobrasil.com.br
+            </p>
+          </div>
 
-          {/* Link discreto para Admin - SEMPRE VISÍVEL */}
-          <Link
-            to={isAdmin ? "/admin" : "/auth"}
-            className="mt-4 inline-flex items-center gap-2 text-card-foreground/40 hover:text-card-foreground/70 transition-colors"
-          >
-            <Settings size={14} />
-            <span>Área Admin</span>
-          </Link>
+          <div className="flex items-center gap-8">
+            <Link
+              to={isAdmin ? "/admin" : "/auth"}
+              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 hover:text-blue-400 transition-colors group"
+            >
+              <Settings size={12} className="group-hover:rotate-90 transition-transform duration-500" />
+              Área Admin
+            </Link>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-800">
+              v4.0.2
+            </p>
+          </div>
         </div>
       </div>
     </footer>
   );
 };
+

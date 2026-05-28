@@ -3,7 +3,6 @@ import { Button } from "./ui/button";
 import { Menu, ArrowLeft, User as UserIcon, Download, Bell, ChevronRight, Home, CreditCard, LogOut } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { ThemeToggle } from "./ThemeToggle";
-import { CitySelector } from "./CitySelector";
 import { FreePostsBadge } from "./FreePostsBadge";
 import { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "./ui/sheet";
@@ -90,10 +89,21 @@ export const Header = () => {
     setOpen(false);
   };
 
-  const navItems = [
+const navItems = [
     { path: "/", label: "Início", icon: Home },
     { path: "/premium", label: "Planos", icon: CreditCard },
   ];
+
+  const saasNavLinks = [
+    { path: "/", label: "Home" },
+    { path: "/procurar-bicos", label: "Procurar bicos" },
+    { path: "/premium", label: "Premium" },
+    { path: "/about", label: "Sobre" },
+    { path: "/FAQ", label: "Ajuda" },
+    { path: "/contact", label: "Contato" },
+  ];
+
+  const isPublicLanding = publicPaths.some(p => location.pathname.startsWith(p));
 
   const handleNavClick = (path: string) => {
     navigate(path);
@@ -130,8 +140,8 @@ export const Header = () => {
         Ir para conteúdo principal
       </a>
 
-      <header className="sticky top-0 z-50 w-full bg-white/70 dark:bg-background/80 text-foreground backdrop-blur-md border-b border-slate-200/60 dark:border-border/50 shadow-sm overflow-visible" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="container flex h-16 min-h-[64px] items-center justify-between px-3 md:px-5">
+<header className="sticky top-0 z-50 w-full mx-auto h-24 bg-gradient-to-r from-[#0B1F3A] to-[#0F2A4D] text-white border-b border-white/10 shadow-sm backdrop-blur-md" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+  <div className="container mx-auto h-24 px-4 md:px-8 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             {showBackButton && (
               <Button
@@ -139,97 +149,86 @@ export const Header = () => {
                 size="icon"
                 onClick={() => safeGoBack(navigate)}
                 aria-label="Voltar"
-                className="text-[var(--nav-link)] shrink-0 h-11 w-11 min-h-[44px] rounded-full flex items-center justify-center hover:bg-muted/60 transition-colors"
+                className="text-[var(--nav-link)] shrink-0 h-11 w-11 min-h-[44px] rounded-full flex items-center justify-center transition-colors"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             )}
 
             <Link to={user ? "/app" : "/"} className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
-              <img src={logo} alt="Bico Brasil" className="h-9 w-9 md:h-12 md:w-12 shrink-0 rounded-2xl shadow-sm" />
+              <img src={logo} alt="Bico Brasil" className="h-9 w-9 md:h-16 md:w-16 shrink-0 rounded-2xl shadow-sm" />
               <div className="flex flex-col justify-center">
-                <span className="text-base md:text-lg font-semibold leading-tight whitespace-nowrap text-foreground">
+                <span className="text-[25px] font-bold leading-tight whitespace-nowrap text-white">
                   Bico Brasil
                 </span>
-                <span className="sr-only sm:not-sr-only text-xs text-muted-foreground/90 leading-tight font-semibold whitespace-nowrap uppercase tracking-wider">
+                <span className="sr-only sm:not-sr-only text-xs text-zinc-400 leading-tight font-bold whitespace-nowrap uppercase tracking-wider">
                   Trabalhou, Tá Pago.
+                </span>
+                <span className="sr-only sm:not-sr-only text-xs text-zinc-400 leading-tight font-bold whitespace-nowrap uppercase tracking-wider">
+                  Contratou, Tá feito.
                 </span>
               </div>
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-5 z-40">
-            <Link
-              to="/app"
-              className={cn(
-                "relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap pb-0.5",
-                location.pathname === '/' || location.pathname === '/app'
-                  ? "text-[var(--nav-link-hover)] dark:text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-primary"
-                  : "text-[var(--nav-link)]"
-              )}
-            >
-              Início
-            </Link>
-            {!user && (
+          {isPublicLanding && (
+            <nav className="hidden md:flex items-center gap-8 mx-auto">
+              {saasNavLinks.map(({ path, label }) => (
+                <Link
+                  key={path}
+                  to={path}
+                  className={cn(
+                    "text-lg font-medium text-white/80 hover:text-white hover:opacity-90 hover:underline decoration-white/30 underline-offset-4 transition-all duration-300 py-1",
+                    location.pathname === path && "font-semibold text-white underline decoration-white underline-offset-4"
+                  )}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          )}
+          { !isPublicLanding && (
+            <nav className="hidden md:flex items-center gap-2 z-40 ml-4">
               <Link
-                to="/search-workers"
+                to="/app"
                 className={cn(
-                  "relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap pb-0.5",
-                  location.pathname === '/search-workers'
-                    ? "text-[var(--nav-link-hover)] dark:text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-primary"
-                    : "text-[var(--nav-link)]"
+                  "relative text-[13px] font-bold transition-all duration-300 px-4 py-2 rounded-full",
+                  location.pathname === '/' || location.pathname === '/app'
+                    ? "bg-white/10 text-white border border-white/10"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
               >
-                Buscar
+                Início
               </Link>
-            )}
-            {!user && (
               <Link
-                to="/offer-services"
+                to="/premium"
                 className={cn(
-                  "relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap pb-0.5",
-                  location.pathname === '/offer-services'
-                    ? "text-[var(--nav-link-hover)] dark:text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-primary"
-                    : "text-[var(--nav-link)]"
+                  "relative text-[13px] font-bold transition-all duration-300 px-4 py-2 rounded-full",
+                  location.pathname === '/premium'
+                    ? "bg-white/10 text-white border border-white/10"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
               >
-                Publicar
+                Planos
               </Link>
-            )}
-            <Link
-              to="/premium"
-              className={cn(
-                "relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] whitespace-nowrap pb-0.5",
-                location.pathname === '/premium'
-                  ? "text-[var(--nav-link-hover)] dark:text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-primary"
-                  : "text-[var(--nav-link)]"
-              )}
-            >
-              Planos
-            </Link>
-            <Link
-              to="/download"
-              className="relative text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:text-[var(--nav-link-hover)] flex items-center gap-2 text-[var(--nav-link)]"
-            >
-              <Download className="h-4 w-4" />
-              <span className="hidden lg:inline">Baixar App</span>
-            </Link>
-          </nav>
+              <Link
+                to="/download"
+                className="relative text-[13px] font-bold transition-all duration-300 px-4 py-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 flex items-center gap-2"
+              >
+                <Download className="h-4 w-4" />
+                <span className="hidden lg:inline">Baixar App</span>
+              </Link>
+            </nav>
+          )}
 
           {/* Right Section */}
           <div className="flex items-center gap-1">
-            <ThemeToggle className="max-[360px]:hidden hover:bg-muted/60" />
-            {/* Badge de Publicações Grátis */}
-            {user && (
-              <FreePostsBadge />
-            )}
-
+            <ThemeToggle className="hover:bg-white/10 rounded-lg transition-colors" />
             {/* Notification Bell */}
             {user && (
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative h-11 w-11 min-h-[44px] rounded-full hover:bg-muted/60 transition-colors">
+                  <Button variant="ghost" size="icon" className="relative h-11 w-11 min-h-[44px] rounded-full transition-colors">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <Badge
@@ -248,10 +247,10 @@ export const Header = () => {
             )}
 
             {/* User Menu or Login Button */}
-            {user ? (
+{user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex rounded-full border border-border/60 h-9 px-2.5 hover:bg-muted/60 transition-colors">
+                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex rounded-full border border-white/10 h-9 px-2.5 hover:bg-white/5 transition-colors text-white">
                     <Avatar className="h-6 w-6">
                       <AvatarImage
                         src={
@@ -274,22 +273,35 @@ export const Header = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            ) : isPublicLanding ? (
+              <div className="hidden md:flex items-center gap-4">
+                <button
+                  onClick={() => navigate('/auth')}
+                  className="text-[15px] font-bold text-white/80 hover:text-white hover:opacity-90 transition-colors px-4 py-2"
+                >
+                  Entrar
+                </button>
+                <Button
+                  onClick={() => navigate('/auth?mode=signup')}
+                  className="text-[15px] font-bold bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 h-10"
+                >
+                  Criar conta
+                </Button>
+              </div>
             ) : (
-              <div className="flex gap-1.5">
+              <div className="hidden md:flex items-center gap-3 ml-2">
+                <button
+                  onClick={() => navigate('/auth')}
+                  className="hidden md:flex text-[13px] font-bold text-white/80 hover:text-white transition-colors"
+                >
+                  Entrar
+                </button>
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
                   size="sm"
-                  variant="ghost"
-                  className="hidden md:flex text-xs font-semibold text-muted-foreground hover:text-foreground px-3 h-9"
+                  className="hidden md:flex text-[13px] font-bold px-6 h-9 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 bg-white hover:bg-zinc-200 text-black border border-transparent"
                 >
-                  Cadastre-se
-                </Button>
-                <Button
-                  onClick={() => navigate('/auth')}
-                  size="sm"
-                  className="hidden md:flex text-xs font-semibold px-4 h-9 rounded-full shadow-sm shadow-primary/15 hover:shadow-primary/25 transition-shadow"
-                >
-                  Entrar
+                  Criar conta grátis
                 </Button>
               </div>
             )}
@@ -297,11 +309,11 @@ export const Header = () => {
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
-                  <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-11 w-11 min-h-[44px] flex items-center justify-center rounded-full hover:bg-muted/60 transition-colors">
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-              <SheetContent side="right" className="w-[320px] p-0">
+                <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-11 w-11 min-h-[44px] flex items-center justify-center rounded-full transition-colors">
+                  <Menu className="md:hidden h-10 w-10 flex items-center justify-center text-white hover:bg-white/10 rounded-lg" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-[#0B1F3A] text-white border-white/10">
                 <div className="flex flex-col h-full">
                   {/* Header do Menu */}
                   {user && (
@@ -316,7 +328,7 @@ export const Header = () => {
                         <p className="font-semibold text-sm text-foreground truncate">
                           {getUserDisplayName()}
                         </p>
-                        <p className="text-xs text-muted-foreground truncate">
+                        <p className="text-xs bg-[#0B1F3A] text-white border-white/10 truncate">
                           {user.email}
                         </p>
                       </div>
@@ -426,10 +438,6 @@ export const Header = () => {
           </div>
         </div>
       </header>
-
-
-
-      {!(location.pathname.startsWith('/procurar-bicos') || location.pathname.startsWith('/search-workers')) && <CitySelector />}
     </>
   );
 };

@@ -4,9 +4,6 @@ import { Helmet } from "react-helmet";
 import { useAuth } from "@/contexts/AuthContext";
 import { SalesAnnouncementBar } from "@/components/sales/SalesAnnouncementBar";
 import { SalesHeroSection } from "@/components/sales/SalesHeroSection";
-import { InstitutionalBlock } from "@/components/sales/InstitutionalBlock";
-import { TrustBar } from "@/components/sales/TrustBar";
-import { ComparisonTable } from "@/components/sales/ComparisonTable";
 import { HowItWorks } from "@/components/sales/HowItWorks";
 import { CategoriesGrid } from "@/components/sales/CategoriesGrid";
 import { ProviderSection } from "@/components/sales/ProviderSection";
@@ -29,10 +26,10 @@ const SalesLandingPage = () => {
   // Mostrar loading enquanto verifica autenticação
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-[#080C14] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="animate-spin rounded-full h-9 w-9 border-2 border-border border-t-primary"></div>
-          <span className="text-sm text-muted-foreground">Carregando…</span>
+          <div className="animate-spin rounded-full h-9 w-9 border-2 border-white/10 border-t-blue-500"></div>
+          <span className="text-sm text-zinc-500 font-bold uppercase tracking-widest">Carregando…</span>
         </div>
       </div>
     );
@@ -79,18 +76,17 @@ const SalesLandingPage = () => {
         </script>
       </Helmet>
 
-      <div className="min-h-screen bg-background overflow-x-hidden">
+      <div className="min-h-screen bg-[#080C14] overflow-x-hidden selection:bg-blue-500/30 selection:text-white">
         <Header />
         <SalesAnnouncementBar />
-        <SalesHeroSection />
-        <InstitutionalBlock />
-        <TrustBar />
-        <ComparisonTable />
-        <HowItWorks />
-        <CategoriesGrid />
-        <ProviderSection />
-        <SecuritySection />
-        <SalesFAQ />
+        <main>
+          <SalesHeroSection />
+          <CategoriesGrid />
+          <ProviderSection />
+          <HowItWorks />
+          <SecuritySection />
+          <SalesFAQ />
+        </main>
         <SalesFooter />
       </div>
     </>
@@ -98,3 +94,5 @@ const SalesLandingPage = () => {
 };
 
 export default SalesLandingPage;
+
+

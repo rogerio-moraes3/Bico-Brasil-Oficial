@@ -1,73 +1,149 @@
-import { Search, MapPin, MessageCircle } from "lucide-react";
+import { useState } from "react";
+import { Search, MessageCircle, ArrowRight, Zap, CheckCircle2, UserPlus, Target, Wallet } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const steps = [
+const clientSteps = [
   {
     icon: Search,
-    number: "01",
-    title: "Busque ou Anuncie",
-    description: "Diga o que você precisa ou o que sabe fazer. De pedreiro a designer, temos espaço para todos.",
-    color: "from-blue-500 to-cyan-500",
+    title: "Busque o que precisa",
+    description: "Digite o serviço ou problema. Encontramos quem resolve perto de você em segundos.",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
   },
   {
-    icon: MapPin,
-    number: "02",
-    title: "Filtre por Proximidade",
-    description: "Nossa tecnologia mostra quem está perto de você agora. Economize no transporte e no tempo.",
-    color: "from-orange-500 to-amber-500",
+    icon: Zap,
+    title: "Escolha o Perfil",
+    description: "Veja avaliações, fotos e o selo de verificação. Escolha com total segurança.",
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
   },
   {
     icon: MessageCircle,
-    number: "03",
-    title: "Negocie Livremente",
-    description: "Gostou do perfil? Chame no WhatsApp com um clique. O acordo é entre vocês, sem burocracia.",
-    color: "from-green-500 to-emerald-500",
+    title: "Feche pelo WhatsApp",
+    description: "Contato direto e imediato. Sem taxas ocultas, sem intermediários. Você decide.",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+  },
+];
+
+const workerSteps = [
+  {
+    icon: UserPlus,
+    title: "Crie seu Perfil",
+    description: "Mostre suas habilidades, fotos de trabalhos e conquiste o selo de verificado.",
+    color: "text-purple-400",
+    bg: "bg-purple-500/10",
+  },
+  {
+    icon: Target,
+    title: "Apareça nas Buscas",
+    description: "Seja encontrado por clientes na sua cidade no exato momento que eles precisam.",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+  },
+  {
+    icon: Wallet,
+    title: "Fature 100%",
+    description: "Negocie direto, sem comissões. O dinheiro do seu trabalho é inteiramente seu.",
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
   },
 ];
 
 export const HowItWorks = () => {
+  const [activeTab, setActiveTab] = useState<"client" | "worker">("client");
+
+  const steps = activeTab === "client" ? clientSteps : workerSteps;
+
   return (
-    <section className="py-14 md:py-24 bg-[#F1F5F9] dark:bg-muted/30">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-10 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Como Funciona</span>
+    <section className="py-24 md:py-32 bg-[#080C14] overflow-hidden relative border-t border-white/5">
+      {/* Decorative Glows */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 mb-6 backdrop-blur-sm">
+            <CheckCircle2 className="w-3 h-3" />
+            <span>Fluxo de Trabalho</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
-            Simples como deve ser
+          <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tight leading-[1.1]">
+            Como funciona o <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Bico Brasil?</span>
           </h2>
-          <p className="text-muted-foreground text-base leading-relaxed">
-            Em 3 passos você resolve — sem burocracia, sem intermediários.
-          </p>
+
+          {/* Toggle Switch Moderno */}
+          <div className="flex justify-center mt-10">
+            <div className="bg-white/5 p-1.5 rounded-2xl border border-white/10 flex gap-2 backdrop-blur-xl">
+              <button
+                onClick={() => setActiveTab("client")}
+                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all ${
+                  activeTab === "client" 
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
+                  : "text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                QUERO CONTRATAR
+              </button>
+              <button
+                onClick={() => setActiveTab("worker")}
+                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all ${
+                  activeTab === "worker" 
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
+                  : "text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                QUERO TRABALHAR
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {steps.map((step, index) => (
-            <div key={index} className="relative">
-              {/* Connector dot trail */}
-              {index < steps.length - 1 && (
-                <div className="hidden md:block absolute top-[3.25rem] left-[calc(60%+1rem)] right-[-1rem] h-px bg-gradient-to-r from-border/80 to-transparent" aria-hidden="true" />
-              )}
+        <div className="relative min-h-[400px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.4 }}
+              className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+            >
+              {steps.map((step, index) => (
+                <div
+                  key={index}
+                  className="relative group bg-white/[0.02] border border-white/5 rounded-[40px] p-10 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
+                >
+                  <div className="relative z-10">
+                    <div className="flex justify-between items-start mb-8">
+                      <div className={`w-16 h-16 rounded-2xl ${step.bg} flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform duration-500`}>
+                        <step.icon className={`w-8 h-8 ${step.color}`} />
+                      </div>
+                      <span className="text-6xl font-black text-white/[0.03] group-hover:text-white/5 transition-colors select-none tracking-tighter">
+                        0{index + 1}
+                      </span>
+                    </div>
 
-              <div className="bg-card border border-border rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-[0_4px_24px_-6px_hsl(var(--xp-primary)/0.14)] hover:border-primary/30 transition-all duration-300 relative overflow-hidden group card-lift">
-                {/* Background number */}
-                <span className="absolute right-4 top-2 text-7xl font-bold text-muted-foreground/10 group-hover:text-primary/10 transition-colors select-none" aria-hidden="true">
-                  {step.number}
-                </span>
-
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-5 shadow-md relative z-10`}>
-                  <step.icon className="w-6 h-6 text-white" aria-hidden="true" />
+                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight">
+                      {step.title}
+                    </h3>
+                    <p className="text-zinc-400 leading-relaxed font-medium">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-                <h3 className="text-base font-bold text-foreground mb-2 relative z-10">
-                  {step.title}
-                </h3>
-
-                <p className="text-muted-foreground text-sm leading-relaxed relative z-10">
-                  {step.description}
-                </p>
-              </div>
-            </div>
-          ))}
+        <div className="mt-20 flex flex-col items-center gap-4">
+          <button 
+          onClick={() => window.location.href = "/app"}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95">
+            {activeTab === "client" ? "Começar a Contratar" : "Começar a Trabalhar"}
+          </button>
+          <span className="text-zinc-500 font-medium">Rápido, fácil e sem intermediários.</span>
         </div>
       </div>
     </section>

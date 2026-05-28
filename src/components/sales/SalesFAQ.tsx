@@ -1,74 +1,114 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { HelpCircle } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { HelpCircle, Sparkles, MessageCircle, ShieldCheck, Zap, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 const faqs = [
-  {
-    question: "Preciso pagar para contratar?",
-    answer: "Não! A busca por profissionais é 100% gratuita para clientes. Você só precisa criar uma conta e pode começar a buscar imediatamente.",
+  { 
+    question: "O Bico Brasil realmente funciona?", 
+    answer: "Sim! Somos uma plataforma focada em conexão direta. Milhares de pessoas usam o Bico Brasil todos os meses para resolver problemas domésticos ou ganhar renda extra sem intermediários." 
   },
-  {
-    question: "O aplicativo funciona no iPhone e Android?",
-    answer: "Sim! O Bico Brasil é um Web App moderno (PWA). Funciona em qualquer navegador e você pode adicionar à tela inicial sem ir à loja de aplicativos. Não ocupa memória do seu celular.",
+  { 
+    question: "É seguro contratar por aqui?", 
+    answer: "Trabalhamos com o selo de 'Perfil Verificado', onde validamos documentos dos profissionais. Recomendamos sempre priorizar esses perfis e ler as avaliações reais da comunidade." 
   },
-  {
-    question: "Como sei que o profissional é confiável?",
-    answer: "Busque pelo selo de 'Verificado' e leia as avaliações de outros clientes antes de fechar negócio. Profissionais verificados passaram por validação de documentos.",
+  { 
+    question: "Quanto custa usar o sistema?", 
+    answer: "Para quem busca serviços, é 100% gratuito. Para profissionais, oferecemos planos a partir de R$19,90/mês para ter visibilidade total, sem NUNCA cobrar comissão sobre o valor do seu trabalho." 
   },
-  {
-    question: "Qual o custo para profissionais?",
-    answer: "Oferecemos planos acessíveis a partir de R$19,90/mês. Não cobramos comissão sobre os serviços realizados - você recebe 100% do valor combinado com o cliente.",
+  { 
+    question: "Como recebo o pagamento do serviço?", 
+    answer: "O pagamento é feito diretamente pelo cliente para você, da forma que combinarem (Pix, dinheiro, etc). O Bico Brasil não retém seu dinheiro e não cobra taxas sobre o serviço realizado." 
   },
-  {
-    question: "Como funciona a negociação?",
-    answer: "Toda negociação é feita diretamente entre você e o profissional via WhatsApp. Não há intermediários. Vocês combinam preço, horário e forma de pagamento livremente.",
+  { 
+    question: "Preciso baixar um aplicativo pesado?", 
+    answer: "Não! O Bico Brasil é um PWA ultra-leve. Você acessa pelo navegador e pode adicionar à tela inicial do celular. Funciona como um app, mas sem ocupar espaço na sua memória." 
   },
-  {
-    question: "Posso divulgar qualquer tipo de serviço?",
-    answer: "Sim, desde que seja um serviço lícito. Temos categorias que vão de construção e reformas até serviços digitais, passando por limpeza, jardinagem, fretes e muito mais.",
+  { 
+    question: "Posso anunciar qualquer tipo de bico?", 
+    answer: "Sim, desde que seja lícito. De faxina e frete até aulas particulares e serviços digitais. Se você sabe fazer, o Bico Brasil é o seu lugar." 
   },
 ];
 
 export const SalesFAQ = () => {
   return (
-    <section className="py-14 md:py-24 bg-[#F8FAFC] dark:bg-muted/20">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-10 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
-            <HelpCircle className="w-4 h-4 text-primary" aria-hidden="true" />
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">FAQ</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
-            Perguntas Frequentes
-          </h2>
-          <p className="text-muted-foreground text-base leading-relaxed">
-            Tire suas dúvidas sobre o Bico Brasil
-          </p>
-        </div>
+    <section className="py-24 md:py-40 bg-[#080C14] relative overflow-hidden">
+      {/* Decorative Blur Elements */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2" />
 
-        <div className="max-w-3xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-3">
-            {faqs.map((faq, index) => (
-              <AccordionItem
-                key={index}
-                value={`item-${index}`}
-                className="bg-card rounded-xl border border-border px-6 shadow-sm data-[state=open]:border-primary/30 data-[state=open]:shadow-[0_2px_16px_-4px_hsl(var(--xp-primary)/0.12)] transition-all duration-300"
-              >
-                <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline py-5 text-sm md:text-base">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-5 text-sm leading-relaxed">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="grid lg:grid-cols-12 gap-16 items-start">
+          
+          <div className="lg:col-span-5">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 rounded-full px-4 py-2 mb-8 backdrop-blur-md">
+                <HelpCircle className="w-4 h-4 text-blue-400" />
+                <span className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">Suporte 24/7</span>
+              </div>
+              
+              <h2 className="text-5xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-[0.95]">
+                Dúvidas <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Frequentes.</span>
+              </h2>
+              
+              <p className="text-blue-100/60 text-lg md:text-xl font-medium leading-relaxed mb-12 max-w-md">
+                Tudo o que você precisa saber para começar a resolver sua vida ou ganhar dinheiro hoje mesmo.
+              </p>
+
+              <div className="p-8 rounded-[40px] bg-white/[0.03] border border-white/10 backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500">
+                <div className="flex items-center gap-6">
+                  <div className="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
+                    <MessageCircle className="w-8 h-8 text-blue-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-xl mb-1">Ainda com dúvida?</h4>
+                    <p className="text-blue-100/40 text-sm">Chame nosso time no suporte agora.</p>
+                  </div>
+                </div>
+                <button 
+                onClick={() => window.location.href = "/contact"}
+                className="w-full mt-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 group/btn">
+                  Falar com especialista
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="lg:col-span-7">
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <AccordionItem
+                    value={`item-${index}`}
+                    className="bg-white/[0.02] border border-white/5 rounded-[32px] px-8 md:px-10 data-[state=open]:border-blue-500/40 data-[state=open]:bg-white/[0.05] transition-all duration-500 overflow-hidden group"
+                  >
+                    <AccordionTrigger className="text-left font-bold text-white hover:no-underline py-8 text-xl md:text-2xl hover:text-blue-400 transition-colors">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-blue-100/60 pb-10 leading-relaxed font-medium text-lg md:text-xl">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </motion.div>
+              ))}
+            </Accordion>
+          </div>
         </div>
       </div>
     </section>
   );
 };
+
+
