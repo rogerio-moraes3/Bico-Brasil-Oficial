@@ -1,145 +1,142 @@
 import { useNavigate } from "react-router-dom";
-import { 
-  Home, 
-  Sparkles, 
-  Laptop, 
-  Truck, 
-  Wrench, 
-  Paintbrush,
-  Zap,
-  Droplets,
-  TreePine,
-  ChefHat,
-  ArrowRight
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, Sparkles, Laptop, Truck, Wrench, Paintbrush, Zap, Droplets, TreePine, ChefHat, ArrowRight, Clock, ShieldCheck, Heart } from "lucide-react";
+import { motion } from "framer-motion";
 
-const categories = [
-  {
-    icon: Home,
-    name: "Casa e Reformas",
-    examples: "Pedreiros, Pintores, Eletricistas",
-    slug: "construcao-reforma",
-    color: "bg-blue-500",
-  },
-  {
-    icon: Sparkles,
-    name: "Limpeza",
-    examples: "Diaristas, Limpeza Pós-obra",
-    slug: "limpeza-organizacao",
-    color: "bg-cyan-500",
-  },
-  {
-    icon: Laptop,
-    name: "Digital e Aulas",
-    examples: "Designers, Professores, Tech",
-    slug: "digital",
-    color: "bg-purple-500",
-  },
-  {
-    icon: Truck,
-    name: "Fretes e Mudanças",
-    examples: "Carretos rápidos na região",
-    slug: "transporte-apoio",
-    color: "bg-orange-500",
-  },
-  {
-    icon: Wrench,
-    name: "Manutenção",
-    examples: "Celulares, Ar-condicionado",
-    slug: "manutencao-domestica",
-    color: "bg-red-500",
-  },
-  {
-    icon: Paintbrush,
-    name: "Pintura",
-    examples: "Paredes, Portões, Muros",
-    slug: "pintura",
-    color: "bg-amber-500",
-  },
-  {
-    icon: Zap,
-    name: "Elétrica",
-    examples: "Instalações, Reparos",
-    slug: "eletrica",
-    color: "bg-yellow-500",
-  },
-  {
-    icon: Droplets,
-    name: "Hidráulica",
-    examples: "Encanadores, Vazamentos",
+const scenarios = [
+  { 
+    title: "Minha pia entupiu agora", 
+    category: "Hidráulica", 
     slug: "hidraulica",
-    color: "bg-teal-500",
+    icon: Droplets,
+    color: "from-blue-500/20 to-cyan-500/5",
+    iconColor: "text-blue-400"
   },
-  {
-    icon: TreePine,
-    name: "Jardinagem",
-    examples: "Corte de grama, Poda",
-    slug: "jardinagem-externo",
-    color: "bg-green-500",
+  { 
+    title: "Preciso de um frete hoje", 
+    category: "Transporte", 
+    slug: "transporte-apoio",
+    icon: Truck,
+    color: "from-orange-500/20 to-amber-500/5",
+    iconColor: "text-orange-400"
   },
-  {
-    icon: ChefHat,
-    name: "Serviços de Casa",
-    examples: "Cozinheiras, Cuidadores",
-    slug: "diaristas-servicos-casa",
-    color: "bg-pink-500",
+  { 
+    title: "A luz da sala parou", 
+    category: "Elétrica", 
+    slug: "eletrica",
+    icon: Zap,
+    color: "from-yellow-500/20 to-orange-500/5",
+    iconColor: "text-yellow-400"
+  },
+  { 
+    title: "Faxina pesada urgente", 
+    category: "Limpeza", 
+    slug: "limpeza-organizacao",
+    icon: Sparkles,
+    color: "from-cyan-500/20 to-blue-500/5",
+    iconColor: "text-cyan-400"
+  },
+  { 
+    title: "Montar móveis novos", 
+    category: "Manutenção", 
+    slug: "manutencao-domestica",
+    icon: Wrench,
+    color: "from-rose-500/20 to-red-500/5",
+    iconColor: "text-rose-400"
+  },
+  { 
+    title: "Pintar uma parede", 
+    category: "Pintura", 
+    slug: "pintura",
+    icon: Paintbrush,
+    color: "from-amber-500/20 to-yellow-500/5",
+    iconColor: "text-amber-400"
   },
 ];
 
 export const CategoriesGrid = () => {
   const navigate = useNavigate();
 
-  const handleCategoryClick = (slug: string) => {
-    navigate(`/search-workers?category=${slug}`);
-  };
-
   return (
-    <section className="py-14 md:py-24 bg-background dark:bg-background">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-10 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Categorias</span>
+    <section className="py-24 md:py-32 bg-[#080C14] relative overflow-hidden">
+      {/* Decorative background element */}
+      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full -translate-x-1/2" />
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-6 backdrop-blur-sm">
+              <Clock className="w-3 h-3" />
+              <span>PARA CONTRATANTES</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight leading-[1.1]">
+              O que você precisa <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">resolver hoje?</span>
+            </h2>
+            <p className="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed max-w-xl">
+              Não busque apenas por nomes, busque por soluções. Conectamos você aos profissionais que resolvem o seu problema agora.
+            </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
-            Categorias em Destaque
-          </h2>
-          <p className="text-muted-foreground text-base leading-relaxed">
-            Encontre o profissional certo para cada tipo de serviço
-          </p>
+          
+          <button
+            onClick={() => navigate("/app")}
+            className="group flex items-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white px-8 py-4 rounded-2xl font-bold transition-all"
+          >
+            Ver todas as categorias
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-6xl mx-auto">
-          {categories.map((category, index) => (
-            <button
-              key={index}
-              onClick={() => handleCategoryClick(category.slug)}
-              className="group bg-card border border-border rounded-xl p-4 hover:border-primary/60 hover:shadow-[0_4px_20px_-6px_hsl(var(--xp-primary)/0.18)] transition-all duration-300 text-left card-lift"
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {scenarios.map((item, i) => (
+            <motion.button
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              viewport={{ once: true }}
+              onClick={() => navigate(`/app?category=${item.slug}`)}
+              className="group relative text-left p-8 rounded-[32px] bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 overflow-hidden"
             >
-              <div className={`w-12 h-12 rounded-xl ${category.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                <category.icon className="w-6 h-6 text-white" />
+              {/* Background Gradient Hover */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+              
+              <div className="relative z-10">
+                <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all duration-500 border border-white/5`}>
+                  <item.icon className={`w-6 h-6 ${item.iconColor}`} />
+                </div>
+                
+                <h3 className="text-2xl font-black text-white mb-2 tracking-tight group-hover:translate-x-1 transition-transform">
+                  "{item.title}"
+                </h3>
+                
+                <div className="flex items-center gap-2 text-zinc-500 group-hover:text-zinc-300 transition-colors">
+                  <span className="text-xs font-bold uppercase tracking-widest">{item.category}</span>
+                  <div className="w-1 h-1 bg-zinc-700 rounded-full" />
+                  <span className="text-xs">Encontrar profissional</span>
+                </div>
               </div>
-              <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
-                {category.name}
-              </h3>
-              <p className="text-xs text-muted-foreground">
-                {category.examples}
-              </p>
-            </button>
+
+              {/* Decorative Corner Icon */}
+              <ArrowRight className="absolute bottom-8 right-8 w-6 h-6 text-white/5 group-hover:text-white/20 group-hover:translate-x-1 transition-all" />
+            </motion.button>
           ))}
         </div>
 
-        <div className="text-center mt-8">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate("/search-workers")}
-            className="group"
-          >
-            Ver todas as categorias
-            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
+        <div className="mt-16 text-center">
+          <div className="inline-flex items-center gap-6 px-8 py-4 bg-white/[0.02] border border-white/5 rounded-3xl backdrop-blur-sm">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              <span className="text-sm font-bold text-zinc-300">Perfis Verificados</span>
+            </div>
+            <div className="w-px h-4 bg-white/10" />
+            <div className="flex items-center gap-2">
+              <Heart className="w-5 h-5 text-rose-400" />
+              <span className="text-sm font-bold text-zinc-300">Aprovado pela Comunidade</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 };
+

@@ -2,11 +2,10 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lock, Eye, Database, Heart } from "lucide-react";
 import { safeGoBack } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 const Privacy = () => {
   const navigate = useNavigate();
@@ -16,191 +15,86 @@ const Privacy = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col pb-20 md:pb-0 bg-background">
+    <div className="min-h-screen flex flex-col bg-[#080C14] text-white selection:bg-blue-500/30">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <Breadcrumbs />
-          <Button
-            variant="ghost"
-            onClick={() => safeGoBack(navigate)}
-            className="mb-4 text-[var(--nav-link)]"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4 text-[var(--nav-link)]" />
-            Voltar
-          </Button>
+      <main className="flex-grow overflow-hidden">
+        {/* Hero Header */}
+        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 border-b border-white/5">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-indigo-600/5 blur-[150px] rounded-full -translate-y-1/2" />
+          
+          <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Button
+                variant="ghost"
+                onClick={() => safeGoBack(navigate)}
+                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-xl font-bold flex items-center gap-2 group"
+              >
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                Voltar
+              </Button>
 
-          <h1 className="text-4xl font-bold mb-8">Política de Privacidade</h1>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>1. Informações que Coletamos</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p className="mb-4">Coletamos apenas as informações essenciais para o funcionamento da plataforma:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Dados de cadastro:</strong> nome, telefone (WhatsApp), e-mail, cidade, bairro</li>
-                <li><strong>Dados profissionais:</strong> categoria de serviço, disponibilidade, preços</li>
-                <li><strong>Dados opcionais:</strong> foto de perfil, descrição, documentos (RG/antecedentes)</li>
-                <li><strong>Dados de uso:</strong> avaliações, trabalhos realizados, histórico de pagamentos</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>2. Como Usamos Seus Dados</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Para conectar contratantes e prestadores de serviço</li>
-                <li>Para exibir perfis públicos de trabalhadores</li>
-                <li>Para processar pagamentos de assinaturas (Plano Pro)</li>
-                <li>Para enviar notificações sobre trabalhos e atualizações</li>
-                <li>Para melhorar a experiência da plataforma</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>3. Compartilhamento de Dados</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p className="mb-4">
-                <strong>Seus dados NÃO são compartilhados com terceiros,</strong> exceto:
+              <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
+                Sua Privacidade <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">é Sagrada.</span>
+              </h1>
+              <p className="text-xl text-blue-100/40 max-w-2xl font-medium leading-relaxed">
+                Transparência total sobre como protegemos seus dados e garantimos sua segurança digital dentro do Bico Brasil.
               </p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Com outros usuários da plataforma (nome, telefone, categoria, avaliações)</li>
-                <li>Com processadores de pagamento (Mercado Pago) para assinaturas</li>
-                <li>Quando exigido por lei ou ordem judicial</li>
-              </ul>
-
-              <p className="mt-4">
-                Nunca vendemos ou alugamos seus dados pessoais para empresas de marketing
-                ou publicidade.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>4. Seus Direitos (LGPD)</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p className="mb-4">De acordo com a Lei Geral de Proteção de Dados (LGPD), você tem o direito de:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Acessar</strong> seus dados a qualquer momento</li>
-                <li><strong>Corrigir</strong> informações desatualizadas ou incorretas</li>
-                <li><strong>Excluir</strong> sua conta e todos os dados associados</li>
-                <li><strong>Revogar</strong> consentimento para uso de dados</li>
-                <li><strong>Portar</strong> seus dados para outra plataforma</li>
-              </ul>
-
-              <p className="mt-4">
-                Para exercer qualquer um desses direitos, entre em contato:
-                <br />
-                <strong>contato.bicobrasil@gmail.com</strong>
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>5. Segurança dos Dados</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p>
-                Utilizamos medidas de segurança técnicas e organizacionais para proteger
-                seus dados contra acesso não autorizado, perda ou vazamento. Isso inclui:
-              </p>
-              <ul className="list-disc pl-6 space-y-2 mt-4">
-                <li>Criptografia de dados sensíveis</li>
-                <li>Servidores seguros e atualizados</li>
-                <li>Acesso restrito a informações pessoais</li>
-                <li>Monitoramento constante de segurança</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>6. Cookies e Rastreamento</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p>
-                Utilizamos cookies essenciais para o funcionamento da plataforma
-                (login, preferências). Não usamos cookies de rastreamento para publicidade.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>7. Retenção de Dados</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p>
-                Mantemos seus dados enquanto sua conta estiver ativa. Após a exclusão
-                da conta, seus dados são removidos em até 30 dias, exceto informações
-                que devemos manter por obrigação legal (registros fiscais, por exemplo).
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>8. Alterações nesta Política</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p>
-                Podemos atualizar esta política periodicamente. Mudanças significativas
-                serão notificadas por e-mail ou na plataforma.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>9. Consentimento LGPD</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none space-y-4">
-              <p>
-                Ao criar sua conta no Bico Brasil, você autoriza expressamente o tratamento de seus
-                dados pessoais (nome, telefone, email, CPF, documentos, imagens) para fins de:
-              </p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Autenticação e gestão de conta</li>
-                <li>Publicação de serviços e perfil profissional</li>
-                <li>Comunicação entre contratante e prestador</li>
-                <li>Processamento de pagamentos</li>
-                <li>Cumprimento de obrigações legais</li>
-              </ul>
-              <p>
-                Você está ciente dos direitos previstos na Lei n.º 13.709/2018 (LGPD) e concorda que
-                seus dados sejam utilizados nos termos desta Política de Privacidade.
-              </p>
-              <p className="font-semibold">
-                Você pode exercer seus direitos de acesso, correção, eliminação ou portabilidade
-                de dados a qualquer momento através do email de contato.
-              </p>
-            </CardContent>
-          </Card>
-
-          <div className="mt-8 p-6 bg-muted rounded-lg">
-            <p className="text-sm text-center">
-              <strong>Última atualização:</strong> {new Date().toLocaleDateString('pt-BR')}
-            </p>
-            <p className="text-sm text-center mt-2 text-muted-foreground">
-              Para exercer seus direitos ou esclarecer dúvidas sobre privacidade, entre em contato:<br />
-              <a href="mailto:contato.bicobrasil@gmail.com" className="text-primary hover:underline font-medium">contato.bicobrasil@gmail.com</a>
-            </p>
-            <p className="text-xs text-center mt-2 text-muted-foreground">
-              Controlador de dados: Bico Brasil | Base legal: Lei nº 13.709/2018 (LGPD)
-            </p>
+            </motion.div>
           </div>
-        </div>
+        </section>
+
+        <section className="py-24 md:py-32 max-w-5xl mx-auto px-6">
+          <div className="grid gap-12">
+            {[
+              {
+                icon: Database,
+                title: "1. Dados Coletados",
+                desc: "Coletamos apenas o essencial para a conexão: Nome, WhatsApp, e-mail e localização aproximada (bairro/cidade). Fotos e documentos são opcionais para verificação de confiança."
+              },
+              {
+                icon: Lock,
+                title: "2. Segurança de Elite",
+                desc: "Utilizamos criptografia de ponta a ponta e servidores protegidos para garantir que suas informações nunca caiam em mãos erradas."
+              },
+              {
+                icon: Heart,
+                title: "3. Respeito à LGPD",
+                desc: "Você tem controle total. Pode acessar, corrigir ou excluir seus dados permanentemente a qualquer momento através das configurações do seu perfil."
+              }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="p-12 rounded-[48px] bg-white/[0.02] border border-white/5 hover:border-blue-500/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center shrink-0">
+                  <item.icon className="w-8 h-8 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-black text-white mb-4 tracking-tight uppercase">{item.title}</h3>
+                  <p className="text-xl text-blue-100/40 leading-relaxed font-medium">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+
+            <div className="mt-20 p-12 rounded-[48px] bg-blue-500/5 border border-blue-400/10 text-center">
+              <p className="text-sm font-black uppercase tracking-[0.2em] text-blue-400 mb-4">Última Atualização</p>
+              <p className="text-2xl font-bold text-white mb-8">{new Date().toLocaleDateString('pt-BR')}</p>
+              <p className="text-blue-100/40 font-medium">
+                Dúvidas sobre sua privacidade? Envie um e-mail para <a href="mailto:contato.bicobrasil@gmail.com" className="text-blue-400 hover:underline">privacidade@bicobrasil.com.br</a>
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
@@ -209,3 +103,4 @@ const Privacy = () => {
 };
 
 export default Privacy;
+
