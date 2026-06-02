@@ -78,11 +78,24 @@ export const SalesFooter = () => {
               A plataforma definitiva para quem trabalha e para quem resolve. Tecnologia feita para brasileiros de verdade.
             </p>
             <div className="flex gap-4">
-              {[Instagram, Facebook, Mail].map((Icon, i) => (
-                <a key={i} href="#" className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/40 hover:text-blue-400 transition-all duration-300">
-                  <Icon className="w-6 h-6" />
-                </a>
-              ))}
+              {[
+                { Icon: Instagram, href: "https://www.instagram.com/bicobrasil_" },
+                { Icon: Facebook, href: "https://www.facebook.com/profile.php?id=61584453683707" },
+                { Icon: Mail, href: "mailto:contato.bicobrasil@gmail.com" }
+              ].map(({ Icon, href }, i) => {
+                const isEmail = href.startsWith("mailto:");
+                return (
+                  <a
+                    key={i}
+                    href={href}
+                    target={isEmail ? undefined : "_blank"}
+                    rel={isEmail ? undefined : "noopener noreferrer"}
+                    className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/40 hover:text-blue-400 transition-all duration-300"
+                  >
+                    <Icon className="w-6 h-6" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
