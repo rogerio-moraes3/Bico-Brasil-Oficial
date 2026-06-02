@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, Briefcase, MapPin } from "lucide-react";
+import { Users, Briefcase, MapPin, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const PlatformStatsStrip = () => {
   const { data: stats } = useQuery({
@@ -32,38 +33,67 @@ export const PlatformStatsStrip = () => {
   const items = [
     {
       icon: Users,
-      value: stats?.workers !== undefined ? stats.workers : "—",
-      label: "trabalhadores",
+      value: stats?.workers !== undefined ? `${stats.workers}+` : "—",
+      label: "Profissionais",
+      color: "text-blue-400"
     },
     {
       icon: Briefcase,
-      value: stats?.services !== undefined ? stats.services : "—",
-      label: "serviços publicados",
+      value: stats?.services !== undefined ? `${stats.services}+` : "—",
+      label: "Serviços",
+      color: "text-emerald-400"
     },
     {
       icon: MapPin,
       value: stats?.cities !== undefined ? stats.cities : "—",
-      label: "cidades",
+      label: "Cidades",
+      color: "text-purple-400"
     },
   ];
 
   return (
-    <div className="w-full bg-[#f3f7fc]/80 dark:bg-muted/35 py-3 px-4">
-      <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5">
-        {/* Live indicator */}
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium" aria-hidden="true">
-          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="hidden sm:inline">Ao vivo</span>
-        </div>
-
-        {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <item.icon className="w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true" />
-            <span className="font-bold text-sm text-foreground">{item.value}</span>
-            <span>{item.label}</span>
+    <div className="w-full bg-[#080C14] border-y border-white/5 py-6 overflow-hidden relative group">
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="flex flex-wrap items-center justify-center md:justify-between gap-8 md:gap-12">
+          
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+            <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Plataforma Ativa</span>
           </div>
-        ))}
+
+          {items.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-4 group/item"
+            >
+              <div className={`p-2.5 rounded-xl bg-white/[0.03] border border-white/5 group-hover/item:border-white/20 transition-all duration-300 ${item.color}`}>
+                <item.icon className="w-4 h-4" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-black text-white tracking-tighter leading-none mb-1">
+                  {item.value}
+                </span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-blue-100/30">
+                  {item.label}
+                </span>
+              </div>
+            </motion.div>
+          ))}
+
+          <div className="hidden lg:flex items-center gap-2 text-[10px] font-black text-blue-100/20 uppercase tracking-widest">
+            <Sparkles className="w-3 h-3" />
+            <span>Dados em Tempo Real</span>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
+
