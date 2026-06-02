@@ -5,8 +5,9 @@ import { Footer } from "@/components/Footer";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Shield, Scale, FileText } from "lucide-react";
 import { safeGoBack } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 const Terms = () => {
   const navigate = useNavigate();
@@ -15,170 +16,117 @@ const Terms = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const sections = [
+    {
+      icon: Shield,
+      title: "1. Sobre o Bico Brasil",
+      content: "O Bico Brasil é uma plataforma que conecta contratantes e prestadores de serviço para trabalhos manuais em Presidente Prudente-SP e região."
+    },
+    {
+      icon: Scale,
+      title: "2. Responsabilidades",
+      content: (
+        <>
+          <p className="mb-4 text-blue-100/60"><strong>O Bico Brasil NÃO:</strong></p>
+          <ul className="list-disc pl-6 space-y-2 text-blue-100/40">
+            <li>Intermedia pagamentos entre contratantes e prestadores</li>
+            <li>Garante a qualidade ou execução dos serviços</li>
+            <li>É responsável por problemas decorrentes dos trabalhos realizados</li>
+            <li>Realiza verificação de antecedentes criminais (a menos que fornecido)</li>
+          </ul>
+        </>
+      )
+    },
+    {
+      icon: FileText,
+      title: "3. Cadastro e Uso",
+      content: (
+        <ul className="list-disc pl-6 space-y-2 text-blue-100/40">
+          <li>Ao se cadastrar, você concorda com estes Termos e nossa Política</li>
+          <li>Você é responsável por manter suas informações atualizadas</li>
+          <li>É proibido criar perfis falsos ou usar informações de terceiros</li>
+          <li>Você deve ter 18 anos ou mais para usar a plataforma</li>
+        </ul>
+      )
+    }
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col pb-20 md:pb-0 bg-background">
+    <div className="min-h-screen flex flex-col bg-[#080C14] text-white selection:bg-blue-500/30">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <Breadcrumbs />
-          <Button
-            variant="ghost"
-            onClick={() => safeGoBack(navigate)}
-            className="mb-4 text-[var(--nav-link)]"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4 text-[var(--nav-link)]" />
-          </Button>
-          <h1 className="text-4xl font-bold mb-8">Termos de Uso</h1>
+      <main className="flex-grow overflow-hidden">
+        {/* Hero Header */}
+        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 border-b border-white/5">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-blue-600/5 blur-[150px] rounded-full -translate-y-1/2" />
+          
+          <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Button
+                variant="ghost"
+                onClick={() => safeGoBack(navigate)}
+                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-xl font-bold flex items-center gap-2 group"
+              >
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                Voltar
+              </Button>
 
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>1. Sobre o Bico Brasil</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p>
-                O Bico Brasil é uma plataforma que conecta contratantes e prestadores de serviço
-                para trabalhos manuais em Presidente Prudente-SP e região.
+              <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
+                Termos de <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Uso.</span>
+              </h1>
+              <p className="text-xl text-blue-100/40 max-w-2xl font-medium leading-relaxed">
+                Leia atentamente as regras de utilização da nossa plataforma para garantir uma experiência segura para todos.
               </p>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>2. Responsabilidades</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p className="mb-4">
-                <strong>O Bico Brasil NÃO:</strong>
-              </p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Intermedia pagamentos entre contratantes e prestadores</li>
-                <li>Garante a qualidade ou execução dos serviços</li>
-                <li>É responsável por problemas decorrentes dos trabalhos realizados</li>
-                <li>Realiza verificação de antecedentes criminais (a menos que o usuário forneça)</li>
-              </ul>
-
-              <p className="mt-4 mb-4">
-                <strong>O contratante é responsável por:</strong>
-              </p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Escolher e negociar diretamente com o profissional</li>
-                <li>Verificar referências e avaliações antes de contratar</li>
-                <li>Acordar valores, prazos e condições de pagamento</li>
-                <li>Zelar pela própria segurança ao contratar serviços</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>3. Cadastro e Uso da Plataforma</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Ao se cadastrar, você concorda com estes Termos e nossa Política de Privacidade</li>
-                <li>Você é responsável por manter suas informações atualizadas</li>
-                <li>É proibido criar perfis falsos ou usar informações de terceiros</li>
-                <li>Você deve ter 18 anos ou mais para usar a plataforma</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>4. Plano Pro (Assinatura)</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Trabalhadores podem realizar até 3 trabalhos gratuitamente</li>
-                <li>Após 3 trabalhos, é necessário ativar o Plano Pro (R$ 19,90/mês)</li>
-                <li>O pagamento é processado por meio do Mercado Pago</li>
-                <li>Você pode cancelar a assinatura a qualquer momento</li>
-                <li>Perfis sem plano ativo ficarão ocultos nas buscas após 7 dias</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>5. Avaliações e Comentários</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Avaliações devem ser honestas e baseadas em experiências reais</li>
-                <li>Comentários ofensivos ou difamatórios serão removidos</li>
-                <li>O Bico Brasil se reserva o direito de moderar conteúdo inadequado</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>6. Limitação de Responsabilidade</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p>
-                O Bico Brasil atua apenas como intermediário de conexão. Qualquer problema,
-                disputa ou dano relacionado aos serviços contratados deve ser resolvido
-                diretamente entre as partes envolvidas.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>7. Alterações nos Termos</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none">
-              <p>
-                O Bico Brasil pode atualizar estes termos a qualquer momento. Continuando
-                a usar a plataforma, você concorda com as novas versões dos termos.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>8. Natureza da Plataforma e Isenção de Vínculo</CardTitle>
-            </CardHeader>
-            <CardContent className="prose prose-sm max-w-none space-y-4">
-              <p>
-                O Bico Brasil atua apenas como plataforma de intermediação entre prestadores de serviços
-                (pessoas físicas ou jurídicas autônomas) e contratantes.
-              </p>
-              <p>
-                A utilização do Bico Brasil não constitui vínculo empregatício, societário, de subordinação
-                ou qualquer relação de trabalho entre a plataforma e o prestador de serviços.
-              </p>
-              <p>
-                O prestador é responsável pela execução correta do serviço, e o contratante é responsável
-                pelo pagamento, aceitabilidade do serviço e avaliação.
-              </p>
-              <p>
-                A plataforma presta serviço técnico-operacional de divulgação, conexão e pagamento
-                (quando aplicável), não assumindo responsabilidade direta por eventuais falhas técnicas,
-                danos causados por terceiros ou acordos financeiros privados celebrados entre usuários.
-              </p>
-              <p>
-                Em casos de disputa entre contratante e prestador, a plataforma atua como canal de
-                comunicação e disponibiliza registros e avaliações, mas não substitui acordos privados
-                e não responde por obrigações trabalhistas entre as partes.
-              </p>
-            </CardContent>
-          </Card>
-
-          <div className="mt-8 p-6 bg-muted rounded-lg">
-            <p className="text-sm text-center">
-              <strong>Última atualização:</strong> {new Date().toLocaleDateString('pt-BR')}
-            </p>
-            <p className="text-sm text-center mt-2 text-muted-foreground">
-              Para dúvidas, entre em contato: <a href="mailto:contato.bicobrasil@gmail.com" className="text-primary hover:underline">contato.bicobrasil@gmail.com</a>
-            </p>
-            <p className="text-xs text-center mt-2 text-muted-foreground">
-              Base legal: Lei nº 13.709/2018 (LGPD) e Lei nº 12.965/2014 (Marco Civil da Internet)
-            </p>
+            </motion.div>
           </div>
-        </div>
+        </section>
+
+        <section className="py-24 md:py-32 max-w-5xl mx-auto px-6">
+          <div className="grid gap-8">
+            {/* Sections using glassmorphism cards */}
+            <div className="grid gap-8">
+              {[
+                {
+                  title: "1. Natureza da Plataforma",
+                  desc: "O Bico Brasil atua apenas como plataforma de intermediação entre prestadores de serviços autônomos e contratantes. Não constituímos vínculo empregatício ou societário."
+                },
+                {
+                  title: "2. Responsabilidades do Usuário",
+                  desc: "O contratante é responsável por escolher e negociar diretamente com o profissional. O prestador é responsável pela execução correta do serviço acordado."
+                },
+                {
+                  title: "3. Planos e Assinaturas",
+                  desc: "Trabalhadores podem realizar até 3 trabalhos gratuitamente. Após isso, é necessário ativar o Plano Profissional para manter a visibilidade do perfil."
+                }
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-10 rounded-[40px] bg-white/[0.02] border border-white/5 hover:border-blue-500/20 transition-colors"
+                >
+                  <h3 className="text-2xl font-black text-white mb-6 uppercase tracking-tight">{item.title}</h3>
+                  <p className="text-lg text-blue-100/40 leading-relaxed font-medium">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-20 p-12 rounded-[40px] bg-blue-500/5 border border-blue-400/10 text-center">
+              <p className="text-sm font-black uppercase tracking-[0.2em] text-blue-400 mb-4">Última Atualização</p>
+              <p className="text-2xl font-bold text-white mb-8">{new Date().toLocaleDateString('pt-BR')}</p>
+              <p className="text-blue-100/40 font-medium">
+                Dúvidas sobre os termos? Envie um e-mail para <a href="mailto:contato.bicobrasil@gmail.com" className="text-blue-400 hover:underline">contato.bicobrasil@gmail.com</a>
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
@@ -187,3 +135,4 @@ const Terms = () => {
 };
 
 export default Terms;
+
