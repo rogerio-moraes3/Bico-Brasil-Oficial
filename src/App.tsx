@@ -16,6 +16,7 @@ import { NotificationPrompt } from "./components/NotificationPrompt";
 import { AdminIcon } from "./components/AdminIcon";
 import { SplashScreen } from "./components/SplashScreen";
 import { Gatekeeper } from "./components/Gatekeeper";
+import { BeforeInstallPromptEvent, setDeferredPwaPrompt } from "@/lib/pwaPrompt";
 import Index from "./pages/Index";
 import SalesLandingPage from "./pages/SalesLandingPage";
 import Home from "./pages/Home";
@@ -66,12 +67,38 @@ function App() {
   });
 
   useEffect(() => {
-    // NUCLEAR FIX: No offline persistence, no cache resurrection
-    // Site is 100% dependent on real-time Supabase data
+    // CENTRAL PWA CAPTURE: Handle beforeinstallprompt at app level to prevent conflicts
+    const handleBeforeInstallPrompt = (e: any) => {
+      // Prevent default behavior
+      e.preventDefault();
+      console.log('✅ [APP LEVEL] beforeinstallprompt captured - stored globally');
+      
+      // Store globally for all components to access
+      setDeferredPwaPrompt(e);
+      
+      // Dispatch custom event to notify components
+      window.dispatchEvent(new CustomEvent('pwa-prompt-available'));
+    };
+
+    // Listen for app install
+    const handleAppInstalled = () => {
+      console.log('✅ App installed successfully');
+      setDeferredPwaPrompt(null);
+      window.dispatchEvent(new CustomEvent('pwa-installed'));
+    };
+
+    // Register listeners at app level ONLY (before components mount)
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
   }, []);
 
-  // CRITICAL FIX: Detect auth errors from URL to prevent login loops
   useEffect(() => {
+    // CRITICAL FIX: Detect auth errors from URL to prevent login loops
     const params = new URLSearchParams(window.location.search);
     const error = params.get('error');
     const errorDescription = params.get('error_description');

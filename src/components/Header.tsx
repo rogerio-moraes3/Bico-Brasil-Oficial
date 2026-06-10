@@ -40,31 +40,40 @@ export const Header = () => {
       setShowInstallButton(!mediaQuery.matches);
       if (mediaQuery.matches) {
         setDeferredPrompt(null);
-        clearDeferredPwaPrompt(); // Clear global
+        clearDeferredPwaPrompt();
       }
     };
     updateDisplayMode();
 
-    const handler = (e: any) => {
-      e.preventDefault();
-      setDeferredPwaPrompt(e); // Save globally
-      setDeferredPrompt(e);
-      setShowInstallButton(true);
+    // Listen to custom event from App.tsx instead of beforeinstallprompt
+    const handlePwaPromptAvailable = () => {
+      const prompt = getDeferredPwaPrompt();
+      if (prompt && !window.matchMedia('(display-mode: standalone)').matches) {
+        setDeferredPrompt(prompt);
+        setShowInstallButton(true);
+      }
     };
 
-    const handleInstalled = () => {
+    const handleAppInstalled = () => {
       setShowInstallButton(false);
       setDeferredPrompt(null);
-      clearDeferredPwaPrompt(); // Clear global
+      clearDeferredPwaPrompt();
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
-    window.addEventListener('appinstalled', handleInstalled);
+    window.addEventListener('pwa-prompt-available', handlePwaPromptAvailable);
+    window.addEventListener('appinstalled', handleAppInstalled);
     mediaQuery.addEventListener('change', updateDisplayMode);
 
+    // Check if prompt is already available
+    const existingPrompt = getDeferredPwaPrompt();
+    if (existingPrompt && !mediaQuery.matches) {
+      setDeferredPrompt(existingPrompt);
+      setShowInstallButton(true);
+    }
+
     return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
-      window.removeEventListener('appinstalled', handleInstalled);
+      window.removeEventListener('pwa-prompt-available', handlePwaPromptAvailable);
+      window.removeEventListener('appinstalled', handleAppInstalled);
       mediaQuery.removeEventListener('change', updateDisplayMode);
     };
   }, []);

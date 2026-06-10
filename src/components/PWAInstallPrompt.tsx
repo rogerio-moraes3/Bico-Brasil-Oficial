@@ -24,32 +24,41 @@ export const PWAInstallPrompt = () => {
   };
 
   useEffect(() => {
-    let timeoutId: number | undefined;
+    // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setShowPrompt(false);
       return;
     }
-    const handler = (e: BeforeInstallPromptEvent) => {
-      e.preventDefault();
-      console.log('✅ PWA Install Prompt captured!', e);
-      setDeferredPwaPrompt(e); // Save globally
-      setDeferredPrompt(e);
 
-      // Check if user dismissed before
-      const dismissed = localStorage.getItem('pwa-dismissed');
-      const dismissedDate = dismissed ? new Date(dismissed) : null;
-      const now = new Date();
+    let timeoutId: number | undefined;
 
-      // Show if never dismissed or dismissed more than 7 days ago
-      if (!dismissedDate || (now.getTime() - dismissedDate.getTime()) > 7 * 24 * 60 * 60 * 1000) {
-        // Show after 3 seconds
-        timeoutId = window.setTimeout(() => setShowPrompt(true), 3000);
+    // Handle custom PWA event from App.tsx (central capture)
+    const handlePwaPromptAvailable = () => {
+      const prompt = getDeferredPwaPrompt();
+      if (prompt) {
+        console.log('✅ [PWA Prompt] Event received, preparing to show');
+        setDeferredPrompt(prompt);
+
+        // Check if user dismissed before
+        const dismissed = localStorage.getItem('pwa-dismissed');
+        const dismissedDate = dismissed ? new Date(dismissed) : null;
+        const now = new Date();
+
+        // Show if never dismissed or dismissed more than 7 days ago
+        if (!dismissedDate || (now.getTime() - dismissedDate.getTime()) > 7 * 24 * 60 * 60 * 1000) {
+          timeoutId = window.setTimeout(() => {
+            console.log('✅ [PWA Prompt] Showing install prompt');
+            setShowPrompt(true);
+          }, 3000);
+        }
       }
     };
-    const handleInstalled = () => {
+
+    const handleAppInstalled = () => {
+      console.log('✅ [PWA Prompt] App installed event received');
       setShowPrompt(false);
       setDeferredPrompt(null);
-      clearDeferredPwaPrompt(); // Clear global
+      clearDeferredPwaPrompt();
       localStorage.removeItem('pwa-dismissed');
     };
 
@@ -59,21 +68,27 @@ export const PWAInstallPrompt = () => {
       if (prompt) {
         handleInstall();
       } else {
-        // Fallback: navigate to install page with instructions
         window.location.href = '/install-app';
       }
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
-    window.addEventListener('appinstalled', handleInstalled);
+    // Listen to custom events dispatched from App.tsx
+    window.addEventListener('pwa-prompt-available', handlePwaPromptAvailable);
+    window.addEventListener('pwa-installed', handleAppInstalled);
     window.addEventListener('show-pwa-prompt', handleCustomPrompt);
+
+    // Also trigger if prompt is already available (app loaded after PWA event)
+    const existingPrompt = getDeferredPwaPrompt();
+    if (existingPrompt && !window.matchMedia('(display-mode: standalone)').matches) {
+      handlePwaPromptAvailable();
+    }
 
     return () => {
       if (timeoutId) {
         window.clearTimeout(timeoutId);
       }
-      window.removeEventListener('beforeinstallprompt', handler);
-      window.removeEventListener('appinstalled', handleInstalled);
+      window.removeEventListener('pwa-prompt-available', handlePwaPromptAvailable);
+      window.removeEventListener('pwa-installed', handleAppInstalled);
       window.removeEventListener('show-pwa-prompt', handleCustomPrompt);
     };
   }, [deferredPrompt]);

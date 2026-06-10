@@ -29,7 +29,7 @@ export const SalesHeroSection = () => {
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-[72px] font-black leading-[1.1] tracking-tight mb-8 text-white">
-              O jeito mais <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">direto</span> de resolver sua vida.
+              O jeito mais <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">rápido</span> de resolver sua vida.
             </h1>
 
             {/* Description */}
