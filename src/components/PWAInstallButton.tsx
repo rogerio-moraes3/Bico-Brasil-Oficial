@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Download } from 'lucide-react';
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-};
+import { BeforeInstallPromptEvent, getDeferredPwaPrompt } from '@/lib/pwaPrompt';
 
 export const PWAInstallButton = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(getDeferredPwaPrompt());
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
@@ -21,23 +17,34 @@ export const PWAInstallButton = () => {
     };
     updateDisplayMode();
 
-    const handler = (e: BeforeInstallPromptEvent) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowButton(true);
+    // Listen to custom event from App.tsx
+    const handlePwaPromptAvailable = () => {
+      const prompt = getDeferredPwaPrompt();
+      if (prompt && !window.matchMedia('(display-mode: standalone)').matches) {
+        setDeferredPrompt(prompt);
+        setShowButton(true);
+      }
     };
 
-    const handleInstalled = () => {
+    const handleAppInstalled = () => {
       setShowButton(false);
       setDeferredPrompt(null);
     };
-    window.addEventListener('beforeinstallprompt', handler);
-    window.addEventListener('appinstalled', handleInstalled);
+
+    window.addEventListener('pwa-prompt-available', handlePwaPromptAvailable);
+    window.addEventListener('appinstalled', handleAppInstalled);
     mediaQuery.addEventListener('change', updateDisplayMode);
 
+    // Check if prompt is already available
+    const existingPrompt = getDeferredPwaPrompt();
+    if (existingPrompt && !mediaQuery.matches) {
+      setDeferredPrompt(existingPrompt);
+      setShowButton(true);
+    }
+
     return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
-      window.removeEventListener('appinstalled', handleInstalled);
+      window.removeEventListener('pwa-prompt-available', handlePwaPromptAvailable);
+      window.removeEventListener('appinstalled', handleAppInstalled);
       mediaQuery.removeEventListener('change', updateDisplayMode);
     };
   }, []);

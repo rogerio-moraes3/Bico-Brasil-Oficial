@@ -13,18 +13,21 @@ export default function InstallApp() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const handler = (e: BeforeInstallPromptEvent) => {
-      e.preventDefault();
-      setDeferredPwaPrompt(e); // Save globally
-      setDeferredPrompt(e);
+    const handlePwaPromptAvailable = () => {
+      const prompt = getDeferredPwaPrompt();
+      if (prompt && !window.matchMedia('(display-mode: standalone)').matches) {
+        setDeferredPrompt(prompt);
+      }
     };
 
     const onInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
-      clearDeferredPwaPrompt(); // Clear global
+      clearDeferredPwaPrompt();
     };
-    window.addEventListener('beforeinstallprompt', handler);
+
+    // Listen to custom events from App.tsx
+    window.addEventListener('pwa-prompt-available', handlePwaPromptAvailable);
     window.addEventListener('appinstalled', onInstalled);
 
     // Check if already installed
@@ -32,8 +35,14 @@ export default function InstallApp() {
       setIsInstalled(true);
     }
 
+    // Also check if prompt is already available
+    const existingPrompt = getDeferredPwaPrompt();
+    if (existingPrompt) {
+      setDeferredPrompt(existingPrompt);
+    }
+
     return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('pwa-prompt-available', handlePwaPromptAvailable);
       window.removeEventListener('appinstalled', onInstalled);
     };
   }, []);

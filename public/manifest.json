@@ -8,7 +8,7 @@
   "theme_color": "#0D6CD7",
   "orientation": "portrait-primary",
   "scope": "/",
-  "id": "/?source=pwa",
+  "id": "/app/bico-brasil",
   "categories": [
     "business",
     "productivity",
@@ -18,7 +18,8 @@
     {
       "src": "/icons/icon-72x72.png",
       "sizes": "72x72",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icons/icon-192x192.png",
@@ -29,7 +30,8 @@
     {
       "src": "/icons/icon-384x384.png",
       "sizes": "384x384",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icons/icon-512x512.png",
@@ -41,8 +43,9 @@
   "screenshots": [
     {
       "src": "/icons/icon-512x512.png",
-      "sizes": "540x720",
-      "type": "image/png"
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ]
 }
