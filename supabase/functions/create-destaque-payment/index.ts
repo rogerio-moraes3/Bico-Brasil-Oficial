@@ -76,6 +76,21 @@ serve(async (req) => {
 
     // PIX é o único método de pagamento aceito (hardcoded no payment_method_id abaixo)
 
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('users')
+      .select('id, email, name')
+      .eq('auth_id', user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('Erro ao buscar perfil:', profileError);
+      throw new Error(`Erro ao buscar perfil: ${profileError.message}`);
+    }
+
+    if (!profile) {
+      throw new Error(`Perfil não encontrado para auth_id: ${user.id}`);
+    }
+
     if (!payer?.cpf) {
       throw new Error('CPF é obrigatório');
     }
@@ -103,7 +118,7 @@ serve(async (req) => {
     const { data: order, error: orderError } = await supabaseClient
       .from('destaque_orders')
       .insert({
-        user_id: user.id,
+        user_id: profile.id,
         days: days,
         amount: amount,
         status: 'pending'
