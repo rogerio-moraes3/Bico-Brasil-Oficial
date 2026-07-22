@@ -135,8 +135,7 @@ serve(async (req) => {
 
         await supabaseClient.from('destaque_orders').update({
           status: 'paid',
-          payment_id: paymentId,
-          paid_at: new Date().toISOString(),
+          mercadopago_payment_id: paymentId,
         }).eq('id', order.id);
 
         // Atualizar perfil do usuário com destaque
@@ -149,7 +148,7 @@ serve(async (req) => {
       } else if (payment.status === 'rejected' || payment.status === 'cancelled') {
         await supabaseClient.from('destaque_orders').update({
           status: 'failed',
-          payment_id: paymentId,
+          mercadopago_payment_id: paymentId,
         }).eq('id', order.id);
 
         console.debug('❌ Pagamento rejeitado/cancelado');

@@ -132,6 +132,7 @@ serve(async (req) => {
       description: `Anúncio Destaque - ${days} dias`,
       payment_method_id: 'pix',
       external_reference: order.id,
+      notification_url: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mercadopago-destaque-webhook`,
       payer: {
         email: user.email || 'cliente@exemplo.com',
         first_name: payer.name || 'Cliente',
@@ -172,7 +173,7 @@ serve(async (req) => {
     await supabaseClient
       .from('destaque_orders')
       .update({
-        payment_id: mpData.id,
+        mercadopago_payment_id: mpData.id,
         status: 'in_process'
       })
       .eq('id', order.id);
