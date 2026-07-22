@@ -39,36 +39,45 @@ const handler = async (req: Request): Promise<Response> => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
-    if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid authentication token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // Chamadas internas (outras Edge Functions, como os webhooks de pagamento) se
+    // autenticam com a própria service role key — não existe usuário por trás
+    // dessas chamadas, então tratamos como confiáveis e pulamos a checagem de
+    // "destinatário = usuário do token" mais abaixo.
+    const isServiceRoleCall = token === supabaseKey;
 
     const { to, subject, type, data }: EmailRequest = await req.json();
 
-    // SECURITY: Validate that the recipient matches the authenticated user's email
-    const { data: profile, error: profileError } = await supabase
-      .from('users')
-      .select('email')
-      .eq('auth_id', user.id)
-      .single();
+    if (!isServiceRoleCall) {
+      const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
-    if (profileError || !profile) {
-      return new Response(
-        JSON.stringify({ error: 'User profile not found' }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+      if (authError || !user) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid authentication token' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
 
-    if (to !== profile.email && to !== user.email) {
-      return new Response(
-        JSON.stringify({ error: 'Forbidden - Can only send emails to your own email address' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      // SECURITY: Validate that the recipient matches the authenticated user's email
+      const { data: profile, error: profileError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('auth_id', user.id)
+        .single();
+
+      if (profileError || !profile) {
+        return new Response(
+          JSON.stringify({ error: 'User profile not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (to !== profile.email && to !== user.email) {
+        return new Response(
+          JSON.stringify({ error: 'Forbidden - Can only send emails to your own email address' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
 

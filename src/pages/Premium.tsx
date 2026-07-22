@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { PlanCheckoutModal } from '@/components/PlanCheckoutModal';
 import { DestaqueButton } from '@/components/DestaqueButton';
+import { supabase } from '@/integrations/supabase/client';
 import { Check, Star, Zap, TrendingUp, Shield, Award, Users, MessageCircle, Eye, Crown, Trophy, ArrowLeft, Sparkles, Rocket } from 'lucide-react';
 import { safeGoBack } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -15,10 +16,48 @@ export default function Premium() {
   const navigate = useNavigate();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<{ type: 'basico' | 'vip' | 'anual', amount: number, name: string } | null>(null);
+  const [currentSubscription, setCurrentSubscription] = useState<{ active: boolean; planType: string | null; subscriptionEnd: string | null } | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setCurrentSubscription(null);
+      return;
+    }
+
+    const loadSubscriptionStatus = async () => {
+      const { data } = await supabase
+        .from('users')
+        .select('plan_active, plan_type, subscription_end')
+        .eq('auth_id', user.id)
+        .maybeSingle();
+
+      const isActive = !!data?.plan_active && (!data.subscription_end || new Date(data.subscription_end) > new Date());
+      setCurrentSubscription({
+        active: isActive,
+        planType: data?.plan_type ?? null,
+        subscriptionEnd: data?.subscription_end ?? null,
+      });
+    };
+
+    loadSubscriptionStatus();
+  }, [user]);
+
+  const handlePlanClick = (plan: { type: 'basico' | 'vip' | 'anual', amount: number, name: string }) => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    if (currentSubscription?.active) {
+      navigate('/profile');
+      return;
+    }
+    setSelectedPlan(plan);
+    setCheckoutOpen(true);
+  };
 
   const planoBasico = [
     { icon: Eye, text: "Perfil visível em todas as buscas" },
@@ -76,6 +115,24 @@ export default function Premium() {
           </div>
         </section>
 
+        {/* Aviso de assinatura já ativa */}
+        {currentSubscription?.active && (
+          <section className="max-w-4xl mx-auto px-6 -mt-8 mb-16 relative z-10">
+            <div className="rounded-3xl border border-emerald-400/30 bg-emerald-500/10 backdrop-blur-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p className="text-emerald-300 font-black text-sm uppercase tracking-widest mb-1">Assinatura ativa</p>
+                <p className="text-white font-bold text-lg">
+                  Você já é assinante{currentSubscription.planType ? ` do plano ${currentSubscription.planType === 'vip' ? 'VIP' : currentSubscription.planType === 'anual' ? 'Anual' : 'Premium'}` : ''}
+                  {currentSubscription.subscriptionEnd && ` — válido até ${new Date(currentSubscription.subscriptionEnd).toLocaleDateString('pt-BR')}`}
+                </p>
+              </div>
+              <Button onClick={() => navigate('/profile')} className="bg-emerald-500 hover:bg-emerald-600 text-black font-black shrink-0">
+                Gerenciar Assinatura
+              </Button>
+            </div>
+          </section>
+        )}
+
         {/* Pricing Grid */}
         <section className="pb-32 md:pb-48 relative">
           <div className="max-w-7xl mx-auto px-6">
@@ -112,7 +169,7 @@ export default function Premium() {
                 </ul>
 
                 <button 
-                  onClick={() => { if (user) { setSelectedPlan({ type: 'basico', amount: 19.90, name: 'Premium' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}
+                  onClick={() => handlePlanClick({ type: 'basico', amount: 19.90, name: 'Premium' })}
                   className="w-full py-6 bg-white/5 hover:bg-white/10 text-white font-black text-xl rounded-[24px] border border-white/10 transition-all active:scale-95"
                 >
                    Assinar Agora
@@ -157,7 +214,7 @@ export default function Premium() {
                 </ul>
 
                 <button 
-                  onClick={() => { if (user) { setSelectedPlan({ type: 'vip', amount: 29.90, name: 'VIP' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}
+                  onClick={() => handlePlanClick({ type: 'vip', amount: 29.90, name: 'VIP' })}
                   className="w-full py-6 bg-white text-black hover:bg-zinc-500 font-black text-2xl rounded-[24px] shadow-[0_20px_40px_rgba(255,255,255,0.15)] transition-all hover:scale-110 active:scale-95"
                 >
                    Ser VIP Agora
@@ -200,7 +257,7 @@ export default function Premium() {
                 </ul>
 
                 <button 
-                  onClick={() => { if (user) { setSelectedPlan({ type: 'anual', amount: 249.90, name: 'Anual' }); setCheckoutOpen(true); } else { navigate('/auth'); } }}
+                  onClick={() => handlePlanClick({ type: 'anual', amount: 249.90, name: 'Anual' })}
                   className="w-full py-6 bg-white/5 hover:bg-white/10 text-white font-black text-xl rounded-[24px] border border-white/10 transition-all active:scale-95"
                 >
                    Assinar Anual
