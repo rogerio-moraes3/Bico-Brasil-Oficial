@@ -261,116 +261,87 @@ serve(async (req) => {
 
       // Enviar sequência completa de emails transacionais
       if (userData?.email) {
-        try {
-          const appUrl = Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '.lovable.app') || 'https://bicobrasil.com.br';
-          const emailBaseUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`;
-          const emailHeaders = {
-            "Content-Type": "application/json",
-            "apikey": Deno.env.get("SUPABASE_ANON_KEY") || "",
-          };
+        const appUrl = Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '.lovable.app') || 'https://bicobrasil.com.br';
+        const emailBaseUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`;
+        const emailHeaders = {
+          "Content-Type": "application/json",
+          "apikey": Deno.env.get("SUPABASE_ANON_KEY") || "",
+          "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || ""}`,
+        };
 
-          // 1. Confirmação de Pagamento Aprovado (imediato)
-          console.debug("📧 [1/4] Enviando confirmação de pagamento...");
-          await fetch(emailBaseUrl, {
-            method: "POST",
-            headers: emailHeaders,
-            body: JSON.stringify({
-              to: userData.email,
-              subject: "✅ Pagamento Aprovado - Bico Brasil",
-              type: "payment_approved",
-              data: {
-                userName: userData.name || 'Usuário',
-                planName: planType === 'basico' ? 'Plano Básico' : planType === 'vip' ? 'Plano VIP' : 'Plano Anual',
-                amount: mpData.transaction_amount || payment.amount,
-                subscriptionStart: now.toLocaleDateString('pt-BR'),
-                subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-                profileUrl: `${appUrl}/profile`,
-              },
-            }),
-          });
-          console.debug("✅ [1/4] Email de confirmação enviado");
-
-          // 2. Recibo Profissional (após 3 segundos)
-          setTimeout(async () => {
-            try {
-              console.debug("📧 [2/4] Enviando recibo...");
-              await fetch(emailBaseUrl, {
-                method: "POST",
-                headers: emailHeaders,
-                body: JSON.stringify({
-                  to: userData.email,
-                  subject: "🧾 Recibo de Pagamento - Bico Brasil",
-                  type: "payment_receipt",
-                  data: {
-                    name: userData.name || 'Usuário',
-                    planName: planType === 'basico' ? 'Plano Básico' : planType === 'vip' ? 'Plano VIP' : 'Plano Anual',
-                    amount: mpData.transaction_amount || payment.amount,
-                    paymentId: mpData.id || paymentId,
-                    paymentDate: now.toLocaleDateString('pt-BR'),
-                    subscriptionStart: now.toLocaleDateString('pt-BR'),
-                    subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-                    profileUrl: `${appUrl}/profile`,
-                  },
-                }),
-              });
-              console.debug("✅ [2/4] Recibo enviado");
-            } catch (err) {
-              console.error("⚠️ Erro ao enviar recibo (não fatal):", err);
+        const sendTransactionalEmail = async (label: string, payload: Record<string, unknown>) => {
+          try {
+            console.debug(`📧 Enviando ${label}...`);
+            const res = await fetch(emailBaseUrl, {
+              method: "POST",
+              headers: emailHeaders,
+              body: JSON.stringify(payload),
+            });
+            if (!res.ok) {
+              const text = await res.text();
+              console.error(`❌ Falha ao enviar ${label} (status ${res.status}):`, text);
+            } else {
+              console.debug(`✅ ${label} enviado`);
             }
-          }, 3000);
+          } catch (err) {
+            console.error(`❌ Erro ao enviar ${label}:`, err);
+          }
+        };
 
-          // 3. Liberação de Acesso (após 6 segundos)
-          setTimeout(async () => {
-            try {
-              console.debug("📧 [3/4] Enviando liberação de acesso...");
-              await fetch(emailBaseUrl, {
-                method: "POST",
-                headers: emailHeaders,
-                body: JSON.stringify({
-                  to: userData.email,
-                  subject: "🎉 Seu Plano Foi Ativado - Bico Brasil",
-                  type: "plan_activated",
-                  data: {
-                    name: userData.name || 'Usuário',
-                    planName: planType === 'basico' ? 'Plano Básico' : planType === 'vip' ? 'Plano VIP' : 'Plano Anual',
-                    subscriptionStart: now.toLocaleDateString('pt-BR'),
-                    subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-                    profileUrl: `${appUrl}/profile`,
-                  },
-                }),
-              });
-              console.debug("✅ [3/4] Email de liberação enviado");
-            } catch (err) {
-              console.error("⚠️ Erro ao enviar liberação (não fatal):", err);
-            }
-          }, 6000);
+        const planLabel = planType === 'basico' ? 'Plano Básico' : planType === 'vip' ? 'Plano VIP' : 'Plano Anual';
 
-          // 4. Boas-Vindas (após 10 segundos)
-          setTimeout(async () => {
-            try {
-              console.debug("📧 [4/4] Enviando boas-vindas...");
-              await fetch(emailBaseUrl, {
-                method: "POST",
-                headers: emailHeaders,
-                body: JSON.stringify({
-                  to: userData.email,
-                  subject: "👋 Bem-vindo ao Bico Brasil - Comece Agora!",
-                  type: "welcome",
-                  data: {
-                    name: userData.name || 'Usuário',
-                    profileUrl: `${appUrl}/profile`,
-                  },
-                }),
-              });
-              console.debug("✅ [4/4] Email de boas-vindas enviado");
-            } catch (err) {
-              console.error("⚠️ Erro ao enviar boas-vindas (não fatal):", err);
-            }
-          }, 10000);
+        await sendTransactionalEmail("confirmação de pagamento", {
+          to: userData.email,
+          subject: "✅ Pagamento Aprovado - Bico Brasil",
+          type: "payment_approved",
+          data: {
+            userName: userData.name || 'Usuário',
+            planName: planLabel,
+            amount: mpData.transaction_amount || payment.amount,
+            subscriptionStart: now.toLocaleDateString('pt-BR'),
+            subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
+            profileUrl: `${appUrl}/profile`,
+          },
+        });
 
-        } catch (emailErr) {
-          console.error("⚠️ Erro geral no envio de emails (não fatal):", emailErr);
-        }
+        await sendTransactionalEmail("recibo", {
+          to: userData.email,
+          subject: "🧾 Recibo de Pagamento - Bico Brasil",
+          type: "payment_receipt",
+          data: {
+            name: userData.name || 'Usuário',
+            planName: planLabel,
+            amount: mpData.transaction_amount || payment.amount,
+            paymentId: mpData.id || paymentId,
+            paymentDate: now.toLocaleDateString('pt-BR'),
+            subscriptionStart: now.toLocaleDateString('pt-BR'),
+            subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
+            profileUrl: `${appUrl}/profile`,
+          },
+        });
+
+        await sendTransactionalEmail("liberação de acesso", {
+          to: userData.email,
+          subject: "🎉 Seu Plano Foi Ativado - Bico Brasil",
+          type: "plan_activated",
+          data: {
+            name: userData.name || 'Usuário',
+            planName: planLabel,
+            subscriptionStart: now.toLocaleDateString('pt-BR'),
+            subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
+            profileUrl: `${appUrl}/profile`,
+          },
+        });
+
+        await sendTransactionalEmail("boas-vindas", {
+          to: userData.email,
+          subject: "👋 Bem-vindo ao Bico Brasil - Comece Agora!",
+          type: "welcome",
+          data: {
+            name: userData.name || 'Usuário',
+            profileUrl: `${appUrl}/profile`,
+          },
+        });
       }
 
       // Criar notificação para o usuário
