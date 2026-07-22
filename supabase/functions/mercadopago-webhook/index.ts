@@ -199,8 +199,7 @@ serve(async (req) => {
       .from('payments')
       .update({
         status: newStatus,
-        webhook_response: mpData,
-        updated_at: new Date().toISOString()
+        raw: mpData
       })
       .eq('id', payment.id);
 
@@ -214,9 +213,9 @@ serve(async (req) => {
       console.debug('🎉 ========== PAGAMENTO APROVADO ==========');
       console.debug('👤 Usuário ID:', payment.user_id);
       console.debug('💰 Valor:', mpData.transaction_amount);
-      console.debug('📦 Plano:', payment.plan_type || 'basico');
+      console.debug('📦 Plano:', mpData.metadata?.plan_type || 'basico');
 
-      const planType = payment.plan_type || 'basico';
+      const planType = mpData.metadata?.plan_type || 'basico';
       const now = new Date();
 
       // Calcular duração baseada no plano

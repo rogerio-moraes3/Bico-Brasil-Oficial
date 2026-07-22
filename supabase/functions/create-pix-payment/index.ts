@@ -367,6 +367,24 @@ serve(async (req) => {
         });
       }
 
+      // Gravar o ID do pagamento no Mercado Pago e os dados do QR code de volta em `payments`.
+      // Sem isso, o webhook nunca consegue localizar essa linha quando a notificação chegar.
+      const { error: updatePixError } = await supabaseClient
+        .from("payments")
+        .update({
+          mercadopago_payment_id: pixData.id?.toString(),
+          qr_code: pixData.point_of_interaction?.transaction_data?.qr_code || null,
+          qr_code_base64: pixData.point_of_interaction?.transaction_data?.qr_code_base64 || null,
+          method: "pix",
+        })
+        .eq("id", payment.id);
+
+      if (updatePixError) {
+        console.error("❌ Erro ao gravar mercadopago_payment_id em payments:", updatePixError);
+      } else {
+        console.debug("✅ mercadopago_payment_id gravado:", pixData.id);
+      }
+
       // Enviar email com QR Code PIX
       try {
         console.debug("📧 Enviando email com QR Code PIX...");

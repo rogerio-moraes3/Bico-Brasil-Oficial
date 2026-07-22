@@ -360,6 +360,7 @@ export function PlanCheckoutModal({
 
       {qrCodeData && (
         <PixQRCodeModal
+          key={qrCodeData.payment_id}
           open={showQRModal}
           onOpenChange={handleCloseQRModal}
           qrCode={qrCodeData.qr_code}
