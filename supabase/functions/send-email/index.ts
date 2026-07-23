@@ -411,7 +411,7 @@ const handler = async (req: Request): Promise<Response> => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Bico Brasil <onboarding@resend.dev>',
+        from: 'Bico Brasil <naoresponda@bicobrasil.com.br>',
         to: [to],
         subject: subject,
         html: html,

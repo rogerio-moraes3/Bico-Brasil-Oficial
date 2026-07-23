@@ -13,7 +13,7 @@ export const FeaturedServicesSection = () => {
     queryKey: ['featured-workers-home'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('users')
+        .from('users_public')
         .select('*')
         .eq('type', 'worker')
         .eq('plan_active', true)
