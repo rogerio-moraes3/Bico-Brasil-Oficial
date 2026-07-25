@@ -7,10 +7,7 @@ export const SalesHeroSection = () => {
 
   return (
     <section className="w-full bg-[#080C14] overflow-hidden">
-      <div className="relative w-full bg-gradient-to-br from-[#0B1C2E] via-[#0D1B35] to-[#1E5EFF]/20">
-        {/* Background Decorative Element */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/4" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/4" />
+      <div className="relative w-full bg-[#0B0F17]">
 
         {/* HERO */}
         <div className="max-w-7xl mx-auto px-6 lg:px-16 pt-24 pb-32 grid lg:grid-cols-2 gap-16 items-center relative z-10">
@@ -22,26 +19,26 @@ export const SalesHeroSection = () => {
             transition={{ duration: 0.6 }}
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-8 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-10 backdrop-blur-sm">
               <Sparkles className="w-3 h-3" />
               <span>Contrate rápido • Encontre trabalho • Sem intermediários</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-[72px] font-black leading-[1.1] tracking-tight mb-8 text-white">
-              Precisa <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">contratar</span> alguém? Ou quer <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">ganhar dinheiro</span> hoje?
+              Precisa <span className="text-blue-400">contratar</span> alguém? Ou quer <span className="text-blue-400">ganhar dinheiro</span> hoje?
             </h1>
 
             {/* Description */}
-            <p className="text-lg lg:text-xl text-blue-100/70 mb-10 max-w-xl leading-relaxed">
+            <p className="text-lg lg:text-xl text-blue-100/70 mb-12 max-w-xl leading-relaxed">
               Encontre um profissional da sua cidade ou divulgue seus serviços para conseguir novos clientes. Tudo com contato direto, sem comissão e sem burocracia.
             </p>
 
             {/* Buttons */}
-            <div className="flex gap-4 mb-10 flex-wrap">
+            <div className="flex gap-4 mb-12 flex-wrap">
               <button
                 onClick={() => navigate("/app")}
-                className="group relative flex items-center gap-2 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-[0_12px_40px_rgba(255,92,53,0.25)] transition-all duration-300 hover:scale-[1.02] active:scale-95"
+                className="group relative flex items-center gap-2 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-8 py-4 rounded-full font-bold text-lg shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95"
               >
                 Quero contratar
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -49,20 +46,20 @@ export const SalesHeroSection = () => {
 
               <button
                 onClick={() => navigate("/auth?mode=signup")}
-                className="px-8 py-4 rounded-2xl font-bold text-lg text-white border border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all duration-300"
+                className="px-8 py-4 rounded-full font-bold text-lg text-white border border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all duration-300"
               >
                 Quero trabalhar
               </button>
             </div>
 
             {/* Pills */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
               {[
                 { icon: Globe, text: "Contato direto pelo WhatsApp" },
                 { icon: Zap, text: "Profissionais perto de você" },
                 { icon: ShieldCheck, text: "Você fica com 100% do valor" }
               ].map((item) => (
-                <span key={item.text} className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/5 rounded-full text-xs font-medium text-blue-100/60 backdrop-blur-sm">
+                <span key={item.text} className="inline-flex items-center gap-2 text-xs font-medium text-blue-100/50">
                   <item.icon className="w-3.5 h-3.5" />
                   {item.text}
                 </span>
@@ -86,18 +83,18 @@ export const SalesHeroSection = () => {
               </div>
               {/* SubHeadLine */}
               <h2 className="text-3xl lg:text-[36px] font-black leading-[1.1] tracking-tight text-white text-center lg:text-right max-w-[400px]">
-                Peça um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">serviço</span>. Ou pegue um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">trabalho</span>.
+                Peça um <span className="text-blue-400">serviço</span>. Ou pegue um <span className="text-blue-400">trabalho</span>.
               </h2>
             </div>
             {/* Phone Container */}
             <div className="relative group">
               {/* Outer Glow */}
-              <div className="absolute inset-0 bg-blue-500/20 blur-[60px] rounded-[60px] group-hover:bg-blue-500/30 transition-colors duration-500" />
+              <div className="absolute inset-0 bg-blue-500/10 blur-[80px] rounded-[60px] group-hover:bg-blue-500/20 transition-colors duration-500" />
               
               {/* Phone Frame */}
               <div className="w-[280px] h-[560px] bg-[#0F172A] border-[8px] border-[#1E293B] rounded-[48px] shadow-2xl relative overflow-hidden rotate-0 md:rotate-2 group-hover:rotate-0 transition-transform duration-700">
                 {/* Screen Content Simulation */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#1E5EFF] to-[#0B1C2E]">
+                <div className="absolute inset-0 bg-gradient-to-b from-[#1a2436] to-[#0B0F17]">
                   {/* Status Bar */}
                   <div className="h-10 flex justify-between px-8 items-center opacity-40">
                     <div className="w-10 h-3 bg-white rounded-full" />
