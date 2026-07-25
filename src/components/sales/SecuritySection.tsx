@@ -35,7 +35,7 @@ const features = [
 export const SecuritySection = () => {
   return (
     <section className="py-24 md:py-32 bg-[#080C14] relative border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-8">
             <ShieldCheck className="w-8 h-8" />

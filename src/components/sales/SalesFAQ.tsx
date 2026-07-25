@@ -36,7 +36,7 @@ export const SalesFAQ = () => {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         <div className="grid lg:grid-cols-12 gap-16 items-start">
           
           <div className="lg:col-span-5">
@@ -51,7 +51,7 @@ export const SalesFAQ = () => {
                 <span className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">Suporte 24/7</span>
               </div>
               
-              <h2 className="text-5xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-[0.95]">
+              <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight leading-[1.1]">
                 Dúvidas <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Frequentes.</span>
               </h2>
@@ -62,8 +62,8 @@ export const SalesFAQ = () => {
 
               <div className="p-8 rounded-[40px] bg-white/[0.03] border border-white/10 backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500">
                 <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
-                    <MessageCircle className="w-8 h-8 text-blue-400" />
+                  <div className="w-14 h-14 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
+                    <MessageCircle className="w-6 h-6 text-blue-400" />
                   </div>
                   <div>
                     <h4 className="text-white font-bold text-xl mb-1">Ainda com dúvida?</h4>

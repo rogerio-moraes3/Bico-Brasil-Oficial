@@ -15,7 +15,7 @@ export const SalesFooter = () => {
         {/* Floating Decorative Elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
         
-        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -70,7 +70,7 @@ export const SalesFooter = () => {
       </section>
 
       {/* Main Footer Links */}
-      <div className="max-w-7xl mx-auto px-6 py-32 border-t border-white/5 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 py-32 border-t border-white/5 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-20 mb-32">
           <div className="md:col-span-2 max-w-md">
             <span className="text-3xl font-black text-white mb-8 block tracking-tighter">BICO BRASIL</span>

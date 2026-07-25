@@ -61,7 +61,7 @@ export const HowItWorks = () => {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 mb-6 backdrop-blur-sm">
             <CheckCircle2 className="w-3 h-3" />
@@ -112,12 +112,12 @@ export const HowItWorks = () => {
               {steps.map((step, index) => (
                 <div
                   key={index}
-                  className="relative group bg-white/[0.02] border border-white/5 rounded-[40px] p-10 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
+                  className="relative group bg-white/[0.02] border border-white/5 rounded-[32px] p-10 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
                 >
                   <div className="relative z-10">
                     <div className="flex justify-between items-start mb-8">
-                      <div className={`w-16 h-16 rounded-2xl ${step.bg} flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform duration-500`}>
-                        <step.icon className={`w-8 h-8 ${step.color}`} />
+                      <div className={`w-14 h-14 rounded-2xl ${step.bg} flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform duration-500`}>
+                        <step.icon className={`w-6 h-6 ${step.color}`} />
                       </div>
                       <span className="text-6xl font-black text-white/[0.03] group-hover:text-white/5 transition-colors select-none tracking-tighter">
                         0{index + 1}

@@ -29,7 +29,7 @@ export const SalesHeroSection = () => {
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-[72px] font-black leading-[1.1] tracking-tight mb-8 text-white">
-              Precisou de um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">serviço</span>? Ou precisa <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">ganhar dinheiro</span> hoje?
+              Precisa <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">contratar</span> alguém? Ou quer <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">ganhar dinheiro</span> hoje?
             </h1>
 
             {/* Description */}
