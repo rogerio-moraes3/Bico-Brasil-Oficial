@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Search, MapPin, Briefcase, Sparkles, ArrowRight, ShieldCheck, Zap, Globe } from "lucide-react";
+import { Search, MapPin, Briefcase, Sparkles, ArrowRight, ShieldCheck, Zap, Globe, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const SalesHeroSection = () => {
@@ -92,7 +92,7 @@ export const SalesHeroSection = () => {
               <div className="absolute inset-0 bg-blue-500/10 blur-[80px] rounded-[60px] group-hover:bg-blue-500/20 transition-colors duration-500" />
               
               {/* Phone Frame */}
-              <div className="w-[280px] h-[560px] bg-[#0F172A] border-[8px] border-[#1E293B] rounded-[48px] shadow-2xl relative overflow-hidden rotate-0 md:rotate-2 group-hover:rotate-0 transition-transform duration-700">
+              <div className="w-[280px] h-[560px] bg-[#0F172A] border-[8px] border-[#1E293B] rounded-[48px] shadow-2xl relative overflow-hidden">
                 {/* Screen Content Simulation */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[#1a2436] to-[#0B0F17]">
                   {/* Status Bar */}
@@ -112,14 +112,28 @@ export const SalesHeroSection = () => {
 
                   {/* List Placeholder */}
                   <div className="mt-12 px-6 space-y-4">
-                    {[1, 2, 3, 4].map(i => (
-                      <div key={i} className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                        <div className="flex gap-3">
-                          <div className="w-10 h-10 rounded-full bg-white/10" />
-                          <div className="flex-1 space-y-2">
-                            <div className="w-full h-3 bg-white/20 rounded" />
-                            <div className="w-2/3 h-2 bg-white/10 rounded" />
+                    {[
+                      { name: "Carlos M.", category: "Elétrica", rating: "4.9", city: "São Paulo, SP", color: "bg-blue-500" },
+                      { name: "Ana P.", category: "Limpeza", rating: "5.0", city: "Rio de Janeiro, RJ", color: "bg-orange-500" },
+                      { name: "João S.", category: "Pintura", rating: "4.8", city: "Belo Horizonte, MG", color: "bg-emerald-500" },
+                    ].map((worker) => (
+                      <div key={worker.name} className="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-11 h-11 rounded-full ${worker.color} flex items-center justify-center text-white font-bold text-sm ring-2 ring-white/10 shrink-0`}>
+                            {worker.name.charAt(0)}
                           </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-white font-bold text-sm truncate block">{worker.name}</span>
+                            <div className="flex items-center gap-1 mt-0.5">
+                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                              <span className="text-white/80 text-xs font-medium">{worker.rating}</span>
+                              <span className="text-white/40 text-xs">• {worker.category}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 mt-2 pl-14">
+                          <MapPin className="w-3 h-3 text-white/40" />
+                          <span className="text-white/40 text-[11px]">{worker.city}</span>
                         </div>
                       </div>
                     ))}
