@@ -17,48 +17,58 @@ import { AdminIcon } from "./components/AdminIcon";
 import { SplashScreen } from "./components/SplashScreen";
 import { Gatekeeper } from "./components/Gatekeeper";
 import { BeforeInstallPromptEvent, setDeferredPwaPrompt } from "@/lib/pwaPrompt";
-import Index from "./pages/Index";
-import SalesLandingPage from "./pages/SalesLandingPage";
-import Home from "./pages/Home";
-import Jobs from "./pages/Jobs";
-import PostJob from "./pages/PostJob";
-import Auth from "./pages/Auth";
-import RecoverByCPF from "./pages/RecoverByCPF";
+// Todas as páginas são lazy-loaded (code splitting por rota) — o bundle
+// principal estava em 1,2MB (346KB gzip) com só 5 rotas divididas; isso
+// reduz o chunk inicial e adia o download de cada página pro momento em
+// que ela é realmente visitada.
+const Index = lazy(() => import("./pages/Index"));
+const SalesLandingPage = lazy(() => import("./pages/SalesLandingPage"));
+const Home = lazy(() => import("./pages/Home"));
+const Jobs = lazy(() => import("./pages/Jobs"));
+const PostJob = lazy(() => import("./pages/PostJob"));
+const Auth = lazy(() => import("./pages/Auth"));
+const RecoverByCPF = lazy(() => import("./pages/RecoverByCPF"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminJobs = lazy(() => import("./pages/AdminJobs"));
 const AdminServices = lazy(() => import("./pages/AdminServices"));
 const AdminPayments = lazy(() => import("./pages/AdminPayments"));
-import Profile from "./pages/Profile";
-import PreLaunchLanding from "./pages/PreLaunchLanding";
-import Terms from "./pages/Terms";
-import Privacy from "./pages/Privacy";
-import Contact from "./pages/Contact";
-import NotFound from "./pages/NotFound";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import PaymentFailed from "./pages/PaymentFailed";
-import PaymentPending from "./pages/PaymentPending";
-import Messages from "./pages/Messages";
+const Profile = lazy(() => import("./pages/Profile"));
+const PreLaunchLanding = lazy(() => import("./pages/PreLaunchLanding"));
+const Terms = lazy(() => import("./pages/Terms"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Contact = lazy(() => import("./pages/Contact"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const PaymentFailed = lazy(() => import("./pages/PaymentFailed"));
+const PaymentPending = lazy(() => import("./pages/PaymentPending"));
+const Messages = lazy(() => import("./pages/Messages"));
 const Analytics = lazy(() => import("./pages/Analytics"));
-import WorkerProfile from "./pages/WorkerProfile";
-import Appointments from "./pages/Appointments";
-import InstallApp from "./pages/InstallApp";
-import Premium from "./pages/Premium";
-import CompleteProfile from "./pages/CompleteProfile";
-import PaymentHistory from "./pages/PaymentHistory";
-import About from "./pages/About";
-import FAQPage from "./pages/FAQ";
-import SearchWorkers from "./pages/SearchWorkers";
-import OfferServices from "./pages/OfferServices";
-import WantToWork from "./pages/WantToWork";
-import WantSomeone from "./pages/WantSomeone";
-import Ranking from "./pages/Ranking";
-import ProcurarBicos from "./pages/ProcurarBicos";
-import DownloadPage from "./pages/Download";
-import EditJob from "./pages/EditJob";
-import EditService from "./pages/EditService";
-import JobDetails from "./pages/JobDetails";
-import PublicStats from "./pages/PublicStats";
-import AuthCallback from "./pages/AuthCallback";
+const WorkerProfile = lazy(() => import("./pages/WorkerProfile"));
+const Appointments = lazy(() => import("./pages/Appointments"));
+const InstallApp = lazy(() => import("./pages/InstallApp"));
+const Premium = lazy(() => import("./pages/Premium"));
+const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
+const PaymentHistory = lazy(() => import("./pages/PaymentHistory"));
+const About = lazy(() => import("./pages/About"));
+const FAQPage = lazy(() => import("./pages/FAQ"));
+const SearchWorkers = lazy(() => import("./pages/SearchWorkers"));
+const OfferServices = lazy(() => import("./pages/OfferServices"));
+const WantToWork = lazy(() => import("./pages/WantToWork"));
+const WantSomeone = lazy(() => import("./pages/WantSomeone"));
+const Ranking = lazy(() => import("./pages/Ranking"));
+const ProcurarBicos = lazy(() => import("./pages/ProcurarBicos"));
+const DownloadPage = lazy(() => import("./pages/Download"));
+const EditJob = lazy(() => import("./pages/EditJob"));
+const EditService = lazy(() => import("./pages/EditService"));
+const JobDetails = lazy(() => import("./pages/JobDetails"));
+const PublicStats = lazy(() => import("./pages/PublicStats"));
+const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+
+const PageLoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary" />
+  </div>
+);
 
 function App() {
   const [showSplash, setShowSplash] = useState(() => {
@@ -143,6 +153,7 @@ function App() {
             <AdminIcon />
             <div className="main-safe-bottom">
               <AccessGuard>
+                <Suspense fallback={<PageLoadingFallback />}>
                 <Routes>
                   <Route path="/" element={<SalesLandingPage />} />
                   <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
@@ -201,10 +212,10 @@ function App() {
                       </ProfileCompletionGuard>
                     </ProtectedRoute>
                   } />
-                  <Route path="/admin" element={<ProtectedRoute requireAdmin={true}><Suspense fallback={<div className="p-8 text-center">Carregando painel administrativo...</div>}><Admin /></Suspense></ProtectedRoute>} />
-                  <Route path="/admin/jobs" element={<ProtectedRoute requireAdmin={true}><Suspense fallback={<div className="p-8 text-center">Carregando Jobs...</div>}><AdminJobs /></Suspense></ProtectedRoute>} />
-                  <Route path="/admin/services" element={<ProtectedRoute requireAdmin={true}><Suspense fallback={<div className="p-8 text-center">Carregando serviços administrativos...</div>}><AdminServices /></Suspense></ProtectedRoute>} />
-                  <Route path="/admin/payments" element={<ProtectedRoute requireAdmin={true}><Suspense fallback={<div className="p-8 text-center">Carregando pagamentos...</div>}><AdminPayments /></Suspense></ProtectedRoute>} />
+                  <Route path="/admin" element={<ProtectedRoute requireAdmin={true}><Admin /></ProtectedRoute>} />
+                  <Route path="/admin/jobs" element={<ProtectedRoute requireAdmin={true}><AdminJobs /></ProtectedRoute>} />
+                  <Route path="/admin/services" element={<ProtectedRoute requireAdmin={true}><AdminServices /></ProtectedRoute>} />
+                  <Route path="/admin/payments" element={<ProtectedRoute requireAdmin={true}><AdminPayments /></ProtectedRoute>} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/contact" element={<Contact />} />
@@ -214,9 +225,7 @@ function App() {
                   <Route path="/analytics" element={
                     <ProtectedRoute>
                       <ProfileCompletionGuard>
-                        <Suspense fallback={<div className="p-8 text-center">Carregando analytics...</div>}>
-                          <Analytics />
-                        </Suspense>
+                        <Analytics />
                       </ProfileCompletionGuard>
                     </ProtectedRoute>
                   } />
@@ -255,6 +264,7 @@ function App() {
                   <Route path="/relacao-usuarios" element={<PublicStats />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
+                </Suspense>
               </AccessGuard>
             </div>
             <BottomNav />
