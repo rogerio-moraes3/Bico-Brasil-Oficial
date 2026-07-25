@@ -15,7 +15,7 @@ import { Footer } from '@/components/Footer';
 import { validateCPF, formatCPF } from '@/lib/validators';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
 import { safeGoBack } from '@/lib/utils';
 
 export default function CompleteProfile() {
@@ -33,10 +33,13 @@ export default function CompleteProfile() {
     cpf: '',
     phone: '',
     phone_type: 'whatsapp_only',
+    cep: '',
+    address: '',
     neighborhood: '',
     city_id: '',
     category: '',
   });
+  const [cepLoading, setCepLoading] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -58,6 +61,8 @@ export default function CompleteProfile() {
         cpf: profileRes.data.cpf || '',
         phone: profileRes.data.phone || '',
         phone_type: (profileRes.data as any).phone_type || 'whatsapp_only',
+        cep: (profileRes.data as any).cep || '',
+        address: profileRes.data.address || '',
         neighborhood: profileRes.data.neighborhood || '',
         city_id: profileRes.data.city_id || '',
         category: profileRes.data.category || '',
@@ -65,6 +70,68 @@ export default function CompleteProfile() {
     }
 
     setCategories(categoriesRes.data || []);
+  };
+
+  const formatCEP = (value: string) => {
+    const numbers = value.replace(/\D/g, '').slice(0, 8);
+    return numbers.replace(/(\d{5})(\d)/, '$1-$2');
+  };
+
+  const lookupCep = async (cepDigits: string) => {
+    setCepLoading(true);
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cepDigits}/json/`);
+      const data = await response.json();
+
+      if (data.erro) {
+        toast({
+          title: 'CEP não encontrado',
+          description: 'Verifique o CEP ou preencha o endereço manualmente',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const matchedCity = cities.find(
+        (c) => c.name.toLowerCase() === (data.localidade || '').toLowerCase() && c.state === data.uf
+      );
+
+      setFormData((prev) => ({
+        ...prev,
+        address: data.logradouro || prev.address,
+        neighborhood: data.bairro || prev.neighborhood,
+        city_id: matchedCity ? matchedCity.id : prev.city_id,
+      }));
+
+      if (matchedCity) {
+        toast({
+          title: 'Endereço encontrado!',
+          description: `${data.logradouro || ''}, ${data.bairro || ''} - ${data.localidade}/${data.uf}`,
+        });
+      } else {
+        toast({
+          title: 'Cidade não atendida',
+          description: `${data.localidade} - ${data.uf} não está na nossa lista. Selecione a cidade manualmente.`,
+          variant: 'destructive',
+        });
+      }
+    } catch {
+      toast({
+        title: 'Erro ao buscar CEP',
+        description: 'Não foi possível consultar o CEP agora. Preencha o endereço manualmente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setCepLoading(false);
+    }
+  };
+
+  const handleCepChange = (value: string) => {
+    const formatted = formatCEP(value);
+    setFormData((prev) => ({ ...prev, cep: formatted }));
+    if (formatted.replace(/\D/g, '').length === 8) {
+      lookupCep(formatted.replace(/\D/g, ''));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -160,6 +227,8 @@ export default function CompleteProfile() {
           cpf: cpfClean,
           phone: formData.phone.trim(),
           phone_type: formData.phone_type,
+          cep: formData.cep.replace(/\D/g, '') || null,
+          address: formData.address.trim() || null,
           neighborhood: formData.neighborhood.trim(),
           city_id: formData.city_id,
           ...(profile?.type === 'worker' && { category: formData.category }),
@@ -266,6 +335,35 @@ export default function CompleteProfile() {
                     <SelectItem value="call_only">Somente Ligação</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="cep">CEP</Label>
+                <div className="relative">
+                  <Input
+                    id="cep"
+                    placeholder="00000-000"
+                    value={formData.cep}
+                    onChange={(e) => handleCepChange(e.target.value)}
+                    maxLength={9}
+                  />
+                  {cepLoading && (
+                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Opcional — preenche rua, bairro e cidade automaticamente. Você pode editar tudo depois.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="address">Rua / Endereço</Label>
+                <Input
+                  id="address"
+                  placeholder="Ex: Rua das Flores, 123"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                />
               </div>
 
               <div className="space-y-2">
