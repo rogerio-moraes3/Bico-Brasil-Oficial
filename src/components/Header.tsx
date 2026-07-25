@@ -158,6 +158,7 @@ const navItems = [
               <Button
                 variant="ghost"
                 size="icon"
+                animateOnMount={false}
                 onClick={() => safeGoBack(navigate)}
                 aria-label="Voltar"
                 className="text-[var(--nav-link)] shrink-0 h-11 w-11 min-h-[44px] rounded-full flex items-center justify-center transition-colors"
@@ -239,7 +240,7 @@ const navItems = [
             {user && (
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative h-11 w-11 min-h-[44px] rounded-full transition-colors">
+                  <Button variant="ghost" size="icon" animateOnMount={false} className="relative h-11 w-11 min-h-[44px] rounded-full transition-colors">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <Badge
@@ -261,7 +262,7 @@ const navItems = [
 {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2 hidden md:flex rounded-full border border-white/10 h-9 px-2.5 hover:bg-white/5 transition-colors text-white">
+                  <Button variant="ghost" size="sm" animateOnMount={false} className="gap-2 hidden md:flex rounded-full border border-white/10 h-9 px-2.5 hover:bg-white/5 transition-colors text-white">
                     <Avatar className="h-6 w-6">
                       <AvatarImage
                         src={
@@ -300,6 +301,7 @@ const navItems = [
                 </button>
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
+                  animateOnMount={false}
                   className="text-[15px] font-bold bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 h-10"
                 >
                   Criar conta
@@ -315,6 +317,7 @@ const navItems = [
                 </button>
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
+                  animateOnMount={false}
                   size="sm"
                   className="hidden md:flex text-[13px] font-bold px-6 h-9 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 bg-white hover:bg-zinc-200 text-black border border-transparent"
                 >
@@ -326,7 +329,7 @@ const navItems = [
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" aria-label="Menu de navegação" className="h-11 w-11 min-h-[44px] flex items-center justify-center rounded-full transition-colors">
+                <Button variant="ghost" size="icon" animateOnMount={false} aria-label="Menu de navegação" className="h-11 w-11 min-h-[44px] flex items-center justify-center rounded-full transition-colors">
                   <Menu className="md:hidden h-10 w-10 flex items-center justify-center text-white hover:bg-white/10 rounded-lg" />
                 </Button>
               </SheetTrigger>

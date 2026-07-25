@@ -95,7 +95,7 @@ export const SalesHeroSection = () => {
               <div className="absolute inset-0 bg-blue-500/20 blur-[60px] rounded-[60px] group-hover:bg-blue-500/30 transition-colors duration-500" />
               
               {/* Phone Frame */}
-              <div className="w-[280px] h-[560px] bg-[#0F172A] border-[8px] border-[#1E293B] rounded-[48px] shadow-2xl relative overflow-hidden rotate-2 group-hover:rotate-0 transition-transform duration-700">
+              <div className="w-[280px] h-[560px] bg-[#0F172A] border-[8px] border-[#1E293B] rounded-[48px] shadow-2xl relative overflow-hidden rotate-0 md:rotate-2 group-hover:rotate-0 transition-transform duration-700">
                 {/* Screen Content Simulation */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[#1E5EFF] to-[#0B1C2E]">
                   {/* Status Bar */}

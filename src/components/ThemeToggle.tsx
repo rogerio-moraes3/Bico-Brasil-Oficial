@@ -18,13 +18,14 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
   }, []);
 
   if (!mounted) {
-    return <Button variant="ghost" size="icon" className={cn(baseButtonClass, className)} />;
+    return <Button variant="ghost" size="icon" animateOnMount={false} className={cn(baseButtonClass, className)} />;
   }
 
   return (
     <Button
       variant="ghost"
       size="icon"
+      animateOnMount={false}
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       className={cn(baseButtonClass, className)}
     >
