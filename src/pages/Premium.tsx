@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { PlanCheckoutModal } from '@/components/PlanCheckoutModal';
 import { DestaqueButton } from '@/components/DestaqueButton';
+import { destaqueMinPrice } from '@/lib/destaquePricing';
 import { supabase } from '@/integrations/supabase/client';
 import { Check, Star, Zap, TrendingUp, Shield, Award, Users, MessageCircle, Eye, Crown, Trophy, ArrowLeft, Sparkles, Rocket } from 'lucide-react';
 import { safeGoBack } from '@/lib/utils';
@@ -281,6 +282,9 @@ export default function Premium() {
                        Ocupe o <br />
                        <span className="text-yellow-400">Topo.</span>
                     </h2>
+                    <p className="text-2xl md:text-3xl font-black text-yellow-400 mb-4">
+                       A partir de R$ {destaqueMinPrice.toFixed(2)}
+                    </p>
                     <p className="text-xl text-blue-100/60 leading-relaxed font-medium mb-10 max-w-md">
                        O Anúncio Destaque coloca você em evidência máxima na página inicial e no topo das buscas, aumentando suas chances em até 3x.
                     </p>

@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { useNotifications } from '@/hooks/useNotifications';
 import { FavoritesTab } from '@/components/FavoritesTab';
 import { NotificationsPanel } from '@/components/NotificationsPanel';
 
@@ -45,6 +46,22 @@ export default function Profile() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { permission: notifPermission, requestPermission: requestNotifPermission } = useNotifications();
+
+  const handleReactivateNotifications = async () => {
+    localStorage.removeItem('notificationPromptSeen');
+    localStorage.removeItem('notificationPromptLastShown');
+    const result = await requestNotifPermission();
+    if (result === 'granted') {
+      toast({ title: 'Notificações ativadas! ✅' });
+    } else if (result === 'denied') {
+      toast({
+        title: 'Bloqueado pelo navegador',
+        description: 'Ative manualmente nas configurações de notificação do site no seu navegador.',
+        variant: 'destructive'
+      });
+    }
+  };
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
@@ -881,6 +898,25 @@ export default function Profile() {
                         </p>
                         <Button size="sm" variant="outline" onClick={() => navigate('/premium')}>
                           Ativar Destaque
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Notificações Push */}
+                  <div className="p-4 rounded-lg border bg-muted/30">
+                    <h3 className="font-semibold mb-2">Notificações Push</h3>
+                    {notifPermission === 'granted' ? (
+                      <p className="text-sm text-muted-foreground">✅ Ativadas neste dispositivo.</p>
+                    ) : notifPermission === 'denied' ? (
+                      <p className="text-sm text-muted-foreground">
+                        Bloqueadas nas configurações do navegador. Pra reativar, ajuste a permissão de notificações do site diretamente no seu navegador.
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-sm text-muted-foreground">Notificações não ativadas.</p>
+                        <Button size="sm" variant="outline" onClick={handleReactivateNotifications}>
+                          Ativar Notificações
                         </Button>
                       </div>
                     )}

@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { PixQRCodeModal } from './PixQRCodeModal';
+import { destaquePlanOptions, destaquePriceTable } from '@/lib/destaquePricing';
 
 interface DestaqueButtonProps {
   initialDays?: number;
@@ -167,25 +168,8 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
     }
   };
 
-  // Tabela de preços fixa
-  const priceTable: Record<number, number> = {
-    1: 9.90,
-    3: 24.90,
-    7: 39.90,
-    15: 69.90,
-    30: 99.90
-  };
-
-  const totalPrice = priceTable[days] || 0;
-
-  // Opções de planos
-  const planOptions = [
-    { days: 1, label: '1 dia', price: 9.90 },
-    { days: 3, label: '3 dias', price: 24.90 },
-    { days: 7, label: '7 dias', price: 39.90 },
-    { days: 15, label: '15 dias', price: 69.90 },
-    { days: 30, label: '30 dias', price: 99.90 }
-  ];
+  const totalPrice = destaquePriceTable[days] || 0;
+  const planOptions = destaquePlanOptions;
 
   return (
     <>

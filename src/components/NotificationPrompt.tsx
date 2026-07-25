@@ -22,21 +22,24 @@ export function NotificationPrompt() {
   const [queueCount, setQueueCount] = useState<number>(0);
   const [processingQueue, setProcessingQueue] = useState(false);
   useEffect(() => {
-    if (user && isSupported && permission === 'default') {
-      const hasSeenPrompt = localStorage.getItem('notificationPromptSeen');
-      const dismissedTime = localStorage.getItem('notificationPromptDismissed');
+    let promptTimer: ReturnType<typeof setTimeout> | undefined;
 
-      // Não mostrar se foi visto/bloqueado permanentemente
+    if (user && isSupported && permission === 'default') {
+      // Não mostrar se o usuário já tomou uma decisão definitiva (ativou, bloqueou ou clicou "Agora não")
+      const hasSeenPrompt = localStorage.getItem('notificationPromptSeen');
       if (hasSeenPrompt) return;
 
-      // Se foi apenas fechado, esperar 24h antes de mostrar novamente
-      if (dismissedTime) {
-        const timeSinceDismiss = Date.now() - parseInt(dismissedTime);
-        const twentyFourHours = 24 * 60 * 60 * 1000;
-        if (timeSinceDismiss < twentyFourHours) return;
+      // Se já apareceu antes (mesmo sem interação), só mostrar de novo depois de 7 dias
+      const lastShown = localStorage.getItem('notificationPromptLastShown');
+      if (lastShown) {
+        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+        if (Date.now() - parseInt(lastShown) < sevenDays) return;
       }
 
-      setTimeout(() => setShowPrompt(true), 3000);
+      promptTimer = setTimeout(() => {
+        localStorage.setItem('notificationPromptLastShown', Date.now().toString());
+        setShowPrompt(true);
+      }, 3000);
     }
 
     const handleOfflineQueue = (e: Event) => {
@@ -66,7 +69,10 @@ export function NotificationPrompt() {
       setQueueCount(arr.length || 0);
     } catch { setQueueCount(0); }
 
-    return () => window.removeEventListener('offlineQueueProcessed', handleOfflineQueue);
+    return () => {
+      if (promptTimer) clearTimeout(promptTimer);
+      window.removeEventListener('offlineQueueProcessed', handleOfflineQueue);
+    };
   }, [user, permission, isSupported, toast]);
 
   const handleEnable = async () => {
@@ -89,10 +95,9 @@ export function NotificationPrompt() {
       localStorage.setItem('notificationBlocked', Date.now().toString());
       setShowPrompt(false);
     } else if (result === 'default') {
-      // Usuário apenas fechou o prompt - não marcar como visto permanentemente
+      // Usuário fechou o diálogo nativo do navegador sem decidir - não é uma recusa
+      // explícita, então só aplica o cooldown de 7 dias já registrado (notificationPromptLastShown)
       setShowPrompt(false);
-      // Permitir que apareça novamente em 24 horas
-      localStorage.setItem('notificationPromptDismissed', Date.now().toString());
     } else if (result === 'unsupported') {
       toast({
         title: "Notificações não suportadas",
@@ -105,8 +110,9 @@ export function NotificationPrompt() {
   };
 
   const handleDismiss = () => {
-    // Usuário fechou o prompt - permitir que apareça novamente em 24h
-    localStorage.setItem('notificationPromptDismissed', Date.now().toString());
+    // "Agora não" é uma escolha explícita do usuário - não perguntar de novo,
+    // a menos que ele reative manualmente nas configurações da conta
+    localStorage.setItem('notificationPromptSeen', 'true');
     setShowPrompt(false);
   };
 
