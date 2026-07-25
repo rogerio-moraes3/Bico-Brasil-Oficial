@@ -108,7 +108,8 @@ const ProcurarBicos = () => {
         query = query.gte('created_at', monthAgo.toISOString());
       }
 
-      const { data, error } = await query;
+      // Guard-rail: evita trazer a tabela inteira sem limite conforme a base cresce
+      const { data, error } = await query.limit(200);
       if (error) throw error;
       setJobs(data || []);
     } catch (error) {

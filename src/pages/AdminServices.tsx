@@ -14,6 +14,7 @@ import { ArrowLeft, Eye, Download, Search, Filter, Wrench, CheckCircle, XCircle,
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { safeGoBack } from '@/lib/utils';
 
 interface WorkerService {
   id: string;
@@ -127,11 +128,16 @@ export default function AdminServices() {
         .from('worker_services')
         .select(`
           *,
-          user:users!user_id(name, email, phone, rating_avg, rating_count, verified, city),
+          user:users!user_id(name, email, phone, rating_avg, rating_count, verified, city:cities(name, state)),
           category:categories!category_id(name),
           subcategory:subcategories!subcategory_id(name)
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        // Guard-rail: teto bem acima do volume atual. Os cards de estatística
+        // abaixo são somados sobre este mesmo resultado, então só ficariam
+        // aproximados se o total real de serviços um dia ultrapassar esse
+        // teto — nesse ponto vale migrar para uma contagem agregada no banco.
+        .limit(2000);
 
       if (error) throw error;
 
@@ -193,7 +199,7 @@ export default function AdminServices() {
       s.price || '',
       s.active ? 'Ativo' : 'Inativo',
       s.user?.name || '',
-      s.user?.city || '',
+      s.user?.city ? `${s.user.city.name} - ${s.user.city.state}` : '',
       s.user?.rating_avg || '',
       format(new Date(s.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })
     ]);
@@ -387,7 +393,7 @@ export default function AdminServices() {
                           </div>
                         ) : '-'}
                       </TableCell>
-                      <TableCell>{service.user?.city || '-'}</TableCell>
+                      <TableCell>{service.user?.city ? `${service.user.city.name} - ${service.user.city.state}` : '-'}</TableCell>
                       <TableCell>
                         {format(new Date(service.created_at), 'dd/MM/yy', { locale: ptBR })}
                       </TableCell>
@@ -473,7 +479,9 @@ export default function AdminServices() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Cidade</p>
-                      <p className="font-medium">{selectedService.user?.city}</p>
+                      <p className="font-medium">
+                        {selectedService.user?.city ? `${selectedService.user.city.name} - ${selectedService.user.city.state}` : '-'}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Rating</p>

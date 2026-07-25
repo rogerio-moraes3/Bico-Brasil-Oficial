@@ -124,7 +124,13 @@ export default function AdminJobs() {
           city:cities ( name, state ),
           contractor:users!user_id ( name )
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        // Guard-rail: teto bem acima do volume atual (dezenas de vagas).
+        // Os cards de estatística acima são somados sobre este mesmo
+        // resultado, então só ficariam aproximados se o total real de
+        // vagas um dia ultrapassar esse teto — nesse ponto vale migrar
+        // para uma contagem agregada no banco.
+        .limit(2000);
 
       if (error) throw error;
 

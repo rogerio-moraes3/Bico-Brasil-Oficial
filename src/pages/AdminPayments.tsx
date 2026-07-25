@@ -130,7 +130,13 @@ export default function AdminPayments() {
             city:cities ( name, state )
           )
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        // Guard-rail: teto bem acima do volume atual. Os cards de receita e
+        // o gráfico "Pagamentos por Plano" são somados sobre este mesmo
+        // resultado, então só ficariam aproximados se o total real de
+        // pagamentos um dia ultrapassar esse teto — nesse ponto vale migrar
+        // para uma agregação no banco em vez de somar no client.
+        .limit(2000);
 
       if (error) throw error;
 

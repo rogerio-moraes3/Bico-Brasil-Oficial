@@ -362,6 +362,9 @@ export default function Admin() {
       setAnnualRevenue(annualRevenueData);
 
       // Store detailed payment data for modal
+      // Só alimenta o modal de detalhes (já paginado no client via .slice
+      // pros tabs) — não participa do cálculo de receita/conversão acima,
+      // então limitar aqui não afeta nenhuma estatística exibida.
       const detailedPayments = await supabase
         .from('payments')
         .select(`
@@ -371,7 +374,8 @@ export default function Admin() {
             email
           )
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(200);
 
       if (detailedPayments.data) {
         setPaymentDetails(detailedPayments.data);
@@ -414,10 +418,13 @@ export default function Admin() {
     console.log('🔄 Loading users...');
 
     // Try admin_user_list view first
+    // Guard-rail: limita a lista/CSV (não afeta as métricas agregadas,
+    // que vêm de uma consulta separada em loadGeneralMetrics)
     const { data, error } = await supabase
       .from('admin_user_list')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(500);
 
     if (error) {
       console.warn('admin_user_list view failed, falling back to users table:', error);
@@ -426,7 +433,8 @@ export default function Admin() {
       const { data: usersData, error: usersError } = await supabase
         .from('users')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(500);
 
       if (usersError) {
         console.error('CRITICAL: Failed to load users:', usersError);
