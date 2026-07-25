@@ -445,7 +445,7 @@ export default function WorkerProfile() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3">
-                    {isWorkerUnlocked && contactInfo?.phone ? (
+                    {isWorkerUnlocked && contactInfo?.phone && (
                       <Button
                         onClick={() => {
                           const cleanPhone = contactInfo.phone.replace(/\D/g, '');
@@ -458,24 +458,6 @@ export default function WorkerProfile() {
                       >
                         <MessageSquare className="h-4 w-4 mr-2" />
                         Abrir WhatsApp
-                      </Button>
-                    ) : !isWorkerUnlocked && (
-                      <Button
-                        onClick={remainingFreeUnlocks > 0 ? handleFreeUnlock : () => setShowUpgradeModal(true)}
-                        disabled={unlocking}
-                        className="w-full md:w-auto disabled:opacity-50"
-                        variant="default"
-                      >
-                        {unlocking ? (
-                          "Desbloqueando..."
-                        ) : remainingFreeUnlocks > 0 ? (
-                          <>🎁 Desbloquear Grátis ({remainingFreeUnlocks}/3)</>
-                        ) : (
-                          <>
-                            <Crown className="h-4 w-4 mr-2" />
-                            Assinar Premium
-                          </>
-                        )}
                       </Button>
                     )}
                   </div>
