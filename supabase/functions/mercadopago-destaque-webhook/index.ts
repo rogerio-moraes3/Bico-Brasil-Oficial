@@ -128,6 +128,15 @@ serve(async (req) => {
         return new Response('OK', { status: 200 });
       }
 
+      // Guarda de idempotência: o Mercado Pago reenvia notificações por
+      // confiabilidade. Sem essa checagem, uma reentrega da mesma
+      // aprovação recalcularia expires_at a partir de "agora" de novo,
+      // estendendo o destaque além do período realmente pago.
+      if (order.status === 'paid') {
+        console.debug('♻️ Ordem já estava marcada como paid — notificação repetida, ignorando reprocessamento');
+        return new Response('OK', { status: 200 });
+      }
+
       if (payment.status === 'approved') {
         // Ativar destaque
         const expiresAt = new Date();

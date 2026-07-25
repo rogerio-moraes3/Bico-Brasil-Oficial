@@ -183,6 +183,16 @@ serve(async (req) => {
 
     console.debug('✅ Pagamento encontrado:', payment.id);
 
+    // ====== GUARDA DE IDEMPOTÊNCIA ======
+    // O Mercado Pago reenvia notificações por confiabilidade (mesmo
+    // pagamento pode chegar várias vezes). Se já processamos essa
+    // aprovação antes, não repete a ativação de plano, os 4 e-mails
+    // transacionais e as notificações — só confirma e sai.
+    if (payment.status === 'paid') {
+      console.debug('♻️ Pagamento já estava marcado como paid — notificação repetida, ignorando reprocessamento');
+      return new Response('OK', { status: 200, headers: corsHeaders });
+    }
+
     // Map Mercado Pago status to our status
     let newStatus: "paid" | "failed" | "pending" | "in_process" = "pending";
     const mpStatus = mpData.status;
@@ -290,58 +300,61 @@ serve(async (req) => {
 
         const planLabel = planType === 'basico' ? 'Plano Básico' : planType === 'vip' ? 'Plano VIP' : 'Plano Anual';
 
-        await sendTransactionalEmail("confirmação de pagamento", {
-          to: userData.email,
-          subject: "✅ Pagamento Aprovado - Bico Brasil",
-          type: "payment_approved",
-          data: {
-            userName: userData.name || 'Usuário',
-            planName: planLabel,
-            amount: mpData.transaction_amount || payment.amount,
-            subscriptionStart: now.toLocaleDateString('pt-BR'),
-            subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-            profileUrl: `${appUrl}/profile`,
-          },
-        });
-
-        await sendTransactionalEmail("recibo", {
-          to: userData.email,
-          subject: "🧾 Recibo de Pagamento - Bico Brasil",
-          type: "payment_receipt",
-          data: {
-            name: userData.name || 'Usuário',
-            planName: planLabel,
-            amount: mpData.transaction_amount || payment.amount,
-            paymentId: mpData.id || paymentId,
-            paymentDate: now.toLocaleDateString('pt-BR'),
-            subscriptionStart: now.toLocaleDateString('pt-BR'),
-            subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-            profileUrl: `${appUrl}/profile`,
-          },
-        });
-
-        await sendTransactionalEmail("liberação de acesso", {
-          to: userData.email,
-          subject: "🎉 Seu Plano Foi Ativado - Bico Brasil",
-          type: "plan_activated",
-          data: {
-            name: userData.name || 'Usuário',
-            planName: planLabel,
-            subscriptionStart: now.toLocaleDateString('pt-BR'),
-            subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
-            profileUrl: `${appUrl}/profile`,
-          },
-        });
-
-        await sendTransactionalEmail("boas-vindas", {
-          to: userData.email,
-          subject: "👋 Bem-vindo ao Bico Brasil - Comece Agora!",
-          type: "welcome",
-          data: {
-            name: userData.name || 'Usuário',
-            profileUrl: `${appUrl}/profile`,
-          },
-        });
+        // Os 4 e-mails são independentes entre si — disparados em paralelo
+        // em vez de sequenciais (cada um já trata seu próprio erro
+        // internamente em sendTransactionalEmail, então uma falha isolada
+        // não derruba as outras).
+        await Promise.all([
+          sendTransactionalEmail("confirmação de pagamento", {
+            to: userData.email,
+            subject: "✅ Pagamento Aprovado - Bico Brasil",
+            type: "payment_approved",
+            data: {
+              userName: userData.name || 'Usuário',
+              planName: planLabel,
+              amount: mpData.transaction_amount || payment.amount,
+              subscriptionStart: now.toLocaleDateString('pt-BR'),
+              subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
+              profileUrl: `${appUrl}/profile`,
+            },
+          }),
+          sendTransactionalEmail("recibo", {
+            to: userData.email,
+            subject: "🧾 Recibo de Pagamento - Bico Brasil",
+            type: "payment_receipt",
+            data: {
+              name: userData.name || 'Usuário',
+              planName: planLabel,
+              amount: mpData.transaction_amount || payment.amount,
+              paymentId: mpData.id || paymentId,
+              paymentDate: now.toLocaleDateString('pt-BR'),
+              subscriptionStart: now.toLocaleDateString('pt-BR'),
+              subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
+              profileUrl: `${appUrl}/profile`,
+            },
+          }),
+          sendTransactionalEmail("liberação de acesso", {
+            to: userData.email,
+            subject: "🎉 Seu Plano Foi Ativado - Bico Brasil",
+            type: "plan_activated",
+            data: {
+              name: userData.name || 'Usuário',
+              planName: planLabel,
+              subscriptionStart: now.toLocaleDateString('pt-BR'),
+              subscriptionEnd: subscriptionEnd.toLocaleDateString('pt-BR'),
+              profileUrl: `${appUrl}/profile`,
+            },
+          }),
+          sendTransactionalEmail("boas-vindas", {
+            to: userData.email,
+            subject: "👋 Bem-vindo ao Bico Brasil - Comece Agora!",
+            type: "welcome",
+            data: {
+              name: userData.name || 'Usuário',
+              profileUrl: `${appUrl}/profile`,
+            },
+          }),
+        ]);
       }
 
       // Criar notificação para o usuário
