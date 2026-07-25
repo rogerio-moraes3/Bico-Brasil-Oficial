@@ -33,14 +33,22 @@ function validateCPF(cpf: string): boolean {
 }
 
 // FASE 1: Função auxiliar para retry de requisições
-async function fetchWithRetry(url: string, options: any, retries = 2, waitMs = 600) {
+// FASE 2: agora com timeout por tentativa (AbortController) — sem isso, uma
+// resposta lenta/travada do Mercado Pago deixava a função (e o spinner do
+// usuário) pendurados indefinidamente.
+async function fetchWithRetry(url: string, options: any, retries = 2, waitMs = 600, timeoutMs = 8000) {
   for (let i = 0; i <= retries; i++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const response = await fetch(url, options);
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(timeoutId);
       return response;
     } catch (err) {
+      clearTimeout(timeoutId);
       if (i === retries) throw err;
-      console.debug(`⚠️ Retry ${i + 1}/${retries} após ${waitMs}ms...`);
+      const reason = err instanceof Error && err.name === "AbortError" ? `timeout de ${timeoutMs}ms` : String(err);
+      console.debug(`⚠️ Retry ${i + 1}/${retries} após ${waitMs}ms (motivo: ${reason})...`);
       await new Promise(resolve => setTimeout(resolve, waitMs));
     }
   }
@@ -123,6 +131,50 @@ serve(async (req) => {
       console.debug("✅ Usando credenciais de PRODUÇÃO - Pagamentos reais");
     }
 
+    // Params (movido pra antes do auto-cancelamento — a checagem de duplo-clique
+    // abaixo precisa saber o valor solicitado antes de decidir o que fazer)
+    const paymentMethod = body.paymentMethod;
+    const planType = body.planType ?? "basico";
+    const amount = Number(body.amount ?? 19.9);
+    const cardToken = body.cardToken;
+    const installments = Number(body.installments ?? 1);
+    const payer = body.payer;
+    const email = body.email ?? profile.email;
+
+    const validAmounts = [19.9, 29.9, 249.9, 9.90, 24.90, 39.90, 69.90, 99.90];
+    if (!validAmounts.includes(amount)) throw new Error("Valor de plano inválido");
+
+    // ====== PROTEÇÃO CONTRA DUPLO-CLIQUE ======
+    // Se já existe um pagamento pendente idêntico (mesmo usuário, mesmo
+    // valor) criado nos últimos 15 segundos e com QR Code já gerado,
+    // reaproveita ele em vez de criar um pagamento duplicado e chamar o
+    // Mercado Pago de novo. Pagamentos pendentes de OUTRO valor (troca de
+    // plano) continuam passando pelo auto-cancelamento normal abaixo.
+    const fifteenSecondsAgo = new Date(Date.now() - 15000).toISOString();
+    const { data: veryRecentPayment } = await supabaseClient
+      .from("payments")
+      .select("id, qr_code, qr_code_base64")
+      .eq("user_id", profile.id)
+      .eq("amount", amount)
+      .eq("status", "pending")
+      .not("qr_code", "is", null)
+      .gte("created_at", fifteenSecondsAgo)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (veryRecentPayment) {
+      console.debug("♻️ Pagamento idêntico recente encontrado — reaproveitando QR Code (evita duplo-clique)");
+      return new Response(
+        JSON.stringify({
+          payment_id: veryRecentPayment.id,
+          qr_code: veryRecentPayment.qr_code,
+          qr_code_base64: veryRecentPayment.qr_code_base64,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
+      );
+    }
+
     // ====== AUTO-CANCELAMENTO DE PAGAMENTOS PENDENTES ======
     const { data: userPendingPayments, error: pendingErr } = await supabaseClient
       .from("payments")
@@ -176,18 +228,6 @@ serve(async (req) => {
 
       console.debug('✅ Cancelamento automático concluído');
     }
-
-    // Params
-    const paymentMethod = body.paymentMethod;
-    const planType = body.planType ?? "basico";
-    const amount = Number(body.amount ?? 19.9);
-    const cardToken = body.cardToken;
-    const installments = Number(body.installments ?? 1);
-    const payer = body.payer;
-    const email = body.email ?? profile.email;
-
-    const validAmounts = [19.9, 29.9, 249.9, 9.90, 24.90, 39.90, 69.90, 99.90];
-    if (!validAmounts.includes(amount)) throw new Error("Valor de plano inválido");
 
     // cria o registro de pagamento
     const { data: payment, error: paymentError } = await supabaseClient

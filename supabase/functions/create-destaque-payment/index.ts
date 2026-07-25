@@ -32,15 +32,22 @@ function validateCPF(cpf: string): boolean {
 }
 
 // Função auxiliar para fazer requisições com retry
-async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3): Promise<Response> {
+// Timeout por tentativa (AbortController) — sem isso, uma resposta lenta do
+// Mercado Pago deixava a função pendurada indefinidamente.
+async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3, timeoutMs = 8000): Promise<Response> {
   let lastError;
   for (let i = 0; i < maxRetries; i++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const response = await fetch(url, options);
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(timeoutId);
       return response;
     } catch (error) {
+      clearTimeout(timeoutId);
       lastError = error;
-      console.error(`Tentativa ${i + 1} falhou:`, error);
+      const reason = error instanceof Error && error.name === "AbortError" ? `timeout de ${timeoutMs}ms` : String(error);
+      console.error(`Tentativa ${i + 1} falhou (${reason})`);
       if (i < maxRetries - 1) {
         await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
       }
@@ -99,6 +106,35 @@ serve(async (req) => {
     }
 
     console.debug(`💰 Criando pagamento de destaque: ${days} dias, R$ ${amount}`);
+
+    // ====== PROTEÇÃO CONTRA DUPLO-CLIQUE ======
+    // Se já existe um pedido pendente idêntico (mesmo usuário, mesma
+    // quantidade de dias) criado nos últimos 15 segundos e com QR Code já
+    // gerado, reaproveita ele em vez de criar um pedido/cobrança duplicada.
+    const fifteenSecondsAgo = new Date(Date.now() - 15000).toISOString();
+    const { data: veryRecentOrder } = await supabaseClient
+      .from('destaque_orders')
+      .select('id, mercadopago_payment_id, qr_code, qr_code_base64')
+      .eq('user_id', user.id)
+      .eq('days', days)
+      .in('status', ['pending', 'in_process'])
+      .not('qr_code', 'is', null)
+      .gte('created_at', fifteenSecondsAgo)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (veryRecentOrder) {
+      console.debug('♻️ Pedido idêntico recente encontrado — reaproveitando QR Code (evita duplo-clique)');
+      return new Response(
+        JSON.stringify({
+          payment_id: veryRecentOrder.mercadopago_payment_id,
+          qr_code: veryRecentOrder.qr_code,
+          qr_code_base64: veryRecentOrder.qr_code_base64,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      );
+    }
 
     const { data: order, error: orderError } = await supabaseClient
       .from('destaque_orders')
@@ -170,15 +206,17 @@ serve(async (req) => {
 
     console.debug('✅ Pagamento criado com sucesso:', mpData.id);
 
+    const pixData = mpData.point_of_interaction?.transaction_data;
+
     await supabaseClient
       .from('destaque_orders')
       .update({
         mercadopago_payment_id: mpData.id,
-        status: 'in_process'
+        status: 'in_process',
+        qr_code: pixData?.qr_code || null,
+        qr_code_base64: pixData?.qr_code_base64 || null,
       })
       .eq('id', order.id);
-
-    const pixData = mpData.point_of_interaction?.transaction_data;
 
     return new Response(
       JSON.stringify({
