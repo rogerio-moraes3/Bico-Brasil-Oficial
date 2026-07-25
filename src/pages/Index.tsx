@@ -41,10 +41,10 @@ export default function Index() {
   })();
 
   const primaryCardClassName =
-    "group flex flex-col items-start gap-3 rounded-3xl border border-primary/50 dark:border-primary/35 bg-primary/[0.10] dark:bg-primary/12 p-6 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/70 hover:bg-primary/[0.15] hover:scale-[1.05] transition-all duration-300 stagger-fade";
+    "group flex flex-col items-start gap-3 rounded-3xl border border-primary/50 dark:border-primary/35 bg-primary/[0.10] dark:bg-primary/12 p-5 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/70 hover:bg-primary/[0.15] hover:scale-[1.05] transition-all duration-300 stagger-fade";
 
   const secondaryCardClassName =
-    "group flex flex-col items-start gap-3 rounded-3xl border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 p-6 shadow-xl shadow-slate-200/60 dark:shadow-sm hover:shadow-2xl hover:shadow-slate-300/50 hover:bg-white dark:hover:bg-card hover:scale-[1.05] transition-all duration-300 stagger-fade backdrop-blur-sm";
+    "group flex flex-col items-start gap-3 rounded-3xl border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 p-5 shadow-xl shadow-slate-200/60 dark:shadow-sm hover:shadow-2xl hover:shadow-slate-300/50 hover:bg-white dark:hover:bg-card hover:scale-[1.05] transition-all duration-300 stagger-fade backdrop-blur-sm";
 
   return (
     <>
@@ -93,13 +93,13 @@ export default function Index() {
                 <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors duration-200">
                   <Search className="w-5 h-5 text-primary-foreground" aria-hidden="true" />
                 </div>
-                <div className="flex-1 text-left">
+                <div className="text-left">
                   <p className="font-extrabold text-foreground text-[17px] leading-snug tracking-tight">Encontrar profissionais agora</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Busque profissionais verificados perto de você
                   </p>
                 </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
+                <span className="mt-auto inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
                   Buscar agora <ArrowRight className="w-3 h-3" aria-hidden="true" />
                 </span>
               </motion.button>
@@ -114,13 +114,13 @@ export default function Index() {
                 <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-muted/80 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-muted transition-colors duration-200">
                   <Briefcase className="w-5 h-5 text-slate-500 dark:text-muted-foreground" aria-hidden="true" />
                 </div>
-                <div className="flex-1 text-left">
+                <div className="text-left">
                   <p className="font-extrabold text-foreground text-[15px] leading-snug tracking-tight">Começar a ganhar dinheiro</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Encontre bicos e ganhe renda extra hoje
                   </p>
                 </div>
-                <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-200">
+                <div className="mt-auto flex items-center gap-1 text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors duration-200">
                   Ver vagas <ArrowRight className="w-3 h-3" aria-hidden="true" />
                 </div>
               </motion.button>

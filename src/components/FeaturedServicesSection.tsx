@@ -93,7 +93,7 @@ export const FeaturedServicesSection = () => {
             featuredWorkers.map((worker) => (
               <Card
                 key={worker.id}
-                className={`bg-card border rounded-2xl hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group relative ${
+                className={`bg-card border rounded-2xl hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group relative h-full flex flex-col ${
                   worker.hasDestaque
                     ? 'border-amber-400 dark:border-amber-500 shadow-md ring-1 ring-amber-400/40'
                     : 'border-border/80 hover:border-primary/40 shadow-sm'
@@ -105,10 +105,10 @@ export const FeaturedServicesSection = () => {
                     Destaque
                   </Badge>
                 )}
-                <CardContent className="p-4 md:p-5">
+                <CardContent className="p-4 md:p-5 flex-1 flex flex-col">
                   <div className="flex items-start gap-3">
                     <div className="relative shrink-0">
-                      <Avatar className={`h-16 w-16 ring-2 ${worker.hasDestaque ? 'ring-amber-400/60' : 'ring-primary/10'}`}>
+                      <Avatar className={`h-14 w-14 ring-2 ${worker.hasDestaque ? 'ring-amber-400/60' : 'ring-primary/10'}`}>
                         <AvatarImage src={worker.profile_photo || undefined} alt={worker.name || 'Profissional'} />
                         <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
                           {getInitials(worker.name)}
@@ -142,7 +142,8 @@ export const FeaturedServicesSection = () => {
                     </div>
                   </div>
 
-                    <div className="mt-4 flex items-center justify-between gap-2">
+                    <div className="mt-auto pt-4">
+                    <div className="flex items-center justify-between gap-2">
                     <div
                       className="flex items-center gap-1"
                       aria-label={`Avaliação: ${worker.rating_avg?.toFixed(1) || '0'} de 5 estrelas`}
@@ -174,6 +175,7 @@ export const FeaturedServicesSection = () => {
                       {worker.neighborhood ? `${worker.neighborhood}, ` : ''}{worker.city}
                     </p>
                   )}
+                  </div>
                 </CardContent>
               </Card>
             ))
