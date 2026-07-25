@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { PlanCheckoutModal } from '@/components/PlanCheckoutModal';
 import { DestaqueButton } from '@/components/DestaqueButton';
-import { destaqueMinPrice } from '@/lib/destaquePricing';
+import { destaquePlanOptions } from '@/lib/destaquePricing';
 import { supabase } from '@/integrations/supabase/client';
 import { Check, Star, Zap, TrendingUp, Shield, Award, Users, MessageCircle, Eye, Crown, Trophy, ArrowLeft, Sparkles, Rocket } from 'lucide-react';
 import { safeGoBack } from '@/lib/utils';
@@ -282,9 +282,6 @@ export default function Premium() {
                        Ocupe o <br />
                        <span className="text-yellow-400">Topo.</span>
                     </h2>
-                    <p className="text-2xl md:text-3xl font-black text-yellow-400 mb-4">
-                       A partir de R$ {destaqueMinPrice.toFixed(2)}
-                    </p>
                     <p className="text-xl text-blue-100/60 leading-relaxed font-medium mb-10 max-w-md">
                        O Anúncio Destaque coloca você em evidência máxima na página inicial e no topo das buscas, aumentando suas chances em até 3x.
                     </p>
@@ -303,25 +300,21 @@ export default function Premium() {
 
                  <div className="relative">
                     <div className="absolute inset-0 bg-yellow-500/10 blur-[100px] rounded-full" />
-                    <motion.div 
-                       animate={{ y: [0, -20, 0] }}
-                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                       className="relative bg-[#1A1F2C] p-8 rounded-[40px] border border-white/10 shadow-2xl"
-                    >
-                       <div className="flex items-center gap-4 mb-8">
-                          <div className="w-12 h-12 rounded-full bg-zinc-800" />
-                          <div className="flex-1 space-y-2">
-                             <div className="w-24 h-4 bg-zinc-800 rounded" />
-                             <div className="w-16 h-3 bg-zinc-800/50 rounded" />
+                    <div className="relative grid grid-cols-2 sm:grid-cols-3 gap-4">
+                       {destaquePlanOptions.map((option) => (
+                          <div
+                             key={option.days}
+                             className="bg-[#1A1F2C] p-5 rounded-3xl border border-white/10 shadow-xl text-center hover:border-yellow-400/40 transition-colors"
+                          >
+                             <p className="text-xs font-bold uppercase tracking-widest text-blue-100/50 mb-2">
+                                {option.label}
+                             </p>
+                             <p className="text-2xl font-black text-yellow-400">
+                                R$ {option.price.toFixed(2)}
+                             </p>
                           </div>
-                          <div className="px-3 py-1 bg-yellow-500 text-black text-[10px] font-black rounded-full">DESTAQUE</div>
-                       </div>
-                       <div className="space-y-4">
-                          <div className="w-full h-4 bg-zinc-800 rounded" />
-                          <div className="w-3/4 h-4 bg-zinc-800 rounded" />
-                          <div className="w-1/2 h-4 bg-zinc-800/50 rounded" />
-                       </div>
-                    </motion.div>
+                       ))}
+                    </div>
                  </div>
               </div>
            </div>
