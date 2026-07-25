@@ -32,6 +32,13 @@ interface Payment {
     name: string;
     email: string | null;
     phone: string;
+    type: string | null;
+    verified: boolean | null;
+    created_at: string | null;
+    plan_active: boolean | null;
+    plan_type: string | null;
+    subscription_end: string | null;
+    city: { name: string; state: string } | null;
   };
 }
 
@@ -117,7 +124,11 @@ export default function AdminPayments() {
         .from('payments')
         .select(`
           *,
-          user:users!user_id(name, email, phone)
+          user:users!user_id(
+            name, email, phone, type, verified, created_at,
+            plan_active, plan_type, subscription_end,
+            city:cities ( name, state )
+          )
         `)
         .order('created_at', { ascending: false });
 
@@ -645,6 +656,57 @@ export default function AdminPayments() {
                     <div>
                       <p className="text-sm text-muted-foreground">ID do Usuário</p>
                       <p className="font-mono text-xs">{selectedPayment.user_id}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Cidade</p>
+                      <p className="font-medium">
+                        {selectedPayment.user?.city
+                          ? `${selectedPayment.user.city.name} - ${selectedPayment.user.city.state}`
+                          : '-'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Tipo de Conta</p>
+                      <p className="font-medium">
+                        {selectedPayment.user?.type === 'worker' ? 'Prestador' : selectedPayment.user?.type === 'contractor' ? 'Contratante' : '-'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Cadastrado Desde</p>
+                      <p className="font-medium">
+                        {selectedPayment.user?.created_at
+                          ? format(new Date(selectedPayment.user.created_at), 'dd/MM/yyyy', { locale: ptBR })
+                          : '-'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Verificado</p>
+                      <p className="font-medium">{selectedPayment.user?.verified ? 'Sim' : 'Não'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t pt-4">
+                  <h4 className="font-semibold mb-3">Situação Atual da Conta</h4>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Estado do plano hoje — pode ser diferente do plano deste pagamento específico, caso o usuário tenha assinado de novo depois.
+                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Plano Ativo</p>
+                      <p className="font-medium">{selectedPayment.user?.plan_active ? 'Sim' : 'Não'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Tipo do Plano Atual</p>
+                      {getPlanBadge(selectedPayment.user?.plan_type ?? null)}
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Validade da Assinatura</p>
+                      <p className="font-medium">
+                        {selectedPayment.user?.subscription_end
+                          ? format(new Date(selectedPayment.user.subscription_end), 'dd/MM/yyyy', { locale: ptBR })
+                          : '-'}
+                      </p>
                     </div>
                   </div>
                 </div>
