@@ -37,7 +37,8 @@ import {
   Upload,
   Camera,
   Loader2,
-  Trash2
+  Trash2,
+  Zap
 } from 'lucide-react';
 
 export default function Profile() {
@@ -854,6 +855,33 @@ export default function Profile() {
                         <p className="text-sm text-muted-foreground">
                           Você está no plano gratuito com funcionalidades limitadas
                         </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Status do Destaque */}
+                  <div className="p-4 rounded-lg border bg-muted/30">
+                    <h3 className="font-semibold mb-2">Anúncio Destaque</h3>
+                    {profile.destaque_expires_at && new Date(profile.destaque_expires_at) > new Date() ? (
+                      <div className="space-y-2">
+                        <Badge className="bg-amber-500 hover:bg-amber-500 text-black gap-1 font-semibold">
+                          <Zap className="h-3.5 w-3.5" />
+                          Destaque Ativo
+                        </Badge>
+                        <p className="text-sm text-muted-foreground">
+                          Faltam {Math.max(1, Math.ceil((new Date(profile.destaque_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} dia(s) — válido até{' '}
+                          {new Date(profile.destaque_expires_at).toLocaleDateString('pt-BR')}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <Badge variant="outline">Sem destaque ativo</Badge>
+                        <p className="text-sm text-muted-foreground">
+                          Ative o Anúncio Destaque para aparecer no topo das buscas e na página inicial
+                        </p>
+                        <Button size="sm" variant="outline" onClick={() => navigate('/premium')}>
+                          Ativar Destaque
+                        </Button>
                       </div>
                     )}
                   </div>

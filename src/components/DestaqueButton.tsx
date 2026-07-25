@@ -8,6 +8,7 @@ import { Star, Zap, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 import { PixQRCodeModal } from './PixQRCodeModal';
 
 interface DestaqueButtonProps {
@@ -28,6 +29,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
   const [showQrModal, setShowQrModal] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const formatCPF = (value: string) => {
     const numbers = value.replace(/\D/g, "").slice(0, 11);
@@ -330,6 +332,14 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
         qrCode={qrCode}
         qrCodeBase64={qrCodeBase64}
         paymentId={paymentId}
+        table="destaque_orders"
+        onConfirmed={() => {
+          toast({
+            title: "Destaque ativado! 🌟",
+            description: "Seu perfil já está em destaque na busca e na página inicial."
+          });
+          navigate('/profile');
+        }}
       />
     </>
   );

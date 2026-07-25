@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Star, ArrowRight, BadgeCheck, MapPin, Briefcase, Phone } from "lucide-react";
+import { Star, ArrowRight, BadgeCheck, MapPin, Briefcase, Phone, Zap } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import { Skeleton } from "./ui/skeleton";
@@ -19,14 +19,27 @@ export const FeaturedServicesSection = () => {
         .eq('plan_active', true)
         .not('profile_photo', 'is', null)
         .order('rating_avg', { ascending: false })
-        .limit(6);
+        .limit(12);
 
       if (error) {
         console.error('Error fetching featured workers:', error);
         throw error;
       }
 
-      return data || [];
+      const now = new Date();
+      const withDestaque = (data || []).map((worker) => ({
+        ...worker,
+        hasDestaque: !!worker.destaque_expires_at && new Date(worker.destaque_expires_at) > now,
+      }));
+
+      // Destaque primeiro, depois por avaliação (mesma ordem de SearchWorkers.tsx)
+      withDestaque.sort((a, b) => {
+        if (a.hasDestaque && !b.hasDestaque) return -1;
+        if (!a.hasDestaque && b.hasDestaque) return 1;
+        return (b.rating_avg || 0) - (a.rating_avg || 0);
+      });
+
+      return withDestaque.slice(0, 6);
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -80,12 +93,22 @@ export const FeaturedServicesSection = () => {
             featuredWorkers.map((worker) => (
               <Card
                 key={worker.id}
-                className="bg-card border border-border/80 rounded-2xl hover:border-primary/40 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group"
+                className={`bg-card border rounded-2xl hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group relative ${
+                  worker.hasDestaque
+                    ? 'border-amber-400 dark:border-amber-500 shadow-md ring-1 ring-amber-400/40'
+                    : 'border-border/80 hover:border-primary/40 shadow-sm'
+                }`}
               >
+                {worker.hasDestaque && (
+                  <Badge className="absolute -top-2.5 left-4 bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-2 text-[10px] font-bold shadow">
+                    <Zap className="h-3 w-3" />
+                    Destaque
+                  </Badge>
+                )}
                 <CardContent className="p-4 md:p-5">
                   <div className="flex items-start gap-3">
                     <div className="relative shrink-0">
-                      <Avatar className="h-16 w-16 ring-2 ring-primary/10">
+                      <Avatar className={`h-16 w-16 ring-2 ${worker.hasDestaque ? 'ring-amber-400/60' : 'ring-primary/10'}`}>
                         <AvatarImage src={worker.profile_photo || undefined} alt={worker.name || 'Profissional'} />
                         <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
                           {getInitials(worker.name)}

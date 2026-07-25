@@ -14,6 +14,8 @@ interface PixQRCodeModalProps {
   qrCode: string;
   qrCodeBase64: string;
   paymentId: string;
+  table?: 'payments' | 'destaque_orders';
+  onConfirmed?: () => void;
 }
 
 export function PixQRCodeModal({
@@ -21,7 +23,9 @@ export function PixQRCodeModal({
   onOpenChange,
   qrCode,
   qrCodeBase64,
-  paymentId
+  paymentId,
+  table = 'payments',
+  onConfirmed
 }: PixQRCodeModalProps) {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
@@ -53,7 +57,7 @@ export function PixQRCodeModal({
     const interval = setInterval(async () => {
       setChecking(true);
       const { data } = await supabase
-        .from('payments')
+        .from(table)
         .select('status')
         .eq('id', paymentId)
         .single();
@@ -61,12 +65,16 @@ export function PixQRCodeModal({
       setChecking(false);
 
       if (data?.status === 'paid') {
-        toast({
-          title: "Pagamento confirmado! ✅",
-          description: "Seu plano foi ativado com sucesso"
-        });
         onOpenChange(false);
-        window.location.href = '/payment-success';
+        if (onConfirmed) {
+          onConfirmed();
+        } else {
+          toast({
+            title: "Pagamento confirmado! ✅",
+            description: "Seu plano foi ativado com sucesso"
+          });
+          window.location.href = '/payment-success';
+        }
       } else if (data?.status === 'failed') {
         toast({
           title: "Pagamento não aprovado",
@@ -78,7 +86,7 @@ export function PixQRCodeModal({
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [open, paymentId, onOpenChange, toast]);
+  }, [open, paymentId, onOpenChange, toast, table, onConfirmed]);
 
   const handleCopy = async () => {
     try {

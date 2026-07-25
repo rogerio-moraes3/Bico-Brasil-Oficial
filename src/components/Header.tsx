@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Menu, ArrowLeft, User as UserIcon, Download, Bell, ChevronRight, Home, CreditCard, LogOut } from "lucide-react";
+import { Menu, ArrowLeft, User as UserIcon, Download, Bell, ChevronRight, Home, CreditCard, LogOut, Crown } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { ThemeToggle } from "./ThemeToggle";
 import { FreePostsBadge } from "./FreePostsBadge";
@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "./ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotifications } from "@/contexts/NotificationContext";
+import { useAccessControl } from "@/hooks/useAccessControl";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { cn, safeGoBack } from "@/lib/utils";
@@ -22,6 +23,7 @@ export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { isPremium } = useAccessControl();
   const { unreadCount } = useNotifications();
   const { mode, setMode } = useUserMode();
   const [open, setOpen] = useState(false);
@@ -269,6 +271,12 @@ const navItems = [
                       />  <AvatarFallback>{getUserInitials()}</AvatarFallback>
                     </Avatar>
                     <span className="hidden lg:inline text-sm font-medium">{getUserDisplayName()}</span>
+                    {isPremium && (
+                      <Badge className="hidden lg:inline-flex bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-1.5 text-[10px] font-bold">
+                        <Crown className="h-3 w-3" />
+                        Premium
+                      </Badge>
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -334,9 +342,17 @@ const navItems = [
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm text-foreground truncate">
-                          {getUserDisplayName()}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-sm text-foreground truncate">
+                            {getUserDisplayName()}
+                          </p>
+                          {isPremium && (
+                            <Badge className="bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-1.5 text-[10px] font-bold shrink-0">
+                              <Crown className="h-3 w-3" />
+                              Premium
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-xs bg-[#0B1F3A] text-white border-white/10 truncate">
                           {user.email}
                         </p>
