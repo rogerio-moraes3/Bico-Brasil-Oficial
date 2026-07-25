@@ -225,11 +225,11 @@ export default function SearchWorkers() {
       let usersQuery = supabase
         .from('users')
         .select(`
-          id, 
-          name, 
-          city, 
+          id,
+          name,
           city_id,
-          neighborhood, 
+          cities ( name, state ),
+          neighborhood,
           profile_photo,
           verified, 
           rating_avg, 
@@ -279,7 +279,7 @@ export default function SearchWorkers() {
         return {
           id: user.id,
           name: user.name,
-          city: user.city,
+          city: (user as any).cities?.name ?? null,
           city_id: user.city_id,
           neighborhood: user.neighborhood,
           profile_photo: user.profile_photo,
