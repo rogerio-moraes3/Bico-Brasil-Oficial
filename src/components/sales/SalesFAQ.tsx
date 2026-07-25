@@ -67,13 +67,13 @@ export const SalesFAQ = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-bold text-xl mb-1">Ainda com dúvida?</h4>
-                    <p className="text-blue-100/40 text-sm">Chame nosso time no suporte agora.</p>
+                    <p className="text-blue-100/40 text-sm">Chama a gente agora.</p>
                   </div>
                 </div>
-                <button 
+                <button
                 onClick={() => window.location.href = "/contact"}
                 className="w-full mt-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 group/btn">
-                  Falar com especialista
+                  Falar com a gente
                   <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
               </div>

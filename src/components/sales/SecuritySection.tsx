@@ -2,33 +2,33 @@ import { ShieldCheck, Star, Headphones, FileCheck, Lock, CheckCircle2 } from "lu
 import { motion } from "framer-motion";
 
 const features = [
-  { 
-    icon: FileCheck, 
-    title: "Identidade Verificada", 
-    desc: "Validamos documentos oficiais para garantir que você está lidando com pessoas reais.", 
-    color: "text-emerald-400", 
-    bg: "bg-emerald-500/10" 
+  {
+    icon: FileCheck,
+    title: "Identidade Verificada",
+    desc: "Você conversa só com gente verificada de verdade.",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10"
   },
-  { 
-    icon: Star, 
-    title: "Avaliações Reais", 
-    desc: "Sistema de reputação transparente baseado em experiências reais da nossa comunidade.", 
-    color: "text-amber-400", 
-    bg: "bg-amber-500/10" 
+  {
+    icon: Star,
+    title: "Avaliações Reais",
+    desc: "Veja o que outras pessoas acharam antes de fechar negócio.",
+    color: "text-amber-400",
+    bg: "bg-amber-500/10"
   },
-  { 
-    icon: Lock, 
-    title: "Dados Protegidos", 
-    desc: "Seus dados estão seguros conforme a LGPD.", 
-    color: "text-blue-400", 
-    bg: "bg-blue-500/10" 
+  {
+    icon: Lock,
+    title: "Dados Protegidos",
+    desc: "Seus dados ficam protegidos. Sempre.",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10"
   },
-  { 
-    icon: Headphones, 
-    title: "Suporte Humano", 
-    desc: "Nada de robôs. Nossa equipe está pronta para ajudar você em qualquer situação.", 
-    color: "text-purple-400", 
-    bg: "bg-purple-500/10" 
+  {
+    icon: Headphones,
+    title: "Suporte Humano",
+    desc: "Time de verdade, pronto pra ajudar quando você precisar.",
+    color: "text-purple-400",
+    bg: "bg-purple-500/10"
   },
 ];
 
@@ -45,7 +45,7 @@ export const SecuritySection = () => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">compromisso real.</span>
           </h2>
           <p className="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed">
-            Criamos um ambiente onde a confiança é a base de cada bico. Tecnologia e verificação humana trabalhando juntas.
+            Aqui, confiança não é discurso. A gente confere quem usa a plataforma, dos dois lados.
           </p>
         </div>
 
@@ -74,8 +74,8 @@ export const SecuritySection = () => {
               <CheckCircle2 className="w-8 h-8 text-blue-400" />
             </div>
             <div>
-              <h4 className="text-xl font-bold text-white mb-1">Busque pelo Selo de Verificado</h4>
-              <p className="text-zinc-400 text-sm md:text-base font-medium">Priorize profissionais com identidade validada para uma experiência 100% segura.</p>
+              <h4 className="text-xl font-bold text-white mb-1">Fique de olho no Selo de Verificado</h4>
+              <p className="text-zinc-400 text-sm md:text-base font-medium">Prefira sempre quem já validou a identidade. É mais segurança pra você.</p>
             </div>
           </div>
           <button 

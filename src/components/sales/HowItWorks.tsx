@@ -5,22 +5,22 @@ import { motion, AnimatePresence } from "framer-motion";
 const clientSteps = [
   {
     icon: Search,
-    title: "Busque o que precisa",
-    description: "Digite o serviço ou problema. Encontramos quem resolve perto de você em segundos.",
+    title: "Busque",
+    description: "Digite o que precisa. A gente acha quem resolve perto de você.",
     color: "text-blue-400",
     bg: "bg-blue-500/10",
   },
   {
     icon: Zap,
-    title: "Escolha o Perfil",
-    description: "Veja avaliações, fotos e o selo de verificação. Escolha com total segurança.",
+    title: "Escolha",
+    description: "Veja fotos, notas e o selo de verificado. Escolha com calma.",
     color: "text-orange-400",
     bg: "bg-orange-500/10",
   },
   {
     icon: MessageCircle,
     title: "Feche pelo WhatsApp",
-    description: "Contato direto e imediato. Sem taxas ocultas, sem intermediários. Você decide.",
+    description: "Conversa direta, sem taxa escondida. Você decide.",
     color: "text-emerald-400",
     bg: "bg-emerald-500/10",
   },
@@ -65,11 +65,11 @@ export const HowItWorks = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 mb-6 backdrop-blur-sm">
             <CheckCircle2 className="w-3 h-3" />
-            <span>Fluxo de Trabalho</span>
+            <span>Simples Assim</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tight leading-[1.1]">
-            Como funciona o <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Bico Brasil?</span>
+            O jeito mais fácil de <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">encontrar trabalho ou contratar alguém.</span>
           </h2>
 
           {/* Toggle Switch Moderno */}

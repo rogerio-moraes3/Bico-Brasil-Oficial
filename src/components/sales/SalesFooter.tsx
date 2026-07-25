@@ -23,31 +23,31 @@ export const SalesFooter = () => {
             className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 rounded-full px-4 py-2 mb-10 backdrop-blur-md"
           >
             <Sparkles className="w-4 h-4 text-blue-400" />
-            <span className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">O futuro do trabalho local</span>
+            <span className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">Bico Brasil</span>
           </motion.div>
 
-          <h2 className="text-6xl md:text-8xl lg:text-[120px] font-black mb-12 tracking-tighter text-white leading-[0.85] select-none">
-            Resolva sua <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-500 animate-pulse">vida agora.</span>
+          <h2 className="text-5xl md:text-7xl lg:text-[88px] font-black mb-12 tracking-tighter text-white leading-[0.95] select-none">
+            Seu próximo cliente ou o profissional que <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-500 animate-pulse">você procura</span> pode estar a poucos minutos de você.
           </h2>
-          
+
           <p className="text-xl md:text-3xl text-blue-100/60 mb-16 max-w-3xl mx-auto font-medium leading-relaxed">
-            Seja para contratar um profissional em minutos ou para conquistar novos clientes, o Bico Brasil é o seu lugar.
+            Cadastre-se gratuitamente e comece agora.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <button
-              onClick={() => navigate("/auth?mode=signup")}
+              onClick={() => navigate("/app")}
               className="group relative flex items-center gap-3 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-12 py-6 rounded-[24px] font-black text-2xl shadow-[0_20px_60px_rgba(255,92,53,0.3)] transition-all duration-300 hover:scale-[1.05] active:scale-95 w-full sm:w-auto justify-center"
             >
-              Criar Conta Grátis
+              Encontrar Profissionais
               <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
             </button>
-            <button 
-              onClick={() => navigate("/app")}
+            <button
+              onClick={() => navigate("/auth?mode=signup")}
               className="px-12 py-6 text-2xl font-black text-white border border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-xl rounded-[24px] transition-all hover:scale-[1.05] active:scale-95 w-full sm:w-auto"
             >
-              Explorar Serviços
+              Quero Trabalhar
             </button>
           </div>
 
@@ -75,7 +75,7 @@ export const SalesFooter = () => {
           <div className="md:col-span-2 max-w-md">
             <span className="text-3xl font-black text-white mb-8 block tracking-tighter">BICO BRASIL</span>
             <p className="text-lg leading-relaxed mb-10 text-blue-100/50 font-medium">
-              A plataforma definitiva para quem trabalha e para quem resolve. Tecnologia feita para brasileiros de verdade.
+              Aqui, quem precisa de um serviço encontra quem faz. Simples assim — feito pro brasileiro de verdade.
             </p>
             <div className="flex gap-4">
               {[

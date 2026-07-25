@@ -4,9 +4,9 @@ import { Check, TrendingUp, Globe, Wallet, ArrowRight, Sparkles, Zap, ShieldChec
 import { motion } from "framer-motion";
 
 const benefits = [
-  { icon: Globe, text: "Seu perfil aparece nas buscas locais" },
-  { icon: TrendingUp, text: "Página exclusiva que serve como seu portfólio" },
-  { icon: Wallet, text: "Fique com 100% do valor do seu serviço" },
+  { icon: Globe, text: "Apareça pra quem tá perto de você" },
+  { icon: TrendingUp, text: "Seu perfil é a sua vitrine" },
+  { icon: Wallet, text: "100% do valor do serviço é seu" },
 ];
 
 export const ProviderSection = () => {
@@ -33,12 +33,12 @@ export const ProviderSection = () => {
             </div>
 
             <h2 className="text-4xl md:text-6xl font-black mb-8 leading-[1.1] tracking-tight text-white">
-              Transforme seu talento <br />
-              em <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">renda imediata.</span>
+              Precisa de dinheiro <br />
+              hoje? <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">Comece a ganhar agora.</span>
             </h2>
 
             <p className="text-zinc-400 mb-10 text-lg md:text-xl leading-relaxed max-w-lg font-medium">
-              Pare de pagar taxas abusivas por cada serviço. No Bico Brasil, você é dono do seu trabalho e fica com 100% do que ganha.
+              Chega de taxa abusiva. Aqui você fica com 100% do que ganha — sem depender de aplicativo que fica com parte do seu dinheiro.
             </p>
 
             <div className="space-y-4 mb-12">
@@ -111,8 +111,8 @@ export const ProviderSection = () => {
                 whileInView={{ y: 48 }}
                 viewport={{ once: true }}
               >
-                <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">SEO</div>
-                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Busca do Google</div>
+                <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">Local</div>
+                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Perto de Você</div>
               </motion.div>
 
             </div>

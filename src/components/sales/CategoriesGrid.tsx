@@ -73,7 +73,7 @@ export const CategoriesGrid = () => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">resolver hoje?</span>
             </h2>
             <p className="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed max-w-xl">
-              Não busque apenas por nomes, busque por soluções. Conectamos você aos profissionais que resolvem o seu problema agora.
+              Não procure só por nomes — procure por quem resolve. A gente te conecta com quem pode cuidar do seu problema agora.
             </p>
           </div>
           

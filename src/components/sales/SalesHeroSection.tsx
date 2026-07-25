@@ -24,17 +24,17 @@ export const SalesHeroSection = () => {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-8 backdrop-blur-sm">
               <Sparkles className="w-3 h-3" />
-              <span>Contrate rápido · Encontre trabalho · Resolva hoje</span>
+              <span>Contrate rápido • Encontre trabalho • Sem intermediários</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-[72px] font-black leading-[1.1] tracking-tight mb-8 text-white">
-              O jeito mais <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">rápido</span> de resolver sua vida.
+              Precisou de um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">serviço</span>? Ou precisa <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">ganhar dinheiro</span> hoje?
             </h1>
 
             {/* Description */}
             <p className="text-lg lg:text-xl text-blue-100/70 mb-10 max-w-xl leading-relaxed">
-              O Bico Brasil conecta quem precisa de uma solução agora a quem quer trabalhar perto, com foco local e contato sem intermediários.
+              Encontre um profissional da sua cidade ou divulgue seus serviços para conseguir novos clientes. Tudo com contato direto, sem comissão e sem burocracia.
             </p>
 
             {/* Buttons */}
@@ -43,7 +43,7 @@ export const SalesHeroSection = () => {
                 onClick={() => navigate("/app")}
                 className="group relative flex items-center gap-2 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-[0_12px_40px_rgba(255,92,53,0.25)] transition-all duration-300 hover:scale-[1.02] active:scale-95"
               >
-                Buscar serviços
+                Quero contratar
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -51,16 +51,16 @@ export const SalesHeroSection = () => {
                 onClick={() => navigate("/auth?mode=signup")}
                 className="px-8 py-4 rounded-2xl font-bold text-lg text-white border border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all duration-300"
               >
-                Criar perfil
+                Quero trabalhar
               </button>
             </div>
 
             {/* Pills */}
             <div className="flex flex-wrap gap-3">
               {[
-                { icon: Globe, text: "Busca por cidade" },
-                { icon: Zap, text: "Perfis Verificados" },
-                { icon: ShieldCheck, text: "Premium opcional" }
+                { icon: Globe, text: "Contato direto pelo WhatsApp" },
+                { icon: Zap, text: "Profissionais perto de você" },
+                { icon: ShieldCheck, text: "Você fica com 100% do valor" }
               ].map((item) => (
                 <span key={item.text} className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/5 rounded-full text-xs font-medium text-blue-100/60 backdrop-blur-sm">
                   <item.icon className="w-3.5 h-3.5" />
@@ -86,7 +86,7 @@ export const SalesHeroSection = () => {
               </div>
               {/* SubHeadLine */}
               <h2 className="text-3xl lg:text-[36px] font-black leading-[1.1] tracking-tight text-white text-center lg:text-right max-w-[400px]">
-                Peça um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">serviço</span> ou Pegue um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Trabalho</span>.
+                Peça um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">serviço</span>. Ou pegue um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">trabalho</span>.
               </h2>
             </div>
             {/* Phone Container */}
@@ -157,7 +157,7 @@ export const SalesHeroSection = () => {
                   <div className="px-2 py-0.5 bg-yellow-500 text-[9px] font-black rounded text-black">PRO</div>
                   <span className="text-yellow-400 text-xs font-bold uppercase tracking-widest">Premium</span>
                 </div>
-                <p className="text-blue-100/90 text-sm leading-snug">Ganhe visibilidade máxima e apareça no topo das buscas.</p>
+                <p className="text-blue-100/90 text-sm leading-snug">Quer aparecer primeiro e conseguir mais clientes? Ative o Premium.</p>
               </motion.div>
             </div>
           </motion.div>
@@ -174,7 +174,7 @@ export const SalesHeroSection = () => {
                 Busca Inteligente
               </span>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
-                Encontre o profissional certo ou sua próxima oportunidade agora.
+                Ache quem você precisa. Perto de você, agora.
               </h2>
             </div>
             
@@ -219,21 +219,21 @@ export const SalesHeroSection = () => {
           {/* Features Grid */}
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { 
-                title: "Trabalhou, tá pago.", 
-                desc: "Jornada direta focada na conclusão do serviço sem burocracia.",
+              {
+                title: "Trabalhou, tá pago.",
+                desc: "Sem enrolação: combinou, fez, recebeu.",
                 icon: Zap,
                 color: "bg-amber-50 text-amber-600"
               },
-              { 
-                title: "Leitura local", 
-                desc: "Priorizamos quem está perto de você para agilizar o atendimento.",
+              {
+                title: "Perto de você",
+                desc: "A gente prioriza quem tá pertinho, pra ser mais rápido.",
                 icon: MapPin,
                 color: "bg-blue-50 text-blue-600"
               },
-              { 
-                title: "Contato mais claro", 
-                desc: "Interface limpa e objetiva para fechar o bico sem ruídos.",
+              {
+                title: "Direto no ponto",
+                desc: "Sem letra miúda, sem intermediário. Você fala com a pessoa certa.",
                 icon: ShieldCheck,
                 color: "bg-emerald-50 text-emerald-600"
               },
