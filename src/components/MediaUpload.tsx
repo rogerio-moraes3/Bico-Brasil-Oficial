@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Upload, Image, FileText, X } from 'lucide-react';
+import { resizeImageFile } from '@/lib/imageResize';
 
 interface MediaUploadProps {
   onUpload: (url: string, type: string) => void;
@@ -19,11 +20,7 @@ export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0] || !user) return;
 
-    const file = e.target.files[0];
-    const fileExt = file.name.split('.').pop();
-    const timestamp = Date.now();
-    const fileName = `${timestamp}_${file.name}`;
-    const filePath = `${user.id}/${fileName}`;
+    const rawFile = e.target.files[0];
 
     // Validate file type
     const allowedTypes = (bucket === 'avatars' || bucket === 'profiles')
@@ -32,7 +29,7 @@ export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
         ? ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4']
         : ['image/jpeg', 'image/png', 'application/pdf'];
 
-    if (!allowedTypes.includes(file.type)) {
+    if (!allowedTypes.includes(rawFile.type)) {
       toast({
         title: "Tipo de arquivo não suportado",
         description: (bucket === 'avatars' || bucket === 'profiles')
@@ -47,7 +44,7 @@ export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
 
     // Validate file size (5MB for avatars/profiles/chat, 10MB for docs)
     const maxSize = (bucket === 'avatars' || bucket === 'profiles' || bucket === 'chat-media') ? 5 * 1024 * 1024 : 10 * 1024 * 1024;
-    if (file.size > maxSize) {
+    if (rawFile.size > maxSize) {
       toast({
         title: "Arquivo muito grande",
         description: `O arquivo deve ter no máximo ${maxSize / (1024 * 1024)}MB`,
@@ -59,6 +56,13 @@ export function MediaUpload({ onUpload, bucket }: MediaUploadProps) {
     setUploading(true);
 
     try {
+      // Redimensiona fotos de perfil/avatar/chat no navegador antes do
+      // upload (fotos de câmera de celular chegam bem maiores do que o
+      // necessário pra um avatar). Documentos (PDF) passam direto.
+      const file = bucket === 'verification-docs' ? rawFile : await resizeImageFile(rawFile);
+      const fileName = `${Date.now()}_${file.name}`;
+      const filePath = `${user.id}/${fileName}`;
+
       const { error: uploadError, data } = await supabase.storage
         .from(bucket)
         .upload(filePath, file, {

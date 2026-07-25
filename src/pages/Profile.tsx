@@ -22,6 +22,7 @@ import { NotificationsPanel } from '@/components/NotificationsPanel';
 
 import { MyAdsTab } from '@/components/MyAdsTab';
 import { MediaUpload } from '@/components/MediaUpload';
+import { resizeImageFile } from '@/lib/imageResize';
 import {
   User,
   Mail,
@@ -172,12 +173,12 @@ export default function Profile() {
   };
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const rawFile = e.target.files?.[0];
+    if (!rawFile) return;
 
     // Validação de tipo
     const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!validTypes.includes(file.type)) {
+    if (!validTypes.includes(rawFile.type)) {
       toast({
         title: "Formato inválido",
         description: "Use JPG, PNG ou WEBP",
@@ -187,7 +188,7 @@ export default function Profile() {
     }
 
     // Validação de tamanho (5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    if (rawFile.size > 5 * 1024 * 1024) {
       toast({
         title: "Arquivo muito grande",
         description: "Tamanho máximo: 5MB",
@@ -198,6 +199,10 @@ export default function Profile() {
 
     try {
       setLoading(true);
+
+      // Redimensiona no navegador antes do upload — fotos de câmera de
+      // celular chegam bem maiores do que o necessário pra um avatar.
+      const file = await resizeImageFile(rawFile);
 
       // Upload para Supabase Storage
       const fileExt = file.name.split('.').pop();

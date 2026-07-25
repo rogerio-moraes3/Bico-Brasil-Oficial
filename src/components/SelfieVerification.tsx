@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Camera, Upload, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { resizeImageFile } from '@/lib/imageResize';
 
 export function SelfieVerification({ 
   open, 
@@ -18,9 +19,13 @@ export function SelfieVerification({
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const handleFileUpload = async (file: File) => {
+  const handleFileUpload = async (rawFile: File) => {
     setLoading(true);
     try {
+      // Redimensiona no navegador (dimensão maior que um avatar comum
+      // pra preservar nitidez suficiente pra conferência de identidade).
+      const file = await resizeImageFile(rawFile, 1200);
+
       // Upload para storage
       const fileName = `${userId}_${Date.now()}.jpg`;
       const { error: uploadError } = await supabase.storage
