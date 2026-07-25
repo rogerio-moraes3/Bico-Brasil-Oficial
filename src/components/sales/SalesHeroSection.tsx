@@ -21,16 +21,16 @@ export const SalesHeroSection = () => {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-10 backdrop-blur-sm">
               <Sparkles className="w-3 h-3" />
-              <span>Contrate rápido • Encontre trabalho • Sem intermediários</span>
+              <span className="!text-blue-400">Contrate rápido • Encontre trabalho • Sem intermediários</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-[72px] font-black leading-[1.1] tracking-tight mb-8 text-white">
-              Precisa <span className="text-blue-400">contratar</span> alguém? Ou quer <span className="text-blue-400">ganhar dinheiro</span> hoje?
+              Precisa <span className="!text-blue-400">contratar</span> alguém? Ou quer <span className="!text-blue-400">ganhar dinheiro</span> hoje?
             </h1>
 
             {/* Description */}
-            <p className="text-lg lg:text-xl text-blue-100/70 mb-12 max-w-xl leading-relaxed">
+            <p className="text-lg lg:text-xl !text-blue-100/70 mb-12 max-w-xl leading-relaxed">
               Encontre um profissional da sua cidade ou divulgue seus serviços para conseguir novos clientes. Tudo com contato direto, sem comissão e sem burocracia.
             </p>
 
@@ -59,7 +59,7 @@ export const SalesHeroSection = () => {
                 { icon: Zap, text: "Profissionais perto de você" },
                 { icon: ShieldCheck, text: "Você fica com 100% do valor" }
               ].map((item) => (
-                <span key={item.text} className="inline-flex items-center gap-2 text-xs font-medium text-blue-100/50">
+                <span key={item.text} className="inline-flex items-center gap-2 text-xs font-medium !text-blue-100/50">
                   <item.icon className="w-3.5 h-3.5" />
                   {item.text}
                 </span>
@@ -79,11 +79,11 @@ export const SalesHeroSection = () => {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-4 backdrop-blur-sm">
                 <Sparkles className="w-3 h-3" />
-                <span>Bico Brasil</span>
+                <span className="!text-blue-400">Bico Brasil</span>
               </div>
               {/* SubHeadLine */}
               <h2 className="text-3xl lg:text-[36px] font-black leading-[1.1] tracking-tight text-white text-center lg:text-right max-w-[400px]">
-                Peça um <span className="text-blue-400">serviço</span>. Ou pegue um <span className="text-blue-400">trabalho</span>.
+                Peça um <span className="!text-blue-400">serviço</span>. Ou pegue um <span className="!text-blue-400">trabalho</span>.
               </h2>
             </div>
             {/* Phone Container */}
@@ -152,9 +152,9 @@ export const SalesHeroSection = () => {
               >
                 <div className="flex items-center gap-2 mb-2">
                   <div className="px-2 py-0.5 bg-yellow-500 text-[9px] font-black rounded text-black">PRO</div>
-                  <span className="text-yellow-400 text-xs font-bold uppercase tracking-widest">Premium</span>
+                  <span className="!text-yellow-400 text-xs font-bold uppercase tracking-widest">Premium</span>
                 </div>
-                <p className="text-blue-100/90 text-sm leading-snug">Quer aparecer primeiro e conseguir mais clientes? Ative o Premium.</p>
+                <p className="!text-blue-100/90 text-sm leading-snug">Quer aparecer primeiro e conseguir mais clientes? Ative o Premium.</p>
               </motion.div>
             </div>
           </motion.div>
