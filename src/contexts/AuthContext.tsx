@@ -122,6 +122,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const clearAuthStorage = () => {
+    // Preserva preferências que não são específicas da sessão do usuário
+    // (ex: decisão do prompt de notificações, que não deve resetar a cada logout)
+    const preservedKeys = ['notificationPromptSeen', 'notificationPromptLastShown'];
+    const preserved = preservedKeys.map((key) => [key, localStorage.getItem(key)] as const);
+    localStorage.clear();
+    sessionStorage.clear();
+    preserved.forEach(([key, value]) => {
+      if (value !== null) localStorage.setItem(key, value);
+    });
+  };
+
   const signOut = async () => {
     try {
       // Limpar estado local PRIMEIRO
@@ -129,16 +141,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(null);
       // Limpar no Supabase
       await supabase.auth.signOut();
-      // MARRETA: Limpar TUDO
-      localStorage.clear();
-      sessionStorage.clear();
+      clearAuthStorage();
       // Forçar redirecionamento e limpar cache
       window.location.href = '/';
     } catch (error: any) {
       console.error('[AuthContext] Error signing out:', error);
-      // Mesmo com erro, MARRETA: limpar tudo e redirecionar
-      localStorage.clear();
-      sessionStorage.clear();
+      clearAuthStorage();
       window.location.href = '/';
     }
   };

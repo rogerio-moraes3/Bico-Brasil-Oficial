@@ -101,7 +101,7 @@ export const FeaturedServicesSection = () => {
             featuredWorkers.map((worker) => (
               <Card
                 key={worker.id}
-                className={`bg-card border rounded-2xl hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group relative h-full flex flex-col ${
+                className={`bg-card border rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group relative h-full flex flex-col ${
                   worker.hasDestaque
                     ? 'border-amber-400 dark:border-amber-500 shadow-md ring-1 ring-amber-400/40'
                     : 'border-border/80 hover:border-primary/40 shadow-sm'

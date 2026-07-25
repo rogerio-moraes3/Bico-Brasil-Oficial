@@ -14,7 +14,6 @@ import { RecentWorkersSection } from "@/components/RecentWorkersSection";
 import { TrustStrip } from "@/components/TrustStrip";
 import { ProfileCompletionWidget } from "@/components/ProfileCompletionWidget";
 import { HowItWorks } from "@/components/sales/HowItWorks";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Index() {
@@ -41,10 +40,10 @@ export default function Index() {
   })();
 
   const primaryCardClassName =
-    "group flex flex-col items-start gap-3 h-full rounded-3xl border border-primary/50 dark:border-primary/35 bg-primary/[0.10] dark:bg-primary/12 p-5 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/70 hover:bg-primary/[0.15] hover:scale-[1.05] transition-all duration-300 stagger-fade";
+    "group flex flex-col items-start gap-3 h-full rounded-lg border border-primary/50 dark:border-primary/35 bg-primary/[0.10] dark:bg-primary/12 p-5 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/70 hover:bg-primary/[0.15] hover:scale-[1.05] transition-all duration-300 stagger-fade";
 
   const secondaryCardClassName =
-    "group flex flex-col items-start gap-3 h-full rounded-3xl border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 p-5 shadow-xl shadow-slate-200/60 dark:shadow-sm hover:shadow-2xl hover:shadow-slate-300/50 hover:bg-white dark:hover:bg-card hover:scale-[1.05] transition-all duration-300 stagger-fade backdrop-blur-sm";
+    "group flex flex-col items-start gap-3 h-full rounded-lg border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 p-5 shadow-xl shadow-slate-200/60 dark:shadow-sm hover:shadow-2xl hover:shadow-slate-300/50 hover:bg-white dark:hover:bg-card hover:scale-[1.05] transition-all duration-300 stagger-fade backdrop-blur-sm";
 
   return (
     <>
@@ -90,7 +89,7 @@ export default function Index() {
                 className={primaryCardClassName}
                 style={{ ["--stagger-delay" as string]: "0ms" }}
               >
-                <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors duration-200">
+                <div className="w-12 h-12 rounded-md bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors duration-200">
                   <Search className="w-5 h-5 text-primary-foreground" aria-hidden="true" />
                 </div>
                 <div className="text-left">
@@ -99,7 +98,7 @@ export default function Index() {
                     Busque profissionais verificados perto de você
                   </p>
                 </div>
-                <span className="mt-auto inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
+                <span className="mt-auto inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
                   Buscar agora <ArrowRight className="w-3 h-3" aria-hidden="true" />
                 </span>
               </motion.button>
@@ -111,7 +110,7 @@ export default function Index() {
                 className={secondaryCardClassName}
                 style={{ ["--stagger-delay" as string]: "80ms" }}
               >
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-muted/80 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-muted transition-colors duration-200">
+                <div className="w-12 h-12 rounded-md bg-slate-100 dark:bg-muted/80 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-muted transition-colors duration-200">
                   <Briefcase className="w-5 h-5 text-slate-500 dark:text-muted-foreground" aria-hidden="true" />
                 </div>
                 <div className="text-left">
@@ -126,19 +125,22 @@ export default function Index() {
               </motion.button>
             </div>
 
-            {/* Quick-nav pills */}
-            <div className="flex flex-wrap justify-center gap-2 mt-6">
-              {["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor"].map((cat) => (
-                <Button
-                  key={cat}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full h-8 px-4 text-xs font-semibold border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 shadow-sm hover:bg-white dark:hover:bg-card hover:border-primary/60 hover:text-primary text-muted-foreground transition-all duration-200"
-                  onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
-                >
-                  {cat}
-                </Button>
-              ))}
+            {/* Categorias populares — lista vertical */}
+            <div className="w-full max-w-xl mt-8">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 text-left">
+                Categorias populares
+              </p>
+              <nav className="flex flex-col divide-y divide-border/60 border-t border-border/60">
+                {["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor"].map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
+                    className="py-3 text-left text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </nav>
             </div>
           </section>
 
