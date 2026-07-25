@@ -26,9 +26,8 @@ interface Payment {
   gateway: string | null;
   plan_type: string | null;
   created_at: string;
-  subscription_start: string | null;
-  subscription_end: string | null;
   mercadopago_payment_id: string | null;
+  raw: any;
   user?: {
     name: string;
     email: string | null;
@@ -124,9 +123,16 @@ export default function AdminPayments() {
 
       if (error) throw error;
 
-      setPayments(paymentsData || []);
-      calculateStats(paymentsData || []);
-      calculateChartData(paymentsData || []);
+      // plan_type não existe como coluna própria — vem do metadata bruto do
+      // Mercado Pago (raw.metadata.plan_type), gravado pela Edge Function.
+      const enrichedPayments: Payment[] = (paymentsData || []).map((p: any) => ({
+        ...p,
+        plan_type: p.raw?.metadata?.plan_type ?? null,
+      }));
+
+      setPayments(enrichedPayments);
+      calculateStats(enrichedPayments);
+      calculateChartData(enrichedPayments);
 
     } catch (error) {
       console.error('Error loading payments:', error);
@@ -617,14 +623,6 @@ export default function AdminPayments() {
                     <p className="text-sm text-muted-foreground">Data Criação</p>
                     <p className="font-medium">
                       {format(new Date(selectedPayment.created_at), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR })}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Assinatura</p>
-                    <p className="font-medium">
-                      {selectedPayment.subscription_start && selectedPayment.subscription_end
-                        ? `${format(new Date(selectedPayment.subscription_start), 'dd/MM/yy')} - ${format(new Date(selectedPayment.subscription_end), 'dd/MM/yy')}`
-                        : '-'}
                     </p>
                   </div>
                 </div>
