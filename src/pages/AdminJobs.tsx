@@ -19,19 +19,18 @@ interface Job {
   id: string;
   title: string;
   description: string;
-  category: string;
-  subcategory: string | null;
+  category: string | null;
   city: string | null;
+  state: string | null;
   neighborhood: string | null;
   status: string;
   urgent: boolean;
   created_at: string;
 
-  contractor_name: string;
-  contractor_phone: string;
+  contractor_name: string | null;
+  contractor_phone: string | null;
   contractor_id: string | null;
-  views_count?: number;
-  contacts_count?: number;
+  applications_count?: number;
 }
 
 export default function AdminJobs() {
@@ -108,47 +107,59 @@ export default function AdminJobs() {
   const loadJobs = async () => {
     setLoading(true);
     try {
-      // Load jobs with views and contacts count
+      // job_postings é a tabela real (jobs/job_views/job_contacts não existem mais)
       const { data: jobsData, error } = await supabase
-        .from('jobs')
-        .select('*')
+        .from('job_postings')
+        .select(`
+          id,
+          title,
+          description,
+          urgent,
+          created_at,
+          status,
+          user_id,
+          contact_phone,
+          neighborhood,
+          category:categories ( name ),
+          city:cities ( name, state ),
+          contractor:users!user_id ( name )
+        `)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      // Get views count for each job
-      const { data: viewsData } = await supabase
-        .from('job_views')
-        .select('job_id');
+      // Candidaturas reais (job_applications), no lugar de "contatos" fictício
+      const { data: applicationsData } = await supabase
+        .from('job_applications')
+        .select('job_posting_id');
 
-      // Get contacts count for each job
-      const { data: contactsData } = await supabase
-        .from('job_contacts')
-        .select('job_id');
-
-      // Count views and contacts per job
-      const viewsCount: Record<string, number> = {};
-      const contactsCount: Record<string, number> = {};
-
-      viewsData?.forEach(v => {
-        viewsCount[v.job_id] = (viewsCount[v.job_id] || 0) + 1;
+      const applicationsCount: Record<string, number> = {};
+      applicationsData?.forEach((a: any) => {
+        applicationsCount[a.job_posting_id] = (applicationsCount[a.job_posting_id] || 0) + 1;
       });
 
-      contactsData?.forEach(c => {
-        contactsCount[c.job_id] = (contactsCount[c.job_id] || 0) + 1;
-      });
-
-      const enrichedJobs = (jobsData || []).map(job => ({
-        ...job,
-        views_count: viewsCount[job.id] || 0,
-        contacts_count: contactsCount[job.id] || 0
+      const enrichedJobs: Job[] = (jobsData || []).map((job: any) => ({
+        id: job.id,
+        title: job.title,
+        description: job.description,
+        category: job.category?.name ?? null,
+        city: job.city?.name ?? null,
+        state: job.city?.state ?? null,
+        neighborhood: job.neighborhood,
+        status: job.status,
+        urgent: job.urgent,
+        created_at: job.created_at,
+        contractor_name: job.contractor?.name ?? null,
+        contractor_phone: job.contact_phone,
+        contractor_id: job.user_id,
+        applications_count: applicationsCount[job.id] || 0,
       }));
 
       setJobs(enrichedJobs);
 
-      // Calculate stats
-      const activeJobs = enrichedJobs.filter(j => j.status === 'published');
-      const inactiveJobs = enrichedJobs.filter(j => j.status !== 'published');
+      // Calculate stats (status real: 'open' | 'closed')
+      const activeJobs = enrichedJobs.filter(j => j.status === 'open');
+      const inactiveJobs = enrichedJobs.filter(j => j.status !== 'open');
       const urgentJobs = enrichedJobs.filter(j => j.urgent);
 
       setStats({
@@ -159,7 +170,7 @@ export default function AdminJobs() {
       });
 
       // Extract unique categories and cities
-      const uniqueCategories = [...new Set(enrichedJobs.map(j => j.category).filter(Boolean))];
+      const uniqueCategories = [...new Set(enrichedJobs.map(j => j.category).filter(Boolean))] as string[];
       const uniqueCities = [...new Set(enrichedJobs.map(j => j.city).filter(Boolean))] as string[];
 
       setCategories(uniqueCategories);
@@ -209,7 +220,7 @@ export default function AdminJobs() {
 
     try {
       const { error } = await supabase
-        .from('jobs')
+        .from('job_postings')
         .delete()
         .eq('id', jobToDelete.id);
 
@@ -226,19 +237,19 @@ export default function AdminJobs() {
   };
 
   const exportToCSV = () => {
-    const headers = ['ID', 'Título', 'Categoria', 'Cidade', 'Bairro', 'Status', 'Urgente', 'Criado Por', 'Data Criação', 'Visualizações', 'Contatos'];
+    const headers = ['ID', 'Título', 'Categoria', 'Cidade', 'Estado', 'Bairro', 'Status', 'Urgente', 'Criado Por', 'Data Criação', 'Candidaturas'];
     const rows = filteredJobs.map(j => [
       j.id,
       j.title,
-      j.category,
+      j.category || '',
       j.city || '',
+      j.state || '',
       j.neighborhood || '',
       j.status,
       j.urgent ? 'Sim' : 'Não',
-      j.contractor_name,
+      j.contractor_name || '',
       format(new Date(j.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR }),
-      j.views_count || 0,
-      j.contacts_count || 0
+      j.applications_count || 0
     ]);
 
     const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
@@ -252,14 +263,10 @@ export default function AdminJobs() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'published':
-        return <Badge className="bg-green-500">Ativo</Badge>;
-      case 'in_progress':
-        return <Badge className="bg-blue-500">Em Andamento</Badge>;
-      case 'done':
-        return <Badge className="bg-gray-500">Concluído</Badge>;
-      case 'cancelled':
-        return <Badge className="bg-red-500">Cancelado</Badge>;
+      case 'open':
+        return <Badge className="bg-green-500">Aberto</Badge>;
+      case 'closed':
+        return <Badge className="bg-gray-500">Fechado</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -303,7 +310,7 @@ export default function AdminJobs() {
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-8 h-8 text-green-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Ativos</p>
+                  <p className="text-sm text-muted-foreground">Abertos</p>
                   <p className="text-2xl font-bold">{stats.active}</p>
                 </div>
               </div>
@@ -314,7 +321,7 @@ export default function AdminJobs() {
               <div className="flex items-center gap-3">
                 <XCircle className="w-8 h-8 text-gray-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Inativos</p>
+                  <p className="text-sm text-muted-foreground">Fechados</p>
                   <p className="text-2xl font-bold">{stats.inactive}</p>
                 </div>
               </div>
@@ -359,10 +366,8 @@ export default function AdminJobs() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos Status</SelectItem>
-                  <SelectItem value="published">Ativo</SelectItem>
-                  <SelectItem value="in_progress">Em Andamento</SelectItem>
-                  <SelectItem value="done">Concluído</SelectItem>
-                  <SelectItem value="cancelled">Cancelado</SelectItem>
+                  <SelectItem value="open">Aberto</SelectItem>
+                  <SelectItem value="closed">Fechado</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -428,8 +433,7 @@ export default function AdminJobs() {
                     <TableHead>Urgente</TableHead>
                     <TableHead>Criado Por</TableHead>
                     <TableHead>Data</TableHead>
-                    <TableHead>Views</TableHead>
-                    <TableHead>Contatos</TableHead>
+                    <TableHead>Candidaturas</TableHead>
                     <TableHead>Ações</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -439,8 +443,8 @@ export default function AdminJobs() {
                       <TableCell className="font-medium max-w-[200px] truncate">
                         {job.title}
                       </TableCell>
-                      <TableCell>{job.category}</TableCell>
-                      <TableCell>{job.city || '-'}</TableCell>
+                      <TableCell>{job.category || '-'}</TableCell>
+                      <TableCell>{job.city ? `${job.city}${job.state ? ` - ${job.state}` : ''}` : '-'}</TableCell>
                       <TableCell>{getStatusBadge(job.status)}</TableCell>
                       <TableCell>
                         {job.urgent ? (
@@ -449,12 +453,11 @@ export default function AdminJobs() {
                           <Badge variant="outline">Não</Badge>
                         )}
                       </TableCell>
-                      <TableCell>{job.contractor_name}</TableCell>
+                      <TableCell>{job.contractor_name || '-'}</TableCell>
                       <TableCell>
                         {format(new Date(job.created_at), 'dd/MM/yy', { locale: ptBR })}
                       </TableCell>
-                      <TableCell>{job.views_count}</TableCell>
-                      <TableCell>{job.contacts_count}</TableCell>
+                      <TableCell>{job.applications_count}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
                           <Button
@@ -507,11 +510,7 @@ export default function AdminJobs() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Categoria</p>
-                    <p className="font-medium">{selectedJob.category}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Subcategoria</p>
-                    <p className="font-medium">{selectedJob.subcategory || '-'}</p>
+                    <p className="font-medium">{selectedJob.category || '-'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Status</p>
@@ -519,7 +518,9 @@ export default function AdminJobs() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Cidade</p>
-                    <p className="font-medium">{selectedJob.city || '-'}</p>
+                    <p className="font-medium">
+                      {selectedJob.city ? `${selectedJob.city}${selectedJob.state ? ` - ${selectedJob.state}` : ''}` : '-'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Bairro</p>
@@ -527,11 +528,11 @@ export default function AdminJobs() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Criado Por</p>
-                    <p className="font-medium">{selectedJob.contractor_name}</p>
+                    <p className="font-medium">{selectedJob.contractor_name || '-'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Telefone</p>
-                    <p className="font-medium">{selectedJob.contractor_phone}</p>
+                    <p className="font-medium">{selectedJob.contractor_phone || '-'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Data Criação</p>
@@ -547,12 +548,8 @@ export default function AdminJobs() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex items-center gap-2">
-                    <Eye className="w-4 h-4 text-muted-foreground" />
-                    <span>{selectedJob.views_count} visualizações</span>
-                  </div>
-                  <div className="flex items-center gap-2">
                     <Briefcase className="w-4 h-4 text-muted-foreground" />
-                    <span>{selectedJob.contacts_count} contatos</span>
+                    <span>{selectedJob.applications_count} candidatura(s)</span>
                   </div>
                 </div>
               </div>
