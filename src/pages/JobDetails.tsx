@@ -224,11 +224,11 @@ export default function JobDetails() {
             </div>
 
             {/* Contato via WhatsApp */}
-            {job.user?.phone && !isOwner && (
+            {job.user?.id && !isOwner && (
               <div className="pt-4 border-t">
                 <h3 className="font-semibold mb-3">Contato</h3>
                 <WhatsAppContactButton
-                  phone={job.user.phone}
+                  workerId={job.user.id}
                   workerName={job.user.name || 'Contratante'}
                   canViewContact={canViewContacts}
                   remainingViews={remainingFreeViews}

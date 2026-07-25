@@ -698,10 +698,10 @@ export default function SearchWorkers() {
                         </CardContent>
                       </Link>
 
-                      {!isOwner && worker.phone && (
+                      {!isOwner && (
                         <div className="px-4 md:px-6 pb-4 md:pb-6 pt-2 border-t">
                           <WhatsAppContactButton
-                            phone={worker.phone}
+                            workerId={worker.id}
                             workerName={worker.name}
                             canViewContact={canViewProfiles}
                             remainingViews={remainingFreeViews}

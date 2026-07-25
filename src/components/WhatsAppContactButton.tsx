@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { MessageSquare, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAccessControl } from "@/hooks/useAccessControl";
 import { supabase } from "@/integrations/supabase/client";
 
 interface WhatsAppContactButtonProps {
-  phone: string;
+  workerId: string;
   workerName: string;
   canViewContact: boolean;
   remainingViews: number;
@@ -14,7 +15,7 @@ interface WhatsAppContactButtonProps {
 }
 
 export const WhatsAppContactButton = ({
-  phone,
+  workerId,
   workerName,
   canViewContact,
   remainingViews,
@@ -23,6 +24,22 @@ export const WhatsAppContactButton = ({
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { hasUnlockedWorker, unlockWorkerContact } = useAccessControl();
+
+  const openWhatsApp = (phoneNumber: string) => {
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
+    const message = encodeURIComponent(`Olá ${workerName}, vi seu anúncio no Bico Brasil e tenho interesse.`);
+    window.open(`https://wa.me/55${cleanPhone}?text=${message}`, '_blank');
+  };
+
+  const fetchAndOpen = async () => {
+    const { data, error } = await supabase.rpc('get_worker_contact', { worker_id: workerId });
+    const contact = Array.isArray(data) ? data[0] : data;
+    if (error || !contact?.phone) {
+      throw new Error('Não foi possível obter o telefone. Tente novamente.');
+    }
+    openWhatsApp(contact.phone);
+  };
 
   const handleContact = async () => {
     if (!user) {
@@ -36,42 +53,41 @@ export const WhatsAppContactButton = ({
 
     setLoading(true);
 
-    // Se for premium/tester, abrir WhatsApp diretamente
-    if (canViewContact) {
-      const cleanPhone = phone.replace(/\D/g, '');
-      const message = encodeURIComponent(`Olá ${workerName}, vi seu anúncio no Bico Brasil e tenho interesse.`);
-      window.open(`https://wa.me/55${cleanPhone}?text=${message}`, '_blank');
-      setLoading(false);
-      return;
-    }
-
-    // Se não for premium, verificar créditos
-    if (remainingViews === 0) {
-      setLoading(false);
-      onUpgradeClick();
-      return;
-    }
-
-    // Decrementar crédito para usuários free
     try {
-      const { error } = await supabase.rpc('decrement_view_credits', {
-        user_auth_id: user.id
-      });
+      // Premium/tester: acesso direto
+      if (canViewContact) {
+        await fetchAndOpen();
+        setLoading(false);
+        return;
+      }
 
-      if (error) {
-        console.error('❌ Erro ao decrementar crédito:', error);
-        throw new Error('Erro ao processar sua solicitação');
+      // Já desbloqueou esse contato antes
+      const alreadyUnlocked = await hasUnlockedWorker(workerId);
+      if (alreadyUnlocked) {
+        await fetchAndOpen();
+        setLoading(false);
+        return;
+      }
+
+      // Sem cota grátis restante
+      if (remainingViews <= 0) {
+        setLoading(false);
+        onUpgradeClick();
+        return;
+      }
+
+      // Consome uma das 3 consultas grátis
+      const unlocked = await unlockWorkerContact(workerId);
+      if (!unlocked) {
+        throw new Error('Não foi possível desbloquear o contato');
       }
 
       toast({
-        title: "Visualização registrada",
+        title: "Contato desbloqueado!",
         description: `Você tem ${remainingViews - 1} visualizações restantes`,
       });
 
-      // Abrir WhatsApp após decrementar
-      const cleanPhone = phone.replace(/\D/g, '');
-      const message = encodeURIComponent(`Olá ${workerName}, vi seu anúncio no Bico Brasil e tenho interesse.`);
-      window.open(`https://wa.me/55${cleanPhone}?text=${message}`, '_blank');
+      await fetchAndOpen();
     } catch (err: any) {
       console.error("❌ Erro ao contatar:", err);
       toast({

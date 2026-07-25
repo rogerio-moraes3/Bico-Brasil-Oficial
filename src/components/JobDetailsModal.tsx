@@ -172,10 +172,10 @@ export const JobDetailsModal = ({ job, open, onOpenChange, canViewContacts, isOw
         {/* Contato - FREEMIUM HABILITADO */}
         <div className="border-t pt-4">
           <Label>Contato</Label>
-          {job.user?.phone ? (
+          {job.user?.id ? (
             <div className="mt-2">
               <WhatsAppContactButton
-                phone={job.user.phone}
+                workerId={job.user.id}
                 workerName={job.user?.name || 'Contratante'}
                 canViewContact={canViewContacts}
                 remainingViews={remainingFreeViews}
