@@ -49,6 +49,14 @@ export const FeaturedServicesSection = () => {
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   };
 
+  const workerCount = featuredWorkers?.length ?? 0;
+  const gridColsClass =
+    isLoading || workerCount === 0 || workerCount >= 3
+      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+      : workerCount === 1
+        ? "grid-cols-1 max-w-sm mx-auto"
+        : "grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto";
+
   return (
     <section className="py-14 bg-[#f8fafc] dark:bg-muted/20 relative z-10" aria-labelledby="featured-services-title">
       <div className="container mx-auto px-4">
@@ -72,7 +80,7 @@ export const FeaturedServicesSection = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        <div className={`grid ${gridColsClass} gap-4 md:gap-5`}>
           {isLoading ? (
             [...Array(6)].map((_, i) => (
                 <Card key={i} className="bg-card border border-border rounded-2xl shadow-sm">

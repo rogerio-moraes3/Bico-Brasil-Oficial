@@ -41,10 +41,10 @@ export default function Index() {
   })();
 
   const primaryCardClassName =
-    "group flex flex-col items-start gap-3 rounded-3xl border border-primary/50 dark:border-primary/35 bg-primary/[0.10] dark:bg-primary/12 p-5 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/70 hover:bg-primary/[0.15] hover:scale-[1.05] transition-all duration-300 stagger-fade";
+    "group flex flex-col items-start gap-3 h-full rounded-3xl border border-primary/50 dark:border-primary/35 bg-primary/[0.10] dark:bg-primary/12 p-5 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/70 hover:bg-primary/[0.15] hover:scale-[1.05] transition-all duration-300 stagger-fade";
 
   const secondaryCardClassName =
-    "group flex flex-col items-start gap-3 rounded-3xl border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 p-5 shadow-xl shadow-slate-200/60 dark:shadow-sm hover:shadow-2xl hover:shadow-slate-300/50 hover:bg-white dark:hover:bg-card hover:scale-[1.05] transition-all duration-300 stagger-fade backdrop-blur-sm";
+    "group flex flex-col items-start gap-3 h-full rounded-3xl border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 p-5 shadow-xl shadow-slate-200/60 dark:shadow-sm hover:shadow-2xl hover:shadow-slate-300/50 hover:bg-white dark:hover:bg-card hover:scale-[1.05] transition-all duration-300 stagger-fade backdrop-blur-sm";
 
   return (
     <>
@@ -115,7 +115,7 @@ export default function Index() {
                   <Briefcase className="w-5 h-5 text-slate-500 dark:text-muted-foreground" aria-hidden="true" />
                 </div>
                 <div className="text-left">
-                  <p className="font-extrabold text-foreground text-[15px] leading-snug tracking-tight">Começar a ganhar dinheiro</p>
+                  <p className="font-extrabold text-foreground text-[17px] leading-snug tracking-tight">Começar a ganhar dinheiro</p>
                   <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Encontre bicos e ganhe renda extra hoje
                   </p>
@@ -133,7 +133,7 @@ export default function Index() {
                   key={cat}
                   variant="outline"
                   size="sm"
-                  className="rounded-full h-8 px-4 text-xs font-medium border-slate-200/80 dark:border-border/60 bg-transparent hover:bg-transparent hover:border-primary/60 hover:text-primary text-muted-foreground transition-all duration-200"
+                  className="rounded-full h-8 px-4 text-xs font-semibold border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 shadow-sm hover:bg-white dark:hover:bg-card hover:border-primary/60 hover:text-primary text-muted-foreground transition-all duration-200"
                   onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
                 >
                   {cat}
