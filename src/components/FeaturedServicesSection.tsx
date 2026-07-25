@@ -180,7 +180,7 @@ export const FeaturedServicesSection = () => {
                   {worker.city && (
                     <p className="mt-2.5 flex items-center gap-1 text-xs text-muted-foreground">
                       <MapPin className="w-3 h-3 shrink-0" aria-hidden="true" />
-                      {worker.neighborhood ? `${worker.neighborhood}, ` : ''}{worker.city}
+                      {worker.neighborhood ? `${worker.neighborhood}, ` : ''}{worker.city}{worker.state ? ` - ${worker.state}` : ''}
                     </p>
                   )}
                   </div>

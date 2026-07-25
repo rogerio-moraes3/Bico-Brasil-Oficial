@@ -15,7 +15,7 @@ export const RecentWorkersSection = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("users")
-        .select("id, name, profile_photo, category, city_id, cities ( name ), verified")
+        .select("id, name, profile_photo, category, city_id, cities ( name, state ), verified")
         .eq("type", "worker")
         .not("profile_photo", "is", null)
         .order("created_at", { ascending: false })
@@ -25,7 +25,7 @@ export const RecentWorkersSection = () => {
         console.error("Error fetching recent workers:", error);
         throw error;
       }
-      return (data || []).map((w: any) => ({ ...w, city: w.cities?.name ?? null }));
+      return (data || []).map((w: any) => ({ ...w, city: w.cities?.name ?? null, state: w.cities?.state ?? null }));
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -121,7 +121,7 @@ export const RecentWorkersSection = () => {
 
                   {worker.city && (
                     <p className="text-[10px] text-muted-foreground text-center truncate w-full">
-                      {worker.city}
+                      {worker.city}{worker.state ? ` - ${worker.state}` : ''}
                     </p>
                   )}
                 </Link>

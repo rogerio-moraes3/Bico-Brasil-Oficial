@@ -280,6 +280,7 @@ export default function SearchWorkers() {
           id: user.id,
           name: user.name,
           city: (user as any).cities?.name ?? null,
+          state: (user as any).cities?.state ?? null,
           city_id: user.city_id,
           neighborhood: user.neighborhood,
           profile_photo: user.profile_photo,
@@ -607,7 +608,7 @@ export default function SearchWorkers() {
                             <div className="text-center w-full">
                               <h3 className="font-semibold text-base mb-1">{worker.name}</h3>
                               <p className="text-sm text-muted-foreground mb-2">
-                                {worker.city}
+                                {worker.city}{worker.state ? ` - ${worker.state}` : ''}
                                 {worker.neighborhood && ` - ${worker.neighborhood}`}
                               </p>
                               <p className="text-sm font-medium text-primary mb-3">
