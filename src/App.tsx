@@ -72,6 +72,12 @@ const PageLoadingFallback = () => (
 
 function App() {
   const [showSplash, setShowSplash] = useState(() => {
+    // Em modo standalone (PWA instalado), o sistema já mostra sua própria
+    // splash nativa a partir do manifest.json antes do app carregar — exibir
+    // essa splash React de novo em seguida criava duas splashes em sequência,
+    // com artes diferentes. Pulamos direto para o app quando já é standalone.
+    const isStandalone = typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches;
+    if (isStandalone) return false;
     // Mostrar splash apenas se não foi exibido nesta sessão
     return !sessionStorage.getItem('splashShown');
   });
