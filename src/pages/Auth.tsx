@@ -69,12 +69,15 @@ export default function Auth() {
     loadSelectedCity();
   }, [mode]);
 
-  // Redirect if already logged in
+  // Redirect if already logged in — mas não durante o fluxo de redefinição de
+  // senha: o link de recuperação já estabelece uma sessão automaticamente
+  // (detectSessionInUrl), então sem essa checagem o usuário nunca veria a
+  // tela de "Nova Senha" antes de ser mandado direto pro /app.
   useEffect(() => {
-    if (user) {
+    if (user && mode !== 'reset-password') {
       navigate('/app');
     }
-  }, [user, navigate]);
+  }, [user, mode, navigate]);
 
   const loadCategories = async () => {
     try {

@@ -11,13 +11,14 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, Search, Mail, KeyRound } from 'lucide-react';
 import { formatCPF, validateCPF } from '@/lib/validators';
 
-type Mode = 'lookup' | 'options' | 'change-email';
+type Mode = 'lookup' | 'options' | 'change-email' | 'confirm-code';
 
 export default function RecoverByCPF() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [cpf, setCpf] = useState('');
   const [newEmail, setNewEmail] = useState('');
+  const [code, setCode] = useState('');
   const [mode, setMode] = useState<Mode>('lookup');
   const [loading, setLoading] = useState(false);
 
@@ -105,7 +106,7 @@ export default function RecoverByCPF() {
     }
   };
 
-  const handleChangeEmail = async () => {
+  const handleRequestEmailChange = async () => {
     if (!newEmail || !newEmail.includes('@')) {
       toast({
         title: "Email inválido",
@@ -120,7 +121,7 @@ export default function RecoverByCPF() {
 
     try {
       const { data, error } = await supabase.functions.invoke('recover-by-cpf', {
-        body: { cpf: cleanCpf, action: 'change-email', newEmail }
+        body: { cpf: cleanCpf, action: 'request-email-change', newEmail }
       });
 
       if (error) {
@@ -129,11 +130,10 @@ export default function RecoverByCPF() {
 
       if (data?.success) {
         toast({
-          title: "Solicitação processada",
-          description: data?.message || "Se o CPF estiver cadastrado, o email foi atualizado e você receberá um link de recuperação."
+          title: "Código enviado",
+          description: data?.message || "Se o CPF estiver cadastrado, um código foi enviado para o e-mail atualmente cadastrado."
         });
-        setMode('options');
-        setNewEmail('');
+        setMode('confirm-code');
       } else {
         toast({
           title: "Erro",
@@ -142,7 +142,59 @@ export default function RecoverByCPF() {
         });
       }
     } catch (error: any) {
-      console.error('Change email error:', error);
+      console.error('Request email change error:', error);
+      const errorMessage = error?.message?.includes('429')
+        ? "Muitas tentativas. Aguarde 1 hora antes de tentar novamente."
+        : "Erro ao processar solicitação. Tente novamente.";
+      toast({
+        title: "Erro",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleConfirmEmailChange = async () => {
+    if (!/^\d{6}$/.test(code)) {
+      toast({
+        title: "Código inválido",
+        description: "Digite o código de 6 dígitos recebido no e-mail antigo",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const cleanCpf = cpf.replace(/\D/g, '');
+    setLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('recover-by-cpf', {
+        body: { cpf: cleanCpf, action: 'confirm-email-change', newEmail, code }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data?.success) {
+        toast({
+          title: "Email atualizado",
+          description: data?.message || "Email atualizado com sucesso! Um link para definir sua senha foi enviado."
+        });
+        setMode('options');
+        setNewEmail('');
+        setCode('');
+      } else {
+        toast({
+          title: "Erro",
+          description: data?.error || "Não foi possível confirmar o código",
+          variant: "destructive"
+        });
+      }
+    } catch (error: any) {
+      console.error('Confirm email change error:', error);
       const errorMessage = error?.message?.includes('429')
         ? "Muitas tentativas. Aguarde 1 hora antes de tentar novamente."
         : "Erro ao processar solicitação. Tente novamente.";
@@ -180,6 +232,7 @@ export default function RecoverByCPF() {
                 {mode === 'lookup' && 'Digite seu CPF para recuperar sua conta'}
                 {mode === 'options' && 'Escolha como deseja recuperar sua conta'}
                 {mode === 'change-email' && 'Digite um novo email para recuperação'}
+                {mode === 'confirm-code' && 'Digite o código enviado ao seu e-mail cadastrado'}
               </CardDescription>
             </CardHeader>
 
@@ -268,7 +321,7 @@ export default function RecoverByCPF() {
                 <>
                   <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
                     <p className="text-sm text-yellow-600 dark:text-yellow-400">
-                      Atenção: Ao trocar o email, você perderá acesso pelo email anterior.
+                      Atenção: Ao trocar o email, você perderá acesso pelo email anterior. Por segurança, vamos enviar um código de confirmação para o e-mail atualmente cadastrado antes de concluir a troca.
                     </p>
                   </div>
 
@@ -284,16 +337,57 @@ export default function RecoverByCPF() {
                   </div>
 
                   <Button
-                    onClick={handleChangeEmail}
+                    onClick={handleRequestEmailChange}
                     className="w-full"
                     disabled={loading || !newEmail}
                   >
-                    {loading ? 'Processando...' : 'Atualizar email e enviar link'}
+                    {loading ? 'Enviando...' : 'Enviar código de confirmação'}
                   </Button>
 
                   <Button
                     variant="ghost"
                     onClick={() => setMode('options')}
+                    className="w-full"
+                  >
+                    Voltar
+                  </Button>
+                </>
+              )}
+
+              {mode === 'confirm-code' && (
+                <>
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="text-sm text-muted-foreground">
+                      Enviamos um código de 6 dígitos para o e-mail atualmente cadastrado na conta. Digite-o abaixo para confirmar a troca para <strong>{newEmail}</strong>.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-code">Código de confirmação</Label>
+                    <Input
+                      id="confirm-code"
+                      inputMode="numeric"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      placeholder="000000"
+                      maxLength={6}
+                    />
+                  </div>
+
+                  <Button
+                    onClick={handleConfirmEmailChange}
+                    className="w-full"
+                    disabled={loading || code.length !== 6}
+                  >
+                    {loading ? 'Confirmando...' : 'Confirmar troca de email'}
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setMode('change-email');
+                      setCode('');
+                    }}
                     className="w-full"
                   >
                     Voltar

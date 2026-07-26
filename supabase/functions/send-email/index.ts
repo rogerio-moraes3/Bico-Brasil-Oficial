@@ -14,7 +14,8 @@ interface EmailRequest {
   type: 'payment_generated' | 'payment_approved' | 'payment_failed' |
   'payment_receipt' | 'plan_activated' | 'welcome' |
   'payment_pending' | 'payment_expired' |
-  'job_posted' | 'service_created';
+  'job_posted' | 'service_created' |
+  'password_recovery' | 'email_change_code';
   data: any;
 }
 
@@ -392,6 +393,52 @@ const handler = async (req: Request): Promise<Response> => {
                 Tentar Novamente
               </a>
             </div>
+          </div>
+        `;
+        break;
+
+      case 'password_recovery':
+        html = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #2563eb; text-align: center;">🔑 Redefinição de Senha</h1>
+
+            <p>Olá,</p>
+
+            <p>Recebemos uma solicitação para redefinir a senha da sua conta no Bico Brasil.</p>
+
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${data.actionLink}" style="background: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">
+                Redefinir Minha Senha
+              </a>
+            </div>
+
+            <p style="color: #6b7280; font-size: 14px;">Se você não solicitou essa mudança, pode ignorar este e-mail com segurança — sua senha continuará a mesma.</p>
+
+            <p style="color: #6b7280; font-size: 14px;">Este link expira em breve por motivos de segurança.</p>
+          </div>
+        `;
+        break;
+
+      case 'email_change_code':
+        html = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #2563eb; text-align: center;">🔒 Confirmação de Troca de E-mail</h1>
+
+            <p>Olá,</p>
+
+            <p>Recebemos uma solicitação para trocar o e-mail de acesso da sua conta no Bico Brasil para <strong>${data.newEmail}</strong>.</p>
+
+            <p>Para confirmar, informe o código abaixo na tela de recuperação de conta:</p>
+
+            <div style="text-align: center; margin: 30px 0;">
+              <span style="font-size: 32px; font-weight: 700; letter-spacing: 8px; background: #f3f4f6; padding: 16px 24px; border-radius: 8px; display: inline-block;">
+                ${data.code}
+              </span>
+            </div>
+
+            <p style="color: #6b7280; font-size: 14px;">Este código expira em ${data.expiresInMinutes} minutos.</p>
+
+            <p style="color: #dc2626; font-size: 14px;"><strong>Se você não solicitou essa troca, ignore este e-mail</strong> — sem esse código, ninguém consegue alterar o e-mail da sua conta.</p>
           </div>
         `;
         break;
