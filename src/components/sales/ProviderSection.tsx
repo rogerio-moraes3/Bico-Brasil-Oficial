@@ -13,16 +13,17 @@ export const ProviderSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="py-24 md:py-32 bg-[#080C14] text-white relative overflow-hidden border-t border-white/5">
+    <section className="py-24 md:py-32 bg-[#080C14] text-white relative overflow-x-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
           {/* Left Content */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="order-2 lg:order-1"
+            style={{ willChange: 'opacity, transform' }}
           >
             <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-400/20 rounded-full px-4 py-2 mb-8 backdrop-blur-md">
               <Sparkles className="w-4 h-4 text-orange-400" />

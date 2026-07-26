@@ -51,7 +51,7 @@ export const CategoriesGrid = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="py-24 md:py-32 bg-[#080C14] relative overflow-hidden">
+    <section className="py-24 md:py-32 bg-[#080C14] relative overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl">
@@ -85,6 +85,7 @@ export const CategoriesGrid = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               viewport={{ once: true }}
+              style={{ willChange: 'opacity, transform' }}
               onClick={() => navigate(`/app?category=${item.slug}`)}
               className="group relative text-left p-8 rounded-[32px] bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.04] transition-all duration-500 overflow-hidden"
             >

@@ -6,17 +6,18 @@ export const SalesHeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="w-full bg-[#080C14] overflow-hidden">
+    <section className="w-full bg-[#080C14] overflow-x-hidden">
       <div className="relative w-full bg-[#0B0F17]">
 
         {/* HERO */}
         <div className="max-w-7xl mx-auto px-6 lg:px-16 pt-24 pb-32 grid lg:grid-cols-2 gap-16 items-center relative z-10">
 
           {/* LEFT */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
+            style={{ willChange: 'opacity, transform' }}
           >
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-10 backdrop-blur-sm">
@@ -68,11 +69,12 @@ export const SalesHeroSection = () => {
           </motion.div>
 
 {/* RIGHT - Mockup */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative flex flex-col items-center lg:items-end justify-center"
+            style={{ willChange: 'opacity, transform' }}
           >
             {/* Texto Auxiliar Acima do Mockup */}
             <div className="flex flex-col items-center lg:items-end mb-8">
@@ -141,19 +143,21 @@ export const SalesHeroSection = () => {
                 </div>
 
                 {/* Floating Chat Bubbles */}
-                <motion.div 
+                <motion.div
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   className="absolute top-16 -left-12 bg-white text-[#0B1C2E] px-5 py-3 rounded-2xl rounded-bl-none text-sm font-bold shadow-2xl flex items-center gap-2 border-b-2 border-blue-100"
+                  style={{ willChange: 'transform' }}
                 >
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   Pedido enviado!
                 </motion.div>
 
-                <motion.div 
+                <motion.div
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                   className="absolute bottom-32 -right-8 bg-[#1E5EFF] text-white px-5 py-3 rounded-2xl rounded-br-none text-sm font-bold shadow-2xl border-b-2 border-blue-400"
+                  style={{ willChange: 'transform' }}
                 >
                   Resposta recebida 🔥
                 </motion.div>

@@ -56,7 +56,7 @@ export const HowItWorks = () => {
   const steps = activeTab === "client" ? clientSteps : workerSteps;
 
   return (
-    <section className="py-24 md:py-32 bg-[#080C14] overflow-hidden relative border-t border-white/5">
+    <section className="py-24 md:py-32 bg-[#080C14] overflow-x-hidden relative border-t border-white/5">
       {/* Decorative Glows */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -108,6 +108,7 @@ export const HowItWorks = () => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+              style={{ willChange: 'opacity, transform' }}
             >
               {steps.map((step, index) => (
                 <div

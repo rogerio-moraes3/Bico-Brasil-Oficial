@@ -57,6 +57,7 @@ export const SecuritySection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
+              style={{ willChange: 'opacity, transform' }}
               className="group p-8 rounded-[32px] bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.04] transition-all duration-300"
             >
               <div className={`w-14 h-14 rounded-2xl ${feat.bg} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>

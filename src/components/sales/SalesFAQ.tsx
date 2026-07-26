@@ -31,7 +31,7 @@ const faqs = [
 
 export const SalesFAQ = () => {
   return (
-    <section className="py-24 md:py-40 bg-[#080C14] relative overflow-hidden">
+    <section className="py-24 md:py-40 bg-[#080C14] relative overflow-x-hidden">
       {/* Decorative Blur Elements */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2" />
@@ -45,6 +45,7 @@ export const SalesFAQ = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
+              style={{ willChange: 'opacity, transform' }}
             >
               <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 rounded-full px-4 py-2 mb-8 backdrop-blur-md">
                 <HelpCircle className="w-4 h-4 text-blue-400" />
@@ -89,6 +90,7 @@ export const SalesFAQ = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
+                  style={{ willChange: 'opacity, transform' }}
                 >
                   <AccordionItem
                     value={`item-${index}`}

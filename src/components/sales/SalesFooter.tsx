@@ -6,9 +6,9 @@ export const SalesFooter = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="bg-[#080C14] text-zinc-400 relative overflow-hidden">
+    <footer className="bg-[#080C14] text-zinc-400 relative overflow-x-hidden">
       {/* Final CTA Section - Ultra Premium */}
-      <section className="relative py-32 md:py-48 overflow-hidden">
+      <section className="relative py-32 md:py-48 overflow-x-hidden">
         {/* Animated Background Gradient */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(30,94,255,0.1),transparent_70%)] pointer-events-none" />
         
@@ -21,6 +21,7 @@ export const SalesFooter = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 rounded-full px-4 py-2 mb-10 backdrop-blur-md"
+            style={{ willChange: 'opacity, transform' }}
           >
             <Sparkles className="w-4 h-4 text-blue-400" />
             <span className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">Bico Brasil</span>
