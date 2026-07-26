@@ -72,6 +72,8 @@ export default function Profile() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+  const [newEmailForChange, setNewEmailForChange] = useState('');
+  const [emailChangeLoading, setEmailChangeLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -170,6 +172,51 @@ export default function Profile() {
     }
 
     setLoading(false);
+  };
+
+  const handleRequestEmailChange = async () => {
+    if (!newEmailForChange || !newEmailForChange.includes('@')) {
+      toast({
+        title: "Email inválido",
+        description: "Digite um email válido",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (newEmailForChange === profile.email) {
+      toast({
+        title: "Nenhuma mudança",
+        description: "Esse já é o email cadastrado",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setEmailChangeLoading(true);
+
+    try {
+      // Usa o fluxo nativo do Supabase Auth (confirmação por e-mail) em vez
+      // de escrever direto em users.email — o campo só é atualizado depois
+      // que a troca é de fato confirmada (via trigger no banco).
+      const { error } = await supabase.auth.updateUser({ email: newEmailForChange });
+      if (error) throw error;
+
+      toast({
+        title: "Confirmação enviada",
+        description: "Verifique seu e-mail para concluir a troca. Seu email de login só muda depois da confirmação."
+      });
+      setNewEmailForChange('');
+    } catch (error: any) {
+      console.error('Erro ao solicitar troca de email:', error);
+      toast({
+        title: "Erro ao solicitar troca de email",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setEmailChangeLoading(false);
+    }
   };
 
   const openPhotoPicker = (useCamera: boolean) => {
@@ -604,6 +651,31 @@ export default function Profile() {
                           required
                         />
                       </div>
+                      <div className="space-y-2 pb-2 border-b">
+                        <Label htmlFor="new-email">Email</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="new-email"
+                            type="email"
+                            value={newEmailForChange}
+                            onChange={(e) => setNewEmailForChange(e.target.value)}
+                            placeholder={profile.email}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleRequestEmailChange}
+                            disabled={emailChangeLoading || !newEmailForChange}
+                          >
+                            {emailChangeLoading ? 'Enviando...' : 'Alterar'}
+                          </Button>
+                        </div>
+                        {user?.new_email && (
+                          <p className="text-xs text-muted-foreground">
+                            Confirmação pendente para <strong>{user.new_email}</strong> — verifique seu e-mail para concluir a troca.
+                          </p>
+                        )}
+                      </div>
                       <div>
                         <Label htmlFor="phone">Telefone</Label>
                         <Input
@@ -769,6 +841,11 @@ export default function Profile() {
                         <Mail className="h-5 w-5 text-muted-foreground" />
                         <span>{profile.email}</span>
                       </div>
+                      {user?.new_email && (
+                        <p className="text-xs text-muted-foreground pl-8">
+                          Confirmação pendente para <strong>{user.new_email}</strong>
+                        </p>
+                      )}
                       {profile.phone && (
                         <div className="flex items-center gap-3">
                           <Phone className="h-5 w-5 text-muted-foreground" />
