@@ -21,7 +21,7 @@ import { FavoritesTab } from '@/components/FavoritesTab';
 import { NotificationsPanel } from '@/components/NotificationsPanel';
 
 import { MyAdsTab } from '@/components/MyAdsTab';
-import { MediaUpload } from '@/components/MediaUpload';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { resizeImageFile } from '@/lib/imageResize';
 import {
   User,
@@ -172,10 +172,65 @@ export default function Profile() {
     setLoading(false);
   };
 
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawFile = e.target.files?.[0];
-    if (!rawFile) return;
+  const openPhotoPicker = (useCamera: boolean) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/jpeg,image/png,image/webp';
+    if (useCamera) input.capture = 'user';
+    input.onchange = (e: any) => {
+      const file = e.target.files?.[0];
+      if (file) handlePhotoUpload(file);
+    };
+    input.click();
+  };
 
+  const handleDeletePhoto = async () => {
+    if (!profile?.avatar_url) return;
+    if (!confirm('Remover sua foto de perfil atual?')) return;
+
+    try {
+      setLoading(true);
+
+      // Extrai o caminho dentro do bucket a partir da URL pública para
+      // remover o arquivo do Storage (best-effort — se falhar, ainda assim
+      // limpamos o campo no banco, que é a fonte de verdade do que é exibido).
+      const bucketMarker = '/profiles/';
+      const markerIndex = profile.avatar_url.indexOf(bucketMarker);
+      if (markerIndex !== -1) {
+        const filePath = profile.avatar_url.slice(markerIndex + bucketMarker.length);
+        await supabase.storage.from('profiles').remove([filePath]);
+      }
+
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ avatar_url: null })
+        .eq('auth_id', user!.id);
+
+      if (updateError) throw updateError;
+
+      const { error: metadataError } = await supabase.auth.updateUser({
+        data: { avatar_url: null, profile_photo: null }
+      });
+
+      if (metadataError) throw metadataError;
+
+      setProfile({ ...profile, avatar_url: null });
+      await supabase.auth.refreshSession();
+
+      toast({ title: "Foto removida" });
+    } catch (error: any) {
+      console.error('Error removing photo:', error);
+      toast({
+        title: "Erro ao remover foto",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePhotoUpload = async (rawFile: File) => {
     // Validação de tipo
     const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!validTypes.includes(rawFile.type)) {
@@ -429,22 +484,34 @@ export default function Profile() {
                       } />
                       <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
                     </Avatar>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-background"
-                      onClick={() => document.getElementById('profile-photo-upload')?.click()}
-                      title="Alterar foto"
-                    >
-                      <Camera className="h-4 w-4" />
-                    </Button>
-                    <input
-                      id="profile-photo-upload"
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      className="hidden"
-                      onChange={handlePhotoUpload}
-                    />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-background"
+                          title="Alterar foto"
+                        >
+                          <Camera className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => openPhotoPicker(true)}>
+                          <Camera className="h-4 w-4 mr-2" />
+                          Tirar Foto
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => openPhotoPicker(false)}>
+                          <Upload className="h-4 w-4 mr-2" />
+                          Escolher da Galeria
+                        </DropdownMenuItem>
+                        {profile.avatar_url && (
+                          <DropdownMenuItem onClick={handleDeletePhoto} className="text-destructive focus:text-destructive">
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Remover Foto
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                   <div>
                     <CardTitle className="text-2xl mb-2">{profile.name}</CardTitle>
