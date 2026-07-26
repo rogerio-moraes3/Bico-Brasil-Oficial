@@ -47,11 +47,13 @@ export function FavoriteButton({ workerId }: FavoriteButtonProps) {
     try {
       if (isFavorite) {
         // Remove favorite
-        await supabase
+        const { error } = await supabase
           .from('favorites')
           .delete()
           .eq('user_id', user.id)
           .eq('worker_id', workerId);
+
+        if (error) throw error;
 
         setIsFavorite(false);
         toast({
@@ -59,9 +61,11 @@ export function FavoriteButton({ workerId }: FavoriteButtonProps) {
         });
       } else {
         // Add favorite
-        await supabase
+        const { error } = await supabase
           .from('favorites')
           .insert({ user_id: user.id, worker_id: workerId });
+
+        if (error) throw error;
 
         setIsFavorite(true);
         toast({
