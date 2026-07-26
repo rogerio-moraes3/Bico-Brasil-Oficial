@@ -30,10 +30,13 @@ export const Header = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
 
-  // Show back button on internal routes (public paths excluded) or when there is a history stack
+  // Show back button on internal routes (public paths excluded) AND only when there is a history stack
   const publicPaths = ['/', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch'];
   const hasHistory = typeof window !== 'undefined' && window.history && window.history.length > 1;
-  const showBackButton = hasHistory || !publicPaths.some(p => location.pathname.startsWith(p));
+  // "/" precisa ser comparado por igualdade exata: com startsWith, "/" bateria
+  // com QUALQUER caminho (todos começam com "/"), anulando o filtro inteiro.
+  const isPublicPath = location.pathname === '/' || publicPaths.some(p => p !== '/' && location.pathname.startsWith(p));
+  const showBackButton = hasHistory && !isPublicPath;
 
   // PWA Install Detection
   useEffect(() => {
@@ -234,7 +237,7 @@ const navItems = [
           )}
 
           {/* Right Section */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-3 md:gap-1">
             <ThemeToggle className="hover:bg-white/10 rounded-lg transition-colors" />
             {/* Notification Bell */}
             {user && (
