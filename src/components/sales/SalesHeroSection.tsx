@@ -181,7 +181,7 @@ export const SalesHeroSection = () => {
 
       {/* SEARCH SECTION */}
       <div className="max-w-7xl mx-auto px-6 lg:px-16 -mt-20 pb-24 relative z-20">
-        <div className="bg-white rounded-[40px] p-10 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border border-gray-100">
+        <div className="bg-white rounded-[24px] sm:rounded-[32px] lg:rounded-[40px] p-6 sm:p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border border-gray-100">
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
             <div className="max-w-2xl">

@@ -69,7 +69,7 @@ export const ProviderSection = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
-                className="bg-white/[0.02] border border-white/5 rounded-[32px] p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
+                className="bg-white/[0.02] border border-white/5 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">0%</div>
                 <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Taxa de Comissão</div>
@@ -79,7 +79,7 @@ export const ProviderSection = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
-                className="bg-white/[0.02] border border-white/5 rounded-[32px] p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
+                className="bg-white/[0.02] border border-white/5 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <Zap className="w-8 h-8 text-orange-400 mb-4" />
                 <div className="text-4xl lg:text-5xl font-black text-white mb-2 tracking-tighter">Direto</div>
@@ -90,7 +90,7 @@ export const ProviderSection = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
-                className="bg-white/[0.02] border border-white/5 rounded-[32px] p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
+                className="bg-white/[0.02] border border-white/5 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <ShieldCheck className="w-8 h-8 text-orange-400 mb-4" />
                 <div className="text-4xl lg:text-5xl font-black text-white mb-2 tracking-tighter">Verificado</div>
@@ -101,7 +101,7 @@ export const ProviderSection = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
-                className="bg-white/[0.02] border border-white/5 rounded-[32px] p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
+                className="bg-white/[0.02] border border-white/5 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">Local</div>
                 <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Perto de Você</div>

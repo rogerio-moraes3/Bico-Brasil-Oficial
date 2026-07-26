@@ -113,7 +113,7 @@ export const HowItWorks = () => {
               {steps.map((step, index) => (
                 <div
                   key={index}
-                  className="relative group bg-white/[0.02] border border-white/5 rounded-[32px] p-10 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
+                  className="relative group bg-white/[0.02] border border-white/5 rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
                 >
                   <div className="relative z-10">
                     <div className="flex justify-between items-start mb-8">
