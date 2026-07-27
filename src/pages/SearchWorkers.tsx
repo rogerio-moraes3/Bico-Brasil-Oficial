@@ -53,7 +53,9 @@ export default function SearchWorkers() {
     isTester,
     isPremium,
     canViewProfiles,
-    remainingFreeViews
+    remainingFreeViews,
+    canViewContacts,
+    remainingFreeUnlocks
   } = useAccessControl();
 
   useEffect(() => {
@@ -712,8 +714,8 @@ export default function SearchWorkers() {
                           <WhatsAppContactButton
                             workerId={worker.id}
                             workerName={worker.name}
-                            canViewContact={canViewProfiles}
-                            remainingViews={remainingFreeViews}
+                            canViewContact={canViewContacts}
+                            remainingViews={remainingFreeUnlocks}
                             onUpgradeClick={() => setShowUpgradeModal(true)}
                           />
                         </div>

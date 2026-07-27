@@ -40,7 +40,6 @@ interface Worker {
 const Jobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSubcategory, setSelectedSubcategory] = useState("all");
   const [neighborhood, setNeighborhood] = useState("");
   const [otherService, setOtherService] = useState("");
   const [selectedCityId, setSelectedCityId] = useState("");
@@ -48,7 +47,6 @@ const Jobs = () => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
-  const [subcategories, setSubcategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const { toast } = useToast();
   const { canViewContacts, remainingFreeUnlocks } = useAccessControl();
   const { cities, loading: citiesLoading } = useCities();
@@ -57,15 +55,6 @@ const Jobs = () => {
   useEffect(() => {
     loadCategories();
   }, []);
-
-  useEffect(() => {
-    if (selectedCategory && selectedCategory !== 'all') {
-      loadSubcategories(selectedCategory);
-    } else {
-      setSubcategories([]);
-      setSelectedSubcategory('all');
-    }
-  }, [selectedCategory]);
 
   // Manual search only: users must click the search button (magnifying glass) to run queries. Removed auto-trigger on city selection.
 
@@ -80,21 +69,6 @@ const Jobs = () => {
       setCategories(data || []);
     } catch (error) {
       console.error('Error loading categories:', error);
-    }
-  };
-
-  const loadSubcategories = async (categorySlug: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('subcategories')
-        .select('id, name, slug, categories!inner(slug)')
-        .eq('categories.slug', categorySlug)
-        .order('name');
-
-      if (error) throw error;
-      setSubcategories(data || []);
-    } catch (error) {
-      console.error('Error loading subcategories:', error);
     }
   };
 
@@ -122,20 +96,13 @@ const Jobs = () => {
         .not('neighborhood', 'is', null);
 
       if (searchTerm) {
-        query = query.or(`name.ilike.%${searchTerm}%,category.ilike.%${searchTerm}%,subcategory.ilike.%${searchTerm}%,neighborhood.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+        query = query.or(`name.ilike.%${searchTerm}%,category.ilike.%${searchTerm}%,neighborhood.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
       }
 
       if (selectedCategory && selectedCategory !== 'all') {
         const selectedCat = categories.find(c => c.slug === selectedCategory);
         if (selectedCat) {
           query = query.eq('category', selectedCat.name);
-        }
-      }
-
-      if (selectedSubcategory && selectedSubcategory !== 'all') {
-        const selectedSub = subcategories.find(s => s.slug === selectedSubcategory);
-        if (selectedSub) {
-          query = query.eq('subcategory', selectedSub.name);
         }
       }
 
@@ -242,25 +209,6 @@ const Jobs = () => {
               />
             </div>
           </div>
-
-          {subcategories.length > 0 && (
-            <div className="mb-4">
-              <label className="text-sm font-medium mb-2 block">Subcategoria</label>
-              <Select value={selectedSubcategory} onValueChange={setSelectedSubcategory}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todas" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas</SelectItem>
-                  {subcategories.map((sub) => (
-                    <SelectItem key={sub.id} value={sub.slug}>
-                      {sub.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
 
           <div>
             <label className="text-sm font-medium mb-2 block">
