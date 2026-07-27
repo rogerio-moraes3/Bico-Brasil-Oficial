@@ -79,6 +79,21 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
+    // user.id é o UID do Auth — mas destaque_orders.user_id precisa do id
+    // interno de public.users (mesmo padrão de create-pix-payment). Na
+    // maioria das contas os dois valores coincidem, mas não é garantido
+    // (id tem default gen_random_uuid() próprio); gravar o UID direto aqui
+    // fazia o webhook falhar silenciosamente em ativar o destaque pra quem
+    // tem esses dois valores diferentes.
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('users')
+      .select('id')
+      .eq('auth_id', user.id)
+      .maybeSingle();
+
+    if (profileError) throw profileError;
+    if (!profile) throw new Error('Perfil do usuário não encontrado');
+
     const { days, payer } = await req.json();
 
     // PIX é o único método de pagamento aceito (hardcoded no payment_method_id abaixo)
@@ -115,7 +130,7 @@ serve(async (req) => {
     const { data: veryRecentOrder } = await supabaseClient
       .from('destaque_orders')
       .select('id, mercadopago_payment_id, qr_code, qr_code_base64')
-      .eq('user_id', user.id)
+      .eq('user_id', profile.id)
       .eq('days', days)
       .in('status', ['pending', 'in_process'])
       .not('qr_code', 'is', null)
@@ -139,7 +154,7 @@ serve(async (req) => {
     const { data: order, error: orderError } = await supabaseClient
       .from('destaque_orders')
       .insert({
-        user_id: user.id,
+        user_id: profile.id,
         days: days,
         amount: amount,
         status: 'pending'
