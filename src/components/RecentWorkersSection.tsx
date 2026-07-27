@@ -13,9 +13,13 @@ export const RecentWorkersSection = () => {
   const { data: recentWorkers, isLoading } = useQuery({
     queryKey: ["recent-workers-home"],
     queryFn: async () => {
+      // users_public é uma view segura (nunca expõe cpf/email/phone/address) —
+      // consultar public.users diretamente aqui não funciona para usuários
+      // comuns, já que o RLS da tabela só libera SELECT para dono-da-linha,
+      // admin ou service_role.
       const { data, error } = await supabase
-        .from("users")
-        .select("id, name, profile_photo, category, city_id, cities ( name, state ), verified")
+        .from("users_public")
+        .select("id, name, profile_photo, category, city_id, city, state, verified")
         .eq("type", "worker")
         .not("profile_photo", "is", null)
         .order("created_at", { ascending: false })
@@ -25,7 +29,7 @@ export const RecentWorkersSection = () => {
         console.error("Error fetching recent workers:", error);
         throw error;
       }
-      return (data || []).map((w: any) => ({ ...w, city: w.cities?.name ?? null, state: w.cities?.state ?? null }));
+      return data || [];
     },
     staleTime: 5 * 60 * 1000,
   });

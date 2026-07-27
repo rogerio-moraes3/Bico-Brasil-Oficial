@@ -225,23 +225,27 @@ export default function SearchWorkers() {
       // FASE 3: Buscar usuários com filtros aplicados
       const userIds = servicesData.map(s => s.user_id);
 
-      // Query users table directly instead of view for reliability
+      // users_public é uma view segura (nunca expõe cpf/email/phone/address) —
+      // consultar public.users diretamente aqui não funciona para usuários
+      // comuns, já que o RLS da tabela só libera SELECT para dono-da-linha,
+      // admin ou service_role.
       let usersQuery = supabase
-        .from('users')
+        .from('users_public')
         .select(`
           id,
           name,
           city_id,
-          cities ( name, state ),
+          city,
+          state,
           neighborhood,
           profile_photo,
-          verified, 
-          rating_avg, 
-          rating_count, 
-          jobs_done, 
-          created_at, 
-          destaque_expires_at, 
-          plan_active, 
+          verified,
+          rating_avg,
+          rating_count,
+          jobs_done,
+          created_at,
+          destaque_expires_at,
+          plan_active,
           type
         `)
         .in('id', userIds)
@@ -283,8 +287,8 @@ export default function SearchWorkers() {
         return {
           id: user.id,
           name: user.name,
-          city: (user as any).cities?.name ?? null,
-          state: (user as any).cities?.state ?? null,
+          city: user.city ?? null,
+          state: user.state ?? null,
           city_id: user.city_id,
           neighborhood: user.neighborhood,
           profile_photo: user.profile_photo,
