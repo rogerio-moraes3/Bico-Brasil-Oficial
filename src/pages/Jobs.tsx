@@ -11,9 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, MessageCircle, MapPin, Search, Loader2, Phone, Lock } from "lucide-react";
+import { Star, MapPin, Search, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { validateWhatsAppUrl } from "@/lib/validation";
 import { supabase } from "@/integrations/supabase/client";
 import { useAccessControl } from '@/hooks/useAccessControl';
 import { useCities } from '@/hooks/useCities';
@@ -21,23 +20,21 @@ import CitySelect from '@/components/CitySelect';
 import { Label } from '@/components/ui/label';
 import { EmptyState } from "@/components/EmptyState";
 import { SkeletonGrid } from "@/components/SkeletonGrid";
+import { WhatsAppContactButton } from '@/components/WhatsAppContactButton';
+import { UpgradeModal } from '@/components/UpgradeModal';
 
 interface Worker {
   id: string;
   name: string;
   category: string | null;
-  subcategory: string | null;
   neighborhood: string | null;
   rating_avg: number;
   rating_count: number;
   price: string | null;
-  phone: string;
   profile_photo: string | null;
   plan_active: boolean;
-  cities?: {
-    name: string;
-    state: string;
-  };
+  city: string | null;
+  state: string | null;
 }
 
 const Jobs = () => {
@@ -53,8 +50,9 @@ const Jobs = () => {
   const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const [subcategories, setSubcategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const { toast } = useToast();
-  const { canViewContacts } = useAccessControl();
+  const { canViewContacts, remainingFreeUnlocks } = useAccessControl();
   const { cities, loading: citiesLoading } = useCities();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
     loadCategories();
@@ -109,13 +107,17 @@ const Jobs = () => {
     setIsSearching(true);
 
     try {
+      // users_public é uma view segura (nunca expõe cpf/email/phone/address) —
+      // consultar public.users diretamente aqui não funciona para usuários
+      // comuns, já que o RLS da tabela só libera SELECT para dono-da-linha,
+      // admin ou service_role. O telefone só é obtido no momento do
+      // desbloqueio, via WhatsAppContactButton (get_worker_contact RPC).
       let query = supabase
-        .from('users')
-        .select('*, cities!users_city_id_fkey(name, state)')
+        .from('users_public')
+        .select('id, name, category, neighborhood, rating_avg, rating_count, price, profile_photo, plan_active, city, state, city_id, description')
         .eq('type', 'worker')
         .eq('plan_active', true)
         .eq('city_id', cityId)
-        .not('phone', 'is', null)
         .not('category', 'is', null)
         .not('neighborhood', 'is', null);
 
@@ -163,22 +165,6 @@ const Jobs = () => {
       loadWorkers(selectedCityId);
     }
   };
-
-  const openWhatsApp = (phone: string, name: string) => {
-    const result = validateWhatsAppUrl(phone, name);
-
-    if (!result.valid) {
-      toast({
-        title: "Erro",
-        description: result.error || "Informações de contato inválidas",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    window.open(result.url, "_blank");
-  };
-
 
   return (
     <div className="min-h-screen flex flex-col pb-20 md:pb-0 animate-fade-in">
@@ -319,7 +305,7 @@ const Jobs = () => {
                         {worker.name}
                       </CardTitle>
                       <p className="text-sm text-muted-foreground">
-                        {worker.subcategory || worker.category}
+                        {worker.category}
                       </p>
                     </div>
                     {worker.plan_active && (
@@ -334,21 +320,9 @@ const Jobs = () => {
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm">
-                        {worker.neighborhood}, {worker.cities?.name}
+                        {worker.neighborhood}, {worker.city}
                       </span>
                     </div>
-
-                    {canViewContacts ? (
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{worker.phone}</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Lock className="h-4 w-4" />
-                        <span className="italic">Disponível para Premium</span>
-                      </div>
-                    )}
 
                     <div className="flex items-center gap-2">
                       <div className="flex items-center">
@@ -369,28 +343,14 @@ const Jobs = () => {
                     )}
                   </div>
                 </CardContent>
-                <CardFooter>
-                  {canViewContacts ? (
-                    <Button
-                      className="w-full"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openWhatsApp(worker.phone, worker.name);
-                      }}
-                    >
-                      <MessageCircle className="mr-2 h-4 w-4" />
-                      Conversar no WhatsApp
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full"
-                      variant="outline"
-                      onClick={() => window.location.href = '/premium'}
-                    >
-                      <Lock className="mr-2 h-4 w-4" />
-                      Desbloquear Contato
-                    </Button>
-                  )}
+                <CardFooter onClick={(e) => e.stopPropagation()}>
+                  <WhatsAppContactButton
+                    workerId={worker.id}
+                    workerName={worker.name}
+                    canViewContact={canViewContacts}
+                    remainingViews={remainingFreeUnlocks}
+                    onUpgradeClick={() => setShowUpgradeModal(true)}
+                  />
                 </CardFooter>
               </Card>
             ))}
@@ -401,6 +361,14 @@ const Jobs = () => {
       </main >
 
       <Footer />
+
+      {showUpgradeModal && (
+        <UpgradeModal
+          open={showUpgradeModal}
+          onOpenChange={setShowUpgradeModal}
+          remainingViews={remainingFreeUnlocks}
+        />
+      )}
     </div >
   );
 };
