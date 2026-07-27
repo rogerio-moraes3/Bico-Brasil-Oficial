@@ -380,7 +380,8 @@ export default function Profile() {
   const handleDeleteAccount = async () => {
     const confirmText = prompt(
       'ATENÇÃO: Esta ação é irreversível!\n\n' +
-      'Digite "EXCLUIR" para confirmar a exclusão permanente da sua conta:'
+      'Seus dados pessoais (nome, e-mail, telefone, CPF, endereço, foto) serão removidos e o acesso à conta será desativado permanentemente.\n\n' +
+      'Digite "EXCLUIR" para confirmar:'
     );
 
     if (confirmText !== 'EXCLUIR') {
@@ -394,27 +395,19 @@ export default function Profile() {
     try {
       setLoading(true);
 
-      // 1. Soft delete: marcar como inativo
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({
-          plan_active: false,
-          updated_at: new Date().toISOString()
-        })
-        .eq('auth_id', user!.id);
+      const { data, error } = await supabase.functions.invoke('delete-account', { body: {} });
 
-      if (updateError) throw updateError;
-
-      // 2. Deletar conta do Auth
-      const { error: authError } = await supabase.auth.signOut();
-      if (authError) throw authError;
+      if (error || !data?.success) {
+        throw new Error(data?.error || error?.message || 'Não foi possível excluir a conta.');
+      }
 
       toast({
-        title: "Conta excluída",
-        description: "Sua conta foi excluída com sucesso. Esperamos vê-lo novamente!"
+        title: "Conta removida",
+        description: "Seus dados pessoais foram anonimizados e o acesso à conta foi desativado permanentemente."
       });
 
       navigate('/');
+      await signOut();
     } catch (error: any) {
       console.error('Erro ao excluir conta:', error);
       toast({
