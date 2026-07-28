@@ -27,3 +27,10 @@ dist-ssr
 
 # Shadow directories
 github-version/
+
+# Env files — .env aqui só tem VITE_SUPABASE_URL/ANON_KEY (públicas por
+# design), mas ficar rastreado é hábito de risco: um commit futuro pode
+# adicionar uma chave de verdade aqui sem ninguém perceber.
+.env
+.env.*
+!.env.example
