@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Users,
@@ -84,22 +83,9 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 
 export default function Admin() {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-
-  // ADMIN EMAIL WHITELIST (SECURITY CRITICAL)
-  useEffect(() => {
-    const allowed = ['23rogeriomoraes@gmail.com', 'nando_petro@hotmail.com'];
-    if (!user) return; // ProtectedRoute handles redirect to login if not authenticated
-    const email = (user.email || '').toLowerCase();
-    if (!allowed.includes(email)) {
-      // Immediate block and inform user
-      alert('Acesso Negado');
-      navigate('/', { replace: true });
-    }
-  }, [user, navigate]);
 
   // Filtros
   const [timeFilter, setTimeFilter] = useState<'today' | 'yesterday' | '7days' | '30days' | 'thisMonth' | 'lastMonth' | 'custom'>('30days');
@@ -183,13 +169,7 @@ export default function Admin() {
         .eq('role', 'admin')
         .maybeSingle();
 
-      const { data: colaboradorData } = await supabase
-        .from('colaboradores_autorizados')
-        .select('email')
-        .ilike('email', user.email || '')
-        .maybeSingle();
-
-      if (!roleData && !colaboradorData) {
+      if (!roleData) {
         toast.error('Acesso não autorizado');
         navigate('/intro');
         return;

@@ -39,13 +39,14 @@ export default function PreLaunchLanding() {
 
       setIsLoggedIn(true);
 
-      const { data: colaboradorData } = await supabase
-        .from("colaboradores_autorizados")
-        .select("email")
-        .ilike("email", user.email)
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
         .maybeSingle();
 
-      setIsAdmin(!!colaboradorData);
+      setIsAdmin(!!roleData);
     } catch (error) {
       console.error("Erro ao verificar admin:", error);
       setIsAdmin(false);

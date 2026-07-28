@@ -19,6 +19,8 @@ export function AdminIcon() {
         }
 
         // Verificar se usuário tem role de admin na tabela user_roles
+        // (única fonte de verdade — colaboradores_autorizados e a lista de
+        // e-mails fixos foram descontinuadas)
         const { data: roleData } = await supabase
           .from('user_roles')
           .select('role')
@@ -26,14 +28,7 @@ export function AdminIcon() {
           .eq('role', 'admin')
           .maybeSingle();
 
-        // Verificar também na tabela colaboradores_autorizados
-        const { data: colaboradorData } = await supabase
-          .from('colaboradores_autorizados')
-          .select('email')
-          .ilike('email', user.email || '')
-          .maybeSingle();
-
-        setIsAdmin(!!roleData || !!colaboradorData);
+        setIsAdmin(!!roleData);
       } catch (error) {
         console.error("Erro ao verificar admin:", error);
         setIsAdmin(false);

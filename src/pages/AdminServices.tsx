@@ -83,7 +83,8 @@ export default function AdminServices() {
         return;
       }
 
-      // Verificação via user_roles (server-side RLS)
+      // Verificação via user_roles (server-side RLS) — única fonte de
+      // verdade, colaboradores_autorizados foi descontinuada
       const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
@@ -91,14 +92,7 @@ export default function AdminServices() {
         .eq('role', 'admin')
         .maybeSingle();
 
-      // Fallback via colaboradores_autorizados (case-insensitive)
-      const { data: colaboradorData } = await supabase
-        .from('colaboradores_autorizados')
-        .select('email')
-        .ilike('email', user.email || '')
-        .maybeSingle();
-
-      if (!roleData && !colaboradorData) {
+      if (!roleData) {
         toast.error('Acesso não autorizado');
         navigate('/admin');
         return;
