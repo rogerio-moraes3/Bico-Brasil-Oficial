@@ -193,7 +193,10 @@ export const SalesHeroSection = () => {
               </h2>
             </div>
             
-            <button className="hidden lg:flex items-center gap-2 text-blue-600 font-bold hover:text-blue-700 transition-colors">
+            <button
+              onClick={() => navigate("/search-workers")}
+              className="hidden lg:flex items-center gap-2 text-blue-600 font-bold hover:text-blue-700 transition-colors"
+            >
               Ver todas as categorias <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -226,7 +229,10 @@ export const SalesHeroSection = () => {
               </select>
             </div>
 
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95">
+            <button
+              onClick={() => navigate("/search-workers")}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95"
+            >
               Buscar
             </button>
           </div>

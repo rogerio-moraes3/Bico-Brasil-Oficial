@@ -984,7 +984,7 @@ export default function Profile() {
                       <p className="text-sm text-muted-foreground">
                         Faça upgrade para ter maior visibilidade
                       </p>
-                      <Button size="sm" className="mt-2">Assinar Plano Pro</Button>
+                      <Button size="sm" className="mt-2" onClick={() => navigate('/premium')}>Assinar Plano Pro</Button>
                     </div>
                   )}
                 </CardContent>

@@ -360,6 +360,12 @@ export default function WorkerProfile() {
                   </div>
 
                   <div className="flex flex-wrap gap-2 mb-2">
+                    {worker.plan_active && (
+                      <Badge className="bg-amber-500 hover:bg-amber-500 text-black gap-1 font-semibold">
+                        <Crown className="h-3.5 w-3.5" />
+                        Premium
+                      </Badge>
+                    )}
                     {worker.rating_avg > 0 && (
                       <Badge variant="outline" className="gap-1">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />

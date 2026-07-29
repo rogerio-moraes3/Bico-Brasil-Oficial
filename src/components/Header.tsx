@@ -113,7 +113,7 @@ const navItems = [
     { path: "/procurar-bicos", label: "Procurar bicos" },
     { path: "/premium", label: "Premium" },
     { path: "/about", label: "Sobre" },
-    { path: "/FAQ", label: "Ajuda" },
+    { path: "/faq", label: "Ajuda" },
     { path: "/contact", label: "Contato" },
   ];
 
