@@ -39,7 +39,7 @@ export const SalesHeroSection = () => {
             <div className="flex gap-4 mb-12 flex-wrap">
               <button
                 onClick={() => navigate("/app")}
-                className="group relative flex items-center gap-2 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-8 py-4 rounded-full font-bold text-lg shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95"
+                className="group relative flex items-center gap-2 bg-[#FF5C35] hover:bg-[#FF451A] text-slate-900 px-8 py-4 rounded-full font-bold text-lg shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95"
               >
                 Quero contratar
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

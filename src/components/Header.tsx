@@ -305,7 +305,7 @@ const navItems = [
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
                   animateOnMount={false}
-                  className="text-[15px] font-bold bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 h-10"
+                  className="text-[15px] font-bold bg-orange-500 hover:bg-orange-600 text-slate-900 px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 h-10"
                 >
                   Criar conta
                 </Button>
