@@ -1,9 +1,22 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, MapPin, Briefcase, Sparkles, ArrowRight, ShieldCheck, Zap, Globe, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const SalesHeroSection = () => {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchType, setSearchType] = useState("Contratar");
+
+  const handleSearch = () => {
+    if (searchType === "Trabalhar") {
+      navigate("/auth?mode=signup");
+      return;
+    }
+    const params = new URLSearchParams();
+    if (searchTerm.trim()) params.set("q", searchTerm.trim());
+    navigate(`/search-workers?${params.toString()}`);
+  };
 
   return (
     <section className="w-full bg-[#080C14] overflow-x-hidden">
@@ -195,7 +208,7 @@ export const SalesHeroSection = () => {
             
             <button
               onClick={() => navigate("/search-workers")}
-              className="hidden lg:flex items-center gap-2 text-blue-600 font-bold hover:text-blue-700 transition-colors"
+              className="flex items-center gap-2 text-blue-600 font-bold hover:text-blue-700 transition-colors"
             >
               Ver todas as categorias <ArrowRight className="w-4 h-4" />
             </button>
@@ -206,6 +219,9 @@ export const SalesHeroSection = () => {
             <div className="flex-1 relative group">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
               <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 placeholder="Ex.: Frete, Pintura, Faxina..."
                 className="w-full pl-14 pr-6 py-5 bg-white rounded-2xl border-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium placeholder:text-gray-400 shadow-sm transition-all"
               />
@@ -222,15 +238,18 @@ export const SalesHeroSection = () => {
 
             <div className="lg:w-48 relative">
               <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <select className="w-full pl-14 pr-6 py-5 bg-white rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium shadow-sm">
-                <option>Tipo</option>
+              <select
+                value={searchType}
+                onChange={(e) => setSearchType(e.target.value)}
+                className="w-full pl-14 pr-6 py-5 bg-white rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium shadow-sm"
+              >
                 <option>Contratar</option>
                 <option>Trabalhar</option>
               </select>
             </div>
 
             <button
-              onClick={() => navigate("/search-workers")}
+              onClick={handleSearch}
               className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95"
             >
               Buscar

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Header } from '@/components/Header';
@@ -13,7 +13,7 @@ import CitySelect from '@/components/CitySelect';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Star, MapPin, MessageCircle, Loader2, Crown, Edit, Trash, Check, Pencil, Briefcase, Share2 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAccessControl } from '@/hooks/useAccessControl';
 import { UpgradeModal } from '@/components/UpgradeModal';
@@ -27,6 +27,8 @@ import { SkeletonGrid } from '@/components/SkeletonGrid';
 export default function SearchWorkers() {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const didAutoSearch = useRef(false);
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
@@ -346,6 +348,23 @@ export default function SearchWorkers() {
       setLoading(false);
     }
   };
+
+  // Deep-link de busca (ex: vindo da landing com ?q=faxina) — pré-carrega o
+  // termo e dispara a busca automaticamente, uma única vez.
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q && !didAutoSearch.current) {
+      setSearchQuery(q);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q && searchQuery === q && !didAutoSearch.current) {
+      didAutoSearch.current = true;
+      handleSearch();
+    }
+  }, [searchQuery]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

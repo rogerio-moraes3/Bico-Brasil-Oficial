@@ -69,7 +69,7 @@ export const CategoriesGrid = () => {
           </div>
           
           <button
-            onClick={() => navigate("/app")}
+            onClick={() => navigate("/search-workers")}
             className="group flex items-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold transition-all"
           >
             Ver todas as categorias
