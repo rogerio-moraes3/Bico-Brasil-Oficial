@@ -85,7 +85,7 @@ export const SalesHeroSection = () => {
               </div>
               {/* SubHeadLine */}
               <h2 className="text-3xl lg:text-[36px] font-black leading-[1.1] tracking-tight text-white text-center lg:text-right max-w-[400px]">
-                Peça um <span className="!text-blue-400">serviço</span>. Ou pegue um <span className="!text-blue-400">trabalho</span>.
+                Veja como é <span className="!text-blue-400">simples</span> encontrar quem você precisa.
               </h2>
             </div>
             {/* Phone Container */}
