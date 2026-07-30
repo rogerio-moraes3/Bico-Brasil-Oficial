@@ -9,7 +9,7 @@ export const PlatformStatsStrip = () => {
     queryFn: async () => {
       const [workersRes, servicesRes, citiesRes] = await Promise.all([
         supabase
-          .from("users")
+          .from("users_public")
           .select("id", { count: "exact", head: true })
           .eq("type", "worker"),
         supabase
