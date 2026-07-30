@@ -7,13 +7,11 @@ import { useUserMode } from "@/contexts/UserModeContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FeaturedServicesSection } from "@/components/FeaturedServicesSection";
-import { CTASection } from "@/components/CTASection";
 import { PlatformStatsStrip } from "@/components/PlatformStatsStrip";
 import { PlatformAuthoritySection } from "@/components/PlatformAuthoritySection";
 import { RecentWorkersSection } from "@/components/RecentWorkersSection";
 import { TrustStrip } from "@/components/TrustStrip";
 import { ProfileCompletionWidget } from "@/components/ProfileCompletionWidget";
-import { HowItWorks } from "@/components/sales/HowItWorks";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Index() {
@@ -144,20 +142,14 @@ export default function Index() {
             </div>
           </section>
 
-          {/* Featured workers */}
-          <FeaturedServicesSection />
-
           {/* Novos profissionais — horizontal strip */}
           <RecentWorkersSection />
 
-          {/* How it works */}
-          <HowItWorks />
+          {/* Featured workers */}
+          <FeaturedServicesSection />
 
           {/* Platform authority block */}
           <PlatformAuthoritySection />
-
-          {/* Final CTA */}
-          <CTASection />
         </main>
 
         <Footer />

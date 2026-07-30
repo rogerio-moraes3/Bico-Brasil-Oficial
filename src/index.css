@@ -252,15 +252,15 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 16%;
 
-    --primary: 218 100% 56%;
-    /* #1E6FFF */
+    --primary: 218 100% 52%;
+    /* #0A64FF — escurecido de 56% para atingir contraste WCAG AA 4.5:1 */
     --primary-foreground: 0 0% 100%;
 
     --border: 215 28% 89%;
     /* #DDE5EF */
     --input: 0 0% 98%;
     /* #FBFBFB */
-    --ring: 218 100% 56%;
+    --ring: 218 100% 52%;
 
     --radius: 0.5rem;
     /* slightly rounded */
