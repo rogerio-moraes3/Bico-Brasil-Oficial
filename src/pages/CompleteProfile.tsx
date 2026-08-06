@@ -220,21 +220,28 @@ export default function CompleteProfile() {
         return;
       }
 
-      // Atualizar perfil
+      // Criar ou atualizar perfil (upsert: usuários órfãos, sem linha em public.users,
+      // precisam do INSERT aqui; um .update() simples falha silenciosamente para eles)
       const { error } = await supabase
         .from('users')
-        .update({
-          cpf: cpfClean,
-          phone: formData.phone.trim(),
-          phone_type: formData.phone_type,
-          cep: formData.cep.replace(/\D/g, '') || null,
-          address: formData.address.trim() || null,
-          neighborhood: formData.neighborhood.trim(),
-          city_id: formData.city_id,
-          ...(profile?.type === 'worker' && { category: formData.category }),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('auth_id', user!.id);
+        .upsert(
+          {
+            id: user!.id,
+            auth_id: user!.id,
+            name: profile?.name || user!.user_metadata?.name || user!.user_metadata?.full_name || user!.email || '',
+            email: profile?.email || user!.email || '',
+            cpf: cpfClean,
+            phone: formData.phone.trim(),
+            phone_type: formData.phone_type,
+            cep: formData.cep.replace(/\D/g, '') || null,
+            address: formData.address.trim() || null,
+            neighborhood: formData.neighborhood.trim(),
+            city_id: formData.city_id,
+            ...(profile?.type === 'worker' && { category: formData.category }),
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'auth_id' }
+        );
 
       if (error) throw error;
 

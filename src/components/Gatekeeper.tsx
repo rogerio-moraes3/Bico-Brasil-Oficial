@@ -26,6 +26,8 @@ export const Gatekeeper = () => {
     const [cpf, setCpf] = useState('');
     const [phone, setPhone] = useState('');
     const [cityId, setCityId] = useState('');
+    const [existingName, setExistingName] = useState<string | null>(null);
+    const [existingEmail, setExistingEmail] = useState<string | null>(null);
 
     useEffect(() => {
         if (!user) {
@@ -47,9 +49,12 @@ export const Gatekeeper = () => {
         try {
             const { data: profile } = await supabase
                 .from('users')
-                .select('cpf, phone, city_id')
+                .select('cpf, phone, city_id, name, email')
                 .eq('auth_id', user.id)
                 .maybeSingle();
+
+            setExistingName((profile as any)?.name ?? null);
+            setExistingEmail((profile as any)?.email ?? null);
 
             if (!profile || !profile.cpf || !profile.phone || !profile.city_id) {
                 // Carregar cidades
@@ -104,12 +109,18 @@ export const Gatekeeper = () => {
         try {
             const { error } = await supabase
                 .from('users')
-                .update({
-                    cpf: cleanCpf,
-                    phone: cleanPhone,
-                    city_id: cityId
-                })
-                .eq('auth_id', user!.id);
+                .upsert(
+                    {
+                        id: user!.id,
+                        auth_id: user!.id,
+                        name: existingName || user!.user_metadata?.name || user!.user_metadata?.full_name || user!.email || '',
+                        email: existingEmail || user!.email || '',
+                        cpf: cleanCpf,
+                        phone: cleanPhone,
+                        city_id: cityId
+                    },
+                    { onConflict: 'auth_id' }
+                );
 
             if (error) throw error;
 
