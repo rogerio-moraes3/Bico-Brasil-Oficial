@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import CitySelect from '@/components/CitySelect';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, MessageCircle, Loader2, Crown, Edit, Trash, Check, Pencil, Briefcase, Share2 } from 'lucide-react';
+import { Star, MapPin, MessageCircle, Loader2, Crown, Edit, Trash, Check, Pencil, Briefcase, Share2, Wallet, CheckCircle2, Clock } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAccessControl } from '@/hooks/useAccessControl';
@@ -22,6 +22,15 @@ import { WhatsAppContactButton } from '@/components/WhatsAppContactButton';
 import { useCities } from '@/hooks/useCities';
 import { EmptyState } from '@/components/EmptyState';
 import { SkeletonGrid } from '@/components/SkeletonGrid';
+
+// Mesmas chaves/labels de disponibilidade usadas em OfferServices.tsx e EditService.tsx —
+// o valor salvo é a chave (ex: "todos_os_dias"), nunca o texto exibido ao usuário.
+const AVAILABILITY_LABELS: Record<string, string> = {
+  todos_os_dias: 'Todos os dias',
+  seg_sex: 'Segunda a Sexta',
+  finais_semana: 'Finais de semana',
+  agendamento: 'Somente por agendamento',
+};
 
 export default function SearchWorkers() {
   const { toast } = useToast();
@@ -381,14 +390,24 @@ export default function SearchWorkers() {
       {/* Banner de limite para usuários gratuitos */}
       {!isTester && !isPremium && (
         <div className="bg-yellow-900/30 border-b border-yellow-500/30 py-3">
-          <div className="container mx-auto px-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Crown className="h-5 w-5 text-yellow-400" />
-              <span className="text-sm text-foreground">
-                {remainingFreeViews > 0
-                  ? `Você tem ${remainingFreeViews} visualizações gratuitas restantes`
-                  : 'Limite de visualizações atingido'}
-              </span>
+          <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-5">
+              <div className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-yellow-400" />
+                <span className="text-sm text-foreground">
+                  {remainingFreeViews > 0
+                    ? `${remainingFreeViews} de 3 perfis completos grátis restantes`
+                    : 'Limite de perfis completos atingido'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MessageCircle className="h-5 w-5 text-yellow-400" />
+                <span className="text-sm text-foreground">
+                  {remainingFreeUnlocks > 0
+                    ? `${remainingFreeUnlocks} de 3 contatos grátis restantes`
+                    : 'Limite de contatos grátis atingido'}
+                </span>
+              </div>
             </div>
             <Button
               size="sm"
@@ -412,9 +431,9 @@ export default function SearchWorkers() {
           <CardContent className="p-4 md:p-6 pt-4 md:pt-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4">
               <div>
-                <Label>Categoria</Label>
+                <Label htmlFor="filter-category">Categoria</Label>
                 <Select value={filters.category} onValueChange={handleCategoryChange}>
-                  <SelectTrigger>
+                  <SelectTrigger id="filter-category">
                     <SelectValue placeholder="Todas as categorias" />
                   </SelectTrigger>
                   <SelectContent>
@@ -428,9 +447,9 @@ export default function SearchWorkers() {
 
               {subcategories.length > 0 && (
                 <div>
-                  <Label>Subcategoria</Label>
+                  <Label htmlFor="filter-subcategory">Subcategoria</Label>
                   <Select value={filters.subcategory} onValueChange={(value) => setFilters({ ...filters, subcategory: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger id="filter-subcategory">
                       <SelectValue placeholder="Todas" />
                     </SelectTrigger>
                     <SelectContent>
@@ -444,7 +463,7 @@ export default function SearchWorkers() {
               )}
 
               <div>
-                <Label>Cidade</Label>
+                <Label htmlFor="filter-city">Cidade</Label>
                 <Select
                   value={filters.city_id}
                   onValueChange={(value) => {
@@ -452,7 +471,7 @@ export default function SearchWorkers() {
                     setFilters(prev => ({ ...prev, city_id: value }));
                   }}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="filter-city">
                     <SelectValue placeholder="Todas" />
                   </SelectTrigger>
                   <SelectContent>
@@ -467,8 +486,9 @@ export default function SearchWorkers() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4">
               <div>
-                <Label>Bairro</Label>
+                <Label htmlFor="filter-neighborhood">Bairro</Label>
                 <Input
+                  id="filter-neighborhood"
                   placeholder="Digite o bairro"
                   value={filters.neighborhood}
                   onChange={(e) => setFilters({ ...filters, neighborhood: e.target.value })}
@@ -476,9 +496,9 @@ export default function SearchWorkers() {
               </div>
 
               <div>
-                <Label>Avaliação Mínima</Label>
+                <Label htmlFor="filter-rating">Avaliação Mínima</Label>
                 <Select value={filters.minRating} onValueChange={(value) => setFilters({ ...filters, minRating: value })}>
-                  <SelectTrigger>
+                  <SelectTrigger id="filter-rating">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -490,8 +510,9 @@ export default function SearchWorkers() {
               </div>
 
               <div>
-                <Label>Buscar por palavra-chave</Label>
+                <Label htmlFor="filter-keyword">Buscar por palavra-chave</Label>
                 <Input
+                  id="filter-keyword"
                   placeholder="Ex: Encanador..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -542,21 +563,6 @@ export default function SearchWorkers() {
             {filters.city_id !== 'all' && ` em ${cities.find(c => c.id === filters.city_id)?.name}`}
           </div>
         )}
-
-        <Card className="p-4 md:p-6 bg-primary border-primary/20 text-primary-foreground rounded-2xl shadow-md mt-6 w-full">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-center md:text-left">
-              <h3 className="font-semibold text-lg mb-2">Não encontrou o profissional ideal?</h3>
-              <p className="text-primary-foreground/80">
-                Publique sua vaga e deixe que os profissionais venham até você!
-              </p>
-            </div>
-            <Button onClick={() => navigate('/post-job')} size="lg" className="whitespace-nowrap bg-card text-foreground border-border rounded-xl hover:bg-muted">
-              <Briefcase className="mr-2 h-4 w-4" />
-              Publicar Vaga
-            </Button>
-          </div>
-        </Card>
 
         {loading && (
           <SkeletonGrid count={6} columnsClassName="md:grid-cols-2 lg:grid-cols-3" className="py-6" />
@@ -660,6 +666,29 @@ export default function SearchWorkers() {
                             </div>
                           </div>
 
+                          {(worker.price || worker.jobs_done > 0 || worker.availability) && (
+                            <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mb-3 text-xs text-muted-foreground">
+                              {worker.price && (
+                                <span className="flex items-center gap-1">
+                                  <Wallet className="h-3 w-3" />
+                                  {worker.price}
+                                </span>
+                              )}
+                              {worker.jobs_done > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  {worker.jobs_done} {worker.jobs_done === 1 ? 'trabalho concluído' : 'trabalhos concluídos'}
+                                </span>
+                              )}
+                              {worker.availability && (
+                                <span className="flex items-center gap-1">
+                                  <Clock className="h-3 w-3" />
+                                  {AVAILABILITY_LABELS[worker.availability] || worker.availability}
+                                </span>
+                              )}
+                            </div>
+                          )}
+
                           {worker.service_description && (
                             <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                               {worker.service_description}
@@ -737,6 +766,21 @@ export default function SearchWorkers() {
             )}
           </div>
         )}
+
+        <Card className="p-4 md:p-6 bg-primary border-primary/20 text-primary-foreground rounded-2xl shadow-md mt-6 w-full">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+              <h3 className="font-semibold text-lg mb-2">Não encontrou o profissional ideal?</h3>
+              <p className="text-primary-foreground/80">
+                Publique sua vaga e deixe que os profissionais venham até você!
+              </p>
+            </div>
+            <Button onClick={() => navigate('/post-job')} size="lg" className="whitespace-nowrap bg-card text-foreground border-border rounded-xl hover:bg-muted">
+              <Briefcase className="mr-2 h-4 w-4" />
+              Publicar Vaga
+            </Button>
+          </div>
+        </Card>
 
         {showUpgradeModal && (
           <UpgradeModal

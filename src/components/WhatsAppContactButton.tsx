@@ -84,7 +84,7 @@ export const WhatsAppContactButton = ({
 
       toast({
         title: "Contato desbloqueado!",
-        description: `Você tem ${remainingViews - 1} visualizações restantes`,
+        description: `Você tem ${remainingViews - 1} de 3 contatos grátis restantes`,
       });
 
       await fetchAndOpen();
@@ -104,7 +104,7 @@ export const WhatsAppContactButton = ({
     <Button
       onClick={handleContact}
       disabled={loading}
-      className="w-full bg-green-600 hover:bg-green-700 text-white"
+      className="w-full bg-green-700 hover:bg-green-800 text-white"
     >
       {loading ? (
         <>
