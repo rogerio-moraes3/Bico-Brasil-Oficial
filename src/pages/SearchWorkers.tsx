@@ -18,7 +18,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useAccessControl } from '@/hooks/useAccessControl';
 import { UpgradeModal } from '@/components/UpgradeModal';
 import { expandSearchTerms } from '@/lib/searchSynonyms';
-import { GeolocationSearch } from '@/components/GeolocationSearch';
 import { WhatsAppContactButton } from '@/components/WhatsAppContactButton';
 import { useCities } from '@/hooks/useCities';
 import { EmptyState } from '@/components/EmptyState';
@@ -38,9 +37,6 @@ export default function SearchWorkers() {
     neighborhood: '',
     minRating: 'all'
   });
-  const [useGeolocation, setUseGeolocation] = useState(false);
-  const [geoLocation, setGeoLocation] = useState<{ lat: number; lng: number; radius: number } | null>(null);
-
   const [workers, setWorkers] = useState<any[]>([]);
   const { cities, loading: citiesLoading } = useCities();
   const [categories, setCategories] = useState<any[]>([]);
@@ -398,7 +394,7 @@ export default function SearchWorkers() {
               size="sm"
               variant="outline"
               onClick={() => navigate('/premium')}
-              className="border-yellow-500 text-yellow-400 hover:bg-yellow-900/50"
+              className="border-yellow-600 text-yellow-800 hover:bg-yellow-100 dark:border-yellow-500 dark:text-yellow-400 dark:hover:bg-yellow-900/50"
             >
               Assinar Premium
             </Button>
@@ -524,22 +520,17 @@ export default function SearchWorkers() {
                     neighborhood: '',
                     minRating: 'all'
                   });
-                  setHasManualCitySelection(false);
+                  // "Todas as cidades" também é uma escolha manual — sem isso, o efeito
+                  // de auto-seleção da cidade do perfil reaplica a cidade antiga na
+                  // hora, e o filtro nunca chega a limpar de fato.
+                  setHasManualCitySelection(true);
                   setSearchQuery('');
-                  setUseGeolocation(false);
-                  setGeoLocation(null);
                 }}
                 variant="outline"
                 disabled={loading}
               >
                 Limpar
               </Button>
-            </div>
-
-            <div className="pt-4 border-t">
-              <GeolocationSearch
-                onLocationChange={(lat, lng, radius) => setGeoLocation({ lat, lng, radius })}
-              />
             </div>
           </CardContent>
         </Card>

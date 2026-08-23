@@ -149,7 +149,7 @@ export default function WorkerProfile() {
       // Fetch contact info via secure RPC function (checks premium/tester status and contact_unlocks)
       if ((canViewContacts || isWorkerUnlocked) && user) {
         const { data: contact, error: contactError } = await supabase
-          .rpc('get_worker_contact', { worker_id: id });
+          .rpc('get_worker_contact', { p_worker_id: id });
 
         if (contact && contact.length > 0) {
           setContactInfo(contact[0]);

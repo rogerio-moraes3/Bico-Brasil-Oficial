@@ -1821,7 +1821,7 @@ export type Database = {
         }[]
       }
       get_worker_contact: {
-        Args: { worker_id: string }
+        Args: { p_worker_id: string }
         Returns: {
           email: string
           phone: string

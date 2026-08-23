@@ -32,7 +32,7 @@ export const UnlockWithCredits = ({
     };
 
     const fetchAndOpen = async () => {
-        const { data, error } = await supabase.rpc('get_worker_contact', { worker_id: workerId });
+        const { data, error } = await supabase.rpc('get_worker_contact', { p_worker_id: workerId });
         const contact = Array.isArray(data) ? data[0] : data;
         if (error || !contact?.phone) {
             throw new Error('Não foi possível obter o telefone. Tente novamente.');
