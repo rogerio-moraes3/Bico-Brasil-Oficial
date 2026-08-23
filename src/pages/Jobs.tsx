@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, MapPin, Search, Loader2 } from "lucide-react";
+import { Star, MapPin, Search, Loader2, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAccessControl } from '@/hooks/useAccessControl';
@@ -257,8 +257,9 @@ const Jobs = () => {
                       </p>
                     </div>
                     {worker.plan_active && (
-                      <Badge variant="secondary" className="bg-primary/10 text-primary">
-                        ✓ Plano Pro
+                      <Badge variant="secondary" className="bg-primary/10 text-primary gap-1">
+                        <Check className="h-3 w-3" />
+                        Plano Pro
                       </Badge>
                     )}
                   </div>

@@ -319,7 +319,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
         table="destaque_orders"
         onConfirmed={() => {
           toast({
-            title: "Destaque ativado! 🌟",
+            title: "Destaque ativado!",
             description: "Seu perfil já está em destaque na busca e na página inicial."
           });
           navigate('/profile');

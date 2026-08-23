@@ -65,7 +65,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
           setPollingPaymentId(null);
 
           toast({
-            title: "🎉 Pagamento Aprovado!",
+            title: "Pagamento Aprovado!",
             description: "Seu plano foi ativado com sucesso!"
           });
 
@@ -77,7 +77,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
           setPollingPaymentId(null);
 
           toast({
-            title: "❌ Pagamento não aprovado",
+            title: "Pagamento não aprovado",
             description: "Tente novamente ou use outro método.",
             variant: "destructive"
           });
@@ -92,7 +92,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
       setPollingPaymentId(null);
 
       toast({
-        title: "⏱️ Tempo esgotado",
+        title: "Tempo esgotado",
         description: "Verifique se o pagamento foi processado.",
         variant: "default"
       });
@@ -109,7 +109,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
       // Validar nome
       if (!payerName.trim() || payerName.trim().length < 3) {
         toast({
-          title: "❌ Nome obrigatório",
+          title: "Nome obrigatório",
           description: "Por favor, informe seu nome completo.",
           variant: "destructive"
         });
@@ -119,7 +119,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
       // Validar email
       if (!payerEmail.trim() || !payerEmail.includes('@')) {
         toast({
-          title: "❌ Email obrigatório",
+          title: "Email obrigatório",
           description: "Por favor, informe um email válido.",
           variant: "destructive"
         });
@@ -130,7 +130,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
       const cleanCPF = payerCPF.replace(/\D/g, '');
       if (!cleanCPF || cleanCPF.length !== 11) {
         toast({
-          title: "❌ CPF obrigatório",
+          title: "CPF obrigatório",
           description: "Por favor, informe um CPF válido com 11 dígitos.",
           variant: "destructive"
         });
@@ -139,7 +139,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
 
       if (/^(\d)\1{10}$/.test(cleanCPF)) {
         toast({
-          title: "❌ CPF inválido",
+          title: "CPF inválido",
           description: "Este CPF não é válido. Por favor, verifique.",
           variant: "destructive"
         });
@@ -181,7 +181,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
         onOpenChange(false);
 
         toast({
-          title: "✅ QR Code gerado!",
+          title: "QR Code gerado!",
           description: "Use o código PIX para finalizar o pagamento. Aguardando confirmação..."
         });
       } else if (data?.init_point) {
@@ -202,18 +202,18 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
 
       if (errorMessage.includes("credenciais de PRODUÇÃO") ||
         errorMessage.includes("Unauthorized use of live credentials")) {
-        errorTitle = "🔒 Conta Mercado Pago não ativada";
+        errorTitle = "Conta Mercado Pago não ativada";
         errorMessage = "Suas credenciais de produção ainda não foram liberadas pelo Mercado Pago. Você precisa:\n\n1. Acessar o painel do Mercado Pago\n2. Completar a verificação de identidade\n3. Aguardar aprovação da conta\n\nOU use credenciais de TESTE temporariamente.";
       } else if (errorMessage.includes("Token") && errorMessage.includes("inválido")) {
-        errorMessage = "⚙️ Token do Mercado Pago está incorreto. Verifique se copiou corretamente das configurações.";
+        errorMessage = "Token do Mercado Pago está incorreto. Verifique se copiou corretamente das configurações.";
       } else if (errorMessage.includes("TEST-") || errorMessage.includes("sandbox")) {
-        errorMessage = "⚠️ Sistema configurado com credenciais de teste.";
+        errorMessage = "Sistema configurado com credenciais de teste.";
       } else if (errorMessage.includes("credenciais")) {
-        errorMessage = "⚙️ Erro na configuração de pagamento. Entre em contato com o suporte.";
+        errorMessage = "Erro na configuração de pagamento. Entre em contato com o suporte.";
       } else if (errorMessage.includes("CPF")) {
-        errorMessage = "❌ CPF inválido ou em formato incorreto.";
+        errorMessage = "CPF inválido ou em formato incorreto.";
       } else if (errorMessage.includes("pendente") || errorMessage.includes("pending")) {
-        errorMessage = "⏳ Você já tem um pagamento pendente. Complete-o ou aguarde expiração.";
+        errorMessage = "Você já tem um pagamento pendente. Complete-o ou aguarde expiração.";
       }
 
       toast({
@@ -287,7 +287,7 @@ export const PaymentModal = ({ open, onOpenChange, planType, amount }: PaymentMo
             {/* Mensagem motivacional */}
             <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
               <p className="text-center text-sm font-medium text-primary">
-                ✨ Bons bicos a todo momento para você! 💰
+                Bons bicos a todo momento para você!
               </p>
               <p className="text-center text-xs text-muted-foreground mt-1">
                 Que não lhe falte trabalho nem dinheiro!

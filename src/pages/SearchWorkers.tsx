@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import CitySelect from '@/components/CitySelect';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, MessageCircle, Loader2, Crown, Edit, Trash, Check, Pencil, Briefcase, Share2, Wallet, CheckCircle2, Clock } from 'lucide-react';
+import { Star, MapPin, MessageCircle, Loader2, Crown, Edit, Trash, Check, Pencil, Briefcase, Share2, Wallet, CheckCircle2, Clock, Gem } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAccessControl } from '@/hooks/useAccessControl';
@@ -381,7 +381,7 @@ export default function SearchWorkers() {
           <div className="container mx-auto px-4 flex items-center gap-2">
             <Badge className="bg-purple-600">BETA TESTER</Badge>
             <span className="text-sm text-foreground">
-              Você tem acesso ilimitado a todos os recursos 🎉
+              Você tem acesso ilimitado a todos os recursos
             </span>
           </div>
         </div>
@@ -643,13 +643,15 @@ export default function SearchWorkers() {
 
                               <div className="flex gap-2 justify-center flex-wrap mb-3">
                                 {worker.destaque_expires_at && new Date(worker.destaque_expires_at) > new Date() && (
-                                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                                    ⭐ Destaque
+                                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 gap-1">
+                                    <Star className="h-3 w-3" />
+                                    Destaque
                                   </Badge>
                                 )}
                                 {worker.plan_active && (
-                                  <Badge variant="secondary" className="bg-purple-100 text-purple-800">
-                                    💎 Premium
+                                  <Badge variant="secondary" className="bg-purple-100 text-purple-800 gap-1">
+                                    <Gem className="h-3 w-3" />
+                                    Premium
                                   </Badge>
                                 )}
                               </div>

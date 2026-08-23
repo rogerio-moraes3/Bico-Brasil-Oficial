@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Copy, CheckCircle, Loader2, Info } from 'lucide-react';
+import { Copy, CheckCircle, Loader2, Info, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Label } from './ui/label';
 
@@ -70,7 +70,7 @@ export function PixQRCodeModal({
           onConfirmed();
         } else {
           toast({
-            title: "Pagamento confirmado! ✅",
+            title: "Pagamento confirmado!",
             description: "Seu plano foi ativado com sucesso"
           });
           window.location.href = '/payment-success';
@@ -116,7 +116,7 @@ export function PixQRCodeModal({
             className="absolute left-0 top-0 h-8 w-8"
             onClick={() => onOpenChange(false)}
           >
-            ←
+            <ArrowLeft className="h-4 w-4" />
           </Button>
           <DialogTitle className="text-2xl text-center text-emerald-900 dark:text-emerald-100">Pagar com PIX</DialogTitle>
           <DialogDescription className="text-center text-slate-700 dark:text-slate-300">
@@ -190,7 +190,7 @@ export function PixQRCodeModal({
             </p>
             {checking && (
               <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1">
-                🔍 Verificando status...
+                Verificando status...
               </p>
             )}
           </div>
@@ -214,7 +214,7 @@ export function PixQRCodeModal({
                 <li>Confirme o pagamento</li>
               </ol>
               <p className="text-xs mt-3 text-slate-600 dark:text-slate-400">
-                💡 O pagamento é processado instantaneamente e seu plano será ativado automaticamente.
+                O pagamento é processado instantaneamente e seu plano será ativado automaticamente.
               </p>
             </AlertDescription>
           </Alert>

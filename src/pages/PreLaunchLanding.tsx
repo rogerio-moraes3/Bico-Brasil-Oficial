@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Helmet } from 'react-helmet';
-import { Loader2, Settings } from 'lucide-react';
+import { Loader2, Settings, CheckCircle2, Lock, PartyPopper } from 'lucide-react';
 import logo from '@/assets/logo.png';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -100,7 +100,7 @@ export default function PreLaunchLanding() {
 
       toast({
         title: "Cadastro realizado!",
-        description: "Você receberá um e-mail quando lançarmos 🎉"
+        description: "Você receberá um e-mail quando lançarmos"
       });
       setFormData({ nome: '', email: '', cidade: '', tipo_interesse: '' });
       loadSubscriberCount(); // Atualizar contador
@@ -155,23 +155,23 @@ export default function PreLaunchLanding() {
             </p>
             <ul className="space-y-3 mb-8 text-base">
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Serviços reais, publicados por pessoas reais</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Chance de ganhar no mesmo dia</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Trabalho simples, direto, sem burocracia</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Atividades rápidas, braçais ou especializadas</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Liberdade total para escolher seus bicos</span>
               </li>
             </ul>
@@ -191,31 +191,31 @@ export default function PreLaunchLanding() {
             </p>
             <ul className="space-y-3 mb-8 text-base">
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Pequenas reformas</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Jardinagem</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Limpeza rápida</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Mudança e carregamento</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Pintura</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Manutenção</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-2xl">✓</span>
+                <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <span>Tarefas simples e urgentes</span>
               </li>
             </ul>
@@ -254,7 +254,7 @@ export default function PreLaunchLanding() {
               </p>
               {subscriberCount > 0 && (
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
-                  <span className="text-2xl">🎉</span>
+                  <PartyPopper className="h-6 w-6 text-primary" />
                   <span className="text-sm font-medium">
                     <strong className="text-primary">{subscriberCount}</strong> {subscriberCount === 1 ? 'pessoa já está' : 'pessoas já estão'} na lista VIP
                   </span>
@@ -337,7 +337,8 @@ export default function PreLaunchLanding() {
         <section className="bg-primary/5 border-y border-primary/20 py-8">
           <div className="container mx-auto px-4 text-center">
             <h3 className="text-xl font-bold text-foreground mb-4 flex items-center justify-center gap-2">
-              🔐 Área Admin
+              <Lock className="h-5 w-5" />
+              Área Admin
             </h3>
             {isAdmin ? (
               <Link to="/admin">
@@ -373,7 +374,8 @@ export default function PreLaunchLanding() {
                 to={isAdmin ? "/admin" : "/auth"}
                 className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors inline-flex items-center gap-1"
               >
-                🔐 Área Admin
+                <Lock className="h-3.5 w-3.5" />
+                Área Admin
               </Link>
             </div>
           </div>

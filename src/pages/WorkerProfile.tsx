@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { FavoriteButton } from '@/components/FavoriteButton';
-import { Star, MapPin, Phone, Mail, Calendar, MessageSquare, CheckCircle, Lock, Crown } from 'lucide-react';
+import { Star, MapPin, Phone, Mail, Calendar, MessageSquare, CheckCircle, Lock, Crown, Gift } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAccessControl } from '@/hooks/useAccessControl';
 import { UpgradeModal } from '@/components/UpgradeModal';
@@ -219,7 +219,7 @@ export default function WorkerProfile() {
 
       setIsWorkerUnlocked(true);
       toast({
-        title: "✅ Contato desbloqueado!",
+        title: "Contato desbloqueado!",
         description: `Você ainda tem ${remainingFreeUnlocks - 1} desbloqueios gratuitos.`,
       });
 
@@ -412,7 +412,7 @@ export default function WorkerProfile() {
                           <Lock className="h-6 w-6 text-yellow-600 dark:text-yellow-400 mt-1 flex-shrink-0" />
                           <div className="flex-1">
                             <p className="font-bold text-yellow-900 dark:text-yellow-100 text-lg mb-2">
-                              🔒 Contato Bloqueado
+                              Contato Bloqueado
                             </p>
 
                             {remainingFreeUnlocks > 0 ? (
@@ -424,9 +424,14 @@ export default function WorkerProfile() {
                                 <Button
                                   onClick={handleFreeUnlock}
                                   disabled={unlocking}
-                                  className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold disabled:opacity-50"
+                                  className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold disabled:opacity-50 gap-2"
                                 >
-                                  {unlocking ? "Desbloqueando..." : `🎁 Desbloquear com Crédito Grátis (${remainingFreeUnlocks}/3)`}
+                                  {unlocking ? "Desbloqueando..." : (
+                                    <>
+                                      <Gift className="h-4 w-4" />
+                                      {`Desbloquear com Crédito Grátis (${remainingFreeUnlocks}/3)`}
+                                    </>
+                                  )}
                                 </Button>
                               </>
                             ) : (

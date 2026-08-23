@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
-import { Camera, Upload, Loader2 } from 'lucide-react';
+import { Camera, Upload, Loader2, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { resizeImageFile } from '@/lib/imageResize';
 
@@ -51,7 +51,7 @@ export function SelfieVerification({
       if (updateError) throw updateError;
 
       toast({
-        title: "✅ Selfie enviada!",
+        title: "Selfie enviada!",
         description: "Sua foto está em análise. Você receberá uma notificação em breve."
       });
 
@@ -147,8 +147,9 @@ export function SelfieVerification({
             </Button>
           </div>
 
-          <p className="text-xs text-center text-muted-foreground">
-            ⚠️ Sem verificação, você não poderá acessar as funcionalidades do app
+          <p className="text-xs text-center text-muted-foreground flex items-center justify-center gap-1.5">
+            <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+            Sem verificação, você não poderá acessar as funcionalidades do app
           </p>
         </div>
       </DialogContent>

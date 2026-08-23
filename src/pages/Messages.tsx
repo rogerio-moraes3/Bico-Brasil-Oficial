@@ -145,7 +145,7 @@ export default function Messages() {
       .insert({
         conversation_id: selectedConversation,
         sender_id: user.id,
-        content: type.startsWith('image/') ? '📷 Imagem' : '📹 Vídeo',
+        content: type.startsWith('image/') ? 'Imagem' : 'Vídeo',
         media_url: url,
         media_type: type
       });

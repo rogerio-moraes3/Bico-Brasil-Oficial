@@ -6,13 +6,14 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Helmet } from 'react-helmet';
 import logo from '@/assets/logo.png';
+import { HardHat, Sparkles, Package, Sprout, Wrench, Smartphone, CheckCircle2 } from 'lucide-react';
 
 const categories = [
-  { name: "Pedreiro", icon: "🏗️" },
-  { name: "Faxina", icon: "🧹" },
-  { name: "Ajudante de Mudança", icon: "📦" },
-  { name: "Jardineiro", icon: "🌱" },
-  { name: "Encanador", icon: "🔧" }
+  { name: "Pedreiro", icon: HardHat },
+  { name: "Faxina", icon: Sparkles },
+  { name: "Ajudante de Mudança", icon: Package },
+  { name: "Jardineiro", icon: Sprout },
+  { name: "Encanador", icon: Wrench }
 ];
 
 export default function Landing() {
@@ -70,7 +71,7 @@ export default function Landing() {
           </p>
 
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            👉 Conectamos pessoas que precisam de ajuda urgente com profissionais qualificados ou com ajudantes capacitados para serviços gerais que não exigem cursos ou diplomas. Rápido, fácil e seguro.
+            Conectamos pessoas que precisam de ajuda urgente com profissionais qualificados ou com ajudantes capacitados para serviços gerais que não exigem cursos ou diplomas. Rápido, fácil e seguro.
           </p>
 
           <Button
@@ -89,7 +90,7 @@ export default function Landing() {
 
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <Card className="p-6 text-center">
-                <div className="text-5xl mb-4">📱</div>
+                <Smartphone className="h-12 w-12 mb-4 mx-auto text-primary" />
                 <h3 className="font-semibold text-xl mb-2">1. Peça um serviço</h3>
                 <p className="text-muted-foreground">
                   Publique o que você precisa em segundos
@@ -97,7 +98,7 @@ export default function Landing() {
               </Card>
 
               <Card className="p-6 text-center">
-                <div className="text-5xl mb-4">👷</div>
+                <HardHat className="h-12 w-12 mb-4 mx-auto text-primary" />
                 <h3 className="font-semibold text-xl mb-2">2. Escolha o profissional</h3>
                 <p className="text-muted-foreground">
                   Veja avaliações e escolha quem preferir
@@ -105,7 +106,7 @@ export default function Landing() {
               </Card>
 
               <Card className="p-6 text-center">
-                <div className="text-5xl mb-4">✅</div>
+                <CheckCircle2 className="h-12 w-12 mb-4 mx-auto text-primary" />
                 <h3 className="font-semibold text-xl mb-2">3. Resolva agora</h3>
                 <p className="text-muted-foreground">
                   Converse direto no WhatsApp e resolva
@@ -127,7 +128,7 @@ export default function Landing() {
                   className="p-6 text-center hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => navigate('/jobs')}
                 >
-                  <div className="text-4xl mb-2">{cat.icon}</div>
+                  <cat.icon className="h-9 w-9 mb-2 mx-auto text-primary" />
                   <p className="font-medium">{cat.name}</p>
                 </Card>
               ))}

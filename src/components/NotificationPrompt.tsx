@@ -80,7 +80,7 @@ export function NotificationPrompt() {
 
     if (result === 'granted') {
       toast({
-        title: "Notificações ativadas! ✅",
+        title: "Notificações ativadas!",
         description: "Você receberá alertas sobre novos trabalhos"
       });
       localStorage.setItem('notificationPromptSeen', 'true');

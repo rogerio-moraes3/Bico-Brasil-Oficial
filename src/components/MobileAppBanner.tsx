@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { X } from 'lucide-react';
+import { X, Zap, Bell, Wifi } from 'lucide-react';
 import logo from '@/assets/logo.png';
 
 export const MobileAppBanner = () => {
@@ -86,11 +86,20 @@ export const MobileAppBanner = () => {
           </div>
         </div>
         
-        <p className="text-sm text-muted-foreground">
-          🚀 Acesso rápido direto da sua tela inicial<br/>
-          📱 Receba notificações de novos trabalhos<br/>
-          ⚡ Funciona offline
-        </p>
+        <ul className="text-sm text-muted-foreground space-y-1">
+          <li className="flex items-center gap-2">
+            <Zap className="h-3.5 w-3.5 shrink-0" />
+            Acesso rápido direto da sua tela inicial
+          </li>
+          <li className="flex items-center gap-2">
+            <Bell className="h-3.5 w-3.5 shrink-0" />
+            Receba notificações de novos trabalhos
+          </li>
+          <li className="flex items-center gap-2">
+            <Wifi className="h-3.5 w-3.5 shrink-0" />
+            Funciona offline
+          </li>
+        </ul>
         
         {getInstructions()}
         

@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { formatCPF, validateCPF } from "@/lib/validators";
@@ -75,7 +75,7 @@ export function PlanCheckoutModal({
       // Auto-aprovar após 2s para não travar
       const timeout = setTimeout(() => {
         if (!mpValidation?.ok) {
-          setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success', icon: '✅' });
+          setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success' });
         }
       }, 2000);
       return () => clearTimeout(timeout);
@@ -103,12 +103,12 @@ export function PlanCheckoutModal({
       setMpValidation(validation);
 
       if (!validation.ok) {
-        setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success', icon: '✅' }); // Permite prosseguir
+        setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success' }); // Permite prosseguir
       } else {
         // validação ok
       }
     } catch (err) {
-      setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success', icon: '✅' }); // Permite prosseguir
+      setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success' }); // Permite prosseguir
     } finally {
       setValidatingMP(false);
     }
@@ -247,7 +247,9 @@ export function PlanCheckoutModal({
                 }
               >
                 <div className="flex items-start gap-2">
-                  <span className="text-xl">{mpValidation.icon}</span>
+                  {mpValidation.badge === 'success' && <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />}
+                  {mpValidation.badge === 'warning' && <AlertTriangle className="h-5 w-5 text-yellow-600 shrink-0" />}
+                  {mpValidation.badge === 'error' && <XCircle className="h-5 w-5 text-destructive shrink-0" />}
                   <div className="flex-1">
                     {process.env.NODE_ENV === 'development' && (
                       <div className="flex items-center gap-2 mb-1">

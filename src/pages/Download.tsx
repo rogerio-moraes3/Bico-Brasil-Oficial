@@ -70,8 +70,9 @@ export default function DownloadPage() {
           {/* Nota para iOS */}
           {isIOSBrowser && (
             <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
-              <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
-                📱 Nota para iPhone/iPad
+              <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2 flex items-center gap-2">
+                <Smartphone className="h-4 w-4" />
+                Nota para iPhone/iPad
               </h4>
               <p className="text-sm text-amber-700 dark:text-amber-300">
                 No iOS, instale pelo Safari: toque em Compartilhar e escolha “Adicionar à Tela de Início”.
@@ -81,7 +82,10 @@ export default function DownloadPage() {
 
           {/* Instruções Rápidas */}
           <div className="text-left bg-muted p-6 rounded-lg">
-            <h3 className="font-bold mb-4 text-foreground">📱 Como Instalar:</h3>
+            <h3 className="font-bold mb-4 text-foreground flex items-center gap-2">
+              <Smartphone className="h-4 w-4" />
+              Como Instalar:
+            </h3>
             {isAndroid && (
               <ol className="list-decimal list-inside space-y-2 text-sm">
                 <li>Abra este site no Chrome</li>

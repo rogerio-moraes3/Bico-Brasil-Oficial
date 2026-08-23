@@ -8,7 +8,6 @@ export interface MercadoPagoValidation {
   mode: "test" | "production" | "unknown";
   reason: string;
   badge: "success" | "warning" | "error";
-  icon: string;
 }
 
 export async function validateMercadoPagoToken(
@@ -20,7 +19,6 @@ export async function validateMercadoPagoToken(
       mode: "unknown",
       reason: "Token do Mercado Pago não configurado. Configure MERCADOPAGO_ACCESS_TOKEN.",
       badge: "error",
-      icon: "⚠️",
     };
   }
 
@@ -34,7 +32,6 @@ export async function validateMercadoPagoToken(
       mode: "test",
       reason: "Modo TESTE ativo - pagamentos em sandbox (não são reais).",
       badge: "warning",
-      icon: "🟡",
     };
   }
 
@@ -45,7 +42,6 @@ export async function validateMercadoPagoToken(
       mode: "unknown",
       reason: "Token inválido. Use TEST-... (teste) ou APP_USR-... (produção).",
       badge: "error",
-      icon: "🔴",
     };
   }
 
@@ -64,7 +60,6 @@ export async function validateMercadoPagoToken(
         reason:
           "Credenciais de PRODUÇÃO não ativadas. Complete a verificação da sua conta no Mercado Pago (documento, selfie, comprovante) ou use credenciais de TESTE.",
         badge: "error",
-        icon: "🔴",
       };
     }
 
@@ -74,7 +69,6 @@ export async function validateMercadoPagoToken(
         mode: "production",
         reason: `Erro ao validar credenciais: ${res.status} ${res.statusText}`,
         badge: "error",
-        icon: "🔴",
       };
     }
 
@@ -86,7 +80,6 @@ export async function validateMercadoPagoToken(
         mode: "production",
         reason: data.error.message || "Erro desconhecido na validação.",
         badge: "error",
-        icon: "🔴",
       };
     }
 
@@ -95,7 +88,6 @@ export async function validateMercadoPagoToken(
       mode: "production",
       reason: "Modo PRODUÇÃO ativo - pagamentos reais habilitados.",
       badge: "success",
-      icon: "🟢",
     };
   } catch (err) {
     return {
@@ -103,7 +95,6 @@ export async function validateMercadoPagoToken(
       mode: "production",
       reason: `Falha na comunicação com Mercado Pago: ${err instanceof Error ? err.message : "Erro desconhecido"}`,
       badge: "error",
-      icon: "🔴",
     };
   }
 }

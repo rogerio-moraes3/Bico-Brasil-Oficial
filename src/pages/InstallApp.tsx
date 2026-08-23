@@ -196,8 +196,9 @@ export default function InstallApp() {
           {/* Nota para iOS */}
           {isIOSBrowser && (
             <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
-              <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
-                📱 Nota para iPhone/iPad
+              <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2 flex items-center gap-2">
+                <Smartphone className="h-4 w-4" />
+                Nota para iPhone/iPad
               </h4>
               <p className="text-sm text-amber-700 dark:text-amber-300">
                 No iOS, instale pelo Safari: toque em Compartilhar e escolha “Adicionar à Tela de Início”.

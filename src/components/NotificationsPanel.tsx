@@ -3,7 +3,7 @@ import { useNotifications } from '@/contexts/NotificationContext';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { Bell, Check, ExternalLink, Trash2 } from 'lucide-react';
+import { Bell, Check, ExternalLink, Trash2, Briefcase, UserPlus, MessageCircle, CheckCircle2, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ScrollArea } from './ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
@@ -80,17 +80,17 @@ export function NotificationsPanel() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'new_job':
-        return '🆕';
+        return Briefcase;
       case 'new_candidate':
-        return '';
+        return UserPlus;
       case 'new_message':
-        return '';
+        return MessageCircle;
       case 'job_update':
-        return '✅';
+        return CheckCircle2;
       case 'rating':
-        return '⭐';
+        return Star;
       default:
-        return '';
+        return Bell;
     }
   };
 
@@ -157,7 +157,10 @@ export function NotificationsPanel() {
                     className={`p-4 cursor-pointer transition-transform duration-200 ease-out hover:bg-muted/50 ${!notification.read ? 'bg-primary/5' : ''} ${swipedId === notification.id ? '-translate-x-20' : 'translate-x-0'}`}
                   >
                     <div className="flex items-start gap-3">
-                      <span className="text-2xl">{getNotificationIcon(notification.type)}</span>
+                      {(() => {
+                        const NotifIcon = getNotificationIcon(notification.type);
+                        return <NotifIcon className="h-6 w-6 shrink-0 text-primary" />;
+                      })()}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <h4 className="text-sm font-semibold truncate">

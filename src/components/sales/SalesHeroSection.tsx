@@ -172,7 +172,7 @@ export const SalesHeroSection = () => {
                   className="absolute bottom-32 -right-8 bg-[#1E5EFF] text-white px-5 py-3 rounded-2xl rounded-br-none text-sm font-bold shadow-2xl border-b-2 border-blue-400"
                   style={{ willChange: 'transform' }}
                 >
-                  Resposta recebida 🔥
+                  Resposta recebida
                 </motion.div>
               </div>
 

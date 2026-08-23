@@ -84,14 +84,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       }, (payload: any) => {
         const newJob = payload.new;
         addNotification({
-          title: '🆕 Novo bico disponível!',
+          title: 'Novo bico disponível!',
           message: `${newJob.title} em ${newJob.neighborhood}`,
           type: 'new_job',
           link: `/jobs/${newJob.id}`
         });
 
         // Toast notification
-        toast('🆕 Novo bico disponível!', {
+        toast('Novo bico disponível!', {
           description: newJob.title
         });
       })
@@ -183,13 +183,13 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           };
 
           addNotification({
-            title: '✅ Status atualizado',
+            title: 'Status atualizado',
             message: `Job "${payload.new.title}" foi ${statusLabels[newStatus] || newStatus}`,
             type: 'job_update',
             link: `/jobs/${payload.new.id}`
           });
 
-          toast('✅ Status atualizado', {
+          toast('Status atualizado', {
             description: payload.new.title
           });
         }
