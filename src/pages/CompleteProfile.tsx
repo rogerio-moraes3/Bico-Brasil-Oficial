@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useCities } from '@/hooks/useCities';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { validateCPF, formatCPF } from '@/lib/validators';
+import { validateCPF, formatCPF, validatePhone, formatPhone } from '@/lib/validators';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
@@ -180,10 +180,21 @@ export default function CompleteProfile() {
       }
 
       // Validação telefone
-      if (!formData.phone.trim()) {
+      const phoneClean = formData.phone.replace(/\D/g, '');
+      if (!phoneClean) {
         toast({
           title: 'Campo obrigatório',
           description: 'Telefone/WhatsApp é obrigatório',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (!validatePhone(phoneClean)) {
+        toast({
+          title: 'Telefone inválido',
+          description: 'Digite um número com DDD, só números (ex: 14999999999)',
           variant: 'destructive',
         });
         setLoading(false);
@@ -231,7 +242,7 @@ export default function CompleteProfile() {
             name: profile?.name || user!.user_metadata?.name || user!.user_metadata?.full_name || user!.email || '',
             email: profile?.email || user!.email || '',
             cpf: cpfClean,
-            phone: formData.phone.trim(),
+            phone: phoneClean,
             phone_type: formData.phone_type,
             cep: formData.cep.replace(/\D/g, '') || null,
             address: formData.address.trim() || null,
@@ -318,7 +329,8 @@ export default function CompleteProfile() {
                   type="tel"
                   placeholder="(14) 99999-9999"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
+                  maxLength={15}
                   required
                 />
                 <p className="text-xs text-muted-foreground">

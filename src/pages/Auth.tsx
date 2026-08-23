@@ -14,7 +14,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Mail, Navigation, Loader2, Eye, EyeOff, KeyRound, ArrowLeft } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { formatCPF, validateCPF } from '@/lib/validators';
+import { formatCPF, validateCPF, formatPhone, validatePhone } from '@/lib/validators';
 import { safeGoBack } from '@/lib/utils';
 
 export default function Auth() {
@@ -39,6 +39,7 @@ export default function Auth() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [cpf, setCpf] = useState('');
+  const [phone, setPhone] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
 
@@ -346,6 +347,10 @@ export default function Auth() {
     setCpf(formatCPF(value));
   };
 
+  const handlePhoneChange = (value: string) => {
+    setPhone(formatPhone(value));
+  };
+
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -399,7 +404,6 @@ export default function Auth() {
       const formData = new FormData(form);
       const name = (formData.get('name') as string || '').trim();
       const email = (formData.get('email') as string || '').trim();
-      const phone = (formData.get('phone') as string || '').trim();
 
       // Sanitizar CPF e WhatsApp (apenas números)
       const cleanCpf = cpf.replace(/\D/g, '');
@@ -410,6 +414,17 @@ export default function Auth() {
         toast({
           title: "CPF inválido",
           description: "Por favor, verifique o CPF e tente novamente",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Validar WhatsApp (bloquear se não tiver DDD + número válidos)
+      if (!validatePhone(cleanPhone)) {
+        toast({
+          title: "WhatsApp inválido",
+          description: "Digite um número com DDD, só números (ex: 14999999999)",
           variant: "destructive"
         });
         setLoading(false);
@@ -725,8 +740,11 @@ export default function Auth() {
                       <Input
                         id="phone"
                         name="phone"
+                        value={phone}
+                        onChange={(e) => handlePhoneChange(e.target.value)}
                         placeholder="(18) 99999-9999"
                         className="h-9 text-sm"
+                        maxLength={15}
                         required
                       />
                     </div>

@@ -23,6 +23,7 @@ import { NotificationsPanel } from '@/components/NotificationsPanel';
 import { MyAdsTab } from '@/components/MyAdsTab';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { resizeImageFile } from '@/lib/imageResize';
+import { validatePhone, formatPhone } from '@/lib/validators';
 import {
   User,
   Mail,
@@ -40,7 +41,10 @@ import {
   Camera,
   Loader2,
   Trash2,
-  Zap
+  Zap,
+  Check,
+  Smartphone,
+  PhoneCall
 } from 'lucide-react';
 
 export default function Profile() {
@@ -54,7 +58,7 @@ export default function Profile() {
     localStorage.removeItem('notificationPromptLastShown');
     const result = await requestNotifPermission();
     if (result === 'granted') {
-      toast({ title: 'Notificações ativadas! ✅' });
+      toast({ title: 'Notificações ativadas!' });
     } else if (result === 'denied') {
       toast({
         title: 'Bloqueado pelo navegador',
@@ -137,6 +141,16 @@ export default function Profile() {
     e.preventDefault();
     if (!user) return;
 
+    const phoneClean = formData.phone.replace(/\D/g, '');
+    if (phoneClean && !validatePhone(phoneClean)) {
+      toast({
+        title: "Telefone inválido",
+        description: "Digite um número com DDD, só números (ex: 14999999999)",
+        variant: "destructive"
+      });
+      return;
+    }
+
     // Formatar bairro (primeira letra maiúscula) se fornecido
     const formattedNeighborhood = formData.neighborhood.trim()
       ? formData.neighborhood.trim()
@@ -151,6 +165,7 @@ export default function Profile() {
       .from('users')
       .update({
         ...formData,
+        phone: phoneClean,
         neighborhood: formattedNeighborhood || null,
         updated_at: new Date().toISOString()
       })
@@ -564,8 +579,9 @@ export default function Profile() {
                           <Badge className="bg-primary/10 text-primary">Plano Pro</Badge>
                         )}
                         {profile.verified && (
-                          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
-                            ✓ Verificado
+                          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 gap-1">
+                            <Check className="h-3 w-3" />
+                            Verificado
                           </Badge>
                         )}
                         {profile.rating_avg > 0 && (
@@ -674,7 +690,8 @@ export default function Profile() {
                         <Input
                           id="phone"
                           value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
+                          maxLength={15}
                         />
                       </div>
                       <div>
@@ -696,9 +713,15 @@ export default function Profile() {
                             <SelectValue placeholder="Como prefere ser contatado?" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="whatsapp_only">📱 Somente WhatsApp</SelectItem>
-                            <SelectItem value="whatsapp_and_call">📞 WhatsApp e Ligação</SelectItem>
-                            <SelectItem value="call_only">☎️ Somente Ligação</SelectItem>
+                            <SelectItem value="whatsapp_only">
+                              <span className="flex items-center gap-2"><Smartphone className="h-4 w-4" /> Somente WhatsApp</span>
+                            </SelectItem>
+                            <SelectItem value="whatsapp_and_call">
+                              <span className="flex items-center gap-2"><PhoneCall className="h-4 w-4" /> WhatsApp e Ligação</span>
+                            </SelectItem>
+                            <SelectItem value="call_only">
+                              <span className="flex items-center gap-2"><Phone className="h-4 w-4" /> Somente Ligação</span>
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -1049,7 +1072,10 @@ export default function Profile() {
                   <div className="p-4 rounded-lg border bg-muted/30">
                     <h3 className="font-semibold mb-2">Notificações Push</h3>
                     {notifPermission === 'granted' ? (
-                      <p className="text-sm text-muted-foreground">✅ Ativadas neste dispositivo.</p>
+                      <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                        <Check className="h-4 w-4" />
+                        Ativadas neste dispositivo.
+                      </p>
                     ) : notifPermission === 'denied' ? (
                       <p className="text-sm text-muted-foreground">
                         Bloqueadas nas configurações do navegador. Pra reativar, ajuste a permissão de notificações do site diretamente no seu navegador.
