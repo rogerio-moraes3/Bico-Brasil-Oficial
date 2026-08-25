@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,16 +13,22 @@ import { useCities } from '@/hooks/useCities';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { validateCPF, formatCPF, validatePhone, formatPhone } from '@/lib/validators';
+import { useProfileCompletion } from '@/hooks/useProfileCompletion';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Loader2, CheckCircle2, MessageCircle, LifeBuoy } from 'lucide-react';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { safeGoBack } from '@/lib/utils';
+
+const RESEND_COOLDOWN_SECONDS = 45;
+const CODE_EXPIRY_SECONDS = 10 * 60;
 
 export default function CompleteProfile() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { refresh: refreshProfileCompletion } = useProfileCompletion();
   const missingFields = location.state?.missingFields || [];
 
   const [loading, setLoading] = useState(false);
@@ -35,11 +41,27 @@ export default function CompleteProfile() {
     phone_type: 'whatsapp_only',
     cep: '',
     address: '',
+    house_number: '',
     neighborhood: '',
     city_id: '',
     category: '',
   });
   const [cepLoading, setCepLoading] = useState(false);
+
+  // Verificação de telefone por código (Twilio Verify via send-phone-code /
+  // verify-phone-code). phoneVerifiedNumber guarda qual número foi
+  // verificado NESTA sessão — se o usuário trocar o telefone depois de
+  // verificar, precisa verificar de novo (comparado abaixo).
+  const [phoneVerifiedNumber, setPhoneVerifiedNumber] = useState<string | null>(null);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpBlocked, setOtpBlocked] = useState(false);
+  const [otpAttemptsRemaining, setOtpAttemptsRemaining] = useState<number | null>(null);
+  const [resendSecondsLeft, setResendSecondsLeft] = useState(0);
+  const [expirySecondsLeft, setExpirySecondsLeft] = useState(0);
+  const cooldownInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -48,6 +70,12 @@ export default function CompleteProfile() {
     }
     loadData();
   }, [user]);
+
+  useEffect(() => {
+    return () => {
+      if (cooldownInterval.current) clearInterval(cooldownInterval.current);
+    };
+  }, []);
 
   const loadData = async () => {
     const [profileRes, categoriesRes] = await Promise.all([
@@ -63,6 +91,7 @@ export default function CompleteProfile() {
         phone_type: (profileRes.data as any).phone_type || 'whatsapp_only',
         cep: (profileRes.data as any).cep || '',
         address: profileRes.data.address || '',
+        house_number: (profileRes.data as any).house_number || '',
         neighborhood: profileRes.data.neighborhood || '',
         city_id: profileRes.data.city_id || '',
         category: profileRes.data.category || '',
@@ -134,6 +163,119 @@ export default function CompleteProfile() {
     }
   };
 
+  const phoneClean = formData.phone.replace(/\D/g, '');
+  const alreadyVerifiedForThisNumber = !!profile?.phone_verified && profile?.phone === phoneClean;
+  const phoneIsVerified = phoneVerifiedNumber === phoneClean || alreadyVerifiedForThisNumber;
+
+  // Trocar o número invalida a verificação anterior — reseta o estado do
+  // fluxo de código pra não deixar a tela num estado inconsistente (ex:
+  // "código enviado" pro número antigo, mas o campo já mudou).
+  const handlePhoneChange = (value: string) => {
+    setFormData({ ...formData, phone: formatPhone(value) });
+    setOtpSent(false);
+    setOtpCode('');
+    setOtpBlocked(false);
+    setOtpAttemptsRemaining(null);
+  };
+
+  const startResendCooldown = () => {
+    if (cooldownInterval.current) clearInterval(cooldownInterval.current);
+    setResendSecondsLeft(RESEND_COOLDOWN_SECONDS);
+    setExpirySecondsLeft(CODE_EXPIRY_SECONDS);
+    cooldownInterval.current = setInterval(() => {
+      setResendSecondsLeft((s) => (s > 0 ? s - 1 : 0));
+      setExpirySecondsLeft((s) => (s > 0 ? s - 1 : 0));
+    }, 1000);
+  };
+
+  // send-phone-code/verify-phone-code sempre respondem com JSON estruturado
+  // mesmo em 4xx/423 (reason, attemptsRemaining) — usa fetch direto em vez de
+  // supabase.functions.invoke() pra não depender de como cada versão do SDK
+  // expõe o corpo de um erro HTTP.
+  const callPhoneFunction = async (name: 'send-phone-code' | 'verify-phone-code', body: Record<string, unknown>) => {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const accessToken = sessionData.session?.access_token;
+    const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${name}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    const json = await res.json().catch(() => ({}));
+    return { status: res.status, ...json } as {
+      status: number;
+      success: boolean;
+      error?: string;
+      reason?: string;
+      attemptsRemaining?: number;
+      channel?: 'whatsapp' | 'sms';
+    };
+  };
+
+  const handleSendCode = async () => {
+    if (!validatePhone(phoneClean)) {
+      toast({
+        title: 'Telefone inválido',
+        description: 'Digite um número com DDD, só números (ex: 14999999999)',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setOtpSending(true);
+    try {
+      const result = await callPhoneFunction('send-phone-code', { phone: phoneClean });
+      if (!result.success) {
+        toast({ title: 'Não foi possível enviar o código', description: result.error, variant: 'destructive' });
+        return;
+      }
+      setOtpSent(true);
+      setOtpBlocked(false);
+      setOtpAttemptsRemaining(null);
+      setOtpCode('');
+      startResendCooldown();
+      toast({
+        title: result.channel === 'whatsapp' ? 'Código enviado por WhatsApp!' : 'Código enviado por SMS!',
+        description: 'Digite os 6 dígitos que você recebeu.',
+      });
+    } catch {
+      toast({ title: 'Erro ao enviar código', description: 'Tente novamente em instantes.', variant: 'destructive' });
+    } finally {
+      setOtpSending(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (otpCode.length !== 6) return;
+
+    setOtpVerifying(true);
+    try {
+      const result = await callPhoneFunction('verify-phone-code', { phone: phoneClean, code: otpCode });
+      if (result.success) {
+        setPhoneVerifiedNumber(phoneClean);
+        setOtpSent(false);
+        setOtpCode('');
+        toast({ title: 'Telefone verificado!', description: 'Agora é só completar o resto do cadastro.' });
+        return;
+      }
+
+      if (result.reason === 'too_many_attempts') {
+        setOtpBlocked(true);
+      } else {
+        setOtpAttemptsRemaining(result.attemptsRemaining ?? null);
+        setOtpCode('');
+        toast({ title: 'Código incorreto', description: result.error, variant: 'destructive' });
+      }
+    } catch {
+      toast({ title: 'Erro ao verificar código', description: 'Tente novamente em instantes.', variant: 'destructive' });
+    } finally {
+      setOtpVerifying(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -180,7 +322,6 @@ export default function CompleteProfile() {
       }
 
       // Validação telefone
-      const phoneClean = formData.phone.replace(/\D/g, '');
       if (!phoneClean) {
         toast({
           title: 'Campo obrigatório',
@@ -195,6 +336,36 @@ export default function CompleteProfile() {
         toast({
           title: 'Telefone inválido',
           description: 'Digite um número com DDD, só números (ex: 14999999999)',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (!phoneIsVerified) {
+        toast({
+          title: 'Confirme seu telefone',
+          description: 'Envie e digite o código de verificação antes de continuar — é por esse número que os contratantes vão falar com você.',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.cep.trim() || formData.cep.replace(/\D/g, '').length !== 8) {
+        toast({
+          title: 'Campo obrigatório',
+          description: 'CEP é obrigatório',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.house_number.trim()) {
+        toast({
+          title: 'Campo obrigatório',
+          description: 'Número da residência é obrigatório',
           variant: 'destructive',
         });
         setLoading(false);
@@ -232,7 +403,9 @@ export default function CompleteProfile() {
       }
 
       // Criar ou atualizar perfil (upsert: usuários órfãos, sem linha em public.users,
-      // precisam do INSERT aqui; um .update() simples falha silenciosamente para eles)
+      // precisam do INSERT aqui; um .update() simples falha silenciosamente para eles).
+      // phone_verified/phone_verified_at não entram aqui — verify-phone-code já
+      // grava isso direto em public.users no momento da confirmação do código.
       const { error } = await supabase
         .from('users')
         .upsert(
@@ -244,8 +417,9 @@ export default function CompleteProfile() {
             cpf: cpfClean,
             phone: phoneClean,
             phone_type: formData.phone_type,
-            cep: formData.cep.replace(/\D/g, '') || null,
+            cep: formData.cep.replace(/\D/g, ''),
             address: formData.address.trim() || null,
+            house_number: formData.house_number.trim(),
             neighborhood: formData.neighborhood.trim(),
             city_id: formData.city_id,
             ...(profile?.type === 'worker' && { category: formData.category }),
@@ -261,6 +435,7 @@ export default function CompleteProfile() {
         description: 'Seu cadastro foi atualizado com sucesso',
       });
 
+      await refreshProfileCompletion();
       navigate('/app');
     } catch (error: any) {
       toast({
@@ -329,13 +504,90 @@ export default function CompleteProfile() {
                   type="tel"
                   placeholder="(14) 99999-9999"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
                   maxLength={15}
+                  disabled={otpSent}
                   required
                 />
                 <p className="text-xs text-muted-foreground">
                   IMPORTANTE: Este número será usado para contato direto. Certifique-se de que está correto e funcionando!
                 </p>
+
+                {/* Bloco de verificação por código — some quando o número já está confirmado */}
+                {phoneIsVerified ? (
+                  <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-400 mt-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    Telefone confirmado
+                  </div>
+                ) : otpBlocked ? (
+                  <Alert variant="destructive" className="mt-2">
+                    <LifeBuoy className="h-4 w-4" />
+                    <AlertDescription>
+                      Não conseguimos confirmar esse número depois de várias tentativas.{' '}
+                      <a href="mailto:contato.bicobrasil@gmail.com" className="underline font-medium">
+                        Fale com o suporte
+                      </a>{' '}
+                      pra gente te ajudar a verificar.
+                    </AlertDescription>
+                  </Alert>
+                ) : !otpSent ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={handleSendCode}
+                    disabled={otpSending || !validatePhone(phoneClean)}
+                  >
+                    {otpSending ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                    )}
+                    Enviar código de verificação
+                  </Button>
+                ) : (
+                  <div className="mt-3 space-y-3 rounded-lg border p-4 bg-muted/30">
+                    <p className="text-sm font-medium">Digite o código que você recebeu:</p>
+                    <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
+                      <InputOTPGroup>
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <InputOTPSlot key={i} index={i} />
+                        ))}
+                      </InputOTPGroup>
+                    </InputOTP>
+                    {otpAttemptsRemaining !== null && (
+                      <p className="text-xs text-destructive">
+                        Código incorreto. {otpAttemptsRemaining} {otpAttemptsRemaining === 1 ? 'tentativa restante' : 'tentativas restantes'}.
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={handleVerifyCode}
+                        disabled={otpVerifying || otpCode.length !== 6}
+                      >
+                        {otpVerifying && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                        Verificar código
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleSendCode}
+                        disabled={otpSending || resendSecondsLeft > 0}
+                      >
+                        {resendSecondsLeft > 0 ? `Reenviar em ${resendSecondsLeft}s` : 'Reenviar código'}
+                      </Button>
+                    </div>
+                    {expirySecondsLeft > 0 && (
+                      <p className="text-xs text-muted-foreground">
+                        Código expira em {Math.floor(expirySecondsLeft / 60)}:{String(expirySecondsLeft % 60).padStart(2, '0')}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -357,7 +609,7 @@ export default function CompleteProfile() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="cep">CEP</Label>
+                <Label htmlFor="cep">CEP *</Label>
                 <div className="relative">
                   <Input
                     id="cep"
@@ -365,24 +617,37 @@ export default function CompleteProfile() {
                     value={formData.cep}
                     onChange={(e) => handleCepChange(e.target.value)}
                     maxLength={9}
+                    required
                   />
                   {cepLoading && (
                     <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Opcional — preenche rua, bairro e cidade automaticamente. Você pode editar tudo depois.
+                  Preenche rua, bairro e cidade automaticamente — confira e edite se precisar.
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="address">Rua / Endereço</Label>
-                <Input
-                  id="address"
-                  placeholder="Ex: Rua das Flores, 123"
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                />
+              <div className="grid grid-cols-3 gap-3">
+                <div className="col-span-2 space-y-2">
+                  <Label htmlFor="address">Rua / Endereço</Label>
+                  <Input
+                    id="address"
+                    placeholder="Ex: Rua das Flores"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="house_number">Número *</Label>
+                  <Input
+                    id="house_number"
+                    placeholder="123"
+                    value={formData.house_number}
+                    onChange={(e) => setFormData({ ...formData, house_number: e.target.value })}
+                    required
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">

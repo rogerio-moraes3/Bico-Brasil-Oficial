@@ -16,6 +16,8 @@ import { NotificationPrompt } from "./components/NotificationPrompt";
 import { AdminIcon } from "./components/AdminIcon";
 import { SplashScreen } from "./components/SplashScreen";
 import { Gatekeeper } from "./components/Gatekeeper";
+import { GracePeriodBanner } from "./components/GracePeriodBanner";
+import { ProfileCompletionProvider } from "./hooks/useProfileCompletion";
 import { BeforeInstallPromptEvent, setDeferredPwaPrompt } from "@/lib/pwaPrompt";
 // Todas as páginas são lazy-loaded (code splitting por rota) — o bundle
 // principal estava em 1,2MB (346KB gzip) com só 5 rotas divididas; isso
@@ -149,7 +151,9 @@ function App() {
       <UserModeProvider>
         <AuthProvider>
           <NotificationProvider>
+            <ProfileCompletionProvider>
             <Gatekeeper />
+            <GracePeriodBanner />
             <Toaster />
             <Sonner />
             <PWAInstallPrompt />
@@ -274,6 +278,7 @@ function App() {
               </AccessGuard>
             </div>
             <BottomNav />
+            </ProfileCompletionProvider>
           </NotificationProvider>
         </AuthProvider>
       </UserModeProvider>
