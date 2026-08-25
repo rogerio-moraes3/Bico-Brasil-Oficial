@@ -47,3 +47,9 @@ verify_jwt = false
 
 [functions.delete-account]
 verify_jwt = false
+
+[functions.send-phone-code]
+verify_jwt = true
+
+[functions.verify-phone-code]
+verify_jwt = true
