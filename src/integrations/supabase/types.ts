@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -1129,6 +1129,7 @@ export type Database = {
           display_name: string | null
           email: string
           free_posts_remaining: number | null
+          house_number: string | null
           id: string
           is_tester: boolean | null
           jobs_done: number | null
@@ -1147,7 +1148,6 @@ export type Database = {
           rating_avg: number | null
           rating_count: number | null
           state: string | null
-          street_number: string | null
           subcategory_id: string | null
           subscription_end: string | null
           subscription_start: string | null
@@ -1172,6 +1172,7 @@ export type Database = {
           display_name?: string | null
           email: string
           free_posts_remaining?: number | null
+          house_number?: string | null
           id?: string
           is_tester?: boolean | null
           jobs_done?: number | null
@@ -1190,7 +1191,6 @@ export type Database = {
           rating_avg?: number | null
           rating_count?: number | null
           state?: string | null
-          street_number?: string | null
           subcategory_id?: string | null
           subscription_end?: string | null
           subscription_start?: string | null
@@ -1215,6 +1215,7 @@ export type Database = {
           display_name?: string | null
           email?: string
           free_posts_remaining?: number | null
+          house_number?: string | null
           id?: string
           is_tester?: boolean | null
           jobs_done?: number | null
@@ -1233,7 +1234,6 @@ export type Database = {
           rating_avg?: number | null
           rating_count?: number | null
           state?: string | null
-          street_number?: string | null
           subcategory_id?: string | null
           subscription_end?: string | null
           subscription_start?: string | null
@@ -1486,6 +1486,7 @@ export type Database = {
           display_name: string | null
           email: string
           free_posts_remaining: number | null
+          house_number: string | null
           id: string
           is_tester: boolean | null
           jobs_done: number | null
@@ -1504,7 +1505,6 @@ export type Database = {
           rating_avg: number | null
           rating_count: number | null
           state: string | null
-          street_number: string | null
           subcategory_id: string | null
           subscription_end: string | null
           subscription_start: string | null
@@ -1557,6 +1557,7 @@ export type Database = {
           display_name: string | null
           email: string
           free_posts_remaining: number | null
+          house_number: string | null
           id: string
           is_tester: boolean | null
           jobs_done: number | null
@@ -1575,7 +1576,6 @@ export type Database = {
           rating_avg: number | null
           rating_count: number | null
           state: string | null
-          street_number: string | null
           subcategory_id: string | null
           subscription_end: string | null
           subscription_start: string | null
@@ -1634,6 +1634,7 @@ export type Database = {
           display_name: string | null
           email: string
           free_posts_remaining: number | null
+          house_number: string | null
           id: string
           is_tester: boolean | null
           jobs_done: number | null
@@ -1652,7 +1653,6 @@ export type Database = {
           rating_avg: number | null
           rating_count: number | null
           state: string | null
-          street_number: string | null
           subcategory_id: string | null
           subscription_end: string | null
           subscription_start: string | null

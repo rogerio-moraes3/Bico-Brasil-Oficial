@@ -86,7 +86,7 @@ export default function Profile() {
     primary_contact_method: 'whatsapp',
     neighborhood: '',
     address: '',
-    street_number: '',
+    house_number: '',
     city: '',
     state: 'SP',
     zip_code: '',
@@ -126,7 +126,7 @@ export default function Profile() {
         primary_contact_method: (data as any).primary_contact_method || 'whatsapp',
         neighborhood: data.neighborhood || '',
         address: (data as any).address || '',
-        street_number: (data as any).street_number || '',
+        house_number: (data as any).house_number || '',
         city: data.city || '',
         state: (data as any).state || 'SP',
         zip_code: (data as any).zip_code || '',
@@ -761,11 +761,11 @@ export default function Profile() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="street_number">Número</Label>
+                          <Label htmlFor="house_number">Número</Label>
                           <Input
-                            id="street_number"
-                            value={formData.street_number}
-                            onChange={(e) => setFormData({ ...formData, street_number: e.target.value })}
+                            id="house_number"
+                            value={formData.house_number}
+                            onChange={(e) => setFormData({ ...formData, house_number: e.target.value })}
                             placeholder="123"
                           />
                         </div>
@@ -878,7 +878,7 @@ export default function Profile() {
                             {profile.address && (
                               <div className="text-muted-foreground">
                                 {profile.address}
-                                {profile.street_number && `, ${profile.street_number}`}
+                                {profile.house_number && `, ${profile.house_number}`}
                               </div>
                             )}
                             {profile.neighborhood && (
