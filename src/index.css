@@ -295,6 +295,10 @@ All colors MUST be HSL.
     --border: 0 0% 100%;
     /* white border in dark mode */
     --container-border: 0 0% 100%;
+    /* Faltava aqui — Input/Select usam bg-[hsl(var(--input))]; sem essa linha
+       o fundo ficava preso no valor de modo claro (quase branco) enquanto o
+       texto virava quase branco também, resultando em texto invisível. */
+    --input: 217.2 32.6% 17.5%;
 
     /* Dark mode - white borders everywhere */
     input,
