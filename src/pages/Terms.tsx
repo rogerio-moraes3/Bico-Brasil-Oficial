@@ -20,7 +20,7 @@ const Terms = () => {
     {
       icon: Shield,
       title: "1. Sobre o Bico Brasil",
-      content: "O Bico Brasil é uma plataforma que conecta contratantes e prestadores de serviço para trabalhos manuais em Presidente Prudente-SP e região."
+      content: "O Bico Brasil é uma plataforma que conecta contratantes e prestadores de serviço para trabalhos manuais em todo o território nacional."
     },
     {
       icon: Scale,
@@ -75,7 +75,7 @@ const Terms = () => {
                 Voltar
               </Button>
 
-              <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
+              <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-white">
                 Termos de <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Uso.</span>
               </h1>

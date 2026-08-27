@@ -43,7 +43,7 @@ export default function About() {
                 <span>Nossa Essência</span>
               </div>
 
-              <h1 className="text-6xl md:text-8xl lg:text-[100px] font-black leading-[0.9] tracking-tighter mb-12">
+              <h1 className="text-6xl md:text-8xl lg:text-[100px] font-black leading-[0.9] tracking-tighter mb-12 text-white">
                 Mais que uma <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">plataforma.</span>
               </h1>

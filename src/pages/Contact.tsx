@@ -124,7 +124,7 @@ export default function Contact() {
                   <span>Estamos aqui para você</span>
                 </div>
 
-                <h1 className="text-6xl md:text-[100px] font-black leading-[0.85] tracking-tighter mb-12">
+                <h1 className="text-6xl md:text-[100px] font-black leading-[0.85] tracking-tighter mb-12 text-white">
                    Central de <br />
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Suporte.</span>
                 </h1>
@@ -143,7 +143,7 @@ export default function Contact() {
                  
                  {/* Left side: Info */}
                  <div>
-                    <h2 className="text-4xl font-black mb-12 tracking-tighter">Canais de <span className="text-blue-400">Atendimento</span></h2>
+                    <h2 className="text-4xl font-black mb-12 tracking-tighter text-white">Canais de <span className="text-blue-400">Atendimento</span></h2>
                     
                     <div className="space-y-8">
                        {[

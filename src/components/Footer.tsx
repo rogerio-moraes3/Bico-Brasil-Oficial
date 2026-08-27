@@ -145,7 +145,7 @@ export const Footer = () => {
               © {new Date().getFullYear()} Bico Brasil. Todos os direitos reservados.
             </p>
             <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest">
-              Contato LGPD: privacidade@bicobrasil.com.br
+              Contato LGPD: contato.bicobrasil@gmail.com
             </p>
           </div>
 

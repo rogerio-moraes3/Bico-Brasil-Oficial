@@ -44,7 +44,7 @@ export default function FAQPage() {
                 <span>Central de Ajuda</span>
               </div>
 
-              <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter mb-8">
+              <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter mb-8 text-white">
                 Como podemos <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">ajudar?</span>
               </h1>

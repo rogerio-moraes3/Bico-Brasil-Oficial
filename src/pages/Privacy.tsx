@@ -38,7 +38,7 @@ const Privacy = () => {
                 Voltar
               </Button>
 
-              <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
+              <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-white">
                 Sua Privacidade <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">é Sagrada.</span>
               </h1>
@@ -90,7 +90,7 @@ const Privacy = () => {
               <p className="text-sm font-black uppercase tracking-[0.2em] text-blue-400 mb-4">Última Atualização</p>
               <p className="text-2xl font-bold text-white mb-8">{new Date().toLocaleDateString('pt-BR')}</p>
               <p className="text-blue-100/40 font-medium">
-                Dúvidas sobre sua privacidade? Envie um e-mail para <a href="mailto:contato.bicobrasil@gmail.com" className="text-blue-400 hover:underline">privacidade@bicobrasil.com.br</a>
+                Dúvidas sobre sua privacidade? Envie um e-mail para <a href="mailto:contato.bicobrasil@gmail.com" className="text-blue-400 hover:underline">contato.bicobrasil@gmail.com</a>
               </p>
             </div>
           </div>
