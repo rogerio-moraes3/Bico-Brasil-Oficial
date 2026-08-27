@@ -1,8 +1,18 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
-import { MapPin, Users, Briefcase, ArrowRight, Globe } from "lucide-react";
+import { MapPin, Users, Briefcase, ArrowRight, Globe, Loader2 } from "lucide-react";
+
+type PillarKey = "cities" | "workers" | "services";
+
+const MODAL_TITLES: Record<PillarKey, string> = {
+  cities: "Cidades atendidas",
+  workers: "Categorias de profissionais",
+  services: "Serviços publicados recentemente",
+};
 
 const formatCount = (n: number) => {
   if (n === 0) return "—";
@@ -37,20 +47,50 @@ export const PlatformAuthoritySection = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const pillars = [
+  const [activeModal, setActiveModal] = useState<PillarKey | null>(null);
+
+  const { data: listData, isLoading: listLoading } = useQuery({
+    queryKey: ["authority-list", activeModal],
+    queryFn: async (): Promise<string[]> => {
+      if (activeModal === "cities") {
+        const { data } = await supabase.from("cities").select("name, state").eq("active", true).order("name");
+        return (data ?? []).map((c) => `${c.name} - ${c.state}`);
+      }
+      if (activeModal === "workers") {
+        const { data } = await supabase.from("categories").select("name").order("name");
+        return (data ?? []).map((c) => c.name);
+      }
+      if (activeModal === "services") {
+        const { data } = await supabase
+          .from("worker_services")
+          .select("title, category:categories(name)")
+          .eq("active", true)
+          .order("created_at", { ascending: false })
+          .limit(200);
+        return (data ?? []).map((s: any) => (s.category?.name ? `${s.title} — ${s.category.name}` : s.title));
+      }
+      return [];
+    },
+    enabled: activeModal !== null,
+  });
+
+  const pillars: { key: PillarKey; icon: typeof MapPin; value: string; label: string; description: string }[] = [
     {
+      key: "cities",
       icon: MapPin,
       value: stats ? formatCount(stats.cities) : "—",
       label: "Cidades Atendidas",
       description: "Presente em todo o território nacional",
     },
     {
+      key: "workers",
       icon: Users,
       value: stats ? formatCount(stats.workers) : "—",
       label: "Profissionais Ativos",
       description: "Trabalhadores verificados e prontos",
     },
     {
+      key: "services",
       icon: Briefcase,
       value: stats ? formatCount(stats.services) : "—",
       label: "Serviços Publicados",
@@ -96,9 +136,11 @@ export const PlatformAuthoritySection = () => {
         {/* Pillar stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
           {pillars.map((p, i) => (
-            <div
+            <button
               key={i}
-              className="bg-background/5 dark:bg-muted/30 border border-background/10 dark:border-border rounded-2xl p-6 stagger-fade"
+              type="button"
+              onClick={() => setActiveModal(p.key)}
+              className="text-left w-full bg-background/5 dark:bg-muted/30 border border-background/10 dark:border-border rounded-2xl p-6 stagger-fade hover:border-primary/40 hover:bg-background/10 dark:hover:bg-muted/50 transition-colors cursor-pointer"
               style={{ ["--stagger-delay" as string]: `${i * 80}ms` }}
             >
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center mb-4">
@@ -113,7 +155,7 @@ export const PlatformAuthoritySection = () => {
               <p className="text-xs text-background/50 dark:text-muted-foreground">
                 {p.description}
               </p>
-            </div>
+            </button>
           ))}
         </div>
 
@@ -141,6 +183,32 @@ export const PlatformAuthoritySection = () => {
           </Button>
         </div>
       </div>
+
+      <Dialog open={activeModal !== null} onOpenChange={(open) => !open && setActiveModal(null)}>
+        <DialogContent className="max-w-md max-h-[80vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{activeModal ? MODAL_TITLES[activeModal] : ""}</DialogTitle>
+            <DialogDescription>
+              {listLoading ? "Carregando..." : `${listData?.length ?? 0} no total`}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="overflow-y-auto flex-1 -mx-1 px-1">
+            {listLoading ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <ul className="space-y-1">
+                {(listData ?? []).map((item, i) => (
+                  <li key={i} className="text-sm py-1.5 px-2 rounded-lg hover:bg-muted">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
