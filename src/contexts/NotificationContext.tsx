@@ -62,7 +62,15 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         .limit(20);
 
       if (data) {
-        setNotifications(data as Notification[]);
+        setNotifications(data.map((row: any) => ({
+          id: row.id,
+          title: row.title,
+          message: row.body,
+          type: row.data?.type ?? 'system',
+          read: row.is_read ?? false,
+          link: row.data?.link,
+          created_at: row.created_at,
+        })));
       }
     };
 
@@ -207,29 +215,37 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const addNotification = useCallback(async (notification: Omit<Notification, 'id' | 'read' | 'created_at'>) => {
     if (!user) return;
 
-    const newNotification = {
-      ...notification,
-      user_id: user.id,
-      read: false,
-      created_at: new Date().toISOString()
-    };
-
-    // Salvar no banco
+    // Salvar no banco (colunas reais: title, body, data, is_read — não
+    // message/type/link/read, que são só o formato usado no resto do app)
     const { data } = await supabase
       .from('notifications')
-      .insert([newNotification])
+      .insert([{
+        user_id: user.id,
+        title: notification.title,
+        body: notification.message,
+        is_read: false,
+        data: { type: notification.type, link: notification.link },
+      }])
       .select()
       .single();
 
     if (data) {
-      setNotifications(prev => [data as Notification, ...prev]);
+      setNotifications(prev => [{
+        id: data.id,
+        title: data.title,
+        message: data.body,
+        type: data.data?.type ?? notification.type,
+        read: data.is_read ?? false,
+        link: data.data?.link,
+        created_at: data.created_at,
+      }, ...prev]);
     }
   }, [user]);
 
   const markAsRead = async (id: string) => {
     await supabase
       .from('notifications')
-      .update({ read: true })
+      .update({ is_read: true })
       .eq('id', id);
 
     setNotifications(prev =>
@@ -242,9 +258,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     await supabase
       .from('notifications')
-      .update({ read: true })
+      .update({ is_read: true })
       .eq('user_id', user.id)
-      .eq('read', false);
+      .eq('is_read', false);
 
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };

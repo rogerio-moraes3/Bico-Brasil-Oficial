@@ -18,6 +18,9 @@ verify_jwt = false
 [functions.get-webhook-urls]
 verify_jwt = true
 
+[functions.send-national-launch-notification]
+verify_jwt = true
+
 [functions.validate-mp-credentials]
 verify_jwt = true
 
