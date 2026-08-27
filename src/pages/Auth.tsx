@@ -12,7 +12,8 @@ import { useToast } from '@/hooks/use-toast';
 import { signupSchema } from '@/lib/validation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { Mail, Navigation, Loader2, Eye, EyeOff, KeyRound, ArrowLeft } from 'lucide-react';
+import { Navigation, Loader2, Eye, EyeOff, KeyRound, ArrowLeft } from 'lucide-react';
+import { GoogleIcon } from '@/components/GoogleIcon';
 import { Checkbox } from '@/components/ui/checkbox';
 import { formatCPF, validateCPF, formatPhone, validatePhone } from '@/lib/validators';
 import { safeGoBack } from '@/lib/utils';
@@ -696,7 +697,7 @@ export default function Auth() {
                       onClick={handleGoogleLogin}
                       disabled={loading}
                     >
-                      <Mail className="mr-2 h-4 w-4" />
+                      <GoogleIcon className="mr-2 h-4 w-4" />
                       Entrar com Google
                     </Button>
 
@@ -866,7 +867,7 @@ export default function Auth() {
                       onClick={handleGoogleLogin}
                       disabled={loading}
                     >
-                      <Mail className="mr-2 h-4 w-4" />
+                      <GoogleIcon className="mr-2 h-4 w-4" />
                       Cadastrar com Google
                     </Button>
 
