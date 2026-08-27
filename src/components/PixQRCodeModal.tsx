@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Copy, CheckCircle, Loader2, Info, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Label } from './ui/label';
+import { formatBRL } from '@/lib/utils';
 
 interface PixQRCodeModalProps {
   open: boolean;
@@ -16,6 +17,10 @@ interface PixQRCodeModalProps {
   paymentId: string;
   table?: 'payments' | 'destaque_orders';
   onConfirmed?: () => void;
+  /** Nome do plano/produto sendo pago, ex: "Premium Anual" ou "Destaque 7 dias" */
+  planLabel?: string;
+  /** Valor sendo pago, em reais */
+  amount?: number;
 }
 
 export function PixQRCodeModal({
@@ -25,12 +30,19 @@ export function PixQRCodeModal({
   qrCodeBase64,
   paymentId,
   table = 'payments',
-  onConfirmed
+  onConfirmed,
+  planLabel,
+  amount
 }: PixQRCodeModalProps) {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const [checking, setChecking] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number>(600); // 10 minutos em segundos
+  const timeLeftRef = useRef(timeLeft);
+
+  useEffect(() => {
+    timeLeftRef.current = timeLeft;
+  }, [timeLeft]);
 
   // Timer de expiração
   useEffect(() => {
@@ -55,6 +67,10 @@ export function PixQRCodeModal({
 
     // Poll payment status every 5 seconds
     const interval = setInterval(async () => {
+      if (timeLeftRef.current <= 0) {
+        clearInterval(interval);
+        return;
+      }
       setChecking(true);
       const { data } = await supabase
         .from(table)
@@ -125,8 +141,20 @@ export function PixQRCodeModal({
         </DialogHeader>
 
         <div className="space-y-3 py-4 mt-6">
+          {/* Resumo do que está sendo pago - evita que o usuário "esqueça" o plano/valor no meio do fluxo */}
+          {(planLabel || typeof amount === 'number') && (
+            <div className="flex items-center justify-between gap-2 p-3 bg-emerald-100 dark:bg-emerald-950/30 rounded-lg border border-emerald-300 dark:border-emerald-700">
+              {planLabel && (
+                <span className="text-sm font-semibold text-emerald-900 dark:text-emerald-100">{planLabel}</span>
+              )}
+              {typeof amount === 'number' && (
+                <span className="text-lg font-bold text-emerald-900 dark:text-emerald-100">R$ {formatBRL(amount)}</span>
+              )}
+            </div>
+          )}
+
           {/* QR Code Image - Reduzido */}
-          <div className="flex justify-center bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800">
+          <div className="flex justify-center bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950/20 dark:to-emerald-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800">
             <div className="bg-white p-2 rounded-xl shadow-lg">
               <img
                 src={`data:image/png;base64,${qrCodeBase64}`}
@@ -180,20 +208,22 @@ export function PixQRCodeModal({
           )}
 
           {/* Indicador de Aguardando Pagamento - Embaixo */}
-          <div className="text-center p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg border border-dashed border-emerald-300 dark:border-emerald-700">
-            <div className="flex items-center justify-center gap-2 text-sm text-emerald-800 dark:text-emerald-200 mb-1">
-              <Loader2 className="h-4 w-4 animate-spin text-emerald-600 dark:text-emerald-400" />
-              <span className="font-medium">Aguardando confirmação do pagamento...</span>
-            </div>
-            <p className="text-xs text-slate-700 dark:text-slate-300">
-              Você será redirecionado automaticamente quando o pagamento for confirmado
-            </p>
-            {checking && (
-              <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1">
-                Verificando status...
+          {timeLeft > 0 && (
+            <div className="text-center p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg border border-dashed border-emerald-300 dark:border-emerald-700">
+              <div className="flex items-center justify-center gap-2 text-sm text-emerald-800 dark:text-emerald-200 mb-1">
+                <Loader2 className="h-4 w-4 animate-spin text-emerald-600 dark:text-emerald-400" />
+                <span className="font-medium">Aguardando confirmação do pagamento...</span>
+              </div>
+              <p className="text-xs text-slate-700 dark:text-slate-300">
+                Você será redirecionado automaticamente quando o pagamento for confirmado
               </p>
-            )}
-          </div>
+              {checking && (
+                <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1">
+                  Verificando status...
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Status */}
           {!checking && timeLeft > 0 && (
@@ -203,13 +233,13 @@ export function PixQRCodeModal({
           )}
 
           {/* Instructions */}
-          <Alert className="bg-green-50 dark:bg-green-950/20 border-green-300 dark:border-green-700">
-            <Info className="h-4 w-4 text-green-800 dark:text-green-200" />
-            <AlertTitle className="text-green-900 dark:text-green-100">Como pagar</AlertTitle>
+          <Alert className="bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-700">
+            <Info className="h-4 w-4 text-emerald-800 dark:text-emerald-200" />
+            <AlertTitle className="text-emerald-900 dark:text-emerald-100">Como pagar</AlertTitle>
             <AlertDescription className="mt-2 space-y-1 text-slate-700 dark:text-slate-300">
               <ol className="list-decimal list-inside space-y-1">
                 <li>Abra o app do seu banco</li>
-                <li>Escolha <strong className="text-green-800 dark:text-green-200">PIX → Ler QR Code</strong></li>
+                <li>Escolha <strong className="text-emerald-800 dark:text-emerald-200">PIX → Ler QR Code</strong></li>
                 <li>Escaneie o código acima ou cole o código PIX</li>
                 <li>Confirme o pagamento</li>
               </ol>

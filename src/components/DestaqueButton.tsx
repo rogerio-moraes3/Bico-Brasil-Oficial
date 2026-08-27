@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { PixQRCodeModal } from './PixQRCodeModal';
 import { destaquePlanOptions, destaquePriceTable } from '@/lib/destaquePricing';
+import { formatBRL } from '@/lib/utils';
 
 interface DestaqueButtonProps {
   initialDays?: number;
@@ -226,7 +227,7 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
                   >
                     <div className="flex flex-col items-center">
                       <span className="font-semibold">{option.label}</span>
-                      <span className="text-xs opacity-80">R$ {option.price.toFixed(2)}</span>
+                      <span className="text-xs opacity-80">R$ {formatBRL(option.price)}</span>
                     </div>
                   </Button>
                 ))}
@@ -284,13 +285,13 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
             <div className="bg-primary/10 p-4 rounded-lg text-center">
               <p className="text-sm text-muted-foreground">Total a pagar:</p>
               <p className="text-3xl font-bold text-primary">
-                R$ {totalPrice.toFixed(2)}
+                R$ {formatBRL(totalPrice)}
               </p>
             </div>
 
             <Button
               onClick={handleActivateDestaque}
-              className="w-full gap-2"
+              className="w-full gap-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold"
               size="lg"
               disabled={loading}
             >
@@ -317,6 +318,8 @@ export const DestaqueButton = ({ initialDays = 1 }: DestaqueButtonProps) => {
         qrCodeBase64={qrCodeBase64}
         paymentId={paymentId}
         table="destaque_orders"
+        planLabel={`Destaque ${days} ${days === 1 ? 'dia' : 'dias'}`}
+        amount={totalPrice}
         onConfirmed={() => {
           toast({
             title: "Destaque ativado!",

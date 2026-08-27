@@ -7,6 +7,7 @@ import { Loader2, AlertCircle, CheckCircle2, AlertTriangle, XCircle } from "luci
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { formatCPF, validateCPF } from "@/lib/validators";
+import { formatBRL } from "@/lib/utils";
 import { PixQRCodeModal } from "./PixQRCodeModal";
 import { validateMercadoPagoToken, type MercadoPagoValidation } from "@/lib/validateMercadoPago";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -68,17 +69,10 @@ export function PlanCheckoutModal({
     }
   }, [open, user]);
 
-  // Validar credenciais Mercado Pago ao abrir modal (não bloqueante)
+  // Validar credenciais Mercado Pago ao abrir modal
   useEffect(() => {
     if (open) {
       validateCredentials();
-      // Auto-aprovar após 2s para não travar
-      const timeout = setTimeout(() => {
-        if (!mpValidation?.ok) {
-          setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success' });
-        }
-      }, 2000);
-      return () => clearTimeout(timeout);
     }
   }, [open]);
 
@@ -100,15 +94,19 @@ export function PlanCheckoutModal({
 
       clearTimeout(timeoutId);
       const validation = await response.json();
-      setMpValidation(validation);
-
-      if (!validation.ok) {
-        setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success' }); // Permite prosseguir
-      } else {
-        // validação ok
-      }
+      setMpValidation({
+        ok: validation.ok,
+        mode: validation.mode,
+        reason: validation.reason,
+        badge: validation.ok ? 'success' : 'warning',
+      });
     } catch (err) {
-      setMpValidation({ ok: true, mode: 'production', reason: 'Sistema pronto', badge: 'success' }); // Permite prosseguir
+      setMpValidation({
+        ok: false,
+        mode: 'unknown',
+        reason: 'Não foi possível verificar as credenciais do Mercado Pago agora.',
+        badge: 'warning',
+      });
     } finally {
       setValidatingMP(false);
     }
@@ -280,7 +278,7 @@ export function PlanCheckoutModal({
             )}
 
             <div className="text-center mb-4 p-4 bg-emerald-100 dark:bg-emerald-950/30 rounded-lg border-2 border-emerald-500 dark:border-emerald-600 shadow-lg">
-              <p className="text-3xl font-bold text-emerald-950 dark:text-emerald-100">R$ {amount.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-emerald-950 dark:text-emerald-100">R$ {formatBRL(amount)}</p>
               <p className="text-sm text-emerald-900 dark:text-emerald-200 font-semibold">Pagamento via PIX</p>
             </div>
 
@@ -337,7 +335,7 @@ export function PlanCheckoutModal({
             <Button
               onClick={handleGenerateQRCode}
               disabled={loading || validatingMP || !mpValidation?.ok}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+              className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold"
               size="lg"
             >
               {loading ? (
@@ -368,6 +366,8 @@ export function PlanCheckoutModal({
           qrCode={qrCodeData.qr_code}
           qrCodeBase64={qrCodeData.qr_code_base64}
           paymentId={qrCodeData.payment_id}
+          planLabel={planName}
+          amount={amount}
         />
       )}
     </>

@@ -17,3 +17,11 @@ export const safeGoBack = (navigate: NavigateFunction, fallbackPath = '/') => {
     navigate(fallbackPath);
   }
 };
+
+/**
+ * Formata um valor em reais no padrão brasileiro (vírgula decimal).
+ * `.toFixed(2)` sozinho sempre usa ponto, independente do locale — não usar
+ * direto em texto voltado ao usuário.
+ */
+export const formatBRL = (amount: number) =>
+  amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

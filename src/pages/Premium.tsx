@@ -9,7 +9,7 @@ import { DestaqueButton } from '@/components/DestaqueButton';
 import { destaquePlanOptions } from '@/lib/destaquePricing';
 import { supabase } from '@/integrations/supabase/client';
 import { Check, Star, Zap, TrendingUp, Shield, Award, Users, MessageCircle, Eye, Crown, Trophy, ArrowLeft, Sparkles, Rocket } from 'lucide-react';
-import { safeGoBack } from '@/lib/utils';
+import { safeGoBack, formatBRL } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 export default function Premium() {
@@ -104,7 +104,7 @@ export default function Premium() {
                   <span>Cresça seu negócio</span>
                 </div>
 
-                <h1 className="text-6xl md:text-[100px] font-black leading-[0.85] tracking-tighter mb-12">
+                <h1 className="text-6xl md:text-[100px] font-black leading-[0.85] tracking-tighter mb-12 text-white">
                    Planos <br />
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-500">Premium.</span>
                 </h1>
@@ -147,14 +147,14 @@ export default function Premium() {
                 className="group relative flex flex-col p-10 rounded-[48px] bg-white/[0.02] border border-white/5 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
               >
                 <div className="mb-10">
-                  <h3 className="text-2xl font-black mb-2">Premium</h3>
-                  <p className="text-blue-100/40 font-bold text-sm uppercase tracking-widest">Essencial para começar</p>
+                  <h3 className="text-2xl font-black mb-2 text-white">Premium</h3>
+                  <p className="text-blue-100/70 font-bold text-sm uppercase tracking-widest">Essencial para começar</p>
                 </div>
                 
                 <div className="mb-12">
                    <div className="flex items-baseline gap-1">
                       <span className="text-5xl font-black text-white">R$ 19,90</span>
-                      <span className="text-blue-100/40 font-bold text-lg">/mês</span>
+                      <span className="text-blue-100/70 font-bold text-lg">/mês</span>
                    </div>
                 </div>
 
@@ -184,7 +184,7 @@ export default function Premium() {
                 viewport={{ once: true }}
                 className="group relative flex flex-col p-10 rounded-[48px] bg-gradient-to-b from-blue-600/20 to-blue-600/5 border-2 border-blue-500/30 backdrop-blur-2xl shadow-[0_32px_80px_-20px_rgba(30,94,255,0.3)] transition-all duration-500 transform lg:-translate-y-6"
               >
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-6 py-2 bg-blue-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-full shadow-[0_10px_30px_rgba(30,94,255,0.4)]">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-6 py-2 bg-blue-700 text-white font-black text-xs uppercase tracking-[0.2em] rounded-full shadow-[0_10px_30px_rgba(30,94,255,0.4)]">
                    Recomendado
                 </div>
 
@@ -199,7 +199,7 @@ export default function Premium() {
                 <div className="mb-12">
                    <div className="flex items-baseline gap-1">
                       <span className="text-5xl font-black text-white">R$ 29,90</span>
-                      <span className="text-blue-100/40 font-bold text-lg">/mês</span>
+                      <span className="text-blue-100/70 font-bold text-lg">/mês</span>
                    </div>
                 </div>
 
@@ -230,14 +230,14 @@ export default function Premium() {
                 className="group relative flex flex-col p-10 rounded-[48px] bg-white/[0.02] border border-white/5 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
               >
                 <div className="mb-10">
-                  <h3 className="text-2xl font-black mb-2">Anual</h3>
-                  <p className="text-blue-100/40 font-bold text-sm uppercase tracking-widest">Economize 30%</p>
+                  <h3 className="text-2xl font-black mb-2 text-white">Anual</h3>
+                  <p className="text-blue-100/70 font-bold text-sm uppercase tracking-widest">Economize 30%</p>
                 </div>
                 
                 <div className="mb-12">
                    <div className="flex items-baseline gap-1">
                       <span className="text-5xl font-black text-white">R$ 249,90</span>
-                      <span className="text-blue-100/40 font-bold text-lg">/ano</span>
+                      <span className="text-blue-100/70 font-bold text-lg">/ano</span>
                    </div>
                    <p className="text-xs text-blue-400 font-black mt-2 uppercase tracking-widest">R$ 20,82 /mês</p>
                 </div>
@@ -310,7 +310,7 @@ export default function Premium() {
                                 {option.label}
                              </p>
                              <p className="text-2xl font-black text-yellow-400">
-                                R$ {option.price.toFixed(2)}
+                                R$ {formatBRL(option.price)}
                              </p>
                           </div>
                        ))}
