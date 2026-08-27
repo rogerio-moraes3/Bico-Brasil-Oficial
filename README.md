@@ -323,3 +323,5 @@ trigger: visual test red text
 trigger: deploy city filter standardization
 
 <!-- Deploy trigger: 2026-01-16 22:08:52 -->
+
+<!-- Test: auto-deploy GitHub -> Vercel, 2026-08-26 -->
