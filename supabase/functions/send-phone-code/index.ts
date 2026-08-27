@@ -97,7 +97,7 @@ serve(async (req) => {
 
     const e164Phone = toE164BR(phoneDigits);
 
-    const sendVerification = (channel: "whatsapp" | "sms") =>
+    const sendVerification = (channel: "sms") =>
       fetch(
         `https://verify.twilio.com/v2/Services/${TWILIO_VERIFY_SERVICE_SID}/Verifications`,
         {
@@ -110,20 +110,12 @@ serve(async (req) => {
         }
       );
 
-    // WhatsApp é o canal esperado pelo usuário (o campo já se chama "WhatsApp"
-    // em todo o app) e mais barato por mensagem. Se o Verify Service não tiver
-    // sender de WhatsApp aprovado/configurado, a Twilio recusa essa chamada —
-    // cai pra SMS automaticamente, sem o usuário perceber a diferença.
-    let channelUsed: "whatsapp" | "sms" = "whatsapp";
-    let twilioResponse = await sendVerification("whatsapp");
-    let twilioData = await twilioResponse.json();
-
-    if (!twilioResponse.ok) {
-      console.warn("Twilio WhatsApp send falhou, tentando SMS:", twilioData);
-      channelUsed = "sms";
-      twilioResponse = await sendVerification("sms");
-      twilioData = await twilioResponse.json();
-    }
+    // SMS apenas por enquanto — WhatsApp Business API exige perfil empresarial
+    // (CNPJ) que ainda não temos. Voltar a tentar WhatsApp primeiro quando o
+    // Business Profile da Twilio estiver aprovado.
+    const channelUsed: "sms" = "sms";
+    const twilioResponse = await sendVerification("sms");
+    const twilioData = await twilioResponse.json();
 
     if (!twilioResponse.ok) {
       console.error("Twilio send error:", twilioData);
@@ -159,7 +151,7 @@ serve(async (req) => {
     return json({
       success: true,
       channel: channelUsed,
-      message: channelUsed === "whatsapp" ? "Código enviado por WhatsApp." : "Código enviado por SMS.",
+      message: "Código enviado por SMS.",
     });
   } catch (error) {
     console.error("send-phone-code error:", error);
