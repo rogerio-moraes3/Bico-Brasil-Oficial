@@ -354,22 +354,36 @@ export default function SearchWorkers() {
     }
   };
 
-  // Deep-link de busca (ex: vindo da landing com ?q=faxina) — pré-carrega o
-  // termo e dispara a busca automaticamente, uma única vez.
+  // Deep-link de busca (ex: vindo da landing com ?q=faxina&city_id=xxx) —
+  // pré-carrega termo/cidade e dispara a busca automaticamente, uma única vez.
   useEffect(() => {
     const q = searchParams.get('q');
     if (q && !didAutoSearch.current) {
       setSearchQuery(q);
     }
-  }, [searchParams]);
+
+    const cityParam = searchParams.get('city_id');
+    if (cityParam && cities.length && !didAutoSearch.current) {
+      const cityExists = cities.some(c => String(c.id) === cityParam);
+      if (cityExists) {
+        setHasManualCitySelection(true);
+        setFilters(prev => ({ ...prev, city_id: cityParam }));
+      }
+    }
+  }, [searchParams, cities]);
 
   useEffect(() => {
     const q = searchParams.get('q');
-    if (q && searchQuery === q && !didAutoSearch.current) {
+    const cityParam = searchParams.get('city_id');
+    if (!q && !cityParam) return;
+
+    const qReady = !q || searchQuery === q;
+    const cityReady = !cityParam || filters.city_id === cityParam;
+    if (qReady && cityReady && !didAutoSearch.current) {
       didAutoSearch.current = true;
       handleSearch();
     }
-  }, [searchQuery]);
+  }, [searchQuery, filters.city_id]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

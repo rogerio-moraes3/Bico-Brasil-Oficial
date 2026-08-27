@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, MapPin, Briefcase, Sparkles, ArrowRight, ShieldCheck, Zap, Globe, Star } from "lucide-react";
 import { motion } from "framer-motion";
+import { useCities } from "@/hooks/useCities";
 
 export const SalesHeroSection = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("Contratar");
+  const [selectedCityId, setSelectedCityId] = useState("");
+  const { cities } = useCities();
 
   const handleSearch = () => {
     if (searchType === "Trabalhar") {
@@ -15,6 +18,7 @@ export const SalesHeroSection = () => {
     }
     const params = new URLSearchParams();
     if (searchTerm.trim()) params.set("q", searchTerm.trim());
+    if (selectedCityId) params.set("city_id", selectedCityId);
     navigate(`/search-workers?${params.toString()}`);
   };
 
@@ -229,10 +233,15 @@ export const SalesHeroSection = () => {
 
             <div className="lg:w-48 relative">
               <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <select className="w-full pl-14 pr-6 py-5 bg-white rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium shadow-sm">
-                <option>Cidade</option>
-                <option>São Paulo</option>
-                <option>Rio de Janeiro</option>
+              <select
+                value={selectedCityId}
+                onChange={(e) => setSelectedCityId(e.target.value)}
+                className="w-full pl-14 pr-6 py-5 bg-white rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium shadow-sm"
+              >
+                <option value="">Cidade</option>
+                {cities.map((city) => (
+                  <option key={city.id} value={city.id}>{city.name} - {city.state}</option>
+                ))}
               </select>
             </div>
 
