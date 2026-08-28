@@ -50,7 +50,7 @@ function emailHtml(name: string, phoneVerified: boolean): string {
             <p>Ótima notícia: o Bico Brasil agora atende profissionais e contratantes em <strong>todo o território nacional</strong> — não é mais só a região de Presidente Prudente. Já são mais de 100 cidades ativas, de norte a sul.</p>
             ${extra}
             <p style="text-align: center;">
-              <a href="${cta.href}" class="cta">${cta.label}</a>
+              <a href="${cta.href}" class="cta" style="display: inline-block; background-color: #0A4CFB; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold;">${cta.label}</a>
             </p>
             <div class="footer">
               <p>Bico Brasil - Trabalhou, Tá Pago.</p>
