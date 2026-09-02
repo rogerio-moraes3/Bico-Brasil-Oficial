@@ -47,6 +47,8 @@ export default function CompleteProfile() {
     category: '',
   });
   const [cepLoading, setCepLoading] = useState(false);
+  const [possibleDuplicate, setPossibleDuplicate] = useState(false);
+  const [duplicateDismissed, setDuplicateDismissed] = useState(false);
 
   // Verificação de telefone por código (Twilio Verify via send-phone-code /
   // verify-phone-code). phoneVerifiedNumber guarda qual número foi
@@ -161,6 +163,23 @@ export default function CompleteProfile() {
     if (formatted.replace(/\D/g, '').length === 8) {
       lookupCep(formatted.replace(/\D/g, ''));
     }
+  };
+
+  // Aviso hipotético e dispensável, nunca afirmativo — cruza nome (já
+  // conhecido da própria conta) + cidade (sinal fraco, só quando disponível)
+  // pra reduzir falso positivo de nomes comuns. Nunca recebe dado de quem
+  // fez o outro cadastro — a function só devolve true/false.
+  const handleCityChange = async (cityId: string) => {
+    setFormData((prev) => ({ ...prev, city_id: cityId }));
+    setDuplicateDismissed(false);
+    setPossibleDuplicate(false);
+    if (!profile?.name || !cityId || !profile?.id) return;
+    const { data, error } = await supabase.rpc('check_possible_duplicate_signup', {
+      p_name: profile.name,
+      p_city_id: cityId,
+      p_exclude_id: profile.id,
+    });
+    if (!error && data) setPossibleDuplicate(true);
   };
 
   const phoneClean = formData.phone.replace(/\D/g, '');
@@ -654,11 +673,28 @@ export default function CompleteProfile() {
                 <Label htmlFor="city">Cidade *</Label>
                 <CitySelect
                   value={formData.city_id}
-                  onChange={(value) => setFormData({ ...formData, city_id: value })}
+                  onChange={handleCityChange}
                   cities={cities}
                   includeAll={false}
                   placeholder="Selecione sua cidade"
                 />
+                {possibleDuplicate && !duplicateDismissed && (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription className="flex flex-col gap-2">
+                      <span>Notamos um cadastro parecido — pode ser você?</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="self-start h-auto py-1 px-2 text-xs"
+                        onClick={() => setDuplicateDismissed(true)}
+                      >
+                        Não, sou outra pessoa
+                      </Button>
+                    </AlertDescription>
+                  </Alert>
+                )}
               </div>
 
               <div className="space-y-2">
