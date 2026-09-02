@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useCities } from "@/hooks/useCities";
 import {
   Users,
   Briefcase,
@@ -94,6 +95,12 @@ export default function Admin() {
   const [filterType, setFilterType] = useState<string>('all');
   const [filterCity, setFilterCity] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+
+  // city (texto) nunca é preenchido pelo app — cidade real vem de city_id,
+  // resolvido aqui contra a lista de cidades (mesma fonte que o resto do site).
+  const { cities } = useCities();
+  const cityById = useMemo(() => new Map(cities.map(c => [c.id, `${c.name} - ${c.state}`])), [cities]);
+  const getCityLabel = (u: { city_id?: string | null }) => (u.city_id && cityById.get(u.city_id)) || null;
 
   const [metrics, setMetrics] = useState({
     totalLeads: 0,
@@ -438,7 +445,7 @@ export default function Admin() {
   useEffect(() => {
     let filtered = leads.filter(lead => {
       const matchType = filterType === 'all' || lead.user_role === filterType;
-      const matchCity = filterCity === 'all' || lead.city === filterCity;
+      const matchCity = filterCity === 'all' || lead.city_id === filterCity;
       const matchSearch = !searchTerm ||
         (lead.name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (lead.email?.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -454,7 +461,7 @@ export default function Admin() {
       u.name || '-',
       u.email || '-',
       u.cpf || '-',
-      u.city || '-',
+      getCityLabel(u) || '-',
       u.user_role === 'empregador' ? 'Empregador' : 'Prestador',
       new Date(u.created_at).toLocaleDateString()
     ]);
@@ -477,7 +484,9 @@ export default function Admin() {
     );
   }
 
-  const uniqueCities = Array.from(new Set(leads.map(l => l.city || 'Outros'))).sort();
+  const uniqueCityIds = Array.from(new Set(leads.map(l => l.city_id).filter(Boolean)))
+    .filter(id => cityById.has(id))
+    .sort((a, b) => cityById.get(a)!.localeCompare(cityById.get(b)!));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -729,8 +738,8 @@ export default function Admin() {
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
                   <SelectItem value="all">TODAS CIDADES</SelectItem>
-                  {uniqueCities.map(city => (
-                    <SelectItem key={city} value={city}>{city.toUpperCase()}</SelectItem>
+                  {uniqueCityIds.map(id => (
+                    <SelectItem key={id} value={id}>{cityById.get(id)!.toUpperCase()}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -768,9 +777,18 @@ export default function Admin() {
                         </div>
                       </TableCell>
                       <TableCell className="py-2 px-4 text-[10px] text-slate-400 font-medium">{user.email}</TableCell>
-                      <TableCell className="py-2 px-4 text-[10px] font-mono text-slate-500">{user.cpf || user.id.slice(0, 8)}</TableCell>
+                      <TableCell className="py-2 px-4 text-[10px] font-mono text-slate-500">
+                        {user.cpf ? (
+                          user.cpf
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5">
+                            <span className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 font-sans">CPF pendente</span>
+                            <span className="text-slate-600">ID {user.id.slice(0, 8)}</span>
+                          </span>
+                        )}
+                      </TableCell>
                       <TableCell className="py-2 px-4">
-                        <span className="text-[10px] font-black text-slate-300 bg-slate-800/50 px-2 py-0.5 rounded">{user.city?.toUpperCase() || '-'}</span>
+                        <span className="text-[10px] font-black text-slate-300 bg-slate-800/50 px-2 py-0.5 rounded">{getCityLabel(user)?.toUpperCase() || '-'}</span>
                       </TableCell>
                       <TableCell className="py-2 px-4">
                         <span className={cn(
@@ -1002,7 +1020,7 @@ export default function Admin() {
                       </div>
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Cidade:</span>
-                        <p className="text-foreground mt-0.5">{lead.city || 'N/A'}</p>
+                        <p className="text-foreground mt-0.5">{getCityLabel(lead) || 'N/A'}</p>
                       </div>
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Bairro:</span>
@@ -1055,7 +1073,7 @@ export default function Admin() {
                       </div>
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Cidade:</span>
-                        <p className="text-foreground mt-0.5">{lead.city || 'N/A'}</p>
+                        <p className="text-foreground mt-0.5">{getCityLabel(lead) || 'N/A'}</p>
                       </div>
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Bairro:</span>
@@ -1107,7 +1125,7 @@ export default function Admin() {
                       </div>
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Cidade:</span>
-                        <p className="text-foreground mt-0.5">{lead.city || 'N/A'}</p>
+                        <p className="text-foreground mt-0.5">{getCityLabel(lead) || 'N/A'}</p>
                       </div>
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Bairro:</span>
@@ -1293,7 +1311,7 @@ export default function Admin() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
                     <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Cidade</div>
-                    <div className="text-xs text-slate-200 font-medium">{selectedUser.city || '—'}</div>
+                    <div className="text-xs text-slate-200 font-medium">{getCityLabel(selectedUser) || '—'}</div>
                   </div>
                   <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
                     <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Bairro</div>
