@@ -45,7 +45,6 @@ const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const PaymentFailed = lazy(() => import("./pages/PaymentFailed"));
 const PaymentPending = lazy(() => import("./pages/PaymentPending"));
 const Messages = lazy(() => import("./pages/Messages"));
-const Analytics = lazy(() => import("./pages/Analytics"));
 const WorkerProfile = lazy(() => import("./pages/WorkerProfile"));
 const InstallApp = lazy(() => import("./pages/InstallApp"));
 const Premium = lazy(() => import("./pages/Premium"));
@@ -228,13 +227,6 @@ function App() {
                   <Route path="/payment-success" element={<PaymentSuccess />} />
                   <Route path="/payment-failed" element={<PaymentFailed />} />
                   <Route path="/payment-pending" element={<PaymentPending />} />
-                  <Route path="/analytics" element={
-                    <ProtectedRoute>
-                      <ProfileCompletionGuard>
-                        <Analytics />
-                      </ProfileCompletionGuard>
-                    </ProtectedRoute>
-                  } />
                   <Route path="/worker/:id" element={<WorkerProfile />} />
                   <Route path="/user/:id" element={<WorkerProfile />} />
                   <Route path="/profile/:id" element={<WorkerProfile />} />
