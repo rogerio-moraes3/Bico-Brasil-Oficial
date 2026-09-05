@@ -135,14 +135,20 @@ serve(async (req) => {
     // abaixo precisa saber o valor solicitado antes de decidir o que fazer)
     const paymentMethod = body.paymentMethod;
     const planType = body.planType ?? "basico";
-    const amount = Number(body.amount ?? 19.9);
     const cardToken = body.cardToken;
     const installments = Number(body.installments ?? 1);
     const payer = body.payer;
     const email = body.email ?? profile.email;
 
-    const validAmounts = [19.9, 29.9, 249.9, 9.90, 24.90, 39.90, 69.90, 99.90];
-    if (!validAmounts.includes(amount)) throw new Error("Valor de plano inválido");
+    // Preço vem SEMPRE do planType, nunca do valor enviado pelo cliente —
+    // essa função só lida com planos (não com "destaque", que tem preço
+    // fixo por dias em create-destaque-payment). Antes disso, `amount` e
+    // `planType` eram validados de forma independente, então bastava mandar
+    // {planType: "anual", amount: 9.90} pra comprar o Anual pelo preço do
+    // Destaque.
+    const PLAN_PRICES: Record<string, number> = { basico: 19.9, vip: 29.9, anual: 249.9 };
+    const amount = PLAN_PRICES[planType];
+    if (amount === undefined) throw new Error("Valor de plano inválido");
 
     // ====== PROTEÇÃO CONTRA DUPLO-CLIQUE ======
     // Se já existe um pagamento pendente idêntico (mesmo usuário, mesmo
