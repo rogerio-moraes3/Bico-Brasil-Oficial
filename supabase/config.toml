@@ -12,9 +12,6 @@ verify_jwt = false
 [functions.mercadopago-destaque-webhook]
 verify_jwt = false
 
-[functions.expire-old-payments]
-verify_jwt = false
-
 [functions.get-webhook-urls]
 verify_jwt = true
 
