@@ -4,10 +4,23 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const DAILY_EMAIL_LIMIT = 100;
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const ALLOWED_ORIGINS = [
+  "https://bicobrasil.com.br",
+  "https://www.bicobrasil.com.br",
+  "http://localhost:8080",
+  "http://localhost:4173",
+];
+
+function getCorsHeaders(origin: string | null) {
+  const isVercelPreview = !!origin && /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin);
+  const allowOrigin = origin && (ALLOWED_ORIGINS.includes(origin) || isVercelPreview)
+    ? origin
+    : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  };
+}
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -69,6 +82,7 @@ const inAppBody = (phoneVerified: boolean) =>
     : "O Bico Brasil agora atende todo o território nacional. Falta só confirmar seu telefone/WhatsApp no perfil pra aproveitar tudo.";
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req.headers.get("origin"));
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
