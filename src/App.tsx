@@ -58,7 +58,6 @@ const SearchWorkers = lazy(() => import("./pages/SearchWorkers"));
 const OfferServices = lazy(() => import("./pages/OfferServices"));
 const WantToWork = lazy(() => import("./pages/WantToWork"));
 const WantSomeone = lazy(() => import("./pages/WantSomeone"));
-const Ranking = lazy(() => import("./pages/Ranking"));
 const ProcurarBicos = lazy(() => import("./pages/ProcurarBicos"));
 const DownloadPage = lazy(() => import("./pages/Download"));
 const EditJob = lazy(() => import("./pages/EditJob"));
@@ -266,7 +265,6 @@ function App() {
                   } />
                   <Route path="/want-to-work" element={<ProtectedRoute><WantToWork /></ProtectedRoute>} />
                   <Route path="/want-someone" element={<ProtectedRoute><WantSomeone /></ProtectedRoute>} />
-                  <Route path="/ranking" element={<Ranking />} />
                   <Route path="/procurar-bicos" element={<ProcurarBicos />} />
                   <Route path="/download" element={<DownloadPage />} />
                   <Route path="/relacao-usuarios" element={<PublicStats />} />
