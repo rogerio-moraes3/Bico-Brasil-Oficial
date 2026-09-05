@@ -98,17 +98,17 @@ serve(async (req) => {
 
     // Token validado em produção
 
+    // Essa função é chamada por QUALQUER usuário abrindo o checkout
+    // (PlanCheckoutModal.tsx), não só admin — não dá pra exigir login de
+    // admin aqui. O frontend só lê ok/mode/reason (confirmado por grep),
+    // então account.id/nickname/site_id e webhook_configured nunca
+    // precisavam sair daqui: eram dados internos da conta MP vazando pra
+    // qualquer usuário autenticado.
     return new Response(
       JSON.stringify({
         ok: true,
         mode: "production",
         reason: "Credenciais válidas! Sistema pronto para processar pagamentos REAIS.",
-        account: {
-          id: accountData.id,
-          nickname: accountData.nickname,
-          site_id: accountData.site_id,
-        },
-        webhook_configured: !!Deno.env.get("MERCADOPAGO_WEBHOOK_SECRET"),
       }),
       {
         status: 200,
