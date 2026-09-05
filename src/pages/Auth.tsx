@@ -262,7 +262,6 @@ export default function Auth() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          flowType: 'pkce',
           redirectTo: 'https://www.bicobrasil.com.br/auth/callback',
           skipBrowserRedirect: false
         }
