@@ -42,14 +42,6 @@ interface WorkerContactData {
   email: string;
 }
 
-interface Rating {
-  id: string;
-  rating: number;
-  comment: string;
-  created_at: string;
-  rating_user_id: string;
-}
-
 export default function WorkerProfile() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -57,7 +49,6 @@ export default function WorkerProfile() {
   const { toast } = useToast();
   const [worker, setWorker] = useState<WorkerData | null>(null);
   const [contactInfo, setContactInfo] = useState<WorkerContactData | null>(null);
-  const [ratings, setRatings] = useState<Rating[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [isWorkerUnlocked, setIsWorkerUnlocked] = useState(false);
@@ -156,17 +147,6 @@ export default function WorkerProfile() {
         } else if (contactError) {
           // Acesso ao contato negado
         }
-      }
-
-      const { data: ratingsData } = await supabase
-        .from('ratings')
-        .select('*')
-        .eq('rated_user_id', id)
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      if (ratingsData) {
-        setRatings(ratingsData);
       }
 
       setLoading(false);
@@ -499,39 +479,6 @@ export default function WorkerProfile() {
               )}
             </CardContent>
           </Card>
-
-          {ratings.length > 0 && (
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Avaliações</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {ratings.map((rating) => (
-                    <div key={rating.id} className="border-b last:border-0 pb-4 last:pb-0">
-                      <div className="flex items-center gap-1 mb-2">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${i < rating.rating
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-muted-foreground'
-                              }`}
-                          />
-                        ))}
-                      </div>
-                      {rating.comment && (
-                        <p className="text-sm text-muted-foreground mb-1">{rating.comment}</p>
-                      )}
-                      <p className="text-xs text-muted-foreground">
-                        {new Date(rating.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </main>
 
