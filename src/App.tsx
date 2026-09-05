@@ -47,7 +47,6 @@ const PaymentPending = lazy(() => import("./pages/PaymentPending"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const WorkerProfile = lazy(() => import("./pages/WorkerProfile"));
-const Appointments = lazy(() => import("./pages/Appointments"));
 const InstallApp = lazy(() => import("./pages/InstallApp"));
 const Premium = lazy(() => import("./pages/Premium"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
@@ -239,13 +238,6 @@ function App() {
                   <Route path="/worker/:id" element={<WorkerProfile />} />
                   <Route path="/user/:id" element={<WorkerProfile />} />
                   <Route path="/profile/:id" element={<WorkerProfile />} />
-                  <Route path="/appointments" element={
-                    <ProtectedRoute>
-                      <ProfileCompletionGuard>
-                        <Appointments />
-                      </ProfileCompletionGuard>
-                    </ProtectedRoute>
-                  } />
                   <Route path="/install-app" element={<InstallApp />} />
                   <Route path="/premium" element={<Premium />} />
                   <Route path="/payment-history" element={
