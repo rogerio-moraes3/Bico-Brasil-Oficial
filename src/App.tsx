@@ -19,6 +19,7 @@ import { Gatekeeper } from "./components/Gatekeeper";
 import { GracePeriodBanner } from "./components/GracePeriodBanner";
 import { ProfileCompletionProvider } from "./hooks/useProfileCompletion";
 import { BeforeInstallPromptEvent, setDeferredPwaPrompt } from "@/lib/pwaPrompt";
+import { toast } from "@/hooks/use-toast";
 // Todas as páginas são lazy-loaded (code splitting por rota) — o bundle
 // principal estava em 1,2MB (346KB gzip) com só 5 rotas divididas; isso
 // reduz o chunk inicial e adia o download de cada página pro momento em
@@ -127,13 +128,10 @@ function App() {
       window.history.replaceState({}, '', newUrl);
 
       // Show user-friendly message
-      import('@/hooks/use-toast').then(({ useToast }) => {
-        const { toast } = useToast();
-        toast({
-          title: "Erro de autenticação",
-          description: "Houve um problema ao fazer login. Por favor, tente novamente.",
-          variant: "destructive"
-        });
+      toast({
+        title: "Erro de autenticação",
+        description: "Houve um problema ao fazer login. Por favor, tente novamente.",
+        variant: "destructive"
       });
     }
   }, []);
