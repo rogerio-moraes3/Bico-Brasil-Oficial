@@ -105,6 +105,7 @@ serve(async (req) => {
     if (!validateCPF(payer.cpf)) {
       throw new Error('CPF inválido');
     }
+    const payerCPF = payer.cpf.replace(/\D/g, "");
 
     // Tabela de preços fixa
     const priceTable: Record<number, number> = {
@@ -189,7 +190,7 @@ serve(async (req) => {
         first_name: payer.name || 'Cliente',
         identification: {
           type: 'CPF',
-          number: payer.cpf
+          number: payerCPF
         }
       }
     };
