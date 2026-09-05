@@ -33,9 +33,6 @@ verify_jwt = true
 [functions.notify-new-lead]
 verify_jwt = false
 
-[functions.notify-job-expiration]
-verify_jwt = false
-
 [functions.notify-new-job]
 verify_jwt = false
 
