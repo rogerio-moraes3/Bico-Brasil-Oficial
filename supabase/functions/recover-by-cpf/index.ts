@@ -13,23 +13,34 @@ interface RecoverRequest {
   code?: string;
 }
 
-// Rate limiting map (in production, use Redis or database)
-const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
+// M3: rate limit durável via audit_log (já grava um "cpf_recovery_<action>"
+// por chamada, com ip_address, umas linhas abaixo) — um Map em memória não
+// segura contra rajadas em isolates diferentes (cold start, concorrência,
+// múltiplas instâncias), cada um começando a contagem do zero.
 const RATE_LIMIT_MAX = 3;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(ip);
-  if (!record || now - record.timestamp > RATE_LIMIT_WINDOW_MS) {
-    rateLimitMap.set(ip, { count: 1, timestamp: now });
+async function checkRateLimit(
+  supabase: ReturnType<typeof createClient>,
+  ip: string
+): Promise<boolean> {
+  const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+  const { count, error } = await supabase
+    .from('audit_log')
+    .select('id', { count: 'exact', head: true })
+    .eq('ip_address', ip)
+    .like('action', 'cpf_recovery_%')
+    .gte('created_at', windowStart);
+
+  if (error) {
+    // Falha na checagem não deve travar recuperação de conta legítima —
+    // diferente de uma checagem de autenticação, aqui é aceitável falhar
+    // aberto numa falha transitória do banco.
+    console.error('Erro ao checar rate limit (audit_log):', error);
     return true;
   }
-  if (record.count >= RATE_LIMIT_MAX) {
-    return false;
-  }
-  record.count++;
-  return true;
+
+  return (count ?? 0) < RATE_LIMIT_MAX;
 }
 
 function validateCPF(cpf: string): boolean {
@@ -99,7 +110,11 @@ const handler = async (req: Request): Promise<Response> => {
     const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       req.headers.get("cf-connecting-ip") || "unknown";
 
-    if (!checkRateLimit(clientIP)) {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    if (!(await checkRateLimit(supabase, clientIP))) {
       return new Response(
         JSON.stringify({ success: false, error: "Muitas tentativas. Aguarde 1 hora antes de tentar novamente." }),
         { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } }
@@ -123,9 +138,6 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const siteUrl = req.headers.get('origin') || 'https://bicobrasil.com.br';
 
     const { data: user, error: lookupError } = await supabase
