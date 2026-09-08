@@ -17,6 +17,7 @@ import { GoogleIcon } from '@/components/GoogleIcon';
 import { Checkbox } from '@/components/ui/checkbox';
 import { formatCPF, validateCPF, formatPhone, validatePhone } from '@/lib/validators';
 import { safeGoBack } from '@/lib/utils';
+import { consumePostLoginRedirectPath } from '@/lib/postLoginRedirect';
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
@@ -77,7 +78,8 @@ export default function Auth() {
   // tela de "Nova Senha" antes de ser mandado direto pro /app.
   useEffect(() => {
     if (user && mode !== 'reset-password') {
-      navigate('/app');
+      const redirectPath = consumePostLoginRedirectPath();
+      navigate(redirectPath || '/app');
     }
   }, [user, mode, navigate]);
 

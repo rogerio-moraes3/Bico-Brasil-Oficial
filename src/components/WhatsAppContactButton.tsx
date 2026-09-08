@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ToastAction } from "@/components/ui/toast";
 import { MessageSquare, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccessControl } from "@/hooks/useAccessControl";
 import { supabase } from "@/integrations/supabase/client";
+import { savePostLoginRedirect } from "@/lib/postLoginRedirect";
 
 interface WhatsAppContactButtonProps {
   workerId: string;
@@ -12,6 +15,9 @@ interface WhatsAppContactButtonProps {
   canViewContact: boolean;
   remainingViews: number;
   onUpgradeClick: () => void;
+  // Dispara a tentativa de contato sozinho ao montar — usado quando a pessoa
+  // volta de /auth depois de ter tentado contatar sem estar logada.
+  autoTrigger?: boolean;
 }
 
 export const WhatsAppContactButton = ({
@@ -19,12 +25,16 @@ export const WhatsAppContactButton = ({
   workerName,
   canViewContact,
   remainingViews,
-  onUpgradeClick
+  onUpgradeClick,
+  autoTrigger
 }: WhatsAppContactButtonProps) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { hasUnlockedWorker, unlockWorkerContact } = useAccessControl();
+  const autoTriggered = useRef(false);
 
   const openWhatsApp = (phoneNumber: string) => {
     const cleanPhone = phoneNumber.replace(/\D/g, '');
@@ -43,10 +53,16 @@ export const WhatsAppContactButton = ({
 
   const handleContact = async () => {
     if (!user) {
+      savePostLoginRedirect(location.pathname, workerId);
       toast({
         title: "Login necessário",
         description: "Faça login para contatar profissionais",
-        variant: "destructive"
+        variant: "destructive",
+        action: (
+          <ToastAction altText="Entrar" onClick={() => navigate('/auth')}>
+            Entrar
+          </ToastAction>
+        )
       });
       return;
     }
@@ -99,6 +115,17 @@ export const WhatsAppContactButton = ({
 
     setLoading(false);
   };
+
+  // Retoma a tentativa de contato que a pessoa fez antes de ser mandada pro
+  // login — só dispara uma vez, e só depois que já temos user (senão handleContact
+  // cairia de novo no fluxo de "login necessário").
+  useEffect(() => {
+    if (autoTrigger && user && !autoTriggered.current) {
+      autoTriggered.current = true;
+      handleContact();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoTrigger, user]);
 
   return (
     <Button

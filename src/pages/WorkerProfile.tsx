@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -15,7 +15,7 @@ import { Star, MapPin, Phone, Mail, Calendar, MessageSquare, CheckCircle, Lock, 
 import { useToast } from '@/hooks/use-toast';
 import { useAccessControl } from '@/hooks/useAccessControl';
 import { UpgradeModal } from '@/components/UpgradeModal';
-import { WhatsAppContactButton } from '@/components/WhatsAppContactButton';
+import { savePostLoginRedirect, consumeAutoContactWorkerId } from '@/lib/postLoginRedirect';
 
 interface WorkerData {
   id: string;
@@ -166,6 +166,9 @@ export default function WorkerProfile() {
 
   const handleFreeUnlock = async () => {
     if (!user || !worker) {
+      if (worker) {
+        savePostLoginRedirect(window.location.pathname, worker.id);
+      }
       toast({
         title: "Login necessário",
         description: "Faça login para desbloquear contatos",
@@ -215,6 +218,21 @@ export default function WorkerProfile() {
       setUnlocking(false);
     }
   };
+
+  // Retoma o desbloqueio que a pessoa tentou antes de ser mandada pro login —
+  // só dispara uma vez. Não abre o WhatsApp sozinho (window.open fora de um
+  // clique direto do usuário costuma ser bloqueado pelo navegador); o
+  // desbloqueio em si já é o que importa, o botão "Abrir WhatsApp" aparece
+  // liberado logo em seguida pra um último clique manual.
+  const autoUnlockTriggered = useRef(false);
+  useEffect(() => {
+    if (!worker || !user || autoUnlockTriggered.current) return;
+    const savedWorkerId = consumeAutoContactWorkerId();
+    if (savedWorkerId === worker.id && !isWorkerUnlocked) {
+      autoUnlockTriggered.current = true;
+      handleFreeUnlock();
+    }
+  }, [worker, user, isWorkerUnlocked]);
 
   const handleContactWorker = async () => {
     if (!user) {

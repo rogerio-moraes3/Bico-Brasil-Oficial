@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
+import { consumePostLoginRedirectPath } from '@/lib/postLoginRedirect'
 import { Loader2 } from 'lucide-react'
 
 export default function AuthCallback() {
@@ -45,11 +46,11 @@ export default function AuthCallback() {
                 // Limpar URL (agora seguro, pois já temos sessão)
                 window.history.replaceState({}, '', window.location.pathname)
 
-                // Redirecionando para /app
-
-                // Redirecionar para /app
+                // Volta pra onde a pessoa estava antes de ir pro login (ex: perfil
+                // de um prestador que ela tentou contatar), se houver; senão /app.
                 if (mounted) {
-                    window.location.replace('/app')
+                    const redirectPath = consumePostLoginRedirectPath()
+                    window.location.replace(redirectPath || '/app')
                 }
             } catch (err) {
                 console.error('🔴 CALLBACK UNEXPECTED ERROR:', err)
