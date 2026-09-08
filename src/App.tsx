@@ -239,7 +239,7 @@ function App() {
                   } />
                   <Route path="/about" element={<About />} />
                   <Route path="/faq" element={<FAQPage />} />
-                  <Route path="/search-workers" element={<ProtectedRoute><SearchWorkers /></ProtectedRoute>} />
+                  <Route path="/search-workers" element={<SearchWorkers />} />
                   <Route path="/offer-services" element={
                     <ProtectedRoute>
                       <ProfileCompletionGuard>
