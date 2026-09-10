@@ -61,6 +61,15 @@ export default function Contact() {
         throw error;
       }
 
+      // Notificar suporte por email (não bloqueia o sucesso do envio se falhar)
+      try {
+        await supabase.functions.invoke('notify-contact-message', {
+          body: validatedData
+        });
+      } catch (err) {
+        console.error('Erro ao notificar suporte por email:', err);
+      }
+
       toast({
         title: "Mensagem enviada!",
         description: "Responderemos por email em breve.",

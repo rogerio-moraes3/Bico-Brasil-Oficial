@@ -36,6 +36,9 @@ verify_jwt = false
 [functions.notify-new-job]
 verify_jwt = false
 
+[functions.notify-contact-message]
+verify_jwt = false
+
 [functions.recover-by-cpf]
 verify_jwt = false
 
