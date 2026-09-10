@@ -1,8 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, MapPin, Briefcase, Sparkles, ArrowRight, ShieldCheck, Zap, Globe, Star } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useCities } from "@/hooks/useCities";
+import { supabase } from "@/integrations/supabase/client";
+
+interface WorkerRotationCard {
+  kind: "worker";
+  id: string;
+  name: string;
+  photo: string | null;
+  category: string | null;
+  city: string | null;
+  state: string | null;
+  rating: number | null;
+}
+
+interface ContractorRotationCard {
+  kind: "contractor";
+  id: string;
+  title: string;
+  category: string | null;
+  city: string | null;
+  state: string | null;
+}
+
+type RotationCard = WorkerRotationCard | ContractorRotationCard;
+
+// Mostrado enquanto os dados reais carregam e como ultimo recurso se nao
+// houver nenhum Premium hoje — nunca deixa o mockup vazio.
+const FALLBACK_CARDS: RotationCard[] = [
+  { kind: "worker", id: "fallback-1", name: "Carlos M.", photo: null, category: "Elétrica", city: "São Paulo", state: "SP", rating: 4.9 },
+  { kind: "worker", id: "fallback-2", name: "Ana P.", photo: null, category: "Limpeza", city: "Rio de Janeiro", state: "RJ", rating: 5.0 },
+  { kind: "worker", id: "fallback-3", name: "João S.", photo: null, category: "Pintura", city: "Belo Horizonte", state: "MG", rating: 4.8 },
+];
+
+const ROTATION_WINDOW_SIZE = 3;
+const ROTATION_INTERVAL_MS = 4500;
+
+function shuffle<T>(items: T[]): T[] {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 export const SalesHeroSection = () => {
   const navigate = useNavigate();
@@ -10,6 +53,69 @@ export const SalesHeroSection = () => {
   const [searchType, setSearchType] = useState("Contratar");
   const [selectedCityId, setSelectedCityId] = useState("");
   const { cities } = useCities();
+
+  const [rotationPool, setRotationPool] = useState<RotationCard[]>(FALLBACK_CARDS);
+  const [windowIndex, setWindowIndex] = useState(0);
+
+  // Rodizio de gente real Premium no mockup — puxa so das views publicas
+  // (users_public / job_postings_public), nunca da tabela crua. Se nao
+  // houver ninguem Premium ainda, mantem os cards de exemplo.
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const [workersRes, jobsRes] = await Promise.all([
+        supabase
+          .from("users_public")
+          .select("id,name,profile_photo,category,city,state,rating_avg")
+          .eq("type", "worker")
+          .eq("plan_active", true)
+          .limit(30),
+        supabase
+          .from("job_postings_public")
+          .select("id,title,category,city,state")
+          .limit(30),
+      ]);
+
+      const workerCards: RotationCard[] = (workersRes.data || []).map((w) => ({
+        kind: "worker",
+        id: w.id,
+        name: w.name,
+        photo: w.profile_photo,
+        category: w.category,
+        city: w.city,
+        state: w.state,
+        rating: w.rating_avg,
+      }));
+      const contractorCards: RotationCard[] = (jobsRes.data || []).map((j) => ({
+        kind: "contractor",
+        id: j.id,
+        title: j.title,
+        category: j.category,
+        city: j.city,
+        state: j.state,
+      }));
+
+      const combined = shuffle([...workerCards, ...contractorCards]);
+      if (active && combined.length > 0) setRotationPool(combined);
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (rotationPool.length <= ROTATION_WINDOW_SIZE) return;
+    const totalWindows = Math.ceil(rotationPool.length / ROTATION_WINDOW_SIZE);
+    const interval = setInterval(() => {
+      setWindowIndex((i) => (i + 1) % totalWindows);
+    }, ROTATION_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [rotationPool]);
+
+  const visibleCards = rotationPool.slice(
+    windowIndex * ROTATION_WINDOW_SIZE,
+    windowIndex * ROTATION_WINDOW_SIZE + ROTATION_WINDOW_SIZE
+  );
 
   const handleSearch = () => {
     if (searchType === "Trabalhar") {
@@ -129,33 +235,78 @@ export const SalesHeroSection = () => {
                     <div className="w-1/2 h-4 bg-white/10 rounded-lg" />
                   </div>
 
-                  {/* List Placeholder */}
-                  <div className="mt-12 px-6 space-y-4">
-                    {[
-                      { name: "Carlos M.", category: "Elétrica", rating: "4.9", city: "São Paulo, SP", color: "bg-blue-500" },
-                      { name: "Ana P.", category: "Limpeza", rating: "5.0", city: "Rio de Janeiro, RJ", color: "bg-orange-500" },
-                      { name: "João S.", category: "Pintura", rating: "4.8", city: "Belo Horizonte, MG", color: "bg-emerald-500" },
-                    ].map((worker) => (
-                      <div key={worker.name} className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-11 h-11 rounded-full ${worker.color} flex items-center justify-center text-white font-bold text-sm ring-2 ring-white/10 shrink-0`}>
-                            {worker.name.charAt(0)}
+                  {/* Rodizio de gente real Premium (fallback: cards de exemplo) */}
+                  <div className="mt-12 px-6 space-y-4 min-h-[280px]">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={windowIndex}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="space-y-4"
+                      >
+                        {visibleCards.map((card) => (
+                          <div key={`${card.kind}-${card.id}`} className="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                            {card.kind === "worker" ? (
+                              <>
+                                <div className="flex items-center gap-3">
+                                  {card.photo ? (
+                                    <img
+                                      src={card.photo}
+                                      alt=""
+                                      className="w-11 h-11 rounded-full object-cover ring-2 ring-white/10 shrink-0"
+                                    />
+                                  ) : (
+                                    <div className="w-11 h-11 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm ring-2 ring-white/10 shrink-0">
+                                      {card.name.charAt(0)}
+                                    </div>
+                                  )}
+                                  <div className="flex-1 min-w-0">
+                                    <span className="text-white font-bold text-sm truncate block">{card.name.split(" ")[0]}</span>
+                                    <div className="flex items-center gap-1 mt-0.5">
+                                      {card.rating != null && (
+                                        <>
+                                          <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                          <span className="text-white/80 text-xs font-medium">{Number(card.rating).toFixed(1)}</span>
+                                        </>
+                                      )}
+                                      {card.category && <span className="text-white/40 text-xs">• {card.category}</span>}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-1 mt-2 pl-14">
+                                  <MapPin className="w-3 h-3 text-white/40" />
+                                  <span className="text-white/40 text-[11px]">
+                                    {card.city}{card.state ? `, ${card.state}` : ""}
+                                  </span>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="flex items-center gap-3">
+                                  <div className="w-11 h-11 rounded-full bg-orange-500 flex items-center justify-center text-white ring-2 ring-white/10 shrink-0">
+                                    <Briefcase className="w-5 h-5" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <span className="text-white font-bold text-sm truncate block">{card.title}</span>
+                                    {card.category && (
+                                      <span className="text-white/40 text-xs mt-0.5 block">Procura: {card.category}</span>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-1 mt-2 pl-14">
+                                  <MapPin className="w-3 h-3 text-white/40" />
+                                  <span className="text-white/40 text-[11px]">
+                                    {card.city}{card.state ? `, ${card.state}` : ""}
+                                  </span>
+                                </div>
+                              </>
+                            )}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="text-white font-bold text-sm truncate block">{worker.name}</span>
-                            <div className="flex items-center gap-1 mt-0.5">
-                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                              <span className="text-white/80 text-xs font-medium">{worker.rating}</span>
-                              <span className="text-white/40 text-xs">• {worker.category}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1 mt-2 pl-14">
-                          <MapPin className="w-3 h-3 text-white/40" />
-                          <span className="text-white/40 text-[11px]">{worker.city}</span>
-                        </div>
-                      </div>
-                    ))}
+                        ))}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 </div>
 
