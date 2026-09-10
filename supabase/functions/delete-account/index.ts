@@ -70,10 +70,13 @@ const handler = async (req: Request): Promise<Response> => {
         name: "Usuário Removido",
         email: anonymizedEmail,
         phone: "00000000000",
+        phone_verified: false,
         cpf: profile.id, // placeholder único (é o próprio id da linha), nunca um CPF real
         address: null,
         neighborhood: null,
         cep: null,
+        city_id: null,
+        house_number: null,
         profile_photo: null,
         avatar_url: null,
         plan_active: false,
