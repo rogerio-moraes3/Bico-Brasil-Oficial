@@ -15,6 +15,8 @@ import { Footer } from '@/components/Footer';
 import { Navigation, Loader2, Eye, EyeOff, KeyRound, ArrowLeft } from 'lucide-react';
 import { GoogleIcon } from '@/components/GoogleIcon';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 import { formatCPF, validateCPF, formatPhone, validatePhone } from '@/lib/validators';
 import { safeGoBack } from '@/lib/utils';
 import { consumePostLoginRedirectPath } from '@/lib/postLoginRedirect';
@@ -42,8 +44,11 @@ export default function Auth() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [cpf, setCpf] = useState('');
   const [phone, setPhone] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
+  const [possibleDuplicateSignup, setPossibleDuplicateSignup] = useState(false);
+  const [duplicateSignupDismissed, setDuplicateSignupDismissed] = useState(false);
 
   // Autofocus no primeiro campo
   useEffect(() => {
@@ -65,6 +70,8 @@ export default function Auth() {
 
   // Carregar categorias e cidades apenas no modo signup
   useEffect(() => {
+    setPossibleDuplicateSignup(false);
+    setDuplicateSignupDismissed(false);
     if (mode === 'signup') {
       loadCategories();
       loadCities();
@@ -351,6 +358,30 @@ export default function Auth() {
 
   const handlePhoneChange = (value: string) => {
     setPhone(formatPhone(value));
+    setPossibleDuplicateSignup(false);
+    setDuplicateSignupDismissed(false);
+  };
+
+  const handleSignupEmailChange = (value: string) => {
+    setSignupEmail(value);
+    setPossibleDuplicateSignup(false);
+    setDuplicateSignupDismissed(false);
+  };
+
+  // Aviso hipotético e dispensável, nunca afirmativo — mesma lógica de
+  // privacidade do check_possible_duplicate_signup (CompleteProfile): só
+  // retorna true/false, nunca expõe dado de quem já cadastrou. Roda no blur
+  // (não a cada tecla) pra não floodar de chamada nem virar oráculo de
+  // enumeração de e-mail.
+  const checkExistingSignup = async (emailValue: string, phoneValue: string) => {
+    const emailTrimmed = emailValue.trim();
+    const phoneDigits = phoneValue.replace(/\D/g, '');
+    if (!emailTrimmed && phoneDigits.length < 10) return;
+    const { data, error } = await supabase.rpc('check_existing_signup', {
+      p_email: emailTrimmed || null,
+      p_phone: phoneDigits || null,
+    });
+    if (!error && data) setPossibleDuplicateSignup(true);
   };
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -722,7 +753,16 @@ export default function Auth() {
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-tight">E-mail</Label>
-                      <Input id="email" name="email" type="email" className="h-9 text-sm" required />
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={signupEmail}
+                        onChange={(e) => handleSignupEmailChange(e.target.value)}
+                        onBlur={(e) => checkExistingSignup(e.target.value, phone)}
+                        className="h-9 text-sm"
+                        required
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="cpf" className="text-xs font-semibold uppercase tracking-tight">CPF</Label>
@@ -744,12 +784,40 @@ export default function Auth() {
                         name="phone"
                         value={phone}
                         onChange={(e) => handlePhoneChange(e.target.value)}
+                        onBlur={(e) => checkExistingSignup(signupEmail, e.target.value)}
                         placeholder="(18) 99999-9999"
                         className="h-9 text-sm"
                         maxLength={15}
                         required
                       />
                     </div>
+                    {possibleDuplicateSignup && !duplicateSignupDismissed && (
+                      <Alert>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription className="flex flex-col gap-2">
+                          <span>Esse e-mail ou telefone já pode ter uma conta no Bico Brasil.</span>
+                          <div className="flex gap-2">
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="h-auto py-1 px-2 text-xs"
+                              onClick={() => navigate('/auth?mode=login')}
+                            >
+                              Fazer login
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-auto py-1 px-2 text-xs"
+                              onClick={() => setDuplicateSignupDismissed(true)}
+                            >
+                              Não, quero criar mesmo assim
+                            </Button>
+                          </div>
+                        </AlertDescription>
+                      </Alert>
+                    )}
                     <div className="space-y-1">
                       <Label htmlFor="city" className="text-xs font-semibold uppercase tracking-tight">Cidade</Label>
                       <Select value={selectedCity} onValueChange={setSelectedCity} required>
