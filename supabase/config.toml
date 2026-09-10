@@ -53,3 +53,9 @@ verify_jwt = true
 
 [functions.verify-phone-code]
 verify_jwt = true
+
+[functions.notify-incomplete-signup]
+verify_jwt = false
+
+[functions.delete-incomplete-account]
+verify_jwt = false
