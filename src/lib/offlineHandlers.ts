@@ -17,7 +17,7 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
       // find user
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('id, user_role, free_posts_remaining')
+        .select('id, type, free_posts_remaining')
         .eq('auth_id', authId)
         .single();
 
@@ -63,7 +63,7 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
       }
 
       // decrement free posts if employer
-      if (userData.user_role === 'empregador' && userData.free_posts_remaining > 0) {
+      if (userData.type === 'contractor' && userData.free_posts_remaining > 0) {
         const { error: updateError } = await supabase
           .from('users')
           .update({ free_posts_remaining: userData.free_posts_remaining - 1 })

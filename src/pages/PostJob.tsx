@@ -127,7 +127,7 @@ export default function PostJob() {
       // Buscar user_id e verificar publicações grátis
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('id, user_role, free_posts_remaining')
+        .select('id, type, free_posts_remaining')
         .eq('auth_id', user!.id)
         .single();
 
@@ -142,7 +142,7 @@ export default function PostJob() {
       }
 
       // Verificar se empregador tem publicações grátis
-      if (userData.user_role === 'empregador' && userData.free_posts_remaining === 0) {
+      if (userData.type === 'contractor' && userData.free_posts_remaining === 0) {
         toast({
           title: "Publicações grátis esgotadas",
           description: "Você já usou suas 10 publicações grátis. Assine um plano premium para continuar publicando.",
@@ -225,7 +225,7 @@ export default function PostJob() {
 
 
       // Decrementar publicações grátis se for empregador
-      if (userData.user_role === 'empregador' && userData.free_posts_remaining > 0) {
+      if (userData.type === 'contractor' && userData.free_posts_remaining > 0) {
         const { error: updateError } = await supabase
           .from('users')
           .update({ free_posts_remaining: userData.free_posts_remaining - 1 })

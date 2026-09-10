@@ -147,7 +147,7 @@ export default function Admin() {
   // Detailed data for modals
   const [paymentDetails, setPaymentDetails] = useState<any[]>([]);
   const [annualRevenue, setAnnualRevenue] = useState<any[]>([]);
-  const [modalUserTypeFilter, setModalUserTypeFilter] = useState<'all' | 'prestador' | 'empregador'>('all');
+  const [modalUserTypeFilter, setModalUserTypeFilter] = useState<'all' | 'worker' | 'contractor'>('all');
 
   useEffect(() => {
     checkAdminAccess();
@@ -382,8 +382,8 @@ export default function Admin() {
         growthRate,
         revenueTrend,
         leadsByType: {
-          fazer_bico: usersData.filter(u => u.user_role === 'prestador').length,
-          anunciar_servico: usersData.filter(u => u.user_role === 'empregador').length
+          fazer_bico: usersData.filter(u => u.type === 'worker').length,
+          anunciar_servico: usersData.filter(u => u.type === 'contractor').length
         },
         leadsByCity: Object.entries(cityCounts).map(([name, value]) => ({ name, value })),
         totalJobs: totalJobs || 0,
@@ -444,7 +444,7 @@ export default function Admin() {
 
   useEffect(() => {
     let filtered = leads.filter(lead => {
-      const matchType = filterType === 'all' || lead.user_role === filterType;
+      const matchType = filterType === 'all' || lead.type === filterType;
       const matchCity = filterCity === 'all' || lead.city_id === filterCity;
       const matchSearch = !searchTerm ||
         (lead.name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -462,7 +462,7 @@ export default function Admin() {
       u.email || '-',
       u.cpf || '-',
       getCityLabel(u) || '-',
-      u.user_role === 'empregador' ? 'Empregador' : 'Prestador',
+      u.type === 'contractor' ? 'Empregador' : 'Prestador',
       new Date(u.created_at).toLocaleDateString()
     ]);
     const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -727,8 +727,8 @@ export default function Admin() {
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
                   <SelectItem value="all">TODOS TIPOS</SelectItem>
-                  <SelectItem value="prestador">PRESTADORES</SelectItem>
-                  <SelectItem value="empregador">EMPREGADORES</SelectItem>
+                  <SelectItem value="worker">PRESTADORES</SelectItem>
+                  <SelectItem value="contractor">EMPREGADORES</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -793,9 +793,9 @@ export default function Admin() {
                       <TableCell className="py-2 px-4">
                         <span className={cn(
                           "text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-sm",
-                          user.user_role === 'empregador' ? "bg-amber-500/10 text-amber-500" : "bg-blue-500/10 text-blue-500"
+                          user.type === 'contractor' ? "bg-amber-500/10 text-amber-500" : "bg-blue-500/10 text-blue-500"
                         )}>
-                          {user.user_role === 'empregador' ? 'EMPREGADOR' : 'PRESTADOR'}
+                          {user.type === 'contractor' ? 'EMPREGADOR' : 'PRESTADOR'}
                         </span>
                       </TableCell>
                       <TableCell className="py-2 px-4">
@@ -992,11 +992,11 @@ export default function Admin() {
               <TabsTrigger value="all" className="text-xs font-bold">
                 Todos ({filteredLeads.length})
               </TabsTrigger>
-              <TabsTrigger value="prestador" className="text-xs font-bold">
-                Trabalhadores ({filteredLeads.filter(u => u.user_role === 'prestador').length})
+              <TabsTrigger value="worker" className="text-xs font-bold">
+                Trabalhadores ({filteredLeads.filter(u => u.type === 'worker').length})
               </TabsTrigger>
-              <TabsTrigger value="empregador" className="text-xs font-bold">
-                Contratantes ({filteredLeads.filter(u => u.user_role === 'empregador').length})
+              <TabsTrigger value="contractor" className="text-xs font-bold">
+                Contratantes ({filteredLeads.filter(u => u.type === 'contractor').length})
               </TabsTrigger>
             </TabsList>
 
@@ -1029,9 +1029,9 @@ export default function Admin() {
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Tipo:</span>
                         <p className="text-foreground mt-0.5">
-                          <Badge className={`text-xs ${lead.user_role === 'prestador' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'
+                          <Badge className={`text-xs ${lead.type === 'worker' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'
                             }`}>
-                            {lead.user_role === 'prestador' ? 'Trabalhador' : 'Contratante'}
+                            {lead.type === 'worker' ? 'Trabalhador' : 'Contratante'}
                           </Badge>
                         </p>
                       </div>
@@ -1053,10 +1053,10 @@ export default function Admin() {
               </div>
             </TabsContent>
 
-            <TabsContent value="prestador" className="mt-0">
+            <TabsContent value="worker" className="mt-0">
               {/* User List - Workers only */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[500px]">
-                {filteredLeads.filter(u => u.user_role === 'prestador').map((lead) => (
+                {filteredLeads.filter(u => u.type === 'worker').map((lead) => (
                   <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
@@ -1090,7 +1090,7 @@ export default function Admin() {
                     </div>
                   </div>
                 ))}
-                {filteredLeads.filter(u => u.user_role === 'prestador').length === 0 && (
+                {filteredLeads.filter(u => u.type === 'worker').length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">Nenhum trabalhador encontrado</p>
@@ -1100,15 +1100,15 @@ export default function Admin() {
 
               {/* Pagination Info */}
               <div className="mt-4 pt-4 border-t border-border text-center text-xs text-muted-foreground">
-                Mostrando {filteredLeads.filter(u => u.user_role === 'prestador').length} trabalhadores
-                {searchTerm && ` (filtrado de ${leads.filter(u => u.user_role === 'prestador').length} total)`}
+                Mostrando {filteredLeads.filter(u => u.type === 'worker').length} trabalhadores
+                {searchTerm && ` (filtrado de ${leads.filter(u => u.type === 'worker').length} total)`}
               </div>
             </TabsContent>
 
-            <TabsContent value="empregador" className="mt-0">
+            <TabsContent value="contractor" className="mt-0">
               {/* User List - Contractors only */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[500px]">
-                {filteredLeads.filter(u => u.user_role === 'empregador').map((lead) => (
+                {filteredLeads.filter(u => u.type === 'contractor').map((lead) => (
                   <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
@@ -1142,7 +1142,7 @@ export default function Admin() {
                     </div>
                   </div>
                 ))}
-                {filteredLeads.filter(u => u.user_role === 'empregador').length === 0 && (
+                {filteredLeads.filter(u => u.type === 'contractor').length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">Nenhum contratante encontrado</p>
@@ -1152,8 +1152,8 @@ export default function Admin() {
 
               {/* Pagination Info */}
               <div className="mt-4 pt-4 border-t border-border text-center text-xs text-muted-foreground">
-                Mostrando {filteredLeads.filter(u => u.user_role === 'empregador').length} contratantes
-                {searchTerm && ` (filtrado de ${leads.filter(u => u.user_role === 'empregador').length} total)`}
+                Mostrando {filteredLeads.filter(u => u.type === 'contractor').length} contratantes
+                {searchTerm && ` (filtrado de ${leads.filter(u => u.type === 'contractor').length} total)`}
               </div>
             </TabsContent>
           </Tabs>
@@ -1246,8 +1246,8 @@ export default function Admin() {
                 <div className="flex-1">
                   <h3 className="font-black text-xl text-foreground">{selectedUser.name || 'Sem Nome'}</h3>
                   <div className="flex gap-2 mt-2 flex-wrap">
-                    <Badge className={`text-[9px] font-black ${selectedUser.user_role === 'empregador' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'} border-0`}>
-                      {selectedUser.user_role === 'empregador' ? 'EMPREGADOR' : 'PRESTADOR'}
+                    <Badge className={`text-[9px] font-black ${selectedUser.type === 'contractor' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'} border-0`}>
+                      {selectedUser.type === 'contractor' ? 'EMPREGADOR' : 'PRESTADOR'}
                     </Badge>
                     {selectedUser.plan_active && (
                       <Badge className="text-[9px] font-black bg-amber-500/10 text-amber-500 border-0">

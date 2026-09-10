@@ -18,11 +18,11 @@ export function FreePostsBadge() {
 
     const { data } = await supabase
       .from('users')
-      .select('user_role, free_posts_remaining')
+      .select('type, free_posts_remaining')
       .eq('auth_id', user.id)
       .maybeSingle();
 
-    if (data && data.user_role === 'empregador') {
+    if (data && data.type === 'contractor') {
       setIsEmployer(true);
       setFreePostsRemaining(data.free_posts_remaining || 0);
     }
