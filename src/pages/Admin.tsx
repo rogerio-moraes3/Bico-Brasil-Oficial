@@ -1233,8 +1233,8 @@ export default function Admin() {
               <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg border border-border">
                 <div className="relative">
                   <img
-                    src={selectedUser.profile_photo ?? '/fallback-avatar.png'}
-                    alt='avatar'
+                    src={selectedUser.profile_photo ?? '/placeholder.svg'}
+                    alt="Foto"
                     style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', border: '2px solid hsl(var(--primary))' }}
                   />
                   {selectedUser.verified && (
