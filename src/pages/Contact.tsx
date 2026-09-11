@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Mail, MessageSquare, Send, ArrowLeft, Sparkles, Phone, MapPin } from "lucide-react";
+import { Mail, Send, ArrowLeft, Sparkles, Phone } from "lucide-react";
 import { Helmet } from "react-helmet";
 import { contactSchema } from "@/lib/validation";
 import { safeGoBack } from "@/lib/utils";
@@ -154,38 +154,18 @@ export default function Contact() {
                  <div>
                     <h2 className="text-4xl font-black mb-12 tracking-tighter text-white">Canais de <span className="text-blue-400">Atendimento</span></h2>
                     
-                    <div className="space-y-8">
-                       {[
-                          { 
-                             icon: Mail, 
-                             label: "E-mail Oficial", 
-                             value: "contato.bicobrasil@gmail.com", 
-                             href: "mailto:contato.bicobrasil@gmail.com" 
-                          },
-                          { 
-                             icon: MessageSquare, 
-                             label: "Suporte via App", 
-                             value: "Acesse o chat interno", 
-                             href: "/app" 
-                          },
-                          { 
-                             icon: MapPin, 
-                             label: "Presença", 
-                             value: "Atendimento Nacional 100% Digital", 
-                             href: "#" 
-                          }
-                       ].map((item, i) => (
-                          <div key={i} className="flex gap-6 group">
-                             <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-blue-500/20 group-hover:border-blue-500/40 transition-all duration-300">
-                                <item.icon className="w-6 h-6 text-blue-400" />
-                             </div>
-                             <div>
-                                <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-100/30 mb-1">{item.label}</p>
-                                <a href={item.href} className="text-xl font-bold text-white hover:text-blue-400 transition-colors">{item.value}</a>
-                             </div>
-                          </div>
-                       ))}
-                    </div>
+                    <a
+                       href="mailto:contato.bicobrasil@gmail.com"
+                       className="group flex items-center gap-6 p-8 rounded-[32px] bg-white/[0.03] border border-white/10 hover:bg-blue-500/[0.06] hover:border-blue-500/40 transition-all duration-300"
+                    >
+                       <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-blue-500/20 group-hover:border-blue-500/40 transition-all duration-300">
+                          <Mail className="w-7 h-7 text-blue-400" />
+                       </div>
+                       <div>
+                          <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-100/30 mb-1">E-mail Oficial</p>
+                          <span className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">contato.bicobrasil@gmail.com</span>
+                       </div>
+                    </a>
 
                     <div className="mt-20 p-8 rounded-[40px] bg-gradient-to-br from-blue-600/20 to-indigo-600/5 border border-blue-500/20 backdrop-blur-xl">
                        <h4 className="text-blue-400 text-xl font-black mb-4">Privacidade & Dados</h4>
