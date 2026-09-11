@@ -31,7 +31,7 @@ const faqs = [
 
 export const SalesFAQ = () => {
   return (
-    <section className="py-24 md:py-40 bg-[#080C14] relative overflow-x-hidden">
+    <section className="bico-showcase py-24 md:py-40 bg-[#080C14] relative overflow-x-hidden">
       {/* Decorative Blur Elements */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2" />
@@ -61,7 +61,7 @@ export const SalesFAQ = () => {
                 Tudo o que você precisa saber para começar a resolver sua vida ou ganhar dinheiro hoje mesmo.
               </p>
 
-              <div className="p-8 rounded-[40px] bg-white/[0.03] border border-white/10 backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500">
+              <div className="p-8 rounded-[40px] bg-white/[0.03] border-1.5 border-white/10 backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500">
                 <div className="flex items-center gap-6">
                   <div className="w-14 h-14 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
                     <MessageCircle className="w-6 h-6 text-blue-400" />
@@ -94,7 +94,7 @@ export const SalesFAQ = () => {
                 >
                   <AccordionItem
                     value={`item-${index}`}
-                    className="bg-white/[0.02] border border-white/5 rounded-[32px] px-8 md:px-10 data-[state=open]:border-blue-500/40 data-[state=open]:bg-white/[0.05] transition-all duration-500 overflow-hidden group"
+                    className="bg-white/[0.02] border-1.5 border-white/10 rounded-[32px] px-8 md:px-10 data-[state=open]:border-blue-500/40 data-[state=open]:bg-white/[0.05] transition-all duration-500 overflow-hidden group"
                   >
                     <AccordionTrigger className="text-left font-bold text-white hover:no-underline py-8 text-xl md:text-2xl hover:text-blue-400 transition-colors">
                       {faq.question}

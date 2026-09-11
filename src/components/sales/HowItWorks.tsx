@@ -56,7 +56,7 @@ export const HowItWorks = () => {
   const steps = activeTab === "client" ? clientSteps : workerSteps;
 
   return (
-    <section className="py-24 md:py-32 bg-[#080C14] overflow-x-hidden relative border-t border-white/5">
+    <section className="bico-showcase py-24 md:py-32 bg-[#080C14] overflow-x-hidden relative border-t-1.5 border-white/10">
       {/* Decorative Glows */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -113,7 +113,7 @@ export const HowItWorks = () => {
               {steps.map((step, index) => (
                 <div
                   key={index}
-                  className="relative group bg-white/[0.02] border border-white/5 rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
+                  className="relative group bg-white/[0.02] border-1.5 border-white/10 rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500"
                 >
                   <div className="relative z-10">
                     <div className="flex justify-between items-start mb-8">

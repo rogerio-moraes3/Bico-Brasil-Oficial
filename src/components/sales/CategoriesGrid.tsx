@@ -51,17 +51,17 @@ export const CategoriesGrid = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="py-24 md:py-32 bg-[#080C14] relative overflow-x-hidden">
+    <section className="bico-showcase py-24 md:py-32 bg-[#080C14] relative overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-6 backdrop-blur-sm">
-              <Clock className="w-3 h-3" />
-              <span className="!text-blue-400">PARA CONTRATANTES</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full mb-6 backdrop-blur-sm" style={{ border: '1.5px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
+              <Clock className="w-3 h-3 text-bico-accent" />
+              <span className="text-bico-accent">PARA CONTRATANTES</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight leading-[1.1]">
+            <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight leading-[1.1]">
               O que você precisa <br />
-              <span className="!text-blue-400">resolver hoje?</span>
+              <span className="text-bico-accent">resolver hoje?</span>
             </h2>
             <p className="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed max-w-xl">
               Não procure só por nomes — procure por quem resolve. A gente te conecta com quem pode cuidar do seu problema agora.
@@ -87,7 +87,7 @@ export const CategoriesGrid = () => {
               viewport={{ once: true }}
               style={{ willChange: 'opacity, transform' }}
               onClick={() => navigate(`/app?category=${item.slug}`)}
-              className="group relative text-left p-8 rounded-[32px] bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.04] transition-all duration-500 overflow-hidden"
+              className="group relative text-left p-8 rounded-[32px] bg-white/[0.02] border-1.5 border-white/10 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-500 overflow-hidden"
             >
               <div className="relative z-10">
                 <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all duration-500 border border-white/5`}>
@@ -112,7 +112,7 @@ export const CategoriesGrid = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-6 px-8 py-4 bg-white/[0.02] border border-white/5 rounded-3xl backdrop-blur-sm">
+          <div className="inline-flex items-center gap-6 px-8 py-4 bg-white/[0.02] border-1.5 border-white/10 rounded-3xl backdrop-blur-sm">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-emerald-400" />
               <span className="!text-zinc-300 text-sm font-bold">Perfis Verificados</span>
