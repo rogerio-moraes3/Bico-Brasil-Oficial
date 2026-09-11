@@ -43,6 +43,33 @@
 
   /* Container border — navy in light mode, overridden per theme scope */
   --container-border: hsl(222 40% 28%);
+
+  /* ============================================================
+     Reformulacao visual 2026-09 (design/refresh-2026-09)
+     Conceito aprovado: referencia fintech, "vitrine" vibrante nas
+     paginas publicas (home/busca/header) + fundo neutro escuro nas
+     telas funcionais (.internal-theme). Fonte Manrope so entra via
+     .bico-showcase (escopada as secoes com o gradiente novo) — o
+     resto do site continua em Inter/Poppins.
+     ============================================================ */
+  --bico-gradient-showcase: linear-gradient(115deg, #050818 0%, #081142 38%, #123B9E 68%, #1650E0 88%, #1E5CF0 100%);
+  --bico-accent-blue: #5B8DEF;
+  --bico-accent-blue-hover: #7BA3F2;
+  --bico-accent-blue-soft: rgba(91, 141, 239, 0.08);
+  --bico-accent-blue-border: rgba(91, 141, 239, 0.35);
+  --bico-text-heading: #F5F7FB;
+  --bico-text-muted: #A7AFC2;
+  /* Laranja de CTA — mantido igual ao que ja existia, NAO trocar pelo
+     #FF6A3D do conceito aprovado (decisao explicita do produto). */
+  --bico-cta-orange: #FF5C35;
+  --bico-cta-orange-hover: #FF451A;
+}
+
+/* Escopo da fonte Manrope — aplicar essa classe nos wrappers de
+   home/busca/header, nunca em .internal-theme (telas funcionais mantêm
+   Inter/Poppins). */
+.bico-showcase {
+  font-family: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* 🔧 CRITICAL: Dark mode nav-link override MUST be outside @layer base.

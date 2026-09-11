@@ -101,6 +101,32 @@ export default {
         'dark-border': '#003366',
         'dark-text': '#FFFFFF',
         'dark-text-secondary': '#B0C4DE',
+        // Reformulacao visual 2026-09 — paleta do conceito aprovado
+        // (referencia fintech). Usar sempre via essas classes em vez de
+        // hex hardcoded tela por tela.
+        bico: {
+          accent: '#5B8DEF',
+          'accent-hover': '#7BA3F2',
+          heading: '#F5F7FB',
+          muted: '#A7AFC2',
+          // Laranja de CTA mantido igual ao ja existente (nao e o
+          // #FF6A3D do conceito aprovado — decisao explicita do produto).
+          orange: '#FF5C35',
+          'orange-hover': '#FF451A',
+        },
+      },
+      backgroundImage: {
+        // Gradiente "vitrine" — so pra home/busca/header (paginas
+        // publicas). Telas funcionais (.internal-theme) nao usam isso.
+        'bico-showcase': 'linear-gradient(115deg, #050818 0%, #081142 38%, #123B9E 68%, #1650E0 88%, #1E5CF0 100%)',
+      },
+      fontFamily: {
+        // Escopada via className="bico-showcase" (ver src/index.css) —
+        // nao e o font-family padrao do body.
+        showcase: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      borderWidth: {
+        '1.5': '1.5px',
       },
       borderRadius: {
         lg: "var(--radius)",
