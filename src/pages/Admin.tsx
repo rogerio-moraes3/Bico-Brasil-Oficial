@@ -712,7 +712,7 @@ export default function Admin() {
         <div className="space-y-4">
           <div className="flex flex-col md:flex-row gap-3">
             <div className="relative flex-grow">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="BUSCAR POR NOME, EMAIL OU CPF..."
                 className="pl-10 admin-filter-input bg-card border-border text-xs font-bold uppercase tracking-wider"
@@ -751,13 +751,13 @@ export default function Admin() {
               <Table className="admin-table">
                 <TableHeader className="bg-card/50 sticky top-0 z-10">
                   <TableRow className="border-border h-10 hover:bg-transparent">
-                    <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Nome Completo</TableHead>
-                    <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Email</TableHead>
-                    <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">CPF / ID</TableHead>
-                    <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Cidade</TableHead>
-                    <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Tipo</TableHead>
-                    <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4">Status</TableHead>
-                    <TableHead className="text-[9px] font-black text-slate-500 uppercase tracking-widest px-4 text-right">Data</TableHead>
+                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Nome Completo</TableHead>
+                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Email</TableHead>
+                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">CPF / ID</TableHead>
+                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Cidade</TableHead>
+                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Tipo</TableHead>
+                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Status</TableHead>
+                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4 text-right">Data</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -776,19 +776,19 @@ export default function Admin() {
                           <span className="text-[9px] text-muted-foreground font-bold">{user.phone || 'Sem Telefone'}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="py-2 px-4 text-[10px] text-slate-400 font-medium">{user.email}</TableCell>
-                      <TableCell className="py-2 px-4 text-[10px] font-mono text-slate-500">
+                      <TableCell className="py-2 px-4 text-[10px] text-muted-foreground font-medium">{user.email}</TableCell>
+                      <TableCell className="py-2 px-4 text-[10px] font-mono text-muted-foreground">
                         {user.cpf ? (
                           user.cpf
                         ) : (
                           <span className="inline-flex items-center gap-1.5">
                             <span className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 font-sans">CPF pendente</span>
-                            <span className="text-slate-600">ID {user.id.slice(0, 8)}</span>
+                            <span className="text-muted-foreground">ID {user.id.slice(0, 8)}</span>
                           </span>
                         )}
                       </TableCell>
                       <TableCell className="py-2 px-4">
-                        <span className="text-[10px] font-black text-slate-300 bg-slate-800/50 px-2 py-0.5 rounded">{getCityLabel(user)?.toUpperCase() || '-'}</span>
+                        <span className="text-[10px] font-black text-foreground bg-muted px-2 py-0.5 rounded">{getCityLabel(user)?.toUpperCase() || '-'}</span>
                       </TableCell>
                       <TableCell className="py-2 px-4">
                         <span className={cn(
@@ -802,17 +802,17 @@ export default function Admin() {
                         <div className="flex gap-1">
                           {user.verified && <div title="Verificado" className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />}
                           {user.plan_active && <div title="Premium" className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]" />}
-                          {!user.verified && !user.plan_active && <div className="w-2 h-2 rounded-full bg-slate-800" />}
+                          {!user.verified && !user.plan_active && <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />}
                         </div>
                       </TableCell>
-                      <TableCell className="py-2 px-4 text-right text-[10px] text-slate-500 font-bold whitespace-nowrap">
+                      <TableCell className="py-2 px-4 text-right text-[10px] text-muted-foreground font-bold whitespace-nowrap">
                         {new Date(user.created_at).toLocaleDateString('pt-BR')}
                       </TableCell>
                     </TableRow>
                   ))}
                   {filteredLeads.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={7} className="h-32 text-center text-xs text-slate-500 font-black uppercase tracking-widest">
+                      <TableCell colSpan={7} className="h-32 text-center text-xs text-muted-foreground font-black uppercase tracking-widest">
                         Nenhum registro encontrado
                       </TableCell>
                     </TableRow>
@@ -820,8 +820,8 @@ export default function Admin() {
                 </TableBody>
               </Table>
             </div>
-            <div className="bg-slate-900/50 px-4 py-3 border-t border-slate-800 flex justify-between items-center">
-              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Exibindo {filteredLeads.length} usuários de {leads.length}</span>
+            <div className="bg-muted/50 px-4 py-3 border-t border-border flex justify-between items-center">
+              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Exibindo {filteredLeads.length} usuários de {leads.length}</span>
               <div className="flex items-center gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Dados Sincronizados</span>
@@ -1230,7 +1230,7 @@ export default function Admin() {
           {selectedUser && (
             <div className="space-y-6 mt-4">
               {/* Header com Avatar e Nome */}
-              <div className="flex items-center gap-4 p-4 bg-slate-900/50 rounded-lg border border-slate-800">
+              <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg border border-border">
                 <div className="relative">
                   <img
                     src={selectedUser.profile_photo ?? '/fallback-avatar.png'}
@@ -1272,29 +1272,29 @@ export default function Admin() {
 
               {/* Informações Pessoais */}
               <div className="space-y-3">
-                <h4 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <h4 className="text-xs font-black text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                   <UserCheck className="h-4 w-4" />
                   Informações Pessoais
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Email</div>
-                    <div className="text-xs text-slate-200 font-medium break-all">{selectedUser.email || '—'}</div>
+                  <div className="bg-muted/50 p-3 rounded border border-border">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Email</div>
+                    <div className="text-xs text-foreground font-medium break-all">{selectedUser.email || '—'}</div>
                   </div>
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">CPF</div>
-                    <div className="text-xs text-slate-200 font-mono">{selectedUser.cpf || '—'}</div>
+                  <div className="bg-muted/50 p-3 rounded border border-border">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">CPF</div>
+                    <div className="text-xs text-foreground font-mono">{selectedUser.cpf || '—'}</div>
                   </div>
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Telefone</div>
-                    <div className="text-xs text-slate-200 font-medium">
+                  <div className="bg-muted/50 p-3 rounded border border-border">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Telefone</div>
+                    <div className="text-xs text-foreground font-medium">
                       <Smartphone className="h-3 w-3 inline mr-1" />
                       {selectedUser.phone || '—'}
                     </div>
                   </div>
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Data de Nascimento</div>
-                    <div className="text-xs text-slate-200 font-medium">
+                  <div className="bg-muted/50 p-3 rounded border border-border">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Data de Nascimento</div>
+                    <div className="text-xs text-foreground font-medium">
                       <Calendar className="h-3 w-3 inline mr-1" />
                       {selectedUser.birth_date ? new Date(selectedUser.birth_date).toLocaleDateString('pt-BR') : '—'}
                     </div>
@@ -1304,32 +1304,32 @@ export default function Admin() {
 
               {/* Localização */}
               <div className="space-y-3">
-                <h4 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <h4 className="text-xs font-black text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
                   Localização
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Cidade</div>
-                    <div className="text-xs text-slate-200 font-medium">{getCityLabel(selectedUser) || '—'}</div>
+                  <div className="bg-muted/50 p-3 rounded border border-border">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Cidade</div>
+                    <div className="text-xs text-foreground font-medium">{getCityLabel(selectedUser) || '—'}</div>
                   </div>
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Bairro</div>
-                    <div className="text-xs text-slate-200 font-medium">{selectedUser.neighborhood || '—'}</div>
+                  <div className="bg-muted/50 p-3 rounded border border-border">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Bairro</div>
+                    <div className="text-xs text-foreground font-medium">{selectedUser.neighborhood || '—'}</div>
                   </div>
                 </div>
               </div>
 
               {/* Informações do Sistema */}
               <div className="space-y-3">
-                <h4 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <h4 className="text-xs font-black text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                   <Activity className="h-4 w-4" />
                   Informações do Sistema
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Data de Cadastro</div>
-                    <div className="text-xs text-slate-200 font-medium">
+                  <div className="bg-muted/50 p-3 rounded border border-border">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Data de Cadastro</div>
+                    <div className="text-xs text-foreground font-medium">
                       {selectedUser.created_at ? new Date(selectedUser.created_at).toLocaleString('pt-BR', {
                         day: '2-digit',
                         month: '2-digit',
@@ -1339,9 +1339,9 @@ export default function Admin() {
                       }) : '—'}
                     </div>
                   </div>
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Última Atualização</div>
-                    <div className="text-xs text-slate-200 font-medium">
+                  <div className="bg-muted/50 p-3 rounded border border-border">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Última Atualização</div>
+                    <div className="text-xs text-foreground font-medium">
                       {selectedUser.updated_at ? new Date(selectedUser.updated_at).toLocaleString('pt-BR', {
                         day: '2-digit',
                         month: '2-digit',
@@ -1351,9 +1351,9 @@ export default function Admin() {
                       }) : '—'}
                     </div>
                   </div>
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800 col-span-2">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">ID do Usuário (public.users)</div>
-                    <div className="text-xs text-slate-200 font-mono break-all flex items-center gap-2">
+                  <div className="bg-muted/50 p-3 rounded border border-border col-span-2">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">ID do Usuário (public.users)</div>
+                    <div className="text-xs text-foreground font-mono break-all flex items-center gap-2">
                       {selectedUser.id || '—'}
                       {selectedUser.id && (
                         <button
@@ -1368,9 +1368,9 @@ export default function Admin() {
                       )}
                     </div>
                   </div>
-                  <div className="bg-slate-900/30 p-3 rounded border border-slate-800 col-span-2">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase mb-1">Auth ID (auth.users)</div>
-                    <div className="text-xs text-slate-200 font-mono break-all flex items-center gap-2">
+                  <div className="bg-muted/50 p-3 rounded border border-border col-span-2">
+                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Auth ID (auth.users)</div>
+                    <div className="text-xs text-foreground font-mono break-all flex items-center gap-2">
                       {selectedUser.auth_id || '—'}
                       {selectedUser.auth_id && (
                         <button
@@ -1389,7 +1389,7 @@ export default function Admin() {
               </div>
 
               {/* Botões de Ação */}
-              <div className="flex gap-2 pt-4 border-t border-slate-800">
+              <div className="flex gap-2 pt-4 border-t border-border">
                 <Button variant="outline" size="sm" onClick={() => { setUserDetailModalOpen(false); setTimeout(() => navigate(`/worker/${selectedUser.id}`), 300); }} className="flex-1">
                   <ArrowRight className="h-4 w-4 mr-2" />Ver Perfil Público
                 </Button>
