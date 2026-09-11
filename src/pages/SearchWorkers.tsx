@@ -387,7 +387,18 @@ export default function SearchWorkers() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Header />
+      <Header variant="showcase" />
+
+      {/* Banner "vitrine" — gradiente vibrante so nesta faixa; filtros e
+          resultados abaixo continuam no fundo neutro pra nao atrapalhar a
+          leitura (mesmo criterio das telas funcionais). */}
+      <div className="bico-showcase bg-bico-showcase relative overflow-hidden">
+        <div className="absolute -top-40 -right-32 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(40,110,255,0.45) 0%, rgba(40,110,255,0) 70%)' }} />
+        <div className="container mx-auto px-4 py-12 md:py-16 relative z-10">
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-2 text-bico-heading">Buscar Profissionais</h1>
+          <p className="text-bico-muted text-sm md:text-base">Encontre o profissional certo para o seu projeto, perto de você.</p>
+        </div>
+      </div>
 
       {/* Banner de acesso para testers */}
       {isTester && (
@@ -436,10 +447,6 @@ export default function SearchWorkers() {
       )}
 
       <main id="main-content" className="flex-grow container mx-auto px-3 sm:px-4 py-6 md:py-8 pb-24 md:pb-8">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Buscar Profissionais</h1>
-          <p className="text-muted-foreground text-sm">Encontre o profissional certo para o seu projeto</p>
-        </div>
 
         <Card className="mb-6 md:mb-8 rounded-2xl border border-border/80 shadow-sm">
           <CardContent className="p-4 md:p-6 pt-4 md:pt-6">

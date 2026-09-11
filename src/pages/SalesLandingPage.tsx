@@ -77,7 +77,7 @@ const SalesLandingPage = () => {
       </Helmet>
 
       <div className="min-h-screen bg-[#080C14] overflow-x-hidden selection:bg-blue-500/30 selection:text-white">
-        <Header />
+        <Header variant="showcase" />
         <SalesAnnouncementBar />
         <main>
           <SalesHeroSection />

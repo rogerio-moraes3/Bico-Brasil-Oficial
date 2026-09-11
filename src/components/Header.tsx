@@ -19,7 +19,19 @@ import { ModeToggle } from "./ModeToggle";
 import { Separator } from "./ui/separator";
 import { BeforeInstallPromptEvent, getDeferredPwaPrompt, setDeferredPwaPrompt, clearDeferredPwaPrompt } from "@/lib/pwaPrompt";
 
-export const Header = () => {
+interface HeaderProps {
+  /**
+   * "showcase" = topo com o gradiente vibrante da reformulacao visual
+   * (design/refresh-2026-09) + fonte Manrope — so pra home e busca
+   * publica, os dois lugares listados no plano aprovado. Todo o resto do
+   * site (inclusive telas logadas que tambem usam este Header) continua
+   * no default "neutral", identico ao que já existia antes desta prop.
+   */
+  variant?: "neutral" | "showcase";
+}
+
+export const Header = ({ variant = "neutral" }: HeaderProps) => {
+  const isShowcase = variant === "showcase";
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
@@ -31,7 +43,7 @@ export const Header = () => {
   const [showInstallButton, setShowInstallButton] = useState(false);
 
   // Show back button on internal routes (public paths excluded) AND only when there is a history stack
-  const publicPaths = ['/', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch'];
+  const publicPaths = ['/', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch', '/search-workers'];
   const hasHistory = typeof window !== 'undefined' && window.history && window.history.length > 1;
   // "/" precisa ser comparado por igualdade exata: com startsWith, "/" bateria
   // com QUALQUER caminho (todos começam com "/"), anulando o filtro inteiro.
@@ -154,7 +166,15 @@ const navItems = [
         Ir para conteúdo principal
       </a>
 
-<header className="sticky top-0 z-50 w-full mx-auto h-24 bg-gradient-to-r from-[#0B1F3A] to-[#0F2A4D] text-white border-b border-white/10 shadow-sm backdrop-blur-md" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+<header
+  className={cn(
+    "sticky top-0 z-50 w-full mx-auto h-24 text-white shadow-sm backdrop-blur-md",
+    isShowcase
+      ? "bico-showcase bg-bico-showcase border-b border-1.5 border-white/10"
+      : "bg-gradient-to-r from-[#0B1F3A] to-[#0F2A4D] border-b border-white/10"
+  )}
+  style={{ paddingTop: 'env(safe-area-inset-top)' }}
+>
   <div className="container mx-auto h-24 px-4 md:px-8 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             {showBackButton && (
@@ -193,8 +213,15 @@ const navItems = [
                   key={path}
                   to={path}
                   className={cn(
-                    "text-lg font-medium text-white/80 hover:text-white hover:opacity-90 hover:underline decoration-white/30 underline-offset-4 transition-all duration-300 py-1",
-                    location.pathname === path && "font-semibold text-white underline decoration-white underline-offset-4"
+                    "text-lg font-medium transition-all duration-300 py-1",
+                    isShowcase
+                      ? "text-bico-muted hover:text-bico-heading"
+                      : "text-white/80 hover:text-white hover:opacity-90 hover:underline decoration-white/30 underline-offset-4",
+                    location.pathname === path && (
+                      isShowcase
+                        ? "font-semibold text-bico-heading"
+                        : "font-semibold text-white underline decoration-white underline-offset-4"
+                    )
                   )}
                 >
                   {label}
@@ -298,14 +325,20 @@ const navItems = [
               <div className="hidden md:flex items-center gap-4">
                 <button
                   onClick={() => navigate('/auth')}
-                  className="text-[15px] font-bold text-white/80 hover:text-white hover:opacity-90 transition-colors px-4 py-2"
+                  className={cn(
+                    "text-[15px] font-bold transition-colors px-4 py-2",
+                    isShowcase ? "text-bico-muted hover:text-bico-heading" : "text-white/80 hover:text-white hover:opacity-90"
+                  )}
                 >
                   Entrar
                 </button>
                 <Button
                   onClick={() => navigate('/auth?mode=signup')}
                   animateOnMount={false}
-                  className="text-[15px] font-bold bg-orange-500 hover:bg-orange-600 text-slate-900 px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 h-10"
+                  className={cn(
+                    "text-[15px] font-bold text-slate-900 px-6 py-2 shadow-md hover:shadow-lg transition-all duration-300 h-10",
+                    isShowcase ? "bg-bico-orange hover:bg-bico-orange-hover rounded-xl" : "bg-orange-500 hover:bg-orange-600 rounded-lg"
+                  )}
                 >
                   Criar conta
                 </Button>
