@@ -355,7 +355,7 @@ export const SalesHeroSection = () => {
 
       {/* SEARCH SECTION */}
       <div className="bico-showcase max-w-7xl mx-auto px-6 lg:px-16 -mt-20 pb-24 relative z-20">
-        <div className="bg-white rounded-[24px] sm:rounded-[32px] lg:rounded-[40px] p-6 sm:p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border-1.5 border-gray-100">
+        <div className="bg-white rounded-[24px] sm:rounded-[32px] lg:rounded-[40px] p-6 sm:p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border-4 border-bico-lime">
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
             <div className="max-w-2xl">
@@ -375,7 +375,7 @@ export const SalesHeroSection = () => {
             </button>
           </div>
 
-          {/* Search Engine UI */}
+          {/* Search Engine UI — Cidade/Contratar/Buscar com a mesma altura (h-16) */}
           <div className="flex flex-col lg:flex-row gap-4 mb-10 bg-gray-50/50 p-2 rounded-[16px] border border-gray-600">
             <div className="flex-1 relative group">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
@@ -384,16 +384,16 @@ export const SalesHeroSection = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 placeholder="Ex.: Frete, Pintura, Faxina..."
-                className="w-full pl-14 pr-6 py-5 bg-white rounded-2xl border-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium placeholder:text-gray-400 shadow-sm transition-all"
+                className="w-full h-16 pl-14 pr-6 bg-white rounded-2xl border-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium placeholder:text-gray-400 shadow-sm transition-all"
               />
             </div>
 
             <div className="lg:w-48 relative">
-              <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none" />
               <select
                 value={selectedCityId}
                 onChange={(e) => setSelectedCityId(e.target.value)}
-                className="w-full pl-14 pr-6 py-5 bg-white rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium shadow-sm"
+                className="w-full h-16 pl-14 pr-6 bg-bico-orange rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-white font-medium shadow-sm"
               >
                 <option value="">Cidade</option>
                 {cities.map((city) => (
@@ -403,11 +403,11 @@ export const SalesHeroSection = () => {
             </div>
 
             <div className="lg:w-48 relative">
-              <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-900 pointer-events-none" />
               <select
                 value={searchType}
                 onChange={(e) => setSearchType(e.target.value)}
-                className="w-full pl-14 pr-6 py-5 bg-white rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 font-medium shadow-sm"
+                className="w-full h-16 pl-14 pr-6 bg-bico-lime rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-900 font-medium shadow-sm"
               >
                 <option>Contratar</option>
                 <option>Trabalhar</option>
@@ -416,7 +416,7 @@ export const SalesHeroSection = () => {
 
             <button
               onClick={handleSearch}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95"
+              className="h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-10 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95"
             >
               Buscar
             </button>

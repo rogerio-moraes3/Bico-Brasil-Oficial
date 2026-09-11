@@ -113,6 +113,9 @@ export default {
           // #FF6A3D do conceito aprovado — decisao explicita do produto).
           orange: '#FF5C35',
           'orange-hover': '#FF451A',
+          // Verde-limao — usado no filtro "Contratar" e na borda do
+          // cartao de busca da home.
+          lime: '#CCFF00',
         },
       },
       backgroundImage: {
