@@ -279,15 +279,16 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 16%;
 
-    --primary: 218 100% 52%;
-    /* #0A64FF — escurecido de 56% para atingir contraste WCAG AA 4.5:1 */
+    --primary: 220 80% 65%;
+    /* #5B8DEF — acento azul da reformulacao visual 2026-09, mesmo tom
+       usado no gradiente das telas publicas (hero/header/busca) */
     --primary-foreground: 0 0% 100%;
 
     --border: 215 28% 89%;
     /* #DDE5EF */
     --input: 0 0% 98%;
     /* #FBFBFB */
-    --ring: 218 100% 52%;
+    --ring: 220 80% 65%;
 
     --radius: 0.5rem;
     /* slightly rounded */
@@ -336,11 +337,14 @@ All colors MUST be HSL.
 
     .border,
     [class*="border-"] {
-      border-color: rgba(255, 255, 255, 0.3);
+      /* Traco fino da reformulacao visual 2026-09 — era 0.3, baixado pra
+         um hairline mais discreto (mesmo criterio das telas publicas). */
+      border-color: rgba(255, 255, 255, 0.14);
     }
 
     /* Ensure switches inside the internal theme use sensible dark tokens */
-    --switch-on: 217.2 91.2% 59.8%;
+    --switch-on: 220 80% 65%;
+    /* #5B8DEF — mesmo acento das telas publicas */
     --switch-off: 217.2 32.6% 17.5%;
     --switch-thumb: 210 40% 98%;
 

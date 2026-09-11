@@ -85,7 +85,7 @@ export default function Premium() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080C14] text-white selection:bg-blue-500/30">
+    <div className="internal-theme min-h-screen flex flex-col bg-[#080C14] text-white selection:bg-blue-500/30">
       <Header />
 
       <main className="flex-grow overflow-hidden">
@@ -99,9 +99,9 @@ export default function Premium() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
              >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-10">
-                  <Sparkles className="w-3 h-3" />
-                  <span>Cresça seu negócio</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase rounded-full mb-10" style={{ border: '1.5px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
+                  <Sparkles className="w-3 h-3 text-bico-accent" />
+                  <span className="text-bico-accent">Cresça seu negócio</span>
                 </div>
 
                 <h1 className="text-6xl md:text-[100px] font-black leading-[0.85] tracking-tighter mb-12 text-white">
@@ -144,7 +144,7 @@ export default function Premium() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="group relative flex flex-col p-10 rounded-[48px] bg-white/[0.02] border border-white/5 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
+                className="group relative flex flex-col p-10 rounded-[48px] bg-white/[0.02] border-1.5 border-white/10 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
               >
                 <div className="mb-10">
                   <h3 className="text-2xl font-black mb-2 text-white">Premium</h3>
@@ -227,7 +227,7 @@ export default function Premium() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="group relative flex flex-col p-10 rounded-[48px] bg-white/[0.02] border border-white/5 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
+                className="group relative flex flex-col p-10 rounded-[48px] bg-white/[0.02] border-1.5 border-white/10 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
               >
                 <div className="mb-10">
                   <h3 className="text-2xl font-black mb-2 text-white">Anual</h3>
