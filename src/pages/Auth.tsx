@@ -15,10 +15,11 @@ import { Footer } from '@/components/Footer';
 import { Navigation, Loader2, Eye, EyeOff, KeyRound, ArrowLeft } from 'lucide-react';
 import { GoogleIcon } from '@/components/GoogleIcon';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Briefcase, HandCoins } from 'lucide-react';
 import { formatCPF, validateCPF, formatPhone, validatePhone } from '@/lib/validators';
-import { safeGoBack } from '@/lib/utils';
+import { safeGoBack, cn } from '@/lib/utils';
 import { consumePostLoginRedirectPath } from '@/lib/postLoginRedirect';
 
 export default function Auth() {
@@ -49,6 +50,7 @@ export default function Auth() {
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
   const [possibleDuplicateSignup, setPossibleDuplicateSignup] = useState(false);
   const [duplicateSignupDismissed, setDuplicateSignupDismissed] = useState(false);
+  const [signupAccountType, setSignupAccountType] = useState<'worker' | 'contractor' | null>(null);
 
   // Autofocus no primeiro campo
   useEffect(() => {
@@ -72,6 +74,7 @@ export default function Auth() {
   useEffect(() => {
     setPossibleDuplicateSignup(false);
     setDuplicateSignupDismissed(false);
+    setSignupAccountType(null);
     if (mode === 'signup') {
       loadCategories();
       loadCities();
@@ -266,8 +269,27 @@ export default function Auth() {
   };
 
   const handleGoogleLogin = async () => {
+    // No cadastro (não no login), a escolha do tipo de conta é obrigatória
+    // antes de sair pro Google — mesma exigência do fluxo por e-mail, senão
+    // essa etapa ficaria mais fácil de pular justamente pelo caminho com
+    // menos fricção (era isso que causava o viés pra "contractor").
+    if (mode === 'signup' && !signupAccountType) {
+      toast({
+        title: "Escolha o que você quer fazer",
+        description: "Selecione se você quer contratar alguém ou prestar serviços antes de continuar",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setLoading(true);
     try {
+      if (mode === 'signup' && signupAccountType) {
+        // Lido pelo listener de SIGNED_IN em AuthContext.tsx assim que a
+        // sessão voltar do redirect do Google.
+        sessionStorage.setItem('bico_pending_account_type', signupAccountType);
+      }
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -278,6 +300,7 @@ export default function Auth() {
 
       if (error) throw error;
     } catch (error: any) {
+      sessionStorage.removeItem('bico_pending_account_type');
       toast({
         title: "Erro ao entrar com Google",
         description: error.message,
@@ -400,6 +423,17 @@ export default function Auth() {
     setLoading(true);
 
     try {
+      // Verificar escolha obrigatória do tipo de conta (sem opção pré-marcada)
+      if (!signupAccountType) {
+        toast({
+          title: "Escolha o que você quer fazer",
+          description: "Selecione se você quer contratar alguém ou prestar serviços antes de continuar",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+
       // Verificar consentimento LGPD
       if (!lgpdConsent) {
         toast({
@@ -486,10 +520,17 @@ export default function Auth() {
         city_id: selectedCity
       };
 
+      // Guarda o tipo de conta escolhido pra o listener de SIGNED_IN em
+      // AuthContext.tsx gravar assim que a sessão for criada (mesmo caminho
+      // usado pelo fluxo do Google, ver handleGoogleLogin).
+      sessionStorage.setItem('bico_pending_account_type', signupAccountType);
+
       // Chamar signUp (mantendo contrato atual do useAuth)
       const { error } = await signUp(email, signupPassword, signupData);
 
       if (error) {
+        sessionStorage.removeItem('bico_pending_account_type');
+
         // Não fazer fallback automático para login em caso de erro 500.
         // Exibir mensagem clara para o usuário.
         let errorMessage = error.message;
@@ -747,6 +788,47 @@ export default function Auth() {
                   </form>
                 ) : (
                   <form onSubmit={handleSignup} className="space-y-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold uppercase tracking-tight">O que você quer fazer no Bico Brasil?</Label>
+                      <RadioGroup
+                        value={signupAccountType ?? undefined}
+                        onValueChange={(value) => setSignupAccountType(value as 'worker' | 'contractor')}
+                        className="gap-2"
+                      >
+                        <label
+                          htmlFor="account-type-contractor"
+                          className={cn(
+                            "flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors",
+                            signupAccountType === 'contractor' ? "border-primary bg-primary/5" : "border-input hover:bg-muted/50"
+                          )}
+                        >
+                          <RadioGroupItem value="contractor" id="account-type-contractor" className="mt-0.5" />
+                          <div className="flex items-start gap-2">
+                            <Briefcase className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                            <div>
+                              <div className="text-sm font-semibold leading-tight">Quero contratar alguém</div>
+                              <div className="text-xs text-muted-foreground leading-tight mt-0.5">Vou publicar o que preciso ou buscar profissionais</div>
+                            </div>
+                          </div>
+                        </label>
+                        <label
+                          htmlFor="account-type-worker"
+                          className={cn(
+                            "flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors",
+                            signupAccountType === 'worker' ? "border-primary bg-primary/5" : "border-input hover:bg-muted/50"
+                          )}
+                        >
+                          <RadioGroupItem value="worker" id="account-type-worker" className="mt-0.5" />
+                          <div className="flex items-start gap-2">
+                            <HandCoins className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                            <div>
+                              <div className="text-sm font-semibold leading-tight">Quero prestar serviços e ganhar dinheiro</div>
+                              <div className="text-xs text-muted-foreground leading-tight mt-0.5">Vou aparecer nas buscas pra ser contratado</div>
+                            </div>
+                          </div>
+                        </label>
+                      </RadioGroup>
+                    </div>
                     <div className="space-y-1">
                       <Label htmlFor="name" className="text-xs font-semibold uppercase tracking-tight">Nome Completo</Label>
                       <Input id="name" name="name" className="h-9 text-sm" required />
@@ -908,7 +990,7 @@ export default function Auth() {
                     <Button
                       type="submit"
                       className="w-full bg-primary hover:bg-primary/90"
-                      disabled={loading || !lgpdConsent}
+                      disabled={loading || !lgpdConsent || !signupAccountType}
                     >
                       {loading ? (
                         <>

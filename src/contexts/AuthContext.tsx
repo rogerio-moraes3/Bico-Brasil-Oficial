@@ -73,6 +73,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error('[AuthContext] Erro ao atualizar foto:', error);
           }
         }, 500);
+
+        // Grava o tipo de conta (prestador/contratante) escolhido na tela de
+        // cadastro (Auth.tsx). Funciona pros dois fluxos de signup (email e
+        // Google) porque os dois disparam SIGNED_IN aqui — o valor só existe
+        // no sessionStorage quando a pessoa acabou de escolher na etapa
+        // obrigatória do cadastro, nunca num login normal, então isso nunca
+        // afeta contas existentes.
+        const pendingAccountType = sessionStorage.getItem('bico_pending_account_type');
+        if (pendingAccountType === 'worker' || pendingAccountType === 'contractor') {
+          sessionStorage.removeItem('bico_pending_account_type');
+          setTimeout(async () => {
+            try {
+              await supabase
+                .from('users')
+                .update({ type: pendingAccountType })
+                .eq('auth_id', session.user.id);
+            } catch (error) {
+              console.error('[AuthContext] Erro ao gravar tipo de conta:', error);
+            }
+          }, 500);
+        }
       }
     });
 
