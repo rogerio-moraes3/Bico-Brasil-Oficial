@@ -1,14 +1,16 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Search, MessageCircle, ArrowRight, Zap, CheckCircle2, UserPlus, Target, Wallet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const clientSteps = [
+const clientSteps: typeof workerSteps = [
   {
     icon: Search,
     title: "Busque",
     description: "Digite o que precisa. A gente acha quem resolve perto de você.",
     color: "text-blue-400",
     bg: "bg-blue-500/10",
+    to: undefined,
   },
   {
     icon: Zap,
@@ -16,6 +18,7 @@ const clientSteps = [
     description: "Veja fotos, notas e o selo de verificado. Escolha com calma.",
     color: "text-orange-400",
     bg: "bg-orange-500/10",
+    to: undefined,
   },
   {
     icon: MessageCircle,
@@ -23,6 +26,7 @@ const clientSteps = [
     description: "Conversa direta, sem taxa escondida. Você decide.",
     color: "text-emerald-400",
     bg: "bg-emerald-500/10",
+    to: undefined,
   },
 ];
 
@@ -33,6 +37,7 @@ const workerSteps = [
     description: "Mostre suas habilidades, fotos de trabalhos e conquiste o selo de verificado.",
     color: "text-purple-400",
     bg: "bg-purple-500/10",
+    to: "/auth?mode=signup",
   },
   {
     icon: Target,
@@ -40,6 +45,7 @@ const workerSteps = [
     description: "Seja encontrado por clientes na sua cidade no exato momento que eles precisam.",
     color: "text-blue-400",
     bg: "bg-blue-500/10",
+    to: "/auth?mode=signup",
   },
   {
     icon: Wallet,
@@ -47,6 +53,7 @@ const workerSteps = [
     description: "Negocie direto, sem comissões. O dinheiro do seu trabalho é inteiramente seu.",
     color: "text-orange-400",
     bg: "bg-orange-500/10",
+    to: "/auth?mode=signup",
   },
 ];
 
@@ -110,11 +117,9 @@ export const HowItWorks = () => {
               className="grid grid-cols-1 lg:grid-cols-3 gap-8"
               style={{ willChange: 'opacity, transform' }}
             >
-              {steps.map((step, index) => (
-                <div
-                  key={index}
-                  className="relative group bg-white/[0.02] border-1.5 border-white/10 rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500"
-                >
+              {steps.map((step, index) => {
+                const cardClassName = "relative group block bg-white/[0.02] border-1.5 border-white/10 rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500";
+                const cardContent = (
                   <div className="relative z-10">
                     <div className="flex justify-between items-start mb-8">
                       <div className={`w-14 h-14 rounded-2xl ${step.bg} flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform duration-500`}>
@@ -132,8 +137,18 @@ export const HowItWorks = () => {
                       {step.description}
                     </p>
                   </div>
-                </div>
-              ))}
+                );
+
+                return step.to ? (
+                  <Link key={index} to={step.to} className={cardClassName}>
+                    {cardContent}
+                  </Link>
+                ) : (
+                  <div key={index} className={cardClassName}>
+                    {cardContent}
+                  </div>
+                );
+              })}
             </motion.div>
           </AnimatePresence>
         </div>

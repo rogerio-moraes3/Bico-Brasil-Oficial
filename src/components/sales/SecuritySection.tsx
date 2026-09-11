@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { ShieldCheck, Star, Headphones, FileCheck, Lock, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -7,32 +8,38 @@ const features = [
     title: "Identidade Verificada",
     desc: "Você conversa só com gente verificada de verdade.",
     color: "text-emerald-400",
-    bg: "bg-emerald-500/10"
+    bg: "bg-emerald-500/10",
+    to: "/privacy"
   },
   {
     icon: Star,
     title: "Avaliações Reais",
     desc: "Veja o que outras pessoas acharam antes de fechar negócio.",
     color: "text-amber-400",
-    bg: "bg-amber-500/10"
+    bg: "bg-amber-500/10",
+    to: "/privacy"
   },
   {
     icon: Lock,
     title: "Dados Protegidos",
     desc: "Seus dados ficam protegidos. Sempre.",
     color: "text-blue-400",
-    bg: "bg-blue-500/10"
+    bg: "bg-blue-500/10",
+    to: "/privacy"
   },
   {
     icon: Headphones,
     title: "Suporte Humano",
     desc: "Time de verdade, pronto pra ajudar quando você precisar.",
     color: "text-purple-400",
-    bg: "bg-purple-500/10"
+    bg: "bg-purple-500/10",
+    to: "/contact"
   },
 ];
 
 export const SecuritySection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="bico-showcase py-24 md:py-32 bg-[#080C14] relative border-t-1.5 border-white/10">
       <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
@@ -51,14 +58,18 @@ export const SecuritySection = () => {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feat, i) => (
-            <motion.div 
+            <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
               style={{ willChange: 'opacity, transform' }}
-              className="group p-8 rounded-[32px] bg-white/[0.02] border-1.5 border-white/10 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300"
+              onClick={() => navigate(feat.to)}
+              role="link"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && navigate(feat.to)}
+              className="group p-8 rounded-[32px] bg-white/[0.02] border-1.5 border-white/10 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 cursor-pointer"
             >
               <div className={`w-14 h-14 rounded-2xl ${feat.bg} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
                 <feat.icon className={`w-6 h-6 ${feat.color}`} />

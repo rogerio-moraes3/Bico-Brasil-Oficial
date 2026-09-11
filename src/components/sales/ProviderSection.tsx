@@ -65,20 +65,28 @@ export const ProviderSection = () => {
           <div className="order-1 lg:order-2">
             <div className="grid grid-cols-2 gap-4 md:gap-6">
 
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
+                onClick={() => navigate("/auth?mode=signup")}
+                role="link"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup")}
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">0%</div>
                 <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Taxa de Comissão</div>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
+                onClick={() => navigate("/auth?mode=signup")}
+                role="link"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup")}
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <Zap className="w-8 h-8 text-orange-400 mb-4" />
@@ -86,10 +94,14 @@ export const ProviderSection = () => {
                 <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">No seu WhatsApp</div>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
+                onClick={() => navigate("/auth?mode=signup")}
+                role="link"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup")}
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <ShieldCheck className="w-8 h-8 text-orange-400 mb-4" />
@@ -97,10 +109,14 @@ export const ProviderSection = () => {
                 <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Selo de Confiança</div>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
+                onClick={() => navigate("/search-workers")}
+                role="link"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && navigate("/search-workers")}
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">Local</div>
