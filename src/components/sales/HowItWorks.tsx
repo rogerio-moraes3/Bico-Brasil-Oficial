@@ -37,7 +37,7 @@ const workerSteps = [
     description: "Mostre suas habilidades, fotos de trabalhos e conquiste o selo de verificado.",
     color: "text-purple-400",
     bg: "bg-purple-500/10",
-    to: "/auth?mode=signup",
+    to: "/auth?mode=signup&tipo=prestador",
   },
   {
     icon: Target,
@@ -53,7 +53,7 @@ const workerSteps = [
     description: "Negocie direto, sem comissões. O dinheiro do seu trabalho é inteiramente seu.",
     color: "text-orange-400",
     bg: "bg-orange-500/10",
-    to: "/auth?mode=signup",
+    to: "/auth?mode=signup&tipo=prestador",
   },
 ];
 

@@ -26,6 +26,13 @@ export default function Auth() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const mode = searchParams.get('mode') || (location.pathname === '/cadastro' ? 'signup' : 'login');
+  // Pre-selecao opcional e editavel do tipo de conta via link (?tipo=prestador
+  // ou ?tipo=contratante) — nunca trava a escolha, so poupa um clique quando
+  // o link de origem ja deixou a intencao clara (ex.: card "Fature 100%").
+  // Qualquer valor ausente/invalido cai no comportamento atual: nada marcado.
+  const tipoParam = searchParams.get('tipo');
+  const initialAccountType: 'worker' | 'contractor' | null =
+    tipoParam === 'prestador' ? 'worker' : tipoParam === 'contratante' ? 'contractor' : null;
   const navigate = useNavigate();
   const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
@@ -50,7 +57,7 @@ export default function Auth() {
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
   const [possibleDuplicateSignup, setPossibleDuplicateSignup] = useState(false);
   const [duplicateSignupDismissed, setDuplicateSignupDismissed] = useState(false);
-  const [signupAccountType, setSignupAccountType] = useState<'worker' | 'contractor' | null>(null);
+  const [signupAccountType, setSignupAccountType] = useState<'worker' | 'contractor' | null>(initialAccountType);
 
   // Autofocus no primeiro campo
   useEffect(() => {
@@ -74,13 +81,14 @@ export default function Auth() {
   useEffect(() => {
     setPossibleDuplicateSignup(false);
     setDuplicateSignupDismissed(false);
-    setSignupAccountType(null);
+    setSignupAccountType(initialAccountType);
     if (mode === 'signup') {
       loadCategories();
       loadCities();
     }
     loadSelectedCity();
-  }, [mode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, tipoParam]);
 
   // Redirect if already logged in — mas não durante o fluxo de redefinição de
   // senha: o link de recuperação já estabelece uma sessão automaticamente

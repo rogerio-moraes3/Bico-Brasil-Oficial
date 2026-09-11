@@ -69,10 +69,10 @@ export const ProviderSection = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
-                onClick={() => navigate("/auth?mode=signup")}
+                onClick={() => navigate("/auth?mode=signup&tipo=prestador")}
                 role="link"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup")}
+                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup&tipo=prestador")}
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">0%</div>
@@ -83,10 +83,10 @@ export const ProviderSection = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
-                onClick={() => navigate("/auth?mode=signup")}
+                onClick={() => navigate("/auth?mode=signup&tipo=prestador")}
                 role="link"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup")}
+                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup&tipo=prestador")}
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <Zap className="w-8 h-8 text-orange-400 mb-4" />
@@ -98,10 +98,10 @@ export const ProviderSection = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
                 layout={false}
-                onClick={() => navigate("/auth?mode=signup")}
+                onClick={() => navigate("/auth?mode=signup&tipo=prestador")}
                 role="link"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup")}
+                onKeyDown={(e) => e.key === "Enter" && navigate("/auth?mode=signup&tipo=prestador")}
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <ShieldCheck className="w-8 h-8 text-orange-400 mb-4" />
