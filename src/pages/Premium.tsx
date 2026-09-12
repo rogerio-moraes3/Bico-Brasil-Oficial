@@ -63,7 +63,7 @@ export default function Premium() {
   const planoBasico = [
     { icon: Eye, text: "Perfil visível em todas as buscas" },
     { icon: Users, text: "Aumente suas chances de ser contratado" },
-    { icon: MessageCircle, text: "Chat direto com clientes" },
+    { icon: MessageCircle, text: "Contato direto pelo WhatsApp" },
     { icon: Shield, text: "Selo de profissional verificado" },
     { icon: Award, text: "Sistema de avaliações" },
   ];

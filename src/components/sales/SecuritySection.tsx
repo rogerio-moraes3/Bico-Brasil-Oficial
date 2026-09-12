@@ -6,7 +6,7 @@ const features = [
   {
     icon: FileCheck,
     title: "Identidade Verificada",
-    desc: "Você conversa só com gente verificada de verdade.",
+    desc: "Prefira sempre perfis com o Selo de Verificado.",
     color: "text-emerald-400",
     bg: "bg-emerald-500/10",
     to: "/privacy"
