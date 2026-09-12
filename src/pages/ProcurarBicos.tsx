@@ -169,17 +169,18 @@ const ProcurarBicos = () => {
             </div>
             
             <div className="flex items-center gap-3">
-               <Button 
+               <Button
                 onClick={() => setShowFilters(!showFilters)}
                 variant="outline"
-                className="bg-card border-border rounded-2xl h-14 px-6 font-bold hover:scale-[1.02] active:scale-95 transition-all duration-300"
+                className="bg-card border-border rounded-2xl h-14 w-40 justify-center font-bold hover:scale-[1.02] active:scale-95 transition-all duration-300"
                >
                  <Filter className="w-5 h-5 mr-2" />
                  Filtros
                </Button>
-               <ShareButtons 
+               <ShareButtons
                 text="Procurando bicos? Confira no Bico Brasil!"
                 url={window.location.href}
+                buttonClassName="h-14 w-40 justify-center rounded-2xl"
                />
             </div>
           </div>
