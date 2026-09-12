@@ -72,6 +72,7 @@ const handler = async (req: Request): Promise<Response> => {
         phone: "00000000000",
         phone_verified: false,
         cpf: profile.id, // placeholder único (é o próprio id da linha), nunca um CPF real
+        category: null,
         address: null,
         neighborhood: null,
         cep: null,
@@ -87,10 +88,14 @@ const handler = async (req: Request): Promise<Response> => {
     if (updateError) throw updateError;
 
     // 3. Desativar anúncios/vagas (evita "Usuário Removido" aparecendo como
-    // se ainda estivesse ofertando serviço ou postando vaga)
+    // se ainda estivesse ofertando serviço ou postando vaga). job_postings
+    // precisa de status: 'closed' alem de is_active: false — a busca publica
+    // (ProcurarBicos, PublicStats, AdminJobs) filtra por status = 'open', nao
+    // por is_active, entao só zerar is_active deixava a vaga de um usuario
+    // excluido continuar aparecendo normalmente nas buscas.
     try {
       await supabase.from("worker_services").update({ active: false }).eq("user_id", profile.id);
-      await supabase.from("job_postings").update({ is_active: false, contact_phone: null }).eq("user_id", profile.id);
+      await supabase.from("job_postings").update({ is_active: false, status: "closed", contact_phone: null }).eq("user_id", profile.id);
     } catch (e) {
       console.error("Erro ao desativar anúncios/vagas:", e);
     }
