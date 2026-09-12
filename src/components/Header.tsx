@@ -337,7 +337,7 @@ const navItems = [
                   animateOnMount={false}
                   className={cn(
                     "text-[15px] font-bold text-slate-900 px-6 py-2 shadow-md hover:shadow-lg transition-all duration-300 h-10",
-                    isShowcase ? "bg-bico-orange hover:bg-bico-orange-hover rounded-xl" : "bg-[#C55405] hover:bg-[#AD4904] rounded-lg"
+                    isShowcase ? "bg-bico-orange hover:bg-bico-orange-hover rounded-xl" : "bg-orange-500 hover:bg-orange-600 rounded-lg"
                   )}
                 >
                   Criar conta

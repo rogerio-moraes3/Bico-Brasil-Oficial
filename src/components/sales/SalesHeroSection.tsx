@@ -388,11 +388,11 @@ export const SalesHeroSection = () => {
             </div>
 
             <div className="lg:w-48 relative">
-              <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none" />
+              <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-900 pointer-events-none" />
               <select
                 value={selectedCityId}
                 onChange={(e) => setSelectedCityId(e.target.value)}
-                className="w-full h-16 pl-14 pr-6 bg-bico-orange rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-white font-medium shadow-sm"
+                className="w-full h-16 pl-14 pr-6 bg-bico-orange rounded-2xl border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 font-medium shadow-sm"
               >
                 <option value="">Cidade</option>
                 {cities.map((city) => (

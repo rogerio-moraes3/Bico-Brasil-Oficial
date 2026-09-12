@@ -111,11 +111,8 @@ export default {
           muted: '#A7AFC2',
           // Laranja de CTA mantido igual ao ja existente (nao e o
           // #FF6A3D do conceito aprovado — decisao explicita do produto).
-          // Escurecido em 2026-09 (mesmo matiz/identidade, so o tom) —
-          // o tom original (#FF5C35) tinha contraste 3.07:1 com texto
-          // branco, abaixo do minimo WCAG AA (4.5:1) pra texto normal.
-          orange: '#E22C00',
-          'orange-hover': '#C72600',
+          orange: '#FF5C35',
+          'orange-hover': '#FF451A',
           // Verde-limao — usado no filtro "Contratar" e na borda do
           // cartao de busca da home.
           lime: '#CCFF00',
