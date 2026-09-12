@@ -39,6 +39,9 @@ export default function SearchWorkers() {
   const didAutoSearch = useRef(false);
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
+  const [professionQuery, setProfessionQuery] = useState('');
+  const [professionSuggestions, setProfessionSuggestions] = useState<any[]>([]);
+  const [showProfessionSuggestions, setShowProfessionSuggestions] = useState(false);
   const [filters, setFilters] = useState({
     category: 'all',
     subcategory: 'all',
@@ -68,6 +71,36 @@ export default function SearchWorkers() {
   useEffect(() => {
     loadCategories();
   }, []);
+
+  // Autocomplete de profissao — mesmo padrao de OfferServices.tsx/PostJob.tsx.
+  // Filtro ADICIONAL: nao substitui o dropdown de Categoria/Subcategoria nem
+  // o campo "Buscar por palavra-chave" ja existente (que usa outra RPC,
+  // buscar_e_logar_ocupacoes, so no submit).
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!professionQuery.trim() || professionQuery.length < 2) {
+        setProfessionSuggestions([]);
+        setShowProfessionSuggestions(false);
+        return;
+      }
+      try {
+        const { data, error } = await supabase.rpc('search_ocupacoes', {
+          q: professionQuery,
+          lim: 8,
+          min_sim: 0.3
+        });
+        if (!error && data) {
+          setProfessionSuggestions(data);
+          setShowProfessionSuggestions(data.length > 0);
+        }
+      } catch {
+        setProfessionSuggestions([]);
+        setShowProfessionSuggestions(false);
+      }
+    };
+    const timer = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timer);
+  }, [professionQuery]);
 
   const loadCategories = async () => {
     try {
@@ -127,7 +160,8 @@ export default function SearchWorkers() {
         filters.city_id !== 'all' ||
         filters.neighborhood.trim() !== '' ||
         filters.minRating !== 'all' ||
-        searchQuery.trim() !== '';
+        searchQuery.trim() !== '' ||
+        professionQuery.trim() !== '';
 
       // Check schema: availability may not exist in every environment
       const { hasColumn } = await import('@/lib/schemaCheck');
@@ -151,6 +185,12 @@ export default function SearchWorkers() {
 
         if (filters.subcategory !== 'all') {
           servicesQuery = servicesQuery.eq('subcategory_id', filters.subcategory);
+        }
+
+        if (professionQuery.trim()) {
+          servicesQuery = servicesQuery.or(
+            `title.ilike.%${professionQuery}%,description.ilike.%${professionQuery}%,custom_category.ilike.%${professionQuery}%`
+          );
         }
 
         if (searchQuery.trim()) {
@@ -450,7 +490,7 @@ export default function SearchWorkers() {
 
         <Card className="mb-6 md:mb-8 rounded-2xl border border-border/80 shadow-sm">
           <CardContent className="p-4 md:p-6 pt-4 md:pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
               <div>
                 <Label htmlFor="filter-category">Categoria</Label>
                 <Select value={filters.category} onValueChange={handleCategoryChange}>
@@ -502,6 +542,36 @@ export default function SearchWorkers() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="relative">
+                <Label htmlFor="filter-profession">Profissão</Label>
+                <Input
+                  id="filter-profession"
+                  placeholder="Ex: Pedreiro, Diarista..."
+                  value={professionQuery}
+                  onChange={(e) => setProfessionQuery(e.target.value)}
+                  onFocus={() => { if (professionSuggestions.length > 0) setShowProfessionSuggestions(true); }}
+                  onBlur={() => setTimeout(() => setShowProfessionSuggestions(false), 200)}
+                />
+                {showProfessionSuggestions && professionSuggestions.length > 0 && (
+                  <div className="absolute z-20 w-full mt-1 bg-popover border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    {professionSuggestions.map((sug, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="w-full text-left px-3 py-2 hover:bg-accent text-sm text-popover-foreground"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setProfessionQuery(sug.nome_oficial);
+                          setShowProfessionSuggestions(false);
+                        }}
+                      >
+                        {sug.nome_oficial}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -567,6 +637,7 @@ export default function SearchWorkers() {
                   // hora, e o filtro nunca chega a limpar de fato.
                   setHasManualCitySelection(true);
                   setSearchQuery('');
+                  setProfessionQuery('');
                 }}
                 variant="outline"
                 disabled={loading}

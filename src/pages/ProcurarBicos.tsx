@@ -34,6 +34,9 @@ const ProcurarBicos = () => {
   const { user } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [professionQuery, setProfessionQuery] = useState('');
+  const [professionSuggestions, setProfessionSuggestions] = useState<any[]>([]);
+  const [showProfessionSuggestions, setShowProfessionSuggestions] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
   const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -70,6 +73,35 @@ const ProcurarBicos = () => {
     }
   }, [cities, user, hasManualCitySelection, filters.city_id]);
 
+  // Autocomplete de profissao — mesmo padrao de OfferServices.tsx/PostJob.tsx.
+  // So um filtro ADICIONAL: nao substitui o dropdown de Categoria (6+ opcoes
+  // macro), nem o campo generico "O que voce busca?" ja existente.
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!professionQuery.trim() || professionQuery.length < 2) {
+        setProfessionSuggestions([]);
+        setShowProfessionSuggestions(false);
+        return;
+      }
+      try {
+        const { data, error } = await supabase.rpc('search_ocupacoes', {
+          q: professionQuery,
+          lim: 8,
+          min_sim: 0.3
+        });
+        if (!error && data) {
+          setProfessionSuggestions(data);
+          setShowProfessionSuggestions(data.length > 0);
+        }
+      } catch {
+        setProfessionSuggestions([]);
+        setShowProfessionSuggestions(false);
+      }
+    };
+    const timer = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timer);
+  }, [professionQuery]);
+
   const loadCategories = async () => {
     const { data, error } = await supabase
       .from('categories')
@@ -93,6 +125,7 @@ const ProcurarBicos = () => {
         .order('created_at', { ascending: false });
 
       if (searchQuery.trim()) query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+      if (professionQuery.trim()) query = query.or(`title.ilike.%${professionQuery}%,description.ilike.%${professionQuery}%,custom_category.ilike.%${professionQuery}%`);
       if (filters.city_id !== 'all') query = query.eq('city_id', filters.city_id);
       if (filters.category_id !== 'all') query = query.eq('category_id', filters.category_id);
       if (filters.urgent) query = query.eq('urgent', true);
@@ -124,6 +157,7 @@ const ProcurarBicos = () => {
 
   const handleClearFilters = () => {
     setSearchQuery('');
+    setProfessionQuery('');
     setFilters({ city_id: 'all', category_id: 'all', urgent: false, dateFilter: 'all' });
     setTimeout(loadJobs, 100);
   };
@@ -196,12 +230,12 @@ const ProcurarBicos = () => {
               >
                 <div className="p-8 rounded-[32px] bg-card border border-border backdrop-blur-xl shadow-xl space-y-6">
                   {/* Primeira Linha: Busca e Localização */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="space-y-3 md:col-span-1">
                       <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">O que você busca?</Label>
                       <div className="relative group">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-blue-400" />
-                        <Input 
+                        <Input
                           placeholder="Ex: Pintura, Frete..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
@@ -239,6 +273,36 @@ const ProcurarBicos = () => {
                           {categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                         </SelectContent>
                       </Select>
+                    </div>
+
+                    <div className="space-y-3 relative">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Profissão</Label>
+                      <Input
+                        placeholder="Ex: Pedreiro, Diarista..."
+                        value={professionQuery}
+                        onChange={(e) => setProfessionQuery(e.target.value)}
+                        onFocus={() => { if (professionSuggestions.length > 0) setShowProfessionSuggestions(true); }}
+                        onBlur={() => setTimeout(() => setShowProfessionSuggestions(false), 200)}
+                        className="h-14 bg-background border-border rounded-2xl focus:ring-blue-500/30"
+                      />
+                      {showProfessionSuggestions && professionSuggestions.length > 0 && (
+                        <div className="absolute z-20 w-full mt-1 bg-popover border border-border rounded-2xl shadow-lg max-h-60 overflow-y-auto">
+                          {professionSuggestions.map((sug, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              className="w-full text-left px-4 py-2 hover:bg-accent text-sm text-popover-foreground"
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                setProfessionQuery(sug.nome_oficial);
+                                setShowProfessionSuggestions(false);
+                              }}
+                            >
+                              {sug.nome_oficial}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 
