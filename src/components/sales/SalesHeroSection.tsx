@@ -334,7 +334,7 @@ export const SalesHeroSection = () => {
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 className="hidden sm:flex absolute top-16 -left-10 bg-white text-[#0B1C2E] px-5 py-3 rounded-2xl rounded-bl-none text-sm font-bold shadow-2xl items-center gap-2"
-                style={{ willChange: 'transform' }}
+                style={{ backfaceVisibility: 'hidden' }}
               >
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 Pedido enviado!
@@ -344,7 +344,7 @@ export const SalesHeroSection = () => {
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                 className="hidden sm:block absolute bottom-24 -right-6 text-white px-5 py-3 rounded-2xl rounded-br-none text-sm font-bold shadow-2xl"
-                style={{ willChange: 'transform', background: '#3B6EF6' }}
+                style={{ backfaceVisibility: 'hidden', background: '#3B6EF6' }}
               >
                 Resposta recebida
               </motion.div>
