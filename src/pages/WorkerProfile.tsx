@@ -126,6 +126,7 @@ export default function WorkerProfile() {
       });
 
       // Verificar se worker já foi desbloqueado
+      let unlocked = canViewContacts;
       if (user) {
         const { data: unlockData } = await supabase
           .from('contact_unlocks')
@@ -134,11 +135,16 @@ export default function WorkerProfile() {
           .eq('worker_id', id)
           .maybeSingle();
 
-        setIsWorkerUnlocked(!!unlockData || canViewContacts);
+        unlocked = !!unlockData || canViewContacts;
+        setIsWorkerUnlocked(unlocked);
       }
 
-      // Fetch contact info via secure RPC function (checks premium/tester status and contact_unlocks)
-      if ((canViewContacts || isWorkerUnlocked) && user) {
+      // Fetch contact info via secure RPC function (checks premium/tester status and
+      // contact_unlocks). Usa a variavel local `unlocked` calculada acima, nao o state
+      // isWorkerUnlocked — o setState logo acima ainda nao foi aplicado nesta mesma
+      // execucao (closure desatualizada), entao ler o state aqui sempre pegava o valor
+      // antigo (false) e pulava a busca do contato, mesmo com o desbloqueio ja salvo.
+      if (unlocked && user) {
         const { data: contact, error: contactError } = await supabase
           .rpc('get_worker_contact', { p_worker_id: id });
 
