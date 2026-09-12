@@ -329,24 +329,24 @@ export const SalesHeroSection = () => {
                 </div>
               </div>
 
-              {/* Floating Chat Bubbles */}
-              <motion.div
-                animate={{ top: [64, 54, 64] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="hidden sm:flex absolute -left-10 bg-white text-[#0B1C2E] px-5 py-3 rounded-2xl rounded-bl-none text-sm font-bold shadow-2xl items-center gap-2"
-              >
+              {/* Chat Bubbles — posicao estatica (sem animacao continua de posicao).
+                  Uma animacao de loop em top/bottom/transform passa a maior parte
+                  do tempo em valores fracionarios de pixel, o que faz o navegador
+                  reanti-alias o texto a cada frame e produz um efeito de "ghosting"
+                  perceptivel num balao branco com texto escuro. O carrossel de
+                  cards (Nando/Carlos/Ana) continua animando normalmente — só estes
+                  dois balões ficaram estáticos. */}
+              <div className="hidden sm:flex absolute top-16 -left-10 bg-white text-[#0B1C2E] px-5 py-3 rounded-2xl rounded-bl-none text-sm font-bold shadow-2xl items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 Novo prestador!
-              </motion.div>
+              </div>
 
-              <motion.div
-                animate={{ bottom: [96, 86, 96] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="hidden sm:block absolute -right-6 text-white px-5 py-3 rounded-2xl rounded-br-none text-sm font-bold shadow-2xl"
+              <div
+                className="hidden sm:block absolute bottom-24 -right-6 text-white px-5 py-3 rounded-2xl rounded-br-none text-sm font-bold shadow-2xl"
                 style={{ background: '#3B6EF6' }}
               >
                 Resposta recebida
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         </div>
