@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import CitySelect from '@/components/CitySelect';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
@@ -29,20 +28,23 @@ export default function PostJob() {
     description: '',
     price: '',
     location: '',
-    category: '',
+    profession_raw: '',
+    occupation_id: null as string | null,
+    confidence_score: null as number | null,
+    occupation_category_id: null as string | null,
     city_id: '',
     neighborhood: '',
     urgent: false,
 
     availability: 'todos_os_dias',
-    available_today: false,
-    customCategory: '',
-    isCustomCategory: false
+    available_today: false
   });
 
   const { cities, loading: citiesLoading } = useCities();
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -81,6 +83,54 @@ export default function PostJob() {
     return () => clearTimeout(id);
   }, [formData]);
 
+  // Autocomplete de profissao — mesmo padrao de OfferServices.tsx (texto
+  // livre com sugestoes via search_ocupacoes; category_id inferido a
+  // partir da ocupacao escolhida, sem dropdown separado de categoria).
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!formData.profession_raw.trim() || formData.profession_raw.length < 2) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.rpc('search_ocupacoes', {
+          q: formData.profession_raw,
+          lim: 8,
+          min_sim: 0.3
+        });
+
+        if (!error && data) {
+          setSuggestions(data);
+          setShowSuggestions(data.length > 0);
+        }
+      } catch (err) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    };
+
+    const timer = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timer);
+  }, [formData.profession_raw]);
+
+  const handleSuggestionClick = (suggestion: any) => {
+    setFormData({
+      ...formData,
+      profession_raw: suggestion.nome_oficial,
+      occupation_id: suggestion.ocupacao_id,
+      confidence_score: suggestion.similarity_score,
+      occupation_category_id: suggestion.category_id || null
+    });
+    setShowSuggestions(false);
+  };
+
+  const fallbackCategoryId = (): string | null => {
+    const cat = categories.find(c => c.slug === 'outros' || c.slug === 'outros-servicos');
+    return cat ? cat.id : null;
+  };
+
   const loadData = async () => {
     const [categoriesRes, profileRes] = await Promise.all([
       supabase.from('categories').select('*'),
@@ -115,8 +165,8 @@ export default function PostJob() {
       if (!formData.description.trim()) {
         throw new Error('Descrição é obrigatória');
       }
-      if (!formData.category) {
-        throw new Error('Categoria é obrigatória');
+      if (!formData.profession_raw.trim()) {
+        throw new Error('Profissão / tipo de trabalho é obrigatório');
       }
       if (!formData.city_id) {
         throw new Error('Cidade é obrigatória');
@@ -153,12 +203,42 @@ export default function PostJob() {
         return;
       }
 
+      // Resolver ocupacao se ainda nao tiver match (usuario digitou e nao
+      // clicou em nenhuma sugestao) — mesmo padrao de OfferServices.tsx
+      let finalOccupationId = formData.occupation_id;
+      let finalConfidenceScore = formData.confidence_score;
+      let finalOccupationCategoryId = formData.occupation_category_id;
 
+      if (!finalOccupationId && formData.profession_raw.trim()) {
+        try {
+          const { data: occData } = await supabase.rpc('search_ocupacoes', {
+            q: formData.profession_raw,
+            lim: 1,
+            min_sim: 0.3
+          });
+
+          if (occData && occData.length > 0) {
+            finalOccupationId = occData[0].ocupacao_id;
+            finalConfidenceScore = occData[0].similarity_score;
+            finalOccupationCategoryId = occData[0].category_id || null;
+          }
+        } catch { }
+      }
+
+      // category_id vem da ocupacao (FK real), sem match confiavel cai em
+      // "Outros" e guarda o texto digitado em custom_category — mesma
+      // semantica que o antigo dropdown+campo "Outros" tinha.
+      const hasConfidentMatch = !!finalOccupationCategoryId && (finalConfidenceScore === null || finalConfidenceScore >= 0.3);
+      const categoryId = hasConfidentMatch ? finalOccupationCategoryId : fallbackCategoryId();
+      const customCategory = hasConfidentMatch ? null : formData.profession_raw.trim();
 
       // Offline handling
       if (!navigator.onLine) {
         const { enqueue } = await import('@/lib/offlineQueue');
-        enqueue({ type: 'publishJob', payload: { ...formData, _auth_id: user!.id } } as any);
+        enqueue({
+          type: 'publishJob',
+          payload: { ...formData, category_id: categoryId, custom_category: customCategory, _auth_id: user!.id }
+        } as any);
         localStorage.removeItem('post_job_autosave');
         toast({ title: 'Sem internet', description: 'Vamos publicar assim que a conexão voltar' });
         navigate('/jobs');
@@ -178,8 +258,8 @@ export default function PostJob() {
           title: formData.title,
           description: formData.description,
           price: formData.price ? parseFloat(formData.price) : null,
-          category_id: formData.isCustomCategory ? null : formData.category,
-          custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
+          category_id: categoryId,
+          custom_category: customCategory,
           city_id: formData.city_id,
           neighborhood: formData.neighborhood,
           urgent: formData.urgent,
@@ -202,8 +282,8 @@ export default function PostJob() {
               title: formData.title,
               description: formData.description,
               price: formData.price ? parseFloat(formData.price) : null,
-              category_id: formData.isCustomCategory ? null : formData.category,
-              custom_category: formData.isCustomCategory ? formData.customCategory.trim() : null,
+              category_id: categoryId,
+              custom_category: customCategory,
               city_id: formData.city_id,
               neighborhood: formData.neighborhood,
               urgent: formData.urgent,
@@ -330,42 +410,36 @@ export default function PostJob() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="category">Categoria *</Label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={(value) => {
-                      if (value === 'outros') {
-                        setFormData({ ...formData, category: value, isCustomCategory: true });
-                      } else {
-                        setFormData({ ...formData, category: value, isCustomCategory: false, customCategory: '' });
-                      }
+                <div className="relative">
+                  <Label htmlFor="profession_raw">Profissão / Tipo de Trabalho *</Label>
+                  <Input
+                    id="profession_raw"
+                    placeholder="Ex: Pedreiro, Eletricista, Diarista..."
+                    value={formData.profession_raw}
+                    onChange={(e) => setFormData({ ...formData, profession_raw: e.target.value, occupation_id: null, confidence_score: null, occupation_category_id: null })}
+                    onFocus={() => {
+                      if (suggestions.length > 0) setShowSuggestions(true);
+                    }}
+                    onBlur={() => {
+                      setTimeout(() => setShowSuggestions(false), 200);
                     }}
                     required
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.sort((a, b) => a.name.localeCompare(b.name)).map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </SelectItem>
+                  />
+                  {showSuggestions && suggestions.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                      {suggestions.map((sug, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            handleSuggestionClick(sug);
+                          }}
+                        >
+                          {sug.nome_oficial}
+                        </button>
                       ))}
-                      <SelectItem value="outros">Outros</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Campo personalizado "Outros" */}
-                  {formData.category === 'outros' && (
-                    <div className="mt-2">
-                      <Input
-                        value={formData.customCategory}
-                        onChange={(e) => setFormData({ ...formData, customCategory: e.target.value })}
-                        placeholder="Descreva o tipo de trabalho"
-                        required
-                        maxLength={100}
-                      />
                     </div>
                   )}
                 </div>
