@@ -129,7 +129,7 @@ export default function Index() {
                 Categorias populares
               </p>
               <nav className="flex flex-col divide-y divide-border/60 border-t border-border/60">
-                {["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor"].map((cat) => (
+                {["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor", "Serviços Gerais", "Outros"].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
