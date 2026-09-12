@@ -415,7 +415,7 @@ export const SalesHeroSection = () => {
 
             <button
               onClick={handleSearch}
-              className="h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-10 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95"
+              className="lg:w-48 h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-10 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95"
             >
               Buscar
             </button>
