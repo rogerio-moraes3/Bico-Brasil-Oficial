@@ -35,9 +35,9 @@ export default function OfferServices() {
     phone: '',
     availability: 'todos_os_dias',
     available_today: false,
-    occupation_id: null as number | null,
+    occupation_id: null as string | null,
     confidence_score: null as number | null,
-    occupation_category: ''
+    occupation_category_id: null as string | null
   });
 
   const { cities, loading: citiesLoading } = useCities();
@@ -151,28 +151,9 @@ export default function OfferServices() {
       profession_raw: suggestion.nome_oficial,
       occupation_id: suggestion.ocupacao_id,
       confidence_score: suggestion.similarity_score,
-      occupation_category: suggestion.categoria_principal || ''
+      occupation_category_id: suggestion.category_id || null
     });
     setShowSuggestions(false);
-  };
-
-  const normalizeCategoryName = (name: string): string => {
-    return name.toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .trim();
-  };
-
-  const CATEGORY_NAME_TO_SLUG: { [key: string]: string } = {
-    'construcao e reforma': 'construcao-reforma',
-    'construção e reforma': 'construcao-reforma',
-    'limpeza': 'limpeza',
-    'montagem e reparos': 'montagem-reparos',
-    'montagem & reparos': 'montagem-reparos',
-    'jardinagem e externos': 'jardinagem-externos',
-    'jardinagem & externos': 'jardinagem-externos',
-    'transporte e ajuda': 'transporte-ajuda',
-    'transporte & ajuda': 'transporte-ajuda'
   };
 
   const fallbackCategoryId = (): string | null => {
@@ -194,31 +175,14 @@ export default function OfferServices() {
   };
 
   const inferCategoryId = (): string | null => {
-    // Only infer if confidence >= 0.3 and occupation_category exists
-    if (!formData.occupation_category || (formData.confidence_score !== null && formData.confidence_score < 0.3)) {
-      return fallbackCategoryId();
+    // occupation_category_id vem direto de ocupacoes.category_id (FK real,
+    // via search_ocupacoes) — nao depende mais de comparar categoria_principal
+    // (texto livre) contra um dicionario manual, que so cobria ~28% dos casos.
+    // So cai no fallback "Outros" se a pessoa digitou algo sem nenhum match
+    // (ou com confianca baixa).
+    if (formData.occupation_category_id && (formData.confidence_score === null || formData.confidence_score >= 0.3)) {
+      return formData.occupation_category_id;
     }
-
-    const normalized = normalizeCategoryName(formData.occupation_category);
-    const slug = CATEGORY_NAME_TO_SLUG[normalized];
-
-    if (!slug) {
-      return fallbackCategoryId();
-    }
-
-    // Find in state
-    let cat = categories.find(c => c.slug === slug);
-    if (cat) return cat.id;
-
-    // Find in cache
-    try {
-      const cached = localStorage.getItem('offer_services_categories_cache');
-      if (cached) {
-        const cachedCats = JSON.parse(cached);
-        cat = cachedCats.find((c: any) => c.slug === slug);
-        if (cat) return cat.id;
-      }
-    } catch { }
 
     return fallbackCategoryId();
   };
@@ -295,7 +259,7 @@ export default function OfferServices() {
       // 3. Try to fetch occupation data if not already set
       let finalOccupationId = formData.occupation_id;
       let finalConfidenceScore = formData.confidence_score;
-      let finalOccupationCategory = formData.occupation_category;
+      let finalOccupationCategoryId = formData.occupation_category_id;
 
       if (!finalOccupationId && formData.profession_raw.trim()) {
         try {
@@ -308,13 +272,16 @@ export default function OfferServices() {
           if (occData && occData.length > 0) {
             finalOccupationId = occData[0].ocupacao_id;
             finalConfidenceScore = occData[0].similarity_score;
-            finalOccupationCategory = occData[0].categoria_principal || '';
+            finalOccupationCategoryId = occData[0].category_id || null;
           }
         } catch { }
       }
 
-      // 4. Infer category_id
-      const categoryId = inferCategoryId();
+      // 4. Infer category_id (usa finalOccupationCategoryId, que pode ter
+      // sido resolvido agora mesmo no passo 3 acima)
+      const categoryId = finalOccupationCategoryId && (finalConfidenceScore === null || finalConfidenceScore >= 0.3)
+        ? finalOccupationCategoryId
+        : fallbackCategoryId();
 
       // 5. Check schema for optional columns
       const { hasColumn } = await import('@/lib/schemaCheck');

@@ -765,6 +765,7 @@ export type Database = {
         Row: {
           ativo: boolean | null
           categoria_principal: string | null
+          category_id: string | null
           created_at: string | null
           descricao_simples: string | null
           id: string
@@ -776,6 +777,7 @@ export type Database = {
         Insert: {
           ativo?: boolean | null
           categoria_principal?: string | null
+          category_id?: string | null
           created_at?: string | null
           descricao_simples?: string | null
           id?: string
@@ -787,6 +789,7 @@ export type Database = {
         Update: {
           ativo?: boolean | null
           categoria_principal?: string | null
+          category_id?: string | null
           created_at?: string | null
           descricao_simples?: string | null
           id?: string
@@ -795,7 +798,15 @@ export type Database = {
           slug?: string
           tipo_trabalho?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "ocupacoes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       payments: {
         Row: {
@@ -1757,6 +1768,7 @@ export type Database = {
         Args: { lim?: number; min_sim?: number; q: string }
         Returns: {
           categoria_principal: string
+          category_id: string
           descricao_simples: string
           nivel_instrucao: string
           nome_oficial: string
