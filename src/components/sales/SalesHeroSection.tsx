@@ -336,7 +336,7 @@ export const SalesHeroSection = () => {
                 className="hidden sm:flex absolute -left-10 bg-white text-[#0B1C2E] px-5 py-3 rounded-2xl rounded-bl-none text-sm font-bold shadow-2xl items-center gap-2"
               >
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                Pedido enviado!
+                Novo prestador!
               </motion.div>
 
               <motion.div
