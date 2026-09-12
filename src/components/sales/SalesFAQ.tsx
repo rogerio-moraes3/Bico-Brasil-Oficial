@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 const faqs = [
   { 
     question: "O Bico Brasil realmente funciona?", 
-    answer: "Sim! Somos uma plataforma focada em conexão direta. Milhares de pessoas usam o Bico Brasil todos os meses para resolver problemas domésticos ou ganhar renda extra sem intermediários." 
+    answer: "Sim! Somos uma plataforma focada em conexão direta: você publica o que precisa ou o que sabe fazer, e a combinação acontece direto entre as partes, sem intermediários."
   },
   { 
     question: "É seguro contratar por aqui?", 

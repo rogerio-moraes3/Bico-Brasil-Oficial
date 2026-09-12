@@ -13,7 +13,7 @@ const faqItems = [
   },
   {
     question: "Como funcionam os planos?",
-    answer: "O profissional tem 3 acessos gratuitos para testar a plataforma e depois pode escolher um dos planos: Plano Básico (R$19,90/mês) com perfil publicado e acesso aos contatos, ou Plano VIP (R$29,90/mês) com fotos, vídeos, selo de credibilidade e prioridade nas buscas."
+    answer: "Cadastrar seus serviços é 100% gratuito e sem limite de uso — o objetivo é justamente ter o maior número possível de profissionais na plataforma. Se quiser turbinar sua visibilidade, existem planos opcionais: Plano Básico (R$19,90/mês) e Plano VIP (R$29,90/mês), com prioridade nas buscas, selo de verificado e mais recursos."
   },
   {
     question: "Como funciona o painel de destaque?",

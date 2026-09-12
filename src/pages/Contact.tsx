@@ -139,7 +139,7 @@ export default function Contact() {
                 </h1>
 
                 <p className="text-xl md:text-3xl text-blue-100/60 max-w-2xl leading-relaxed font-medium">
-                   Dúvidas, sugestões ou problemas? Fale com nosso time agora e resolva sua vida em minutos.
+                   Dúvidas, sugestões ou problemas? Escreva pra gente por email — nossa equipe responde o mais rápido possível.
                 </p>
               </motion.div>
            </div>

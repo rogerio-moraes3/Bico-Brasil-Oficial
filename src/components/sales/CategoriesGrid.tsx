@@ -2,46 +2,52 @@ import { useNavigate } from "react-router-dom";
 import { Search, Sparkles, Laptop, Truck, Wrench, Paintbrush, Zap, Droplets, TreePine, ChefHat, ArrowRight, Clock, ShieldCheck, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 
+// searchTerm alimenta o campo de busca de /search-workers (?q=), que já
+// existe e faz match fuzzy/por sinonimo via buscar_e_logar_ocupacoes —
+// confirmado que cada termo abaixo tem similarity_score 1 (match exato)
+// contra a lista real de ocupacoes antes de usar (script de auditoria,
+// 2026-09). Antes esses cards apontavam pra /app?category=<slug>, um
+// parametro que nada no codigo lia — o clique nao filtrava nada.
 const scenarios = [
-  { 
-    title: "Minha pia entupiu agora", 
-    category: "Hidráulica", 
-    slug: "hidraulica",
+  {
+    title: "Minha pia entupiu agora",
+    category: "Hidráulica",
+    searchTerm: "Encanador",
     icon: Droplets,
     iconColor: "text-blue-400"
   },
-  { 
-    title: "Preciso de um frete hoje", 
-    category: "Transporte", 
-    slug: "transporte-apoio",
+  {
+    title: "Preciso de um frete hoje",
+    category: "Transporte",
+    searchTerm: "Frete",
     icon: Truck,
     iconColor: "text-orange-400"
   },
-  { 
-    title: "A luz da sala parou", 
-    category: "Elétrica", 
-    slug: "eletrica",
+  {
+    title: "A luz da sala parou",
+    category: "Elétrica",
+    searchTerm: "Eletricista",
     icon: Zap,
     iconColor: "text-yellow-400"
   },
-  { 
-    title: "Faxina pesada urgente", 
-    category: "Limpeza", 
-    slug: "limpeza-organizacao",
+  {
+    title: "Faxina pesada urgente",
+    category: "Limpeza",
+    searchTerm: "Diarista",
     icon: Sparkles,
     iconColor: "text-cyan-400"
   },
-  { 
-    title: "Montar móveis novos", 
-    category: "Manutenção", 
-    slug: "manutencao-domestica",
+  {
+    title: "Montar móveis novos",
+    category: "Manutenção",
+    searchTerm: "Montador de Móveis",
     icon: Wrench,
     iconColor: "text-rose-400"
   },
-  { 
-    title: "Pintar uma parede", 
-    category: "Pintura", 
-    slug: "pintura",
+  {
+    title: "Pintar uma parede",
+    category: "Pintura",
+    searchTerm: "Pintor",
     icon: Paintbrush,
     iconColor: "text-amber-400"
   },
@@ -86,7 +92,7 @@ export const CategoriesGrid = () => {
               transition={{ delay: i * 0.05 }}
               viewport={{ once: true }}
               style={{ willChange: 'opacity, transform' }}
-              onClick={() => navigate(`/app?category=${item.slug}`)}
+              onClick={() => navigate(`/search-workers?q=${encodeURIComponent(item.searchTerm)}`)}
               className="group relative text-left p-8 rounded-[32px] bg-white/[0.02] border-1.5 border-white/10 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-500 overflow-hidden"
             >
               <div className="relative z-10">

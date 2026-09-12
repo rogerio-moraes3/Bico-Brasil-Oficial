@@ -369,7 +369,7 @@ const ProcurarBicos = () => {
           >
             <div className="text-center md:text-left">
               <h3 className="text-3xl font-black text-white mb-2 tracking-tight">Quer oferecer seus serviços?</h3>
-              <p className="text-white/80 font-medium text-lg">Seja visto por milhares de clientes na sua região.</p>
+              <p className="text-white/80 font-medium text-lg">Apareça pra quem está procurando profissionais na sua região agora.</p>
             </div>
             <Button 
               onClick={() => navigate('/offer-services')} 
