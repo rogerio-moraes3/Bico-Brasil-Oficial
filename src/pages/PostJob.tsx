@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { parsePriceInput } from '@/lib/utils';
 
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -257,7 +258,7 @@ export default function PostJob() {
           user_id: userData.id,
           title: formData.title,
           description: formData.description,
-          price: formData.price ? parseFloat(formData.price) : null,
+          price: parsePriceInput(formData.price),
           category_id: categoryId,
           custom_category: customCategory,
           city_id: formData.city_id,
@@ -281,7 +282,7 @@ export default function PostJob() {
               user_id: userData.id,
               title: formData.title,
               description: formData.description,
-              price: formData.price ? parseFloat(formData.price) : null,
+              price: parsePriceInput(formData.price),
               category_id: categoryId,
               custom_category: customCategory,
               city_id: formData.city_id,

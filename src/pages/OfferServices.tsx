@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ShareButtons } from '@/components/ShareButtons';
+import { parsePriceInput } from '@/lib/utils';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -298,7 +299,7 @@ export default function OfferServices() {
         title: resolvedTitle,
         description: resolvedDescription,
         category_id: categoryId,
-        price: formData.price ? parseFloat(formData.price) : null,
+        price: parsePriceInput(formData.price),
         active: true
       };
 
@@ -321,7 +322,7 @@ export default function OfferServices() {
             title: resolvedTitle,
             description: resolvedDescription,
             category_id: categoryId,
-            price: formData.price ? parseFloat(formData.price) : null,
+            price: parsePriceInput(formData.price),
             active: true
           };
           const { data: sdata2, error: serror2 } = await supabase.from('worker_services').insert(payloadFallback).select();

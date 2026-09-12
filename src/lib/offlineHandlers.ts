@@ -1,5 +1,6 @@
 import { processQueue, getQueue } from './offlineQueue';
 import { supabase } from '@/integrations/supabase/client';
+import { parsePriceInput } from './utils';
 
 /**
  * Process offline queue items using supabase handlers.
@@ -34,7 +35,7 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
         user_id: userData.id,
         title: payload.title,
         description: payload.description,
-        price: payload.price ? parseFloat(payload.price) : null,
+        price: parsePriceInput(payload.price),
         location: payload.location || null,
         category_id: payload.category_id || null,
         custom_category: payload.custom_category || null,
@@ -112,7 +113,7 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
         category_id: payload.category_id || null,
         custom_category: payload.custom_category || null,
         subcategory_id: payload.subcategory || null,
-        price: payload.price ? parseFloat(payload.price) : null,
+        price: parsePriceInput(payload.price),
         active: true
       };
 

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { parsePriceInput } from '@/lib/utils';
 import { Loader2, Wrench, ArrowLeft } from 'lucide-react';
 import { safeGoBack } from '@/lib/utils';
 
@@ -118,7 +119,7 @@ export default function EditService() {
         description: formData.description.trim(),
         category_id: formData.category_id || null,
         subcategory_id: formData.subcategory_id || null,
-        price: formData.price ? parseFloat(formData.price) : null,
+        price: parsePriceInput(formData.price),
         active: formData.active,
         updated_at: new Date().toISOString()
       };
