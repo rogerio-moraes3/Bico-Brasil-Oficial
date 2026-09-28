@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useProfileCompletion } from '@/hooks/useProfileCompletion';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Checkpoint global: bloqueia a navegação de contas NOVAS (criadas a partir
 // do lançamento do item 11) até o cadastro estar completo — CPF, endereço
@@ -22,12 +23,25 @@ import { useProfileCompletion } from '@/hooks/useProfileCompletion';
 // histórico em vez de empilhar uma nova, então voltar não retorna pra tela
 // bloqueada.
 export const Gatekeeper = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth();
   const { loading, blockGeneralNavigation } = useProfileCompletion();
   const location = useLocation();
 
-  // Enquanto loading, ainda não sabemos se deve bloquear — deixa passar
-  // (mesmo comportamento de antes) em vez de travar toda a navegação
-  // esperando essa checagem, que a maioria das rotas nem precisa.
+  // Usuário logado com o perfil ainda carregando: ainda não sabemos se deve
+  // bloquear, mas também não deixamos a página real montar nesse meio-tempo
+  // — ex.: logo após o AuthCallback do Google mandar pra /app com uma conta
+  // recém-criada, antes do fetch de completude terminar. Um spinner curto
+  // em vez do conteúdo de destino (mesmo padrão do ProfileCompletionGuard).
+  // Visitante anônimo nunca passa por essa espera — loading aqui é só do
+  // fetch de perfil, que só roda quando há usuário.
+  if (user && loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   if (!loading && blockGeneralNavigation && location.pathname !== '/complete-profile') {
     return <Navigate to="/complete-profile" state={{ fromGatekeeper: true }} replace />;
   }
