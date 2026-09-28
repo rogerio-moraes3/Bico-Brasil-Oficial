@@ -33,16 +33,23 @@ function toE164BR(phoneDigits: string): string {
   return `+55${phoneDigits}`;
 }
 
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json", ...corsHeaders },
-  });
-}
-
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req.headers.get("origin"));
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  // Precisa ser definida aqui dentro (nao no escopo do modulo) pra fechar
+  // sobre o corsHeaders desta requisicao — a refatoracao de CORS (7a4ab64)
+  // moveu corsHeaders pra dentro do serve() mas deixou json() la fora
+  // referenciando um identificador que nao existe mais nesse escopo,
+  // quebrando TODA resposta da function com "ReferenceError: corsHeaders is
+  // not defined" (500 Internal Server Error generico, sem chegar a rodar
+  // nenhuma logica de negocio).
+  function json(body: unknown, status = 200) {
+    return new Response(JSON.stringify(body), {
+      status,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  }
 
   try {
     if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_VERIFY_SERVICE_SID) {

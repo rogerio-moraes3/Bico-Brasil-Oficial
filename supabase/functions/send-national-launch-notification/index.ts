@@ -22,13 +22,6 @@ function getCorsHeaders(origin: string | null) {
   };
 }
 
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-}
-
 function emailHtml(name: string, phoneVerified: boolean): string {
   const safeName = name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const cta = phoneVerified
@@ -84,6 +77,19 @@ const inAppBody = (phoneVerified: boolean) =>
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req.headers.get("origin"));
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  // Precisa ser definida aqui dentro (nao no escopo do modulo) pra fechar
+  // sobre o corsHeaders desta requisicao — a refatoracao de CORS (7a4ab64)
+  // moveu corsHeaders pra dentro do serve() mas deixou json() la fora
+  // referenciando um identificador que nao existe mais nesse escopo,
+  // quebrando TODA resposta da function com "ReferenceError: corsHeaders is
+  // not defined".
+  function json(body: unknown, status = 200) {
+    return new Response(JSON.stringify(body), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
 
   try {
     const authHeader = req.headers.get("authorization");
