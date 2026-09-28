@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAccessControl } from '@/hooks/useAccessControl';
 import { UpgradeModal } from '@/components/UpgradeModal';
 import { savePostLoginRedirect, consumeAutoContactWorkerId } from '@/lib/postLoginRedirect';
+import { useProfileCompletion, PROFILE_FIELD_LABELS } from '@/hooks/useProfileCompletion';
 
 interface WorkerData {
   id: string;
@@ -60,6 +61,7 @@ export default function WorkerProfile() {
     remainingFreeViews,
     remainingFreeUnlocks
   } = useAccessControl();
+  const { blockHighValueActions, missingFields } = useProfileCompletion();
 
   useEffect(() => {
     if (id) {
@@ -181,6 +183,18 @@ export default function WorkerProfile() {
         variant: "destructive"
       });
       navigate('/auth');
+      return;
+    }
+
+    if (blockHighValueActions) {
+      toast({
+        title: "Complete seu cadastro",
+        description: "Você precisa completar seu cadastro (CPF, endereço e telefone confirmado) para desbloquear contatos.",
+        variant: "destructive"
+      });
+      navigate('/complete-profile', {
+        state: { missingFields: missingFields.map((key) => PROFILE_FIELD_LABELS[key] ?? key), fromGuard: true }
+      });
       return;
     }
 

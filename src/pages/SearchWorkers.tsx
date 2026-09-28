@@ -298,7 +298,8 @@ export default function SearchWorkers() {
           type
         `)
         .in('id', userIds)
-        .eq('type', 'worker');
+        .eq('type', 'worker')
+        .eq('profile_complete', true);
 
       // Aplicar filtro de cidade
       if (filters.city_id !== 'all') {

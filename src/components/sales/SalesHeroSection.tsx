@@ -69,6 +69,7 @@ export const SalesHeroSection = () => {
           .select("id,name,profile_photo,category,city,state,rating_avg")
           .eq("type", "worker")
           .eq("plan_active", true)
+          .eq("profile_complete", true)
           .limit(30),
         supabase
           .from("job_postings_public")

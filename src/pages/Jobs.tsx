@@ -91,6 +91,7 @@ const Jobs = () => {
         .select('id, name, category, neighborhood, rating_avg, rating_count, price, profile_photo, plan_active, city, state, city_id, description')
         .eq('type', 'worker')
         .eq('plan_active', true)
+        .eq('profile_complete', true)
         .eq('city_id', cityId)
         .not('category', 'is', null)
         .not('neighborhood', 'is', null);

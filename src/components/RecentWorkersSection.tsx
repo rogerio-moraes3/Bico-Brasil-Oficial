@@ -21,6 +21,7 @@ export const RecentWorkersSection = () => {
         .from("users_public")
         .select("id, name, profile_photo, category, city_id, city, state, verified")
         .eq("type", "worker")
+        .eq("profile_complete", true)
         .not("profile_photo", "is", null)
         .order("created_at", { ascending: false })
         .limit(8);

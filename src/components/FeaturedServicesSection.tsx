@@ -17,6 +17,7 @@ export const FeaturedServicesSection = () => {
         .select('*')
         .eq('type', 'worker')
         .eq('plan_active', true)
+        .eq('profile_complete', true)
         .not('profile_photo', 'is', null)
         .order('rating_avg', { ascending: false })
         .limit(12);
