@@ -147,7 +147,6 @@ function App() {
         <AuthProvider>
           <NotificationProvider>
             <ProfileCompletionProvider>
-            <Gatekeeper />
             <GracePeriodBanner />
             <Toaster />
             <Sonner />
@@ -158,6 +157,13 @@ function App() {
             <AdminIcon />
             <div className="main-safe-bottom">
               <AccessGuard>
+                {/* Gatekeeper agora ENVOLVE as rotas e renderiza <Navigate replace>
+                    no lugar delas quando bloqueado, em vez de deixar a rota
+                    montar e só depois chamar navigate() num useEffect — isso
+                    evita o flash de conteúdo bloqueado e, com replace, não
+                    deixa a página bloqueada voltar a aparecer pelo botão Voltar
+                    do navegador (ver Gatekeeper.tsx). */}
+                <Gatekeeper>
                 <Suspense fallback={<PageLoadingFallback />}>
                 <Routes>
                   <Route path="/" element={<SalesLandingPage />} />
@@ -255,6 +261,7 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 </Suspense>
+                </Gatekeeper>
               </AccessGuard>
             </div>
             <BottomNav />
