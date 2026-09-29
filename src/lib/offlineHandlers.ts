@@ -18,7 +18,7 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
       // find user
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('id, type, free_posts_remaining')
+        .select('id, type')
         .eq('auth_id', authId)
         .single();
 
@@ -63,15 +63,8 @@ export const processOfflineQueue = async (onProgress?: (item: any) => void) => {
         }
       }
 
-      // decrement free posts if employer
-      if (userData.type === 'contractor' && userData.free_posts_remaining > 0) {
-        const { error: updateError } = await supabase
-          .from('users')
-          .update({ free_posts_remaining: userData.free_posts_remaining - 1 })
-          .eq('id', userData.id);
-        if (updateError) console.warn('Failed to decrement free posts', updateError);
-      }
-
+      // Publicar vaga e gratis e sem limite pra contratante — nao decrementa
+      // free_posts_remaining (mesmo ajuste feito em PostJob.tsx).
       processedCount++;
     },
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, MapPin, Briefcase, Sparkles, ArrowRight, ShieldCheck, Zap, Globe, Star } from "lucide-react";
+import { Search, MapPin, Briefcase, Sparkles, ArrowRight, ShieldCheck, Zap, Globe, Star, Infinity } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCities } from "@/hooks/useCities";
 import { supabase } from "@/integrations/supabase/client";
@@ -160,12 +160,13 @@ export const SalesHeroSection = () => {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 text-[10px] font-semibold tracking-wider uppercase rounded-full mb-10" style={{ border: '1px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
               <Sparkles className="w-3 h-3 text-bico-accent-hover" />
-              <span className="text-[#9FB6EE]">Contrate rápido • Encontre trabalho • Sem intermediários</span>
+              <span className="text-[#9FB6EE]">Contrate grátis, sem limite • Encontre trabalho • Sem intermediários</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-[64px] font-extrabold leading-[1.12] tracking-tight mb-8 text-bico-heading">
-              Precisa <span className="text-bico-accent">contratar</span> alguém?<br />
+              Precisa <span className="text-bico-accent">contratar</span> alguém?
+              <span className="block text-2xl lg:text-3xl text-bico-lime font-bold my-2">É grátis, sem limite.</span>
               Ou quer <span className="text-bico-accent">ganhar dinheiro</span> hoje?
             </h1>
 
@@ -197,7 +198,8 @@ export const SalesHeroSection = () => {
               {[
                 { icon: Globe, text: "Contato direto pelo WhatsApp" },
                 { icon: Zap, text: "Profissionais perto de você" },
-                { icon: ShieldCheck, text: "Você fica com 100% do valor" }
+                { icon: ShieldCheck, text: "Você fica com 100% do valor" },
+                { icon: Infinity, text: "Publique quantas vagas quiser, sempre grátis" }
               ].map((item) => (
                 <span key={item.text} className="inline-flex items-center gap-2.5 text-sm font-medium text-bico-muted">
                   <item.icon className="w-4 h-4 text-bico-accent" />

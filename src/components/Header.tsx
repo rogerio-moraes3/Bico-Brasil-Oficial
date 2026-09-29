@@ -3,7 +3,6 @@ import { Button } from "./ui/button";
 import { Menu, ArrowLeft, User as UserIcon, Download, Bell, ChevronRight, Home, CreditCard, LogOut, Crown } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { ThemeToggle } from "./ThemeToggle";
-import { FreePostsBadge } from "./FreePostsBadge";
 import { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "./ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";

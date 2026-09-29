@@ -175,10 +175,12 @@ export default function PostJob() {
 
 
 
-      // Buscar user_id e verificar publicações grátis
+      // Buscar user_id — publicar vaga é gratis e sem limite pra
+      // contratante (decisao de produto: so publicacao de vaga, nao mexe
+      // em desbloqueio de contato/Premium/Destaque).
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('id, type, free_posts_remaining')
+        .select('id, type')
         .eq('auth_id', user!.id)
         .single();
 
@@ -190,18 +192,6 @@ export default function PostJob() {
       if (!userData) {
         console.error('❌ Usuário não encontrado no banco');
         throw new Error('Usuário não encontrado. Complete seu perfil primeiro.');
-      }
-
-      // Verificar se empregador tem publicações grátis
-      if (userData.type === 'contractor' && userData.free_posts_remaining === 0) {
-        toast({
-          title: "Publicações grátis esgotadas",
-          description: "Você já usou suas 10 publicações grátis. Assine um plano premium para continuar publicando.",
-          variant: "destructive"
-        });
-        setLoading(false);
-        navigate('/premium');
-        return;
       }
 
       // Resolver ocupacao se ainda nao tiver match (usuario digitou e nao
@@ -305,26 +295,10 @@ export default function PostJob() {
 
 
 
-      // Decrementar publicações grátis se for empregador
-      if (userData.type === 'contractor' && userData.free_posts_remaining > 0) {
-        const { error: updateError } = await supabase
-          .from('users')
-          .update({ free_posts_remaining: userData.free_posts_remaining - 1 })
-          .eq('id', userData.id);
-
-        if (!updateError) {
-          const remaining = userData.free_posts_remaining - 1;
-          toast({
-            title: "Trabalho publicado",
-            description: `Profissionais poderão visualizar e entrar em contato. Você tem ${remaining} publicações grátis restantes.`
-          });
-        }
-      } else {
-        toast({
-          title: "Trabalho publicado",
-          description: "Profissionais poderão visualizar e entrar em contato."
-        });
-      }
+      toast({
+        title: "Trabalho publicado!",
+        description: "Profissionais já podem visualizar e entrar em contato."
+      });
 
       navigate('/jobs');
     } catch (error: any) {
@@ -355,6 +329,9 @@ export default function PostJob() {
             </div>
             <p className="text-muted-foreground">
               Descreva o trabalho e receba propostas de profissionais
+            </p>
+            <p className="text-sm text-primary font-medium">
+              Publicação sempre gratuita, sem limite de quantidade.
             </p>
           </CardHeader>
 
