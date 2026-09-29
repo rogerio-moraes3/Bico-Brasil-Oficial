@@ -165,8 +165,7 @@ export const SalesHeroSection = () => {
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-[64px] font-extrabold leading-[1.12] tracking-tight mb-8 text-bico-heading">
-              Precisa <span className="text-bico-accent">contratar</span> alguém?
-              <span className="block text-2xl lg:text-3xl text-bico-lime font-bold my-2">É grátis, sem limite.</span>
+              Precisa <span className="text-bico-accent">contratar</span> alguém? <span className="text-bico-lime">É grátis, sem limite.</span><br />
               Ou quer <span className="text-bico-accent">ganhar dinheiro</span> hoje?
             </h1>
 
