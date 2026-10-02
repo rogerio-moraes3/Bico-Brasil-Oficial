@@ -203,3 +203,15 @@ Como são 193 pendentes e o teto é 100/dia, são **dois lotes em dias
 diferentes**: 100 e depois 93.
 
 Quando o envio acontecer, registrar aqui a data e a quantidade efetiva.
+
+---
+
+## PITR — avaliado e adiado (2026-10-02)
+
+PITR (Point-in-Time Recovery) avaliado em 02/10/2026 como proteção contra
+futuros bugs destrutivos (não resolve o incidente das 194 contas, que já foi
+fechado pelo gate de completude — é sobre qualquer bug novo que vier a apagar
+dados reais). Custo real: ~US$100/mês pra 7 dias de retenção, exigindo também
+compute mínimo "Small". Decisão do dono do projeto: adiar por restrição de
+orçamento agora. Revisar quando houver receita recorrente ou aporte que
+viabilize o custo fixo mensal.
