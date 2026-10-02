@@ -111,3 +111,32 @@ Nenhum dos três apaga linha nenhuma. Se um novo cron destrutivo for criado no
 futuro, seguir o padrão usado aqui: `WITH x AS (UPDATE ... RETURNING ...)
 INSERT INTO audit_log SELECT ... FROM x` — atômico, loga exatamente o que foi
 alterado, nunca loga algo que não aconteceu de verdade.
+
+---
+
+## Limpeza de edge functions órfãs — 2026-10-02
+
+Três edge functions estavam `ACTIVE` em produção (`pyelmqmhraczgptagvve`) sem
+nunca terem existido no git e sem nenhuma chamada no projeto:
+
+| Função | Última versão | Criada em |
+|---|---|---|
+| `search-workers` | 16 | 2026-01-20 |
+| `nearby-workers` | 15 | 2026-01-20 |
+| `get-worker` | 15 | 2026-01-20 |
+
+**Verificação antes de apagar:** grep em todo o repositório (exceto
+`node_modules`/`dist`) por `functions.invoke('<nome>')` e `functions/v1/<nome>`
+— zero ocorrências. As ocorrências de `search-workers` no código são todas da
+rota do frontend `/search-workers` (`src/App.tsx`, `BottomNav`, `SalesHeroSection`
+etc.), que não tem relação com a edge function de mesmo nome. Nenhuma das três
+tinha pasta em `supabase/functions/`.
+
+**Ação:** apagadas com `supabase functions delete <nome> --project-ref
+pyelmqmhraczgptagvve`, sob autorização explícita do dono do projeto. Exclusão
+irreversível — não havia código-fonte versionado para restaurar. Depois da
+limpeza o projeto tem 18 edge functions, batendo exatamente com as 18 pastas
+em `supabase/functions/`.
+
+A quarta função órfã identificada na mesma auditoria (`sync_user_profile`) já
+tinha sido removida em sessão anterior.
