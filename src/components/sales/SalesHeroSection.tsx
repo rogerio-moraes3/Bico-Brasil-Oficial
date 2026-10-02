@@ -338,7 +338,7 @@ export const SalesHeroSection = () => {
                   perceptivel num balao branco com texto escuro. O carrossel de
                   cards (Nando/Carlos/Ana) continua animando normalmente — só estes
                   dois balões ficaram estáticos. */}
-              <div className="hidden sm:flex absolute top-16 -left-10 bg-white text-[#0B1C2E] px-5 py-3 rounded-2xl rounded-bl-none text-sm font-bold shadow-2xl items-center gap-2">
+              <div className="hidden sm:flex absolute -top-6 -left-10 bg-white text-[#0B1C2E] px-5 py-3 rounded-2xl rounded-bl-none text-sm font-bold shadow-2xl items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 Novo prestador!
               </div>
