@@ -36,3 +36,8 @@ github-version/
 !.env.example
 .vercel
 .env*.local
+
+# Arquivos locais de ferramentas (Supabase CLI, Claude Code) — estado da
+# máquina, não do projeto.
+supabase/.temp/
+.claude/
