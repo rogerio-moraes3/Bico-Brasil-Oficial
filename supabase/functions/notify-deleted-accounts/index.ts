@@ -118,16 +118,22 @@ serve(async (req) => {
       ? Math.min(body.limit, DAILY_EMAIL_LIMIT)
       : DAILY_EMAIL_LIMIT;
 
+    async function countFor(status: string) {
+      const { count } = await supabase
+        .from("deleted_account_notice_log")
+        .select("id", { count: "exact", head: true })
+        .eq("email_status", status);
+      return count ?? 0;
+    }
+
     async function counts() {
-      const out: Record<string, number> = { pending: 0, sent: 0, failed: 0, skipped: 0 };
-      for (const status of Object.keys(out)) {
-        const { count } = await supabase
-          .from("deleted_account_notice_log")
-          .select("id", { count: "exact", head: true })
-          .eq("email_status", status);
-        out[status] = count ?? 0;
-      }
-      return out;
+      const [pending, sent, failed, skipped] = await Promise.all([
+        countFor("pending"),
+        countFor("sent"),
+        countFor("failed"),
+        countFor("skipped"),
+      ]);
+      return { pending, sent, failed, skipped };
     }
 
     if (action === "status") {

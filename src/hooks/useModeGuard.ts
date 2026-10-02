@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MODE_ONLY_ROUTES, modeHome, useUserMode } from "@/contexts/UserModeContext";
+import { useUserMode } from "@/contexts/UserModeContext";
+import { MODE_ONLY_ROUTES, modeHome } from "@/lib/userMode";
 
 /**
  * Tira a pessoa de uma tela que so faz sentido no outro modo, mandando pra

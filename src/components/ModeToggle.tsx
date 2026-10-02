@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { modeHome, useUserMode, type UserMode } from "@/contexts/UserModeContext";
+import { useUserMode } from "@/contexts/UserModeContext";
+import { modeHome, type UserMode } from "@/lib/userMode";
 
 // bico.accent = Contratar, bico.work = Trabalhar. Sao as duas cores da marca
 // que representam os modos; blue-600/green-600 (genericas do Tailwind) saiam
