@@ -1503,8 +1503,10 @@ export type Database = {
           neighborhood: string | null
           phone: string | null
           phone_type: string | null
+          phone_verified: boolean | null
           plan_active: boolean | null
           price: string | null
+          profile_complete: boolean | null
           rating_avg: number | null
           rating_count: number | null
           state: string | null

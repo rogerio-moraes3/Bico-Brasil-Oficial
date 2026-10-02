@@ -95,6 +95,10 @@ export default function Admin() {
   const [filterType, setFilterType] = useState<string>('all');
   const [filterCity, setFilterCity] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  // Cadastros incompletos ficam fora da visao padrao: sao ~2/3 da base e
+  // poluem a lista. Nao somem do banco nem perdem nada — so saem da tela ate
+  // alguem pedir pra ver.
+  const [showIncomplete, setShowIncomplete] = useState(false);
 
   // city (texto) nunca é preenchido pelo app — cidade real vem de city_id,
   // resolvido aqui contra a lista de cidades (mesma fonte que o resto do site).
@@ -455,6 +459,19 @@ export default function Admin() {
     setFilteredLeads(filtered);
   }, [filterType, filterCity, searchTerm, leads]);
 
+  // profile_complete vem da view admin_user_list, que chama a mesma
+  // public.is_profile_complete() usada pelos triggers — nada e recalculado
+  // aqui. No fallback pra tabela users o campo nao existe (undefined), e ai o
+  // `!== false` deixa a lista inteira visivel, como era antes.
+  const incompleteLeads = useMemo(
+    () => filteredLeads.filter(l => l.profile_complete === false),
+    [filteredLeads]
+  );
+  const visibleLeads = useMemo(
+    () => (showIncomplete ? filteredLeads : filteredLeads.filter(l => l.profile_complete !== false)),
+    [filteredLeads, showIncomplete]
+  );
+
   const exportToCSV = () => {
     const headers = ['Nome', 'Email', 'CPF', 'Cidade', 'Tipo', 'Cadastro'];
     const rows = filteredLeads.map(u => [
@@ -746,6 +763,18 @@ export default function Admin() {
             </div>
           </div>
 
+          {incompleteLeads.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowIncomplete(v => !v)}
+              className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {showIncomplete
+                ? `— ocultar ${incompleteLeads.length} cadastros incompletos`
+                : `+ ${incompleteLeads.length} cadastros incompletos (ver)`}
+            </button>
+          )}
+
           <Card className="bg-card border-border overflow-hidden shadow-2xl">
             <div className="max-h-[500px] overflow-y-auto">
               <Table className="admin-table">
@@ -761,7 +790,7 @@ export default function Admin() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredLeads.map((user) => (
+                  {visibleLeads.map((user) => (
                     <TableRow
                       key={user.id}
                       className="border-border hover:bg-card/40 cursor-pointer transition-colors group"
@@ -773,7 +802,13 @@ export default function Admin() {
                       <TableCell className="py-2 px-4">
                         <div className="flex flex-col">
                           <span className="text-[11px] font-black text-foreground group-hover:text-primary transition-colors">{user.name?.toUpperCase() || '-'}</span>
-                          <span className="text-[9px] text-muted-foreground font-bold">{user.phone || 'Sem Telefone'}</span>
+                          {user.phone_verified === false || !user.phone ? (
+                            <span className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 font-sans w-fit mt-0.5">
+                              {user.phone ? 'Telefone não verificado' : 'Sem Telefone'}
+                            </span>
+                          ) : (
+                            <span className="text-[9px] text-muted-foreground font-bold">{user.phone}</span>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell className="py-2 px-4 text-[10px] text-muted-foreground font-medium">{user.email}</TableCell>
@@ -810,7 +845,7 @@ export default function Admin() {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {filteredLeads.length === 0 && (
+                  {visibleLeads.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={7} className="h-32 text-center text-xs text-muted-foreground font-black uppercase tracking-widest">
                         Nenhum registro encontrado
@@ -821,7 +856,7 @@ export default function Admin() {
               </Table>
             </div>
             <div className="bg-muted/50 px-4 py-3 border-t border-border flex justify-between items-center">
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Exibindo {filteredLeads.length} usuários de {leads.length}</span>
+              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Exibindo {visibleLeads.length} usuários de {leads.length}</span>
               <div className="flex items-center gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Dados Sincronizados</span>
