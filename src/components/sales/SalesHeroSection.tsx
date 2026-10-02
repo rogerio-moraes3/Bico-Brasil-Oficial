@@ -244,7 +244,7 @@ export const SalesHeroSection = () => {
 
                   {/* App header */}
                   <div className="relative z-10 pt-[52px] px-5 pb-4 flex items-center justify-between">
-                    <span className="text-[15px] font-extrabold text-bico-heading tracking-tight">Bico Brasil</span>
+                    <span className="text-[15px] font-extrabold !text-bico-heading tracking-tight">Bico Brasil</span>
                     <div className="w-7 h-7 rounded-full bg-white/[0.08] flex items-center justify-center">
                       <Search className="w-3.5 h-3.5 text-bico-muted" />
                     </div>
