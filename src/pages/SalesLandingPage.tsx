@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useAuth } from "@/contexts/AuthContext";
-import { SalesAnnouncementBar } from "@/components/sales/SalesAnnouncementBar";
 import { SalesHeroSection } from "@/components/sales/SalesHeroSection";
 import { HowItWorks } from "@/components/sales/HowItWorks";
 import { CategoriesGrid } from "@/components/sales/CategoriesGrid";
@@ -78,7 +77,6 @@ const SalesLandingPage = () => {
 
       <div className="min-h-screen bg-[#080C14] overflow-x-hidden selection:bg-blue-500/30 selection:text-white">
         <Header variant="showcase" />
-        <SalesAnnouncementBar />
         <main>
           <SalesHeroSection />
           <CategoriesGrid />

@@ -356,7 +356,7 @@ export const SalesHeroSection = () => {
 
       {/* SEARCH SECTION */}
       <div className="bico-showcase max-w-7xl mx-auto px-0 sm:px-6 lg:px-16 -mt-20 pb-24 relative z-20">
-        <div className="bg-white rounded-none sm:rounded-[32px] lg:rounded-[40px] p-6 sm:p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border sm:border-4 border-bico-lime">
+        <div className="bg-white rounded-none sm:rounded-[32px] lg:rounded-[40px] p-6 sm:p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)]">
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
             <div className="max-w-2xl">
@@ -394,7 +394,7 @@ export const SalesHeroSection = () => {
               <select
                 value={selectedCityId}
                 onChange={(e) => setSelectedCityId(e.target.value)}
-                className="w-full h-16 pl-14 pr-6 bg-gray-50 sm:bg-bico-orange rounded-2xl border border-gray-300 sm:border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 font-medium shadow-sm"
+                className="w-full h-16 pl-14 pr-6 bg-gray-50 rounded-2xl border border-gray-300 appearance-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 font-medium shadow-sm"
               >
                 <option value="">Cidade</option>
                 {cities.map((city) => (
@@ -408,7 +408,7 @@ export const SalesHeroSection = () => {
               <select
                 value={searchType}
                 onChange={(e) => setSearchType(e.target.value)}
-                className="w-full h-16 pl-14 pr-6 bg-gray-50 sm:bg-bico-lime rounded-2xl border border-gray-300 sm:border-none appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-900 font-medium shadow-sm"
+                className="w-full h-16 pl-14 pr-6 bg-gray-50 rounded-2xl border border-gray-300 appearance-none focus:ring-2 focus:ring-blue-500/20 text-gray-900 font-medium shadow-sm"
               >
                 <option>Contratar</option>
                 <option>Trabalhar</option>
@@ -417,7 +417,7 @@ export const SalesHeroSection = () => {
 
             <button
               onClick={handleSearch}
-              className="lg:w-48 h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-10 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95"
+              className="lg:w-48 h-16 flex items-center justify-center bg-bico-orange hover:bg-bico-orange-hover text-slate-900 px-10 rounded-2xl font-bold text-lg shadow-lg shadow-bico-orange/20 transition-all hover:scale-[1.02] active:scale-95"
             >
               Buscar
             </button>
