@@ -264,6 +264,13 @@ const navItems = [
 
           {/* Right Section */}
           <div className="flex items-center gap-3 md:gap-1">
+            {/* Modo Contratar/Trabalhar — so pra quem esta logado; a landing
+                publica nao tem modo. */}
+            {user && !isPublicLanding && (
+              <div className="hidden sm:block mr-1">
+                <ModeToggle />
+              </div>
+            )}
             <ThemeToggle className="hover:bg-white/10 rounded-lg transition-colors" />
             {/* Notification Bell */}
             {user && (

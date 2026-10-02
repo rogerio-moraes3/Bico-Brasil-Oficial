@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { parsePriceInput } from '@/lib/utils';
+import { useModeGuard } from '@/hooks/useModeGuard';
 
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +21,8 @@ import { Loader2, Briefcase, ArrowLeft } from 'lucide-react';
 import { safeGoBack } from '@/lib/utils';
 
 export default function PostJob() {
+  // /post-job so faz sentido no modo Contratar.
+  useModeGuard();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -464,7 +467,7 @@ export default function PostJob() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" size="lg" disabled={loading}>
+              <Button type="submit" className="w-full bg-bico-accent hover:bg-bico-accent-hover text-white" size="lg" disabled={loading}>
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />

@@ -34,9 +34,12 @@ export const BottomNav = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // Cor dinâmica baseada no modo
-  const activeColor = 'text-primary';
-  const indicatorColor = 'bg-primary';
+  // Cor dinâmica baseada no modo — bico.accent para Contratar,
+  // bico.work para Trabalhar (as mesmas duas cores do ModeToggle).
+  const isContractor = mode === 'contractor';
+  const activeColor = isContractor ? 'text-bico-accent' : 'text-bico-work';
+  const activeBg = isContractor ? 'bg-bico-accent/10' : 'bg-bico-work/10';
+  const indicatorColor = isContractor ? 'via-bico-accent' : 'via-bico-work';
 
   // 5 itens: Voltar + 4 itens fixos para navegação principal
   const navItems = [
@@ -74,7 +77,7 @@ export const BottomNav = () => {
       className={`md:hidden fixed bottom-0 left-0 right-0 bg-white/70 dark:bg-background/75 border-t border-slate-200/60 dark:border-border/50 z-50 shadow-[0_-12px_30px_-20px_hsl(var(--xp-primary-glow))] backdrop-blur-md transition-transform duration-300 ${hidden ? 'translate-y-full' : 'translate-y-0'}`}
     >
       {/* Gradient indicator line */}
-      <div className="h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent opacity-70" />
+      <div className={`h-0.5 bg-gradient-to-r from-transparent ${indicatorColor} to-transparent opacity-70`} />
 
       <div className="flex items-center justify-around h-16 px-2">
         {navItems.map(({ path, icon: Icon, label, isBack }) => {
@@ -96,7 +99,7 @@ export const BottomNav = () => {
               key={path}
               to={path}
               className={`flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 rounded-2xl ${isActive(path)
-                  ? `${activeColor} scale-[1.04] bg-primary/10`
+                  ? `${activeColor} ${activeBg} scale-[1.04]`
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                 }`}
             >

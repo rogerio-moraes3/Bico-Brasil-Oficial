@@ -6,6 +6,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ShareButtons } from '@/components/ShareButtons';
 import { parsePriceInput } from '@/lib/utils';
+import { useModeGuard } from '@/hooks/useModeGuard';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,8 @@ import { safeGoBack } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
 
 export default function OfferServices() {
+  // /offer-services so faz sentido no modo Trabalhar.
+  useModeGuard();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -535,7 +538,7 @@ export default function OfferServices() {
                 </Select>
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full bg-bico-work hover:bg-bico-work-hover text-white" disabled={loading}>
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

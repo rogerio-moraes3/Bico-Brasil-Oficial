@@ -1,33 +1,47 @@
-import { useUserMode } from "@/contexts/UserModeContext";
-import { Briefcase, Building2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { modeHome, useUserMode, type UserMode } from "@/contexts/UserModeContext";
+
+// bico.accent = Contratar, bico.work = Trabalhar. Sao as duas cores da marca
+// que representam os modos; blue-600/green-600 (genericas do Tailwind) saiam
+// daqui justamente por nao fazerem parte da paleta.
+const MODES: { value: UserMode; label: string; active: string }[] = [
+    { value: "contractor", label: "Contratar", active: "bg-bico-accent text-white shadow-sm" },
+    { value: "professional", label: "Trabalhar", active: "bg-bico-work text-white shadow-sm" },
+];
 
 export const ModeToggle = () => {
-    const { mode, toggleMode, isTransitioning } = useUserMode();
+    const { mode, setMode, isTransitioning } = useUserMode();
+    const navigate = useNavigate();
+
+    const pick = (next: UserMode) => {
+        if (next === mode || isTransitioning) return;
+        setMode(next);
+        // Trocar de modo leva pra home do modo escolhido. As telas exclusivas
+        // de um modo tambem se protegem sozinhas, via useModeGuard.
+        navigate(modeHome(next));
+    };
 
     return (
-        <div className={`flex items-center gap-1 bg-muted/30 rounded border border-border p-0.5 transition-all duration-300 ${isTransitioning ? 'opacity-50' : 'opacity-100'
-            }`}>
-            <button
-                onClick={() => mode !== 'contractor' && toggleMode()}
-                disabled={isTransitioning}
-                className={`flex items-center justify-center px-3 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 ${mode === 'contractor'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                    }`}
-            >
-                Contratar
-            </button>
-
-            <button
-                onClick={() => mode !== 'professional' && toggleMode()}
-                disabled={isTransitioning}
-                className={`flex items-center justify-center px-3 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 ${mode === 'professional'
-                    ? 'bg-green-600 text-white shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                    }`}
-            >
-                Trabalhar
-            </button>
+        <div
+            className={`flex items-center gap-1 bg-muted/30 rounded border border-border p-0.5 transition-all duration-300 ${isTransitioning ? "opacity-50" : "opacity-100"
+                }`}
+            role="group"
+            aria-label="Modo de uso"
+        >
+            {MODES.map(({ value, label, active }) => (
+                <button
+                    key={value}
+                    onClick={() => pick(value)}
+                    disabled={isTransitioning}
+                    aria-pressed={mode === value}
+                    className={`flex items-center justify-center px-3 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 ${mode === value
+                        ? active
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        }`}
+                >
+                    {label}
+                </button>
+            ))}
         </div>
     );
 };

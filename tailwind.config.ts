@@ -116,6 +116,12 @@ export default {
           // Verde-limao — usado no filtro "Contratar" e na borda do
           // cartao de busca da home.
           lime: '#CCFF00',
+          // Cor do modo "Trabalhar". Faz par com bico.accent, que e a cor do
+          // modo "Contratar". Deliberadamente NAO e bico.orange nem bico.lime:
+          // essas duas ja significam outra coisa no site (CTA e filtro/borda
+          // do cartao de busca) e reusa-las embaralharia os dois vocabularios.
+          work: '#12B886',
+          'work-hover': '#0CA678',
         },
       },
       backgroundImage: {
