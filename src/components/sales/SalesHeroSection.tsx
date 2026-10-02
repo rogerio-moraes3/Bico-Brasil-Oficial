@@ -165,7 +165,7 @@ export const SalesHeroSection = () => {
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-[64px] font-extrabold leading-[1.12] tracking-tight mb-8 text-bico-heading">
-              Precisa <span className="text-bico-accent">contratar</span> alguém? <span className="text-bico-lime">É grátis, sem limite.</span><br />
+              Precisa <span className="text-bico-accent">contratar</span> alguém? <span className="text-bico-accent">É grátis, sem limite.</span><br />
               Ou quer <span className="text-bico-accent">ganhar dinheiro</span> hoje?
             </h1>
 
@@ -430,19 +430,19 @@ export const SalesHeroSection = () => {
                 title: "Trabalhou, tá pago.",
                 desc: "Sem enrolação: combinou, fez, recebeu.",
                 icon: Zap,
-                color: "bg-amber-50 text-amber-600"
+                color: "bg-bico-accent/10 text-bico-accent"
               },
               {
                 title: "Perto de você",
                 desc: "A gente prioriza quem tá pertinho, pra ser mais rápido.",
                 icon: MapPin,
-                color: "bg-blue-50 text-blue-600"
+                color: "bg-bico-accent/10 text-bico-accent"
               },
               {
                 title: "Direto no ponto",
                 desc: "Sem letra miúda, sem intermediário. Você fala com a pessoa certa.",
                 icon: ShieldCheck,
-                color: "bg-emerald-50 text-emerald-600"
+                color: "bg-bico-accent/10 text-bico-accent"
               },
             ].map((feature) => (
               <div key={feature.title} className="group p-6 rounded-3xl border border-gray-100 hover:border-blue-100 hover:bg-blue-50/20 transition-all duration-300">
