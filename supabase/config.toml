@@ -27,9 +27,6 @@ verify_jwt = false
 [functions.send-email]
 verify_jwt = true
 
-[functions.send-profile-completion-email]
-verify_jwt = true
-
 [functions.notify-new-lead]
 verify_jwt = false
 
@@ -57,5 +54,5 @@ verify_jwt = true
 [functions.notify-incomplete-signup]
 verify_jwt = false
 
-[functions.delete-incomplete-account]
-verify_jwt = false
+[functions.notify-deleted-accounts]
+verify_jwt = true
