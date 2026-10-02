@@ -140,3 +140,66 @@ em `supabase/functions/`.
 
 A quarta função órfã identificada na mesma auditoria (`sync_user_profile`) já
 tinha sido removida em sessão anterior.
+
+---
+
+## Aviso às 194 contas — mecanismo pronto, envio NÃO disparado (2026-10-02)
+
+### Estado atual: nada foi enviado
+
+A fila está montada e a função deployada, mas **nenhum e-mail saiu**. O envio
+depende de uma chamada explícita com `dryRun:false` por um admin.
+
+### Lista
+
+Regerada direto de `auth.audit_log_entries` (`payload->>'action' =
+'user_deleted'`) nas três janelas documentadas acima: **194 e-mails únicos,
+nenhum vazio, nenhum formato inválido** — bate com o total apurado na
+investigação.
+
+Atenção ao montar a consulta: os limites precisam ser `>= ... AND < ...`, não
+`BETWEEN`. `BETWEEN '...04:00:10+00' AND '...04:00:18+00'` descarta a fração de
+segundo do último segundo de cada janela e devolve 191 em vez de 194.
+
+### Fila
+
+Tabela `public.deleted_account_notice_log` (migration
+`20261002120000_deleted_account_notice_log.sql`): um registro por e-mail, com
+`email_status` em `pending` / `sent` / `failed` / `skipped`. RLS ligada sem
+policies — só a service role acessa. Permite retomar de onde parou sem
+reenviar pra ninguém.
+
+Estado após o seed: **193 `pending`, 1 `skipped`.** O `skipped` é uma pessoa
+que já se recadastrou sozinha em 2026-09-29 — receberia um convite pra fazer o
+que já fez.
+
+### Envio
+
+Edge function `notify-deleted-accounts`, nos moldes da
+`send-national-launch-notification`: exige admin (`user_roles.role = 'admin'`),
+`dryRun` default `true`, `limit` teto de 100 por chamada (limite diário do
+Resend), grava status por destinatário.
+
+Remetente **`contato@bicobrasil.com.br`**, não `naoresponda@` (usado pela
+`send-email`): o texto aprovado termina com "é só responder este e-mail", então
+as respostas precisam chegar em algum lugar.
+
+A `send-email` não serve pra isso: ela tem um `switch (type)` com templates
+HTML fixos e o `default` devolve `400 Invalid email type` — não existe campo de
+corpo livre.
+
+### Para disparar
+
+```
+POST /functions/v1/notify-deleted-accounts   (Authorization: Bearer <JWT de admin>)
+
+{"action":"status"}                                  → contagem atual
+{"action":"send_batch","dryRun":true}                → quantos sairiam
+{"action":"send_batch","dryRun":false,"targetEmail":"<seu e-mail>"} → teste real em 1
+{"action":"send_batch","dryRun":false}               → lote de até 100
+```
+
+Como são 193 pendentes e o teto é 100/dia, são **dois lotes em dias
+diferentes**: 100 e depois 93.
+
+Quando o envio acontecer, registrar aqui a data e a quantidade efetiva.
