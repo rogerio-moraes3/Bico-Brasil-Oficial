@@ -269,7 +269,7 @@ const navItems = [
           <div className="flex items-center gap-3 md:gap-1">
             {/* Modo Contratar/Trabalhar — so pra quem esta logado; a landing
                 publica nao tem modo. */}
-            {user && !isPublicLanding && (
+            {user && (
               <div className="hidden sm:block mr-1">
                 <ModeToggle />
               </div>

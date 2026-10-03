@@ -24,7 +24,7 @@ export const ModeToggle = () => {
 
     return (
         <div
-            className={`flex items-center gap-1 bg-muted/30 rounded border border-border p-0.5 transition-all duration-300 ${isTransitioning ? "opacity-50" : "opacity-100"
+            className={`flex items-center gap-1 bg-white/10 rounded border border-white/15 p-0.5 transition-all duration-300 ${isTransitioning ? "opacity-50" : "opacity-100"
                 }`}
             role="group"
             aria-label="Modo de uso"
@@ -37,7 +37,7 @@ export const ModeToggle = () => {
                     aria-pressed={mode === value}
                     className={`flex items-center justify-center px-3 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 ${mode === value
                         ? active
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        : "text-white/60 hover:text-white hover:bg-white/10"
                         }`}
                 >
                     {label}
