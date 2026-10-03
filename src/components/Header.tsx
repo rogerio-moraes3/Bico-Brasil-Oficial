@@ -42,7 +42,10 @@ export const Header = ({ variant = "neutral" }: HeaderProps) => {
   const [showInstallButton, setShowInstallButton] = useState(false);
 
   // Show back button on internal routes (public paths excluded) AND only when there is a history stack
-  const publicPaths = ['/', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch', '/search-workers', '/procurar-bicos'];
+  // '/intro' e a mesma SalesLandingPage de '/' (ver App.tsx) e precisa
+  // constar aqui: enquanto isPublicLanding estava quebrado e retornava
+  // true pra tudo, a ausencia dele passava despercebida.
+  const publicPaths = ['/', '/intro', '/landing', '/auth', '/install', '/install-app', '/download', '/pre-launch', '/prelaunch', '/search-workers', '/procurar-bicos'];
   const hasHistory = typeof window !== 'undefined' && window.history && window.history.length > 1;
   // "/" precisa ser comparado por igualdade exata: com startsWith, "/" bateria
   // com QUALQUER caminho (todos começam com "/"), anulando o filtro inteiro.
