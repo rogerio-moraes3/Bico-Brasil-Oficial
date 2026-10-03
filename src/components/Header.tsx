@@ -271,7 +271,9 @@ const navItems = [
                 <ModeToggle />
               </div>
             )}
-            <ThemeToggle className="hover:bg-white/10 rounded-lg transition-colors" />
+            {!isShowcase && (
+              <ThemeToggle className="hover:bg-white/10 rounded-lg transition-colors" />
+            )}
             {/* Notification Bell */}
             {user && (
               <Sheet>
