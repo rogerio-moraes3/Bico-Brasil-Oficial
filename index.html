@@ -112,9 +112,10 @@
     }
     </script>
 
-  <!-- Security Headers via meta tags -->
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-Frame-Options" content="DENY">
+  <!-- X-Frame-Options e X-Content-Type-Options saíram daqui: em <meta
+       http-equiv> o navegador ignora as duas. Agora vêm como cabeçalhos
+       HTTP de verdade, em vercel.json. O referrer abaixo é <meta name>,
+       que é uma forma válida e continua valendo. -->
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <!-- Preload logo para splash sincronizada -->
