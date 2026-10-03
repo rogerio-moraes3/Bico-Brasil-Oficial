@@ -128,7 +128,7 @@ const navItems = [
     { path: "/contact", label: "Contato" },
   ];
 
-  const isPublicLanding = publicPaths.some(p => location.pathname.startsWith(p));
+  const isPublicLanding = location.pathname === '/' || publicPaths.some(p => p !== '/' && location.pathname.startsWith(p));
 
   const handleNavClick = (path: string) => {
     navigate(path);
