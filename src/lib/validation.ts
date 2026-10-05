@@ -11,9 +11,14 @@ export const emailSchema = z.string()
   .max(255, "E-mail muito longo");
 
 // Name validation
+// Minimo 4 para barrar nomes como "St"/"Tr", que apareciam na busca publica e
+// minavam a confianca no perfil. NAO exige duas palavras de proposito: nome
+// legitimo de uma palavra so existe. A mesma regra vale no banco, dentro de
+// public.is_profile_complete() — client-side sozinho nao protege nada.
+export const MIN_NOME = 4;
 export const nameSchema = z.string()
   .trim()
-  .min(2, "Nome deve ter pelo menos 2 caracteres")
+  .min(MIN_NOME, "Digite seu nome completo")
   .max(100, "Nome deve ter no máximo 100 caracteres");
 
 // Job posting validation

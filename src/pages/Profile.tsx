@@ -24,6 +24,7 @@ import { MyAdsTab } from '@/components/MyAdsTab';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { resizeImageFile } from '@/lib/imageResize';
 import { validatePhone, formatPhone } from '@/lib/validators';
+import { MIN_NOME } from '@/lib/validation';
 import {
   User,
   Mail,
@@ -140,6 +141,15 @@ export default function Profile() {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
+    if (formData.name.trim().length < MIN_NOME) {
+      toast({
+        title: "Nome muito curto",
+        description: "Digite seu nome completo",
+        variant: "destructive"
+      });
+      return;
+    }
 
     const phoneClean = formData.phone.replace(/\D/g, '');
     if (phoneClean && !validatePhone(phoneClean)) {
