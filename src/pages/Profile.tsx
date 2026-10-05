@@ -24,7 +24,7 @@ import { MyAdsTab } from '@/components/MyAdsTab';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { resizeImageFile } from '@/lib/imageResize';
 import { validatePhone, formatPhone } from '@/lib/validators';
-import { MIN_NOME } from '@/lib/validation';
+import { nomeInvalido } from '@/lib/validation';
 import {
   User,
   Mail,
@@ -142,10 +142,11 @@ export default function Profile() {
     e.preventDefault();
     if (!user) return;
 
-    if (formData.name.trim().length < MIN_NOME) {
+    const erroNome = nomeInvalido(formData.name);
+    if (erroNome) {
       toast({
-        title: "Nome muito curto",
-        description: "Digite seu nome completo",
+        title: "Nome inválido",
+        description: erroNome,
         variant: "destructive"
       });
       return;

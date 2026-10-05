@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { signupSchema, MIN_NOME } from '@/lib/validation';
+import { signupSchema, nomeInvalido } from '@/lib/validation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Navigation, Loader2, Eye, EyeOff, KeyRound, ArrowLeft } from 'lucide-react';
@@ -518,10 +518,11 @@ export default function Auth() {
         return;
       }
 
-      if (name.trim().length < MIN_NOME) {
+      const erroNome = nomeInvalido(name);
+      if (erroNome) {
         toast({
-          title: "Nome muito curto",
-          description: "Digite seu nome completo",
+          title: "Nome inválido",
+          description: erroNome,
           variant: "destructive"
         });
         setLoading(false);

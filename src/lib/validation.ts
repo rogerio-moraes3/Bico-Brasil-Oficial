@@ -15,11 +15,27 @@ export const emailSchema = z.string()
 // minavam a confianca no perfil. NAO exige duas palavras de proposito: nome
 // legitimo de uma palavra so existe. A mesma regra vale no banco, dentro de
 // public.is_profile_complete() — client-side sozinho nao protege nada.
+// "@" barra o caso real de gente que digitou o proprio e-mail no campo nome.
+// Deliberadamente NAO se exige duas palavras nem so letras: nome legitimo de
+// uma palavra so existe, e exigir so letras barraria alfabeto nao-latino.
 export const MIN_NOME = 4;
 export const nameSchema = z.string()
   .trim()
   .min(MIN_NOME, "Digite seu nome completo")
-  .max(100, "Nome deve ter no máximo 100 caracteres");
+  .max(100, "Nome deve ter no máximo 100 caracteres")
+  .refine(v => !v.includes("@"), "Digite seu nome, não seu e-mail");
+
+/**
+ * Regra unica de nome para os formularios. Devolve a mensagem de erro, ou
+ * null se estiver ok. Espelha exatamente public.is_profile_complete() no
+ * banco — que e a validacao que de fato protege.
+ */
+export const nomeInvalido = (nome: string): string | null => {
+  const n = (nome ?? "").trim();
+  if (n.length < MIN_NOME) return "Digite seu nome completo";
+  if (n.includes("@")) return "Digite seu nome, não seu e-mail";
+  return null;
+};
 
 // Job posting validation
 export const jobSchema = z.object({
