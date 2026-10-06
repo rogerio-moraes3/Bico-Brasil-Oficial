@@ -115,7 +115,7 @@ export const Footer = () => {
                     href={social.href}
                     target={isEmail ? undefined : "_blank"}
                     rel={isEmail ? undefined : "noreferrer"}
-                    className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/40 hover:text-blue-400 transition-all duration-300"
+                    className="w-12 h-12 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/40 hover:text-blue-400 transition-all duration-300"
                   >
                     <social.Icon className="w-5 h-5" />
                   </a>

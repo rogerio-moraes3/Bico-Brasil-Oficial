@@ -178,7 +178,7 @@ export const SalesHeroSection = () => {
             <div className="flex gap-4 mb-12 flex-wrap">
               <button
                 onClick={() => navigate("/app")}
-                className="group relative flex items-center gap-2 bg-bico-orange hover:bg-bico-orange-hover !text-slate-900 px-8 py-4 rounded-xl font-bold text-lg shadow-[0_8px_24px_rgba(255,92,53,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-95"
+                className="group relative flex items-center gap-2 bg-bico-orange hover:bg-bico-orange-hover !text-slate-900 px-8 py-4 rounded-lg font-bold text-lg shadow-[0_8px_24px_rgba(255,92,53,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-95"
               >
                 Quero contratar
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -186,7 +186,7 @@ export const SalesHeroSection = () => {
 
               <button
                 onClick={() => navigate("/auth?mode=signup")}
-                className="px-8 py-4 rounded-xl font-bold text-lg text-bico-heading border-1.5 border-white/[0.18] bg-transparent hover:bg-white/5 transition-all duration-300"
+                className="px-8 py-4 rounded-lg font-bold text-lg text-bico-heading border-1.5 border-white/[0.18] bg-transparent hover:bg-white/5 transition-all duration-300"
               >
                 Quero trabalhar
               </button>
@@ -222,7 +222,7 @@ export const SalesHeroSection = () => {
 
               {/* Outer metallic frame */}
               <div
-                className="relative w-[300px] sm:w-[340px] h-[600px] sm:h-[680px] rounded-[46px] p-[9px]"
+                className="relative w-[300px] sm:w-[340px] h-[600px] sm:h-[680px] rounded-3xl p-[9px]"
                 style={{
                   background: 'linear-gradient(160deg, #40444E 0%, #1B1D22 22%, #0E0F12 55%, #2E313A 88%, #4A4E58 100%)',
                   boxShadow: '0 50px 90px -24px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.14), inset 0 1px 1px rgba(255,255,255,0.35)',
@@ -234,7 +234,7 @@ export const SalesHeroSection = () => {
                 <div className="absolute -right-[2px] top-[210px] w-1 h-[70px] rounded-r-sm" style={{ background: 'linear-gradient(270deg,#4A4E58,#1B1D22)' }} />
 
                 {/* Screen */}
-                <div className="relative w-full h-full rounded-[38px] bg-[#0F1422] overflow-hidden border border-white/10">
+                <div className="relative w-full h-full rounded-3xl bg-[#0F1422] overflow-hidden border border-white/10">
                   {/* glossy sheen */}
                   <div className="absolute inset-0 z-20 pointer-events-none" style={{ background: 'linear-gradient(115deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 14%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 78%, rgba(255,255,255,0.08) 92%, rgba(255,255,255,0.18) 100%)' }} />
                   <div className="absolute top-0 -left-[20%] w-[55%] h-full z-20 pointer-events-none" style={{ background: 'linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.10) 45%, rgba(255,255,255,0) 62%)', transform: 'skewX(-12deg)' }} />
@@ -356,7 +356,7 @@ export const SalesHeroSection = () => {
 
       {/* SEARCH SECTION */}
       <div className="bico-showcase max-w-7xl mx-auto px-0 sm:px-6 lg:px-16 -mt-20 pb-24 relative z-20">
-        <div className="bg-white rounded-none sm:rounded-[32px] lg:rounded-[40px] p-6 sm:p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)]">
+        <div className="bg-white rounded-none sm:rounded-3xl p-6 sm:p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)]">
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
             <div className="max-w-2xl">
@@ -377,7 +377,7 @@ export const SalesHeroSection = () => {
           </div>
 
           {/* Search Engine UI — Cidade/Contratar/Buscar com a mesma altura (h-16) */}
-          <div className="flex flex-col lg:flex-row gap-4 mb-10 bg-gray-50/50 p-2 rounded-[16px] border border-gray-600">
+          <div className="flex flex-col lg:flex-row gap-4 mb-10 bg-gray-50/50 p-2 rounded-2xl border border-gray-600">
             <div className="flex-1 relative group">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
               <input

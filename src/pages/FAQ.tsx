@@ -33,7 +33,7 @@ export default function FAQPage() {
               <Button
                 variant="ghost"
                 onClick={() => safeGoBack(navigate)}
-                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-xl font-bold flex items-center gap-2 group"
+                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-lg font-bold flex items-center gap-2 group"
               >
                 <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 Voltar

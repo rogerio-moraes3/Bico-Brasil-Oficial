@@ -140,7 +140,7 @@ export function NotificationPrompt() {
 
               {/* Offline queue indicator */}
               {queueCount > 0 && (
-                <div className="mt-3 p-3 bg-muted border border-border rounded-md text-sm">
+                <div className="mt-3 p-3 bg-muted border border-border rounded-lg text-sm">
                   Você tem <strong>{queueCount}</strong> item(s) aguardando sincronização.
                   <div className="mt-2 flex gap-2">
                     <Button

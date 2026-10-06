@@ -14,7 +14,7 @@ export const ServiceWorkerUpdatePrompt = () => {
 
   return (
     <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-slide-down w-[90%] max-w-md">
-      <div className="bg-card/95 backdrop-blur-sm border border-border shadow-lg rounded-xl p-3">
+      <div className="bg-card/95 backdrop-blur-sm border border-border shadow-lg rounded-2xl p-3">
         <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-foreground">

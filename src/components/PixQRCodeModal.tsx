@@ -154,8 +154,8 @@ export function PixQRCodeModal({
           )}
 
           {/* QR Code Image - Reduzido */}
-          <div className="flex justify-center bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950/20 dark:to-emerald-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800">
-            <div className="bg-white p-2 rounded-xl shadow-lg">
+          <div className="flex justify-center bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950/20 dark:to-emerald-900/20 p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800">
+            <div className="bg-white p-2 rounded-2xl shadow-lg">
               <img
                 src={`data:image/png;base64,${qrCodeBase64}`}
                 alt="QR Code PIX"

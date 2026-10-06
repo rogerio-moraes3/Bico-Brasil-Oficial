@@ -73,7 +73,7 @@ export const PlatformStatsStrip = () => {
               viewport={{ once: true }}
               className="flex items-center gap-4 group/item"
             >
-              <div className={`p-2.5 rounded-xl bg-white/[0.03] border border-white/5 group-hover/item:border-white/20 transition-all duration-300 ${item.color}`}>
+              <div className={`p-2.5 rounded-lg bg-white/[0.03] border border-white/5 group-hover/item:border-white/20 transition-all duration-300 ${item.color}`}>
                 <item.icon className="w-4 h-4" />
               </div>
               <div className="flex flex-col">

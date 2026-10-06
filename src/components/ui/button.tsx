@@ -7,7 +7,7 @@ import { fadeInUp } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-all duration-200 bb-focus disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] shadow-sm hover:shadow-md [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 bb-focus disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] shadow-sm hover:shadow-md [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -23,7 +23,7 @@ const buttonVariants = cva(
       size: {
         default: "h-11 min-h-[44px] px-4 py-2",
         sm: "h-10 min-h-[44px] rounded-lg px-3",
-        lg: "h-12 min-h-[48px] rounded-xl px-8",
+        lg: "h-12 min-h-[48px] rounded-lg px-8",
         icon: "h-11 w-11 min-h-[44px]",
       },
     },

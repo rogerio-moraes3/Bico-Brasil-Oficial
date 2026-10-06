@@ -1039,7 +1039,7 @@ export default function Admin() {
               {/* User List - All filtered users with scroll */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[500px]">
                 {filteredLeads.map((lead) => (
-                  <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
+                  <div key={lead.id} className="border border-border rounded-2xl p-4 bg-card hover:bg-muted/50 transition-colors">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Nome:</span>
@@ -1092,7 +1092,7 @@ export default function Admin() {
               {/* User List - Workers only */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[500px]">
                 {filteredLeads.filter(u => u.type === 'worker').map((lead) => (
-                  <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
+                  <div key={lead.id} className="border border-border rounded-2xl p-4 bg-card hover:bg-muted/50 transition-colors">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Nome:</span>
@@ -1144,7 +1144,7 @@ export default function Admin() {
               {/* User List - Contractors only */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[500px]">
                 {filteredLeads.filter(u => u.type === 'contractor').map((lead) => (
-                  <div key={lead.id} className="border border-border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors">
+                  <div key={lead.id} className="border border-border rounded-2xl p-4 bg-card hover:bg-muted/50 transition-colors">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
                         <span className="font-bold text-foreground text-xs uppercase tracking-wide">Nome:</span>
@@ -1209,7 +1209,7 @@ export default function Admin() {
           </DialogHeader>
 
           <div className="space-y-4">
-            <div className="bg-card p-4 rounded-lg border border-border">
+            <div className="bg-card p-4 rounded-2xl border border-border">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-black text-foreground">Total Registros</span>
                 <span className="text-2xl font-black text-primary">{metrics.totalLeads}</span>

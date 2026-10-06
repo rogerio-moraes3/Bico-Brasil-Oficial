@@ -84,7 +84,7 @@ export const HowItWorks = () => {
             <div className="bg-white/5 p-1.5 rounded-2xl border border-white/10 flex gap-2 backdrop-blur-xl">
               <button
                 onClick={() => setActiveTab("client")}
-                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all ${
+                className={`px-8 py-3 rounded-lg font-bold text-sm transition-all ${
                   activeTab === "client" 
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
                   : "text-zinc-500 hover:text-zinc-300"
@@ -94,7 +94,7 @@ export const HowItWorks = () => {
               </button>
               <button
                 onClick={() => setActiveTab("worker")}
-                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all ${
+                className={`px-8 py-3 rounded-lg font-bold text-sm transition-all ${
                   activeTab === "worker" 
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
                   : "text-zinc-500 hover:text-zinc-300"
@@ -118,7 +118,7 @@ export const HowItWorks = () => {
               style={{ willChange: 'opacity, transform' }}
             >
               {steps.map((step, index) => {
-                const cardClassName = "relative group block bg-white/[0.02] border-1.5 border-white/10 rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500";
+                const cardClassName = "relative group block bg-white/[0.02] border-1.5 border-white/10 rounded-3xl p-6 sm:p-8 lg:p-10 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500";
                 const cardContent = (
                   <div className="relative z-10">
                     <div className="flex justify-between items-start mb-8">

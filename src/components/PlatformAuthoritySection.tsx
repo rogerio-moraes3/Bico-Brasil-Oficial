@@ -143,7 +143,7 @@ export const PlatformAuthoritySection = () => {
               className="text-left w-full bg-background/5 dark:bg-muted/30 border border-background/10 dark:border-border rounded-2xl p-6 stagger-fade hover:border-primary/40 hover:bg-background/10 dark:hover:bg-muted/50 transition-colors cursor-pointer"
               style={{ ["--stagger-delay" as string]: `${i * 80}ms` }}
             >
-              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center mb-4">
                 <p.icon className="w-5 h-5 text-primary" aria-hidden="true" />
               </div>
               <p className="text-3xl md:text-4xl font-bold text-background dark:text-foreground tracking-tight mb-1">
@@ -164,7 +164,7 @@ export const PlatformAuthoritySection = () => {
           <Button
             asChild
             size="lg"
-            className="h-12 rounded-xl font-bold group shadow-lg shadow-primary/30"
+            className="h-12 rounded-lg font-bold group shadow-lg shadow-primary/30"
           >
             <Link to="/search-workers" className="flex items-center gap-2">
               Buscar Profissionais
@@ -175,7 +175,7 @@ export const PlatformAuthoritySection = () => {
             asChild
             size="lg"
             variant="outline"
-            className="h-12 rounded-xl font-semibold border-background/20 dark:border-border text-background dark:text-foreground hover:bg-background/10 dark:hover:bg-muted transition-colors duration-200"
+            className="h-12 rounded-lg font-semibold border-background/20 dark:border-border text-background dark:text-foreground hover:bg-background/10 dark:hover:bg-muted transition-colors duration-200"
           >
             <Link to="/offer-services">
               Cadastrar como Profissional

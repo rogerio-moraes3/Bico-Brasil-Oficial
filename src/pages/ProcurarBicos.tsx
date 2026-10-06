@@ -218,7 +218,7 @@ const ProcurarBicos = () => {
                 exit={{ opacity: 0, y: -20 }}
                 className="mb-12"
               >
-                <div className="p-8 rounded-[32px] bg-card border border-border backdrop-blur-xl shadow-xl space-y-6">
+                <div className="p-8 rounded-3xl bg-card border border-border backdrop-blur-xl shadow-xl space-y-6">
                   {/* Primeira Linha: Busca e Localização */}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="space-y-3 md:col-span-1">
@@ -355,7 +355,7 @@ const ProcurarBicos = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-12 p-8 rounded-[40px] bg-gradient-to-r from-[#FF5C35] to-[#FF451A] shadow-[0_20px_50px_rgba(255,92,53,0.3)] flex flex-col md:flex-row items-center justify-between gap-8 group"
+            className="mb-12 p-8 rounded-3xl bg-gradient-to-r from-[#FF5C35] to-[#FF451A] shadow-[0_20px_50px_rgba(255,92,53,0.3)] flex flex-col md:flex-row items-center justify-between gap-8 group"
           >
             <div className="text-center md:text-left">
               <h3 className="text-3xl font-black text-white mb-2 tracking-tight">Quer oferecer seus serviços?</h3>
@@ -390,7 +390,7 @@ const ProcurarBicos = () => {
                 >
                   <Card 
                     onClick={() => { setSelectedJob(job); setShowDetailsModal(true); }}
-                    className="cursor-pointer group relative flex flex-col h-full bg-card border border-border rounded-[40px] overflow-hidden hover:border-blue-500/40 transition-all duration-500 shadow-xl"
+                    className="cursor-pointer group relative flex flex-col h-full bg-card border border-border rounded-3xl overflow-hidden hover:border-blue-500/40 transition-all duration-500 shadow-xl"
                   >
                     <CardContent className="p-10 flex flex-col h-full">
                       <div className="flex justify-between items-start mb-6">

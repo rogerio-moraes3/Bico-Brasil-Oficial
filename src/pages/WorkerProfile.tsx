@@ -425,7 +425,7 @@ export default function WorkerProfile() {
                         )}
                       </>
                     ) : !isWorkerUnlocked && (
-                      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-300 dark:border-yellow-700 rounded-xl p-4 md:p-5 my-4 shadow-sm mx-auto max-w-full overflow-hidden">
+                      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-300 dark:border-yellow-700 rounded-2xl p-4 md:p-5 my-4 shadow-sm mx-auto max-w-full overflow-hidden">
                         <div className="flex items-start gap-3">
                           <Lock className="h-6 w-6 text-yellow-600 dark:text-yellow-400 mt-1 flex-shrink-0" />
                           <div className="flex-1">

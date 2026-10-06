@@ -31,7 +31,7 @@ export const SkeletonGrid = ({ count = 6, columnsClassName, className }: Skeleto
             </div>
           </CardContent>
           <CardFooter>
-            <Skeleton className="h-10 w-full rounded-xl" />
+            <Skeleton className="h-10 w-full rounded-lg" />
           </CardFooter>
         </Card>
       ))}

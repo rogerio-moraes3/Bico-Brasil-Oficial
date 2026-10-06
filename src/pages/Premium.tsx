@@ -144,7 +144,7 @@ export default function Premium() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="group relative flex flex-col p-10 rounded-[48px] bg-white/[0.02] border-1.5 border-white/10 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
+                className="group relative flex flex-col p-10 rounded-3xl bg-white/[0.02] border-1.5 border-white/10 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
               >
                 <div className="mb-10">
                   <h3 className="text-2xl font-black mb-2 text-white">Premium</h3>
@@ -171,7 +171,7 @@ export default function Premium() {
 
                 <button 
                   onClick={() => handlePlanClick({ type: 'basico', amount: 19.90, name: 'Premium' })}
-                  className="w-full py-6 bg-white/5 hover:bg-white/10 text-white font-black text-xl rounded-[24px] border border-white/10 transition-all active:scale-95"
+                  className="w-full py-6 bg-white/5 hover:bg-white/10 text-white font-black text-xl rounded-3xl border border-white/10 transition-all active:scale-95"
                 >
                    Assinar Agora
                 </button>
@@ -182,7 +182,7 @@ export default function Premium() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="group relative flex flex-col p-10 rounded-[48px] bg-gradient-to-b from-blue-600/20 to-blue-600/5 border-2 border-blue-500/30 backdrop-blur-2xl shadow-[0_32px_80px_-20px_rgba(30,94,255,0.3)] transition-all duration-500 transform lg:-translate-y-6"
+                className="group relative flex flex-col p-10 rounded-3xl bg-gradient-to-b from-blue-600/20 to-blue-600/5 border-2 border-blue-500/30 backdrop-blur-2xl shadow-[0_32px_80px_-20px_rgba(30,94,255,0.3)] transition-all duration-500 transform lg:-translate-y-6"
               >
                 <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-6 py-2 bg-blue-700 text-white font-black text-xs uppercase tracking-[0.2em] rounded-full shadow-[0_10px_30px_rgba(30,94,255,0.4)]">
                    Recomendado
@@ -216,7 +216,7 @@ export default function Premium() {
 
                 <button 
                   onClick={() => handlePlanClick({ type: 'vip', amount: 29.90, name: 'VIP' })}
-                  className="w-full py-6 bg-white text-black hover:bg-zinc-500 font-black text-2xl rounded-[24px] shadow-[0_20px_40px_rgba(255,255,255,0.15)] transition-all hover:scale-110 active:scale-95"
+                  className="w-full py-6 bg-white text-black hover:bg-zinc-500 font-black text-2xl rounded-3xl shadow-[0_20px_40px_rgba(255,255,255,0.15)] transition-all hover:scale-110 active:scale-95"
                 >
                    Ser VIP Agora
                 </button>
@@ -227,7 +227,7 @@ export default function Premium() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="group relative flex flex-col p-10 rounded-[48px] bg-white/[0.02] border-1.5 border-white/10 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
+                className="group relative flex flex-col p-10 rounded-3xl bg-white/[0.02] border-1.5 border-white/10 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-500"
               >
                 <div className="mb-10">
                   <h3 className="text-2xl font-black mb-2 text-white">Anual</h3>
@@ -259,7 +259,7 @@ export default function Premium() {
 
                 <button 
                   onClick={() => handlePlanClick({ type: 'anual', amount: 249.90, name: 'Anual' })}
-                  className="w-full py-6 bg-white/5 hover:bg-white/10 text-white font-black text-xl rounded-[24px] border border-white/10 transition-all active:scale-95"
+                  className="w-full py-6 bg-white/5 hover:bg-white/10 text-white font-black text-xl rounded-3xl border border-white/10 transition-all active:scale-95"
                 >
                    Assinar Anual
                 </button>

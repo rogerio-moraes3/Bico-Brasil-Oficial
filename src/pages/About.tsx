@@ -32,7 +32,7 @@ export default function About() {
               <Button
                 variant="ghost"
                 onClick={() => safeGoBack(navigate)}
-                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-xl font-bold flex items-center gap-2 group"
+                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-lg font-bold flex items-center gap-2 group"
               >
                 <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 Voltar
@@ -85,7 +85,7 @@ export default function About() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.2 }}
                   viewport={{ once: true }}
-                  className="p-10 rounded-[40px] bg-white/[0.03] border border-white/10 backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500"
+                  className="p-10 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500"
                 >
                   <div className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500`}>
                     <item.icon className="w-8 h-8" />

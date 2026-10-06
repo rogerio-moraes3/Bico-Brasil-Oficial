@@ -31,7 +31,7 @@ export const ModeToggle = () => {
     if (!isModeResolved) {
         return (
             <div
-                className="h-9 w-[150px] animate-pulse rounded-xl bg-white/[0.06] sm:h-12 sm:w-[210px]"
+                className="h-9 w-[150px] animate-pulse rounded-lg bg-white/[0.06] sm:h-12 sm:w-[210px]"
                 aria-hidden="true"
             />
         );
@@ -39,7 +39,7 @@ export const ModeToggle = () => {
 
     return (
         <div
-            className="flex items-center gap-1 rounded-xl border border-white/15 bg-white/10 p-1"
+            className="flex items-center gap-1 rounded-lg border border-white/15 bg-white/10 p-1"
             role="group"
             aria-label="Modo de uso"
         >

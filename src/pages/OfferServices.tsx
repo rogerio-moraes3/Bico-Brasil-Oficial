@@ -388,7 +388,7 @@ export default function OfferServices() {
           </CardHeader>
           <CardContent>
             {!isOnline && (
-              <div className="mb-4 rounded-md bg-yellow-50 border border-yellow-200 p-3 text-yellow-800">
+              <div className="mb-4 rounded-lg bg-yellow-50 border border-yellow-200 p-3 text-yellow-800">
                 <strong>Sem internet no momento</strong> — seus dados serão salvos localmente e publicados assim que a conexão voltar.
               </div>
             )}
@@ -413,7 +413,7 @@ export default function OfferServices() {
                   required
                 />
                 {showSuggestions && suggestions.length > 0 && (
-                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                     {suggestions.map((sug, idx) => (
                       <button
                         key={idx}

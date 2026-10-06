@@ -80,7 +80,7 @@ export const FAQ = () => {
                 Esclareça suas principais dúvidas sobre o funcionamento da plataforma líder em conexões locais.
               </p>
 
-              <div className="p-8 rounded-[40px] bg-white/[0.03] border border-white/10 backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500">
+              <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500">
                 <div className="flex items-center gap-6">
                   <div className="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
                     <MessageCircle className="w-8 h-8 text-blue-400" />
@@ -112,7 +112,7 @@ export const FAQ = () => {
                 >
                   <AccordionItem
                     value={`item-${index}`}
-                    className="bg-white/[0.02] border border-white/5 rounded-[32px] px-8 md:px-10 data-[state=open]:border-blue-500/40 data-[state=open]:bg-white/[0.05] transition-all duration-500 overflow-hidden group"
+                    className="bg-white/[0.02] border border-white/5 rounded-3xl px-8 md:px-10 data-[state=open]:border-blue-500/40 data-[state=open]:bg-white/[0.05] transition-all duration-500 overflow-hidden group"
                   >
                     <AccordionTrigger className="text-left font-bold text-white hover:no-underline py-8 text-xl md:text-2xl hover:text-blue-400 transition-colors">
                       {faq.question}

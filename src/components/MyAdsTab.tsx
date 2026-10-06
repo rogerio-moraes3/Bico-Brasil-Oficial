@@ -169,9 +169,9 @@ export function MyAdsTab() {
           <CardTitle>Meus Anúncios</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 py-6">
-          <Skeleton className="h-20 w-full rounded-xl" />
-          <Skeleton className="h-20 w-full rounded-xl" />
-          <Skeleton className="h-20 w-full rounded-xl" />
+          <Skeleton className="h-20 w-full rounded-lg" />
+          <Skeleton className="h-20 w-full rounded-lg" />
+          <Skeleton className="h-20 w-full rounded-lg" />
         </CardContent>
       </Card>
     );

@@ -32,7 +32,7 @@ const Privacy = () => {
               <Button
                 variant="ghost"
                 onClick={() => safeGoBack(navigate)}
-                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-xl font-bold flex items-center gap-2 group"
+                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-lg font-bold flex items-center gap-2 group"
               >
                 <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 Voltar
@@ -74,7 +74,7 @@ const Privacy = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-12 rounded-[48px] bg-white/[0.02] border border-white/5 hover:border-blue-500/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start"
+                className="p-12 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-blue-500/20 transition-all duration-500 flex flex-col md:flex-row gap-8 items-start"
               >
                 <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center shrink-0">
                   <item.icon className="w-8 h-8 text-blue-400" />
@@ -86,7 +86,7 @@ const Privacy = () => {
               </motion.div>
             ))}
 
-            <div className="mt-20 p-12 rounded-[48px] bg-blue-500/5 border border-blue-400/10 text-center">
+            <div className="mt-20 p-12 rounded-3xl bg-blue-500/5 border border-blue-400/10 text-center">
               <p className="text-sm font-black uppercase tracking-[0.2em] text-blue-400 mb-4">Última Atualização</p>
               <p className="text-2xl font-bold text-white mb-8">{new Date().toLocaleDateString('pt-BR')}</p>
               <p className="text-blue-100/40 font-medium">

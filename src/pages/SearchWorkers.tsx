@@ -555,7 +555,7 @@ export default function SearchWorkers() {
                   onBlur={() => setTimeout(() => setShowProfessionSuggestions(false), 200)}
                 />
                 {showProfessionSuggestions && professionSuggestions.length > 0 && (
-                  <div className="absolute z-20 w-full mt-1 bg-popover border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-20 w-full mt-1 bg-popover border border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
                     {professionSuggestions.map((sug, idx) => (
                       <button
                         key={idx}
@@ -869,7 +869,7 @@ export default function SearchWorkers() {
                 Publique sua vaga e deixe que os profissionais venham até você!
               </p>
             </div>
-            <Button onClick={() => navigate('/post-job')} size="lg" className="whitespace-nowrap bg-card text-foreground border-border rounded-xl hover:bg-muted">
+            <Button onClick={() => navigate('/post-job')} size="lg" className="whitespace-nowrap bg-card text-foreground border-border rounded-lg hover:bg-muted">
               <Briefcase className="mr-2 h-4 w-4" />
               Publicar Vaga
             </Button>

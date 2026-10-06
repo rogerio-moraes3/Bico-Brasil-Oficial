@@ -69,7 +69,7 @@ export const SecuritySection = () => {
               role="link"
               tabIndex={0}
               onKeyDown={(e) => e.key === "Enter" && navigate(feat.to)}
-              className="group p-8 rounded-[32px] bg-white/[0.02] border-1.5 border-white/10 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 cursor-pointer"
+              className="group p-8 rounded-3xl bg-white/[0.02] border-1.5 border-white/10 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 cursor-pointer"
             >
               <div className={`w-14 h-14 rounded-2xl ${feat.bg} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
                 <feat.icon className={`w-6 h-6 ${feat.color}`} />
@@ -80,7 +80,7 @@ export const SecuritySection = () => {
           ))}
         </div>
 
-        <div className="mt-20 p-8 rounded-[40px] bg-gradient-to-r from-blue-600/10 to-indigo-600/10 border-1.5 border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-8 backdrop-blur-sm">
+        <div className="mt-20 p-8 rounded-3xl bg-gradient-to-r from-blue-600/10 to-indigo-600/10 border-1.5 border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-8 backdrop-blur-sm">
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
               <CheckCircle2 className="w-8 h-8 text-blue-400" />

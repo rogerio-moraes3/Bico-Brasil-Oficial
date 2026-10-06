@@ -171,7 +171,7 @@ const navItems = [
       {/* Skip Link for Accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg bb-focus"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:shadow-lg bb-focus"
       >
         Ir para conteúdo principal
       </a>
@@ -364,7 +364,7 @@ const navItems = [
                   animateOnMount={false}
                   className={cn(
                     "text-[15px] font-bold text-slate-900 px-6 py-2 shadow-md hover:shadow-lg transition-all duration-300 h-10",
-                    isShowcase ? "bg-bico-orange hover:bg-bico-orange-hover rounded-xl" : "bg-orange-500 hover:bg-orange-600 rounded-lg"
+                    isShowcase ? "bg-bico-orange hover:bg-bico-orange-hover rounded-lg" : "bg-orange-500 hover:bg-orange-600 rounded-lg"
                   )}
                 >
                   Criar conta

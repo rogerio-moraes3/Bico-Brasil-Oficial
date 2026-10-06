@@ -122,7 +122,7 @@ export default function Contact() {
                 <Button
                   variant="ghost"
                   onClick={() => safeGoBack(navigate)}
-                  className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-xl font-bold flex items-center gap-2 group"
+                  className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-lg font-bold flex items-center gap-2 group"
                 >
                   <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                   Voltar
@@ -156,7 +156,7 @@ export default function Contact() {
                     
                     <a
                        href="mailto:contato.bicobrasil@gmail.com"
-                       className="group flex items-center gap-6 p-8 rounded-[32px] bg-white/[0.03] border border-white/10 hover:bg-blue-500/[0.06] hover:border-blue-500/40 transition-all duration-300"
+                       className="group flex items-center gap-6 p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:bg-blue-500/[0.06] hover:border-blue-500/40 transition-all duration-300"
                     >
                        <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-blue-500/20 group-hover:border-blue-500/40 transition-all duration-300">
                           <Mail className="w-7 h-7 text-blue-400" />
@@ -167,7 +167,7 @@ export default function Contact() {
                        </div>
                     </a>
 
-                    <div className="mt-20 p-8 rounded-[40px] bg-gradient-to-br from-blue-600/20 to-indigo-600/5 border border-blue-500/20 backdrop-blur-xl">
+                    <div className="mt-20 p-8 rounded-3xl bg-gradient-to-br from-blue-600/20 to-indigo-600/5 border border-blue-500/20 backdrop-blur-xl">
                        <h4 className="text-blue-400 text-xl font-black mb-4">Privacidade & Dados</h4>
                        <p className="text-blue-100/50 font-medium leading-relaxed mb-6">
                           Para questões relacionadas à LGPD e seus dados, utilize nosso canal exclusivo de privacidade.
@@ -181,7 +181,7 @@ export default function Contact() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    className="p-10 md:p-12 rounded-[48px] bg-white/[0.02] border border-white/10 backdrop-blur-2xl shadow-2xl"
+                    className="p-10 md:p-12 rounded-3xl bg-white/[0.02] border border-white/10 backdrop-blur-2xl shadow-2xl"
                  >
                     <form onSubmit={handleSubmit} className="space-y-8">
                        <div className="grid md:grid-cols-2 gap-8">

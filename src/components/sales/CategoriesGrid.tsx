@@ -93,7 +93,7 @@ export const CategoriesGrid = () => {
               viewport={{ once: true }}
               style={{ willChange: 'opacity, transform' }}
               onClick={() => navigate(`/search-workers?q=${encodeURIComponent(item.searchTerm)}`)}
-              className="group relative text-left p-8 rounded-[32px] bg-white/[0.02] border-1.5 border-white/10 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-500 overflow-hidden"
+              className="group relative text-left p-8 rounded-3xl bg-white/[0.02] border-1.5 border-white/10 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-500 overflow-hidden"
             >
               <div className="relative z-10">
                 <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all duration-500 border border-white/5`}>

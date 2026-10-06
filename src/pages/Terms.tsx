@@ -69,7 +69,7 @@ const Terms = () => {
               <Button
                 variant="ghost"
                 onClick={() => safeGoBack(navigate)}
-                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-xl font-bold flex items-center gap-2 group"
+                className="mb-12 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-lg font-bold flex items-center gap-2 group"
               >
                 <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 Voltar
@@ -110,7 +110,7 @@ const Terms = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-10 rounded-[40px] bg-white/[0.02] border border-white/5 hover:border-blue-500/20 transition-colors"
+                  className="p-10 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-blue-500/20 transition-colors"
                 >
                   <h3 className="text-2xl font-black text-white mb-6 uppercase tracking-tight">{item.title}</h3>
                   <p className="text-lg text-blue-100/40 leading-relaxed font-medium">{item.desc}</p>
@@ -118,7 +118,7 @@ const Terms = () => {
               ))}
             </div>
 
-            <div className="mt-20 p-12 rounded-[40px] bg-blue-500/5 border border-blue-400/10 text-center">
+            <div className="mt-20 p-12 rounded-3xl bg-blue-500/5 border border-blue-400/10 text-center">
               <p className="text-sm font-black uppercase tracking-[0.2em] text-blue-400 mb-4">Última Atualização</p>
               <p className="text-2xl font-bold text-white mb-8">{new Date().toLocaleDateString('pt-BR')}</p>
               <p className="text-blue-100/40 font-medium">
