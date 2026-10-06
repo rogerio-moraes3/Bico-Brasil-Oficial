@@ -174,8 +174,8 @@ const ProcurarBicos = () => {
     <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-blue-500/30">
       <Header />
 
-      <main className="flex-1 container mx-auto px-6 py-12 pb-32">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1 bb-container py-12 pb-32">
+        <div>
           
           {/* Header Section */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
@@ -184,7 +184,7 @@ const ProcurarBicos = () => {
                 <Sparkles className="w-3 h-3" />
                 <span>Oportunidades agora</span>
               </div>
-              <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-4">
+              <h1 className="bb-h1 mb-4">
                 Procurar <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Bicos.</span>
               </h1>
               <p className="text-muted-foreground font-medium text-xl max-w-xl leading-relaxed">

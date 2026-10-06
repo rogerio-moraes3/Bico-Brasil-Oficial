@@ -423,10 +423,13 @@ export default function SearchWorkers() {
       {/* Banner "vitrine" — gradiente vibrante so nesta faixa; filtros e
           resultados abaixo continuam no fundo neutro pra nao atrapalhar a
           leitura (mesmo criterio das telas funcionais). */}
-      <div className="bico-showcase bg-bico-showcase relative overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(40,110,255,0.45) 0%, rgba(40,110,255,0) 70%)' }} />
-        <div className="container mx-auto px-4 py-12 md:py-16 relative z-10">
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2 text-bico-heading">Buscar Profissionais</h1>
+      <div
+        className="bb-hero bb-on-dark"
+        style={{ ["--bb-env" as string]: "#5B8DEF", ["--bb-env-soft" as string]: "rgba(91, 141, 239, 0.30)" }}
+      >
+        <div className="bb-hero-glow -right-32 -top-40 h-[500px] w-[500px]" aria-hidden="true" />
+        <div className="bb-container relative z-10 py-12 md:py-16">
+          <h1 className="bb-h1 mb-2 text-bico-heading">Buscar Profissionais</h1>
           <p className="text-bico-muted text-sm md:text-base">Encontre o profissional certo para o seu projeto, perto de você.</p>
         </div>
       </div>
@@ -440,7 +443,7 @@ export default function SearchWorkers() {
 
       {!carregandoAcesso && isTester && (
         <div className="bg-purple-900/30 border-b border-purple-500/30 py-3">
-          <div className="container mx-auto px-4 flex items-center gap-2">
+          <div className="bb-container flex items-center gap-2">
             <Badge className="bg-purple-600">BETA TESTER</Badge>
             <span className="text-sm text-foreground">
               Você tem acesso ilimitado a todos os recursos
@@ -452,7 +455,7 @@ export default function SearchWorkers() {
       {/* Banner de limite para usuários gratuitos */}
       {!carregandoAcesso && !isTester && !isPremium && (
         <div className="bg-yellow-900/30 border-b border-yellow-500/30 py-3">
-          <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="bb-container flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-5">
               <div className="flex items-center gap-2">
                 <Crown className="h-5 w-5 text-yellow-400" />
@@ -483,7 +486,7 @@ export default function SearchWorkers() {
         </div>
       )}
 
-      <main id="main-content" className="flex-grow container mx-auto px-3 sm:px-4 py-6 md:py-8 pb-24 md:pb-8">
+      <main id="main-content" className="flex-grow bb-container py-6 md:py-8 pb-24 md:pb-8">
 
         <Card className="mb-6 md:mb-8 rounded-2xl border border-border/80 shadow-sm">
           <CardContent className="p-4 md:p-6 pt-4 md:pt-6">
