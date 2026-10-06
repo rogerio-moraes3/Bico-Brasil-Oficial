@@ -119,17 +119,6 @@ export default function SearchWorkers() {
     }
   };
 
-  // Aplicar cidade padrão do perfil do usuário APENAS UMA VEZ (não sobrescrever escolha manual)
-  useEffect(() => {
-    if (hasManualCitySelection || !cities.length || filters.city_id !== 'all') return;
-    if (!user?.user_metadata?.city_id) return;
-
-    const hasCity = cities.find(c => String(c.id) === String(user.user_metadata.city_id));
-    if (hasCity) {
-      setFilters(prev => ({ ...prev, city_id: user.user_metadata.city_id }));
-    }
-  }, [cities, user, hasManualCitySelection, filters.city_id]);
-
 
 
   const handleCategoryChange = async (categoryId: string) => {

@@ -63,16 +63,6 @@ const ProcurarBicos = () => {
     loadJobs();
   }, []);
 
-  useEffect(() => {
-    if (hasManualCitySelection || !cities.length || filters.city_id !== 'all') return;
-    if (!user?.user_metadata?.city_id) return;
-
-    const hasCity = cities.find(c => String(c.id) === String(user.user_metadata?.city_id));
-    if (hasCity) {
-      setFilters(prev => ({ ...prev, city_id: user.user_metadata?.city_id }));
-    }
-  }, [cities, user, hasManualCitySelection, filters.city_id]);
-
   // Autocomplete de profissao — mesmo padrao de OfferServices.tsx/PostJob.tsx.
   // So um filtro ADICIONAL: nao substitui o dropdown de Categoria (6+ opcoes
   // macro), nem o campo generico "O que voce busca?" ja existente.
