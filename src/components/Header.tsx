@@ -36,7 +36,7 @@ export const Header = ({ variant = "neutral" }: HeaderProps) => {
   const { user, signOut } = useAuth();
   const { isPremium } = useAccessControl();
   const { unreadCount } = useNotifications();
-  const { mode, setMode } = useUserMode();
+  const { mode, setMode, isModeResolved } = useUserMode();
   const [open, setOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
@@ -282,7 +282,12 @@ const navItems = [
                 <ModeToggle />
               </div>
             )}
-            {!isShowcase && (
+            {/* Na vitrine o toggle de tema some so para VISITANTE (a landing
+                e marketing). Quem esta logado tem o controle em toda tela —
+                sem isso /search-workers, que e showcase, ficava sem o icone e
+                a secao direita inteira deslocava, desalinhando o header entre
+                paginas. */}
+            {(!isShowcase || user) && (
               <ThemeToggle className="hover:bg-white/10 rounded-lg transition-colors" />
             )}
             {/* Notification Bell */}
@@ -520,6 +525,17 @@ const navItems = [
             </Sheet>
           </div>
         </div>
+
+        {/* Filete do ambiente: a cor acompanha o modo em TODA tela interna,
+            nao so no /app. E o sinal continuo de "estou no azul ou no verde"
+            sem pintar pagina nenhuma — as telas tem fundo proprio e uma
+            tonalizacao global ficaria invisivel atras delas. */}
+        {user && isModeResolved && (
+          <div
+            className={`h-[3px] w-full ${mode === "contractor" ? "bg-bico-accent" : "bg-bico-work"}`}
+            aria-hidden="true"
+          />
+        )}
 
         {/* No mobile o seletor nao cabe na mesma linha: logo (172px) + os tres
             icones (116px) + o seletor (201px) dao 504px num viewport de 375px.

@@ -65,7 +65,8 @@ export default function SearchWorkers() {
     canViewProfiles,
     remainingFreeViews,
     canViewContacts,
-    remainingFreeUnlocks
+    remainingFreeUnlocks,
+    loading: carregandoAcesso
   } = useAccessControl();
 
   useEffect(() => {
@@ -430,8 +431,14 @@ export default function SearchWorkers() {
         </div>
       </div>
 
-      {/* Banner de acesso para testers */}
-      {isTester && (
+      {/* As duas faixas abaixo so entram depois que o acesso resolve. Antes
+          disso isTester e false por padrao, entao a faixa de limites
+          aparecia por um instante e era substituida por BETA TESTER — o
+          pisca-pisca. Enquanto carrega, um espaco da mesma altura evita que
+          a pagina pule quando a faixa certa chegar. */}
+      {carregandoAcesso && <div className="h-[49px]" aria-hidden="true" />}
+
+      {!carregandoAcesso && isTester && (
         <div className="bg-purple-900/30 border-b border-purple-500/30 py-3">
           <div className="container mx-auto px-4 flex items-center gap-2">
             <Badge className="bg-purple-600">BETA TESTER</Badge>
@@ -443,7 +450,7 @@ export default function SearchWorkers() {
       )}
 
       {/* Banner de limite para usuários gratuitos */}
-      {!isTester && !isPremium && (
+      {!carregandoAcesso && !isTester && !isPremium && (
         <div className="bg-yellow-900/30 border-b border-yellow-500/30 py-3">
           <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-5">
