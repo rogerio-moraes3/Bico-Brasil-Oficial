@@ -14,7 +14,7 @@ import { cn, safeGoBack } from "@/lib/utils";
 import { Badge } from "./ui/badge";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { useUserMode } from "@/contexts/UserModeContext";
-import { ModeToggle } from "./ModeToggle";
+import { ModeChip } from "./ModeChip";
 import { Separator } from "./ui/separator";
 import { BeforeInstallPromptEvent, getDeferredPwaPrompt, setDeferredPwaPrompt, clearDeferredPwaPrompt } from "@/lib/pwaPrompt";
 
@@ -133,6 +133,14 @@ const navItems = [
 
   const isPublicLanding = location.pathname === '/' || publicPaths.some(p => p !== '/' && location.pathname.startsWith(p));
 
+  // O menu publico (marketing) e so para VISITANTE. Quem esta logado ve sempre
+  // o menu interno — inclusive em /search-workers e /procurar-bicos, que sao
+  // rotas publicas mas tambem de uso diario de quem ja tem conta. Era isso que
+  // fazia o menu "mudar sozinho" ao navegar entre telas logado.
+  // isPublicLanding continua valendo sozinho no bloco Entrar/Criar conta, que
+  // ja roda dentro do ramo !user.
+  const mostrarMenuPublico = !user && isPublicLanding;
+
   const handleNavClick = (path: string) => {
     navigate(path);
     setOpen(false);
@@ -208,7 +216,7 @@ const navItems = [
             </Link>
           </div>
 
-          {isPublicLanding && (
+          {mostrarMenuPublico && (
             <nav className="hidden md:flex items-center gap-8 mx-auto">
               {saasNavLinks.map(({ path, label }) => (
                 <Link
@@ -231,7 +239,7 @@ const navItems = [
               ))}
             </nav>
           )}
-          { !isPublicLanding && (
+          { !mostrarMenuPublico && (
             <nav className="hidden md:flex items-center gap-2 z-40 ml-4">
               <Link
                 to="/app"
@@ -270,8 +278,8 @@ const navItems = [
             {/* Modo Contratar/Trabalhar — so pra quem esta logado; a landing
                 publica nao tem modo. */}
             {user && (
-              <div className="hidden sm:block mr-1">
-                <ModeToggle />
+              <div className="mr-1">
+                <ModeChip />
               </div>
             )}
             {!isShowcase && (
