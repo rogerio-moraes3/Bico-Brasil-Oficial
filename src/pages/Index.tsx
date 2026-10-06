@@ -1,22 +1,20 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { Briefcase, Search, ArrowRight, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
-import { fadeInUp } from "@/lib/animations";
+import { ArrowRight, Briefcase, Megaphone, Search, UserPlus } from "lucide-react";
 import { useUserMode } from "@/contexts/UserModeContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FeaturedServicesSection } from "@/components/FeaturedServicesSection";
-import { PlatformStatsStrip } from "@/components/PlatformStatsStrip";
 import { PlatformAuthoritySection } from "@/components/PlatformAuthoritySection";
 import { RecentWorkersSection } from "@/components/RecentWorkersSection";
-import { TrustStrip } from "@/components/TrustStrip";
 import { ProfileCompletionWidget } from "@/components/ProfileCompletionWidget";
-import { useAuth } from "@/contexts/AuthContext";
+
+const CATEGORIAS = ["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor", "Serviços Gerais", "Outros"];
 
 export default function Index() {
   const navigate = useNavigate();
-  const { mode, setMode, isModeResolved, hasChosenMode } = useUserMode();
+  const { mode, isModeResolved, hasChosenMode } = useUserMode();
   const { user } = useAuth();
 
   // Enquanto o modo nao resolveu, nao pinta nada: evita mostrar a tela de um
@@ -31,136 +29,159 @@ export default function Index() {
     return <Navigate to="/escolher-ambiente" replace />;
   }
 
-  const handleContractorClick = () => {
-    setMode("contractor");
-    navigate("/search-workers");
-  };
+  const contratar = mode === "contractor";
 
-  const handleProfessionalClick = () => {
-    setMode("professional");
-    navigate("/procurar-bicos");
-  };
-
-  const greeting = (() => {
-    const rawName = user?.user_metadata?.name?.split(" ")[0] || user?.email?.split("@")[0];
-    const name = rawName && rawName.length > 0 ? rawName : null;
-    const hour = new Date().getHours();
-    const period = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
-    return name ? `${period}, ${name}` : period;
+  const saudacao = (() => {
+    const bruto = user?.user_metadata?.name?.split(" ")[0] || user?.email?.split("@")[0];
+    const nome = bruto && bruto.length > 0 ? bruto : null;
+    const h = new Date().getHours();
+    const periodo = h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite";
+    return nome ? `${periodo}, ${nome}` : periodo;
   })();
 
-  const primaryCardClassName =
-    "group flex flex-col items-start gap-3 h-full rounded-lg border border-primary/50 dark:border-primary/35 bg-primary/[0.10] dark:bg-primary/12 p-5 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/70 hover:bg-primary/[0.15] hover:scale-[1.05] transition-all duration-300 stagger-fade";
+  // Um ambiente, duas acoes. Nada de misturar os dois publicos na mesma tela:
+  // quem esta em CONTRATAR nao ve acao de TRABALHAR e vice-versa.
+  const ambiente = contratar
+    ? {
+        rotulo: "Contratar",
+        titulo: "O que você precisa resolver?",
+        pontinho: "bg-bico-accent",
+        fundo: "bg-bico-accent/[0.05]",
+        acoes: [
+          {
+            icone: Search,
+            titulo: "Encontrar um profissional",
+            descricao: "Busque quem já faz esse serviço perto de você.",
+            cta: "Buscar profissionais",
+            destino: "/search-workers",
+          },
+          {
+            icone: Megaphone,
+            titulo: "Publicar uma vaga",
+            descricao: "Descreva o que precisa e deixe os profissionais virem até você.",
+            cta: "Publicar vaga",
+            destino: "/post-job",
+          },
+        ],
+      }
+    : {
+        rotulo: "Trabalhar",
+        titulo: "O que você quer fazer?",
+        pontinho: "bg-bico-work",
+        fundo: "bg-bico-work/[0.05]",
+        acoes: [
+          {
+            icone: Briefcase,
+            titulo: "Encontrar um bico",
+            descricao: "Veja as oportunidades abertas na sua cidade.",
+            cta: "Encontrar bicos",
+            destino: "/procurar-bicos",
+          },
+          {
+            icone: UserPlus,
+            titulo: "Oferecer meu serviço",
+            descricao: "Apareça nas buscas de quem está contratando.",
+            cta: "Oferecer meu serviço",
+            destino: "/offer-services",
+          },
+        ],
+      };
 
-  const secondaryCardClassName =
-    "group flex flex-col items-start gap-3 h-full rounded-lg border border-slate-200/60 dark:border-border/70 bg-white/80 dark:bg-card/90 p-5 shadow-xl shadow-slate-200/60 dark:shadow-sm hover:shadow-2xl hover:shadow-slate-300/50 hover:bg-white dark:hover:bg-card hover:scale-[1.05] transition-all duration-300 stagger-fade backdrop-blur-sm";
+  // Cor do ambiente so na tonalizacao de fundo do main e nos elementos de
+  // acao — nunca a tela inteira pintada. O wrapper mantem bg-background
+  // opaco: sem ele a tonalizacao de 5% e translucida e deixa passar o fundo
+  // escuro do body, jogando texto escuro sobre fundo escuro.
+  const acentoTexto = contratar ? "text-bico-accent" : "text-bico-work";
+  const acentoBotao = contratar
+    ? "bg-bico-accent hover:bg-bico-accent-hover"
+    : "bg-bico-work hover:bg-bico-work-hover";
 
   return (
     <>
       <Helmet>
         <title>Bico Brasil</title>
-        <meta name="description" content="Bico Brasil — O que você precisa agora?" />
+        <meta name="description" content={`Bico Brasil — ambiente ${ambiente.rotulo}`} />
       </Helmet>
 
-      <div className="min-h-screen flex flex-col bg-background relative bb-surface-muted overflow-hidden">
-        {/* Blurry blobs for depth */}
-        <div className="bb-blob bb-blob-1" aria-hidden="true" />
-        <div className="bb-blob bb-blob-2" aria-hidden="true" />
-        <div className="bb-blob bb-blob-3" aria-hidden="true" />
+      <div className="flex min-h-dvh flex-col bg-background">
         <Header />
-        <PlatformStatsStrip />
 
-        <main id="main-content" className="flex-1">
-          {/* Trust strip */}
-          <TrustStrip />
-
-          {/* Profile completion widget (logged in users only) */}
+        <main id="main-content" className={`flex-1 ${ambiente.fundo}`}>
           <ProfileCompletionWidget />
 
-          {/* Hero CTA block */}
-          <section className="hero-bg bb-surface-soft container mx-auto px-4 pt-16 pb-14 md:pt-20 md:pb-16 flex flex-col items-center text-center gap-3 md:gap-4">
-            <div className="inline-flex items-center gap-2 bg-primary/[0.08] rounded-full px-3.5 py-1.5 mb-1">
-              <Sparkles className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/85">{greeting}</span>
+          <section className="mx-auto w-full max-w-3xl px-5 pb-12 pt-10 sm:pt-14">
+            {/* Badge do ambiente: diz em 1 segundo onde a pessoa esta. */}
+            <div className="flex items-center gap-2">
+              <span className={`h-2 w-2 rounded-full ${ambiente.pontinho}`} aria-hidden="true" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                Ambiente · {ambiente.rotulo}
+              </span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-extrabold text-foreground tracking-tight leading-[1.05] gradient-text">
-              O que você precisa hoje?
+            <p className="mt-6 text-sm text-muted-foreground">{saudacao}</p>
+            <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+              {ambiente.titulo}
             </h1>
-            <p className="text-sm text-muted-foreground max-w-sm leading-relaxed mt-1.5">
-              Conecte-se ao trabalhador certo na sua cidade — ou encontre o próximo bico.
-            </p>
 
-            <div className="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 mt-7">
-              {/* Primary: hire */}
-              <motion.button
-                {...fadeInUp({ duration: 0.38, distance: 14, delay: 0.04 })}
-                onClick={handleContractorClick}
-                className={primaryCardClassName}
-                style={{ ["--stagger-delay" as string]: "0ms" }}
-              >
-                <div className="w-12 h-12 rounded-md bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors duration-200">
-                  <Search className="w-5 h-5 text-primary-foreground" aria-hidden="true" />
-                </div>
-                <div className="text-left">
-                  <p className="font-extrabold text-foreground text-[17px] leading-snug tracking-tight">Encontrar profissionais agora</p>
-                  <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                    Busque profissionais verificados perto de você
-                  </p>
-                </div>
-                <span className="mt-auto inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90 transition-colors duration-200">
-                  Buscar agora <ArrowRight className="w-3 h-3" aria-hidden="true" />
-                </span>
-              </motion.button>
-
-              {/* Secondary: work */}
-              <motion.button
-                {...fadeInUp({ duration: 0.38, distance: 14, delay: 0.12 })}
-                onClick={handleProfessionalClick}
-                className={secondaryCardClassName}
-                style={{ ["--stagger-delay" as string]: "80ms" }}
-              >
-                <div className="w-12 h-12 rounded-md bg-slate-100 dark:bg-muted/80 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-muted transition-colors duration-200">
-                  <Briefcase className="w-5 h-5 text-slate-500 dark:text-muted-foreground" aria-hidden="true" />
-                </div>
-                <div className="text-left">
-                  <p className="font-extrabold text-foreground text-[17px] leading-snug tracking-tight">Começar a ganhar dinheiro</p>
-                  <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                    Encontre bicos e ganhe renda extra hoje
-                  </p>
-                </div>
-                <div className="mt-auto flex items-center gap-1 text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors duration-200">
-                  Ver vagas <ArrowRight className="w-3 h-3" aria-hidden="true" />
-                </div>
-              </motion.button>
+            {/* Duas acoes, sem caixa em volta de cada uma: separadas por uma
+                unica linha. Menos borda, mais tipografia. */}
+            <div className="mt-10 divide-y divide-border/50 border-y border-border/50">
+              {ambiente.acoes.map(({ icone: Icone, titulo, descricao, cta, destino }) => (
+                <button
+                  key={destino}
+                  type="button"
+                  onClick={() => navigate(destino)}
+                  className="group flex w-full items-start gap-4 py-7 text-left transition-opacity hover:opacity-80"
+                >
+                  <Icone className={`mt-0.5 h-6 w-6 shrink-0 ${acentoTexto}`} aria-hidden="true" />
+                  <span className="flex-1">
+                    <span className="block text-lg font-bold text-foreground sm:text-xl">{titulo}</span>
+                    <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                      {descricao}
+                    </span>
+                    <span
+                      className={`mt-4 inline-flex items-center gap-1.5 rounded-lg ${acentoBotao} px-4 py-2 text-sm font-bold text-white transition-colors`}
+                    >
+                      {cta}
+                      <ArrowRight
+                        className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </span>
+                </button>
+              ))}
             </div>
 
-            {/* Categorias populares — lista vertical */}
-            <div className="w-full max-w-xl mt-8">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 text-left">
-                Categorias populares
-              </p>
-              <nav className="flex flex-col divide-y divide-border/60 border-t border-border/60">
-                {["Pedreiro", "Diarista", "Eletricista", "Jardineiro", "Pintor", "Serviços Gerais", "Outros"].map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
-                    className="py-3 text-left text-sm font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    {cat}
-                  </button>
-                ))}
+            {/* Categorias: atalho de busca de profissional, entao so existem no
+                ambiente CONTRATAR. Antes apareciam pra todo mundo, inclusive
+                pra quem esta procurando bico. Mesmo destino de sempre. */}
+            {contratar && (
+              <nav className="mt-10" aria-label="Categorias populares">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                  Categorias populares
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {CATEGORIAS.map(cat => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
+                      className="rounded-full bg-foreground/[0.04] px-3.5 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-foreground/[0.08]"
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
               </nav>
-            </div>
+            )}
           </section>
 
-          {/* Novos profissionais — horizontal strip */}
-          <RecentWorkersSection />
+          {/* Conteudo de apoio, um por ambiente: quem contrata ve
+              profissionais, quem trabalha ve quem esta chegando na praca. */}
+          {contratar ? <FeaturedServicesSection /> : <RecentWorkersSection />}
 
-          {/* Featured workers */}
-          <FeaturedServicesSection />
-
-          {/* Platform authority block */}
+          {/* Prova social institucional — vale para os dois, nao e um dos CTAs. */}
           <PlatformAuthoritySection />
         </main>
 
