@@ -14,7 +14,7 @@ import { cn, safeGoBack } from "@/lib/utils";
 import { Badge } from "./ui/badge";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { useUserMode } from "@/contexts/UserModeContext";
-import { ModeChip } from "./ModeChip";
+import { ModeToggle } from "./ModeToggle";
 import { Separator } from "./ui/separator";
 import { BeforeInstallPromptEvent, getDeferredPwaPrompt, setDeferredPwaPrompt, clearDeferredPwaPrompt } from "@/lib/pwaPrompt";
 
@@ -178,7 +178,7 @@ const navItems = [
 
 <header
   className={cn(
-    "sticky top-0 z-50 w-full mx-auto h-24 text-white shadow-sm backdrop-blur-md",
+    "sticky top-0 z-50 w-full mx-auto min-h-24 text-white shadow-sm backdrop-blur-md",
     isShowcase
       ? "bico-showcase bg-bico-showcase border-b border-1.5 border-white/10"
       : "bg-gradient-to-r from-[#0B1F3A] to-[#0F2A4D] border-b border-white/10"
@@ -278,8 +278,8 @@ const navItems = [
             {/* Modo Contratar/Trabalhar — so pra quem esta logado; a landing
                 publica nao tem modo. */}
             {user && (
-              <div className="mr-1">
-                <ModeChip />
+              <div className="mr-1 hidden sm:block">
+                <ModeToggle />
               </div>
             )}
             {!isShowcase && (
@@ -520,6 +520,18 @@ const navItems = [
             </Sheet>
           </div>
         </div>
+
+        {/* No mobile o seletor nao cabe na mesma linha: logo (172px) + os tres
+            icones (116px) + o seletor (201px) dao 504px num viewport de 375px.
+            Em vez de escondê-lo — que e justamente o problema que esta
+            arquitetura veio resolver — ele ganha uma linha propria de largura
+            cheia logo abaixo. O controle continua visivel em TODOS os
+            breakpoints; o que muda por breakpoint e so onde ele fica. */}
+        {user && (
+          <div className="border-t border-white/10 px-4 pb-3 pt-2 sm:hidden [&>div]:w-full [&_button]:flex-1">
+            <ModeToggle />
+          </div>
+        )}
       </header>
     </>
   );
