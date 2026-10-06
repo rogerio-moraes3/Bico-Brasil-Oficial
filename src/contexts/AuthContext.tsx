@@ -11,7 +11,11 @@ interface AuthContextType {
   loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+// undefined (e nao `{} as AuthContextType`): com o objeto vazio a guarda de
+// useAuth nunca disparava, e usar o hook fora do provider devolvia user
+// undefined silenciosamente em vez de quebrar. Foi assim que a persistencia do
+// ambiente ficou morta sem ninguem perceber.
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

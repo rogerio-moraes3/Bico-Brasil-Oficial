@@ -25,6 +25,7 @@ import { toast } from "@/hooks/use-toast";
 // reduz o chunk inicial e adia o download de cada página pro momento em
 // que ela é realmente visitada.
 const Index = lazy(() => import("./pages/Index"));
+const EscolherAmbiente = lazy(() => import("./pages/EscolherAmbiente"));
 const SalesLandingPage = lazy(() => import("./pages/SalesLandingPage"));
 const Home = lazy(() => import("./pages/Home"));
 const Jobs = lazy(() => import("./pages/Jobs"));
@@ -143,8 +144,12 @@ function App() {
 
   return (
     <BrowserRouter>
-      <UserModeProvider>
-        <AuthProvider>
+      {/* AuthProvider precisa envolver o UserModeProvider, nao o contrario:
+          o UserModeProvider chama useAuth() e, invertido, lia um contexto que
+          nao existia acima dele — user ficava undefined para sempre e nada de
+          last_mode era lido ou gravado. */}
+      <AuthProvider>
+        <UserModeProvider>
           <NotificationProvider>
             <ProfileCompletionProvider>
             <GracePeriodBanner />
@@ -168,6 +173,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<SalesLandingPage />} />
                   <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                  <Route path="/escolher-ambiente" element={<ProtectedRoute><EscolherAmbiente /></ProtectedRoute>} />
                   <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
                   <Route path="/intro" element={<SalesLandingPage />} />
                   <Route path="/landing" element={<PreLaunchLanding />} />
@@ -267,8 +273,8 @@ function App() {
             <BottomNav />
             </ProfileCompletionProvider>
           </NotificationProvider>
-        </AuthProvider>
-      </UserModeProvider>
+        </UserModeProvider>
+      </AuthProvider>
     </BrowserRouter >
   );
 }

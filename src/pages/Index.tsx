@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Briefcase, Search, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
@@ -16,8 +16,20 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export default function Index() {
   const navigate = useNavigate();
-  const { mode, setMode } = useUserMode();
+  const { mode, setMode, isModeResolved, hasChosenMode } = useUserMode();
   const { user } = useAuth();
+
+  // Enquanto o modo nao resolveu, nao pinta nada: evita mostrar a tela de um
+  // ambiente e trocar para o outro na frente do usuario.
+  if (!isModeResolved) {
+    return <div className="min-h-dvh bg-background" aria-busy="true" />;
+  }
+
+  // Quem ainda nao escolheu ambiente vai para o portao. Nao faz sentido ter o
+  // hero de escolha aqui E um portao separado — o portao e a escolha.
+  if (!hasChosenMode) {
+    return <Navigate to="/escolher-ambiente" replace />;
+  }
 
   const handleContractorClick = () => {
     setMode("contractor");

@@ -32,6 +32,11 @@ export const BottomNav = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // O portao e um momento a parte: tela cheia, sem navegacao por cima.
+  // Renderizar a bottom nav ali reintroduziria o "ja estou dentro de algum
+  // ambiente?" que a tela existe justamente pra responder.
+  if (location.pathname === '/escolher-ambiente') return null;
+
   const isActive = (path: string) => location.pathname === path;
 
   // Cor dinâmica baseada no modo — bico.accent para Contratar,

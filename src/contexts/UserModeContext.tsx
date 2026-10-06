@@ -111,12 +111,23 @@ export const UserModeProvider = ({ children }: { children: ReactNode }) => {
       gravarEscolha(novo);
 
       if (user) {
+        // .select() de proposito: sem ele o PostgREST responde 204 mesmo
+        // quando o UPDATE bate 0 linhas (RLS, auth_id errado), e a falha
+        // passa silenciosa. Com ele da pra reclamar quando nada foi gravado.
         void supabase
           .from("users")
           .update({ last_mode: novo })
           .eq("auth_id", user.id)
-          .then(({ error }) => {
-            if (error) console.error("Falha ao salvar o ambiente escolhido:", error);
+          .select("auth_id")
+          .then(({ data, error }) => {
+            if (error) {
+              console.error("Falha ao salvar o ambiente escolhido:", error);
+            } else if (!data || data.length === 0) {
+              console.error(
+                "Ambiente nao gravado: o UPDATE em users nao afetou nenhuma linha para auth_id",
+                user.id
+              );
+            }
           });
       }
     },
