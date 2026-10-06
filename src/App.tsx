@@ -1,8 +1,8 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useCallback, useEffect, useState, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { UserModeProvider } from "./contexts/UserModeContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -65,6 +65,19 @@ const JobDetails = lazy(() => import("./pages/JobDetails"));
 const PublicStats = lazy(() => import("./pages/PublicStats"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
 
+/**
+ * Avisa quando o app esta de fato pronto (sessao resolvida) para a splash
+ * poder sair. Precisa ser um componente separado porque App fica ACIMA do
+ * AuthProvider e nao pode chamar useAuth().
+ */
+const SinalDeProntidao = ({ onReady }: { onReady: () => void }) => {
+  const { loading } = useAuth();
+  useEffect(() => {
+    if (!loading) onReady();
+  }, [loading, onReady]);
+  return null;
+};
+
 const PageLoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary" />
@@ -82,6 +95,9 @@ function App() {
     // Mostrar splash apenas se não foi exibido nesta sessão
     return !sessionStorage.getItem('splashShown');
   });
+
+  const [appPronto, setAppPronto] = useState(false);
+  const marcarPronto = useCallback(() => setAppPronto(true), []);
 
   useEffect(() => {
     // CENTRAL PWA CAPTURE: Handle beforeinstallprompt at app level to prevent conflicts
@@ -134,21 +150,29 @@ function App() {
     }
   }, []);
 
-  // Mostrar splash screen apenas uma vez por sessão
-  if (showSplash) {
-    return <SplashScreen onComplete={() => {
-      sessionStorage.setItem('splashShown', 'true');
-      setShowSplash(false);
-    }} />;
-  }
-
   return (
+    <>
+      {/* A splash e uma CORTINA por cima do app, nao um substituto dele. Antes
+          era `if (showSplash) return <SplashScreen/>` : durante 1,8s nao
+          existia router, nem AuthProvider, nem chunk de rota sendo baixado —
+          o app so comecava a carregar depois. Agora tudo carrega por tras e a
+          cortina sai assim que a sessao resolve (com minimo e teto proprios). */}
+      {showSplash && (
+        <SplashScreen
+          ready={appPronto}
+          onComplete={() => {
+            sessionStorage.setItem('splashShown', 'true');
+            setShowSplash(false);
+          }}
+        />
+      )}
     <BrowserRouter>
       {/* AuthProvider precisa envolver o UserModeProvider, nao o contrario:
           o UserModeProvider chama useAuth() e, invertido, lia um contexto que
           nao existia acima dele — user ficava undefined para sempre e nada de
           last_mode era lido ou gravado. */}
       <AuthProvider>
+        <SinalDeProntidao onReady={marcarPronto} />
         <UserModeProvider>
           <NotificationProvider>
             <ProfileCompletionProvider>
@@ -276,6 +300,7 @@ function App() {
         </UserModeProvider>
       </AuthProvider>
     </BrowserRouter >
+    </>
   );
 }
 
