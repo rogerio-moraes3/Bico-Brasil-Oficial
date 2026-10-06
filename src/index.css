@@ -700,6 +700,134 @@ button {
     transition-property: color, background-color, border-color, box-shadow, opacity, transform, filter;
   }
 
+
+  /* ===== Lote B — grid e escala unicos =====
+     Havia tres sistemas para telas do mesmo nivel: calha de 16, 24 e 20px e
+     H1 de 36/800, 60/900 e 36/800. Aqui fica UM de cada, em CSS, para a
+     proxima tela herdar em vez de inventar a quarta variante. */
+
+  .bb-container {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 72rem;
+    /* 20px: 16px encostava o texto na borda em telas de 360px e 24px comia
+       largura demais no celular. 20 -> 24 -> 32 conforme sobra espaco. */
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .bb-container {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .bb-container {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Medida de leitura. O container cuida da calha e da largura da PAGINA;
+     blocos de texto corrido se limitam a isto dentro dele. */
+  .bb-measure {
+    max-width: 44rem;
+  }
+
+  /* H1 unico e fluido. 60px/900 era o ponto fora da curva (uma tela so);
+     36px/800 era a maioria. A escala sobe de 30px no celular ate 48px no
+     desktop: mantem o peso da maioria e cresce sem o grito dos 60px. */
+  .bb-h1 {
+    font-size: clamp(1.875rem, 1.1rem + 3.1vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.022em;
+    line-height: 1.08;
+  }
+
+  /* ===== Lote B — linguagem visual ===== */
+
+  /* Barrinha curta sob titulo de secao. Usa a cor do ambiente (--bb-env) e
+     cai no azul de foco quando nao houver ambiente definido. */
+  .bb-title-rule {
+    position: relative;
+    padding-bottom: 0.7rem;
+  }
+
+  .bb-title-rule::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 2.25rem;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--bb-env, hsl(var(--bb-focus)));
+  }
+
+  /* CTA pilula: sombra discreta e elevacao no hover. */
+  .bb-cta {
+    border-radius: 999px;
+    box-shadow: 0 6px 16px -8px rgba(2, 8, 23, 0.45);
+    transition-property: transform, box-shadow, background-color, filter;
+    transition-duration: 180ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .bb-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px -12px rgba(2, 8, 23, 0.55);
+  }
+
+  .bb-cta:active {
+    transform: translateY(0);
+  }
+
+  /* Selo circular solido com icone branco dentro. */
+  .bb-badge-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    background: var(--bb-env);
+    color: #fff;
+    box-shadow: 0 10px 22px -12px var(--bb-env);
+  }
+
+  /* Hero com profundidade: gradiente escuro + halo da cor do ambiente por
+     cima, nunca cor chapada. --bb-env e --bb-env-soft vem do componente. */
+  .bb-hero {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(75rem 32rem at 50% -24%, var(--bb-env-soft), transparent 62%),
+      linear-gradient(160deg, #0B1220 0%, #0E1A2E 55%, #0A1526 100%);
+    color: #fff;
+  }
+
+  /* Brilho que respira atras do hero. Desligado em prefers-reduced-motion
+     (ver o bloco no fim do arquivo) junto dos demais decorativos. */
+  .bb-hero-glow {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.45;
+    background: var(--bb-env);
+    animation: bbHeroGlow 16s ease-in-out infinite alternate;
+  }
+
+  @keyframes bbHeroGlow {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    to {
+      transform: translate3d(22px, -18px, 0) scale(1.08);
+    }
+  }
+
   /* Trechos que sao escuros nos DOIS temas (o header, as metades coloridas
      do portao) precisam do anel claro mesmo no tema claro. Em vez de um
      anel proprio em cada botao de dentro, troca-se o token no container e
@@ -1268,23 +1396,6 @@ button {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
-/* Phase 4 — Container max-width consistency */
-.bb-container {
-  width: 100%;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 640px) {
-  .bb-container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
 /* ============================================================
    LIGHT MODE SURFACE SYSTEM — Premium SaaS Visual Depth
    All rules scoped to :root:not(.dark) to protect dark theme.
@@ -1342,6 +1453,7 @@ button {
   /* Decorativos puros: desligados, nao encurtados. Parados no quadro 1 eles
      continuam bonitos e param de respirar no fundo da tela. */
   .bb-blob,
+  .bb-hero-glow,
   .futuristic-bg-main,
   .futuristic-bg-secondary,
   .metallic-grid,

@@ -47,6 +47,10 @@ export default function Index() {
         titulo: "O que você precisa resolver?",
         pontinho: "bg-bico-accent",
         fundo: "bg-bico-accent/[0.05]",
+        // Alimentam --bb-env / --bb-env-soft: o selo circular, a barrinha de
+        // titulo e o halo do hero saem todos daqui. Cores da marca.
+        cor: "#5B8DEF",
+        corSuave: "rgba(91, 141, 239, 0.30)",
         acoes: [
           {
             icone: Search,
@@ -69,6 +73,8 @@ export default function Index() {
         titulo: "O que você quer fazer?",
         pontinho: "bg-bico-work",
         fundo: "bg-bico-work/[0.05]",
+        cor: "#12B886",
+        corSuave: "rgba(18, 184, 134, 0.30)",
         acoes: [
           {
             icone: Briefcase,
@@ -91,7 +97,6 @@ export default function Index() {
   // acao — nunca a tela inteira pintada. O wrapper mantem bg-background
   // opaco: sem ele a tonalizacao de 5% e translucida e deixa passar o fundo
   // escuro do body, jogando texto escuro sobre fundo escuro.
-  const acentoTexto = contratar ? "text-bico-accent" : "text-bico-work";
   const acentoBotao = contratar
     ? "bg-bico-accent hover:bg-bico-accent-hover"
     : "bg-bico-work hover:bg-bico-work-hover";
@@ -103,86 +108,112 @@ export default function Index() {
         <meta name="description" content={`Bico Brasil — ambiente ${ambiente.rotulo}`} />
       </Helmet>
 
-      <div className="flex min-h-dvh flex-col bg-background">
+      <div
+        className="flex min-h-dvh flex-col bg-background"
+        style={{ ["--bb-env" as string]: ambiente.cor, ["--bb-env-soft" as string]: ambiente.corSuave }}
+      >
         <Header />
 
-        <main id="main-content" className={`flex-1 ${ambiente.fundo}`}>
+        <main id="main-content" className="flex-1">
           <ProfileCompletionWidget />
 
-          <section className="mx-auto w-full max-w-3xl px-5 pb-12 pt-10 sm:pt-14">
-            {/* Badge do ambiente: diz em 1 segundo onde a pessoa esta. */}
-            <div className="flex items-center gap-2">
-              <span className={`h-2 w-2 rounded-full ${ambiente.pontinho}`} aria-hidden="true" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                Ambiente · {ambiente.rotulo}
-              </span>
-            </div>
+          {/* HERO — gradiente escuro com halo da cor do ambiente por cima,
+              nunca cor chapada. bb-on-dark: qualquer foco aqui dentro usa o
+              anel claro do Lote C. */}
+          <section className="bb-hero bb-on-dark">
+            <div
+              className="bb-hero-glow -right-24 -top-40 h-[28rem] w-[28rem] sm:-right-10"
+              aria-hidden="true"
+            />
 
-            <p className="mt-6 text-sm text-muted-foreground">{saudacao}</p>
-            <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              {ambiente.titulo}
-            </h1>
-
-            {/* Duas acoes, sem caixa em volta de cada uma: separadas por uma
-                unica linha. Menos borda, mais tipografia. */}
-            <div className="mt-10 divide-y divide-border/50 border-y border-border/50">
-              {ambiente.acoes.map(({ icone: Icone, titulo, descricao, cta, destino }) => (
-                <button
-                  key={destino}
-                  type="button"
-                  onClick={() => navigate(destino)}
-                  className="group flex w-full items-start gap-4 py-7 text-left transition-opacity hover:opacity-80"
-                >
-                  <Icone className={`mt-0.5 h-6 w-6 shrink-0 ${acentoTexto}`} aria-hidden="true" />
-                  <span className="flex-1">
-                    <span className="block text-lg font-bold text-foreground sm:text-xl">{titulo}</span>
-                    <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
-                      {descricao}
-                    </span>
-                    <span
-                      className={`mt-4 inline-flex items-center gap-1.5 rounded-lg ${acentoBotao} px-4 py-2 text-sm font-bold text-white transition-colors`}
-                    >
-                      {cta}
-                      <ArrowRight
-                        className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                        aria-hidden="true"
-                      />
-                    </span>
+            <div className="bb-container relative py-14 sm:py-20">
+              <div className="bb-measure">
+                {/* Badge do ambiente: diz em 1 segundo onde a pessoa esta. */}
+                <div className="flex items-center gap-2">
+                  <span className={`h-2 w-2 rounded-full ${ambiente.pontinho}`} aria-hidden="true" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+                    Ambiente · {ambiente.rotulo}
                   </span>
-                </button>
-              ))}
-            </div>
+                </div>
 
-            {/* Categorias: atalho de busca de profissional, entao so existem no
-                ambiente CONTRATAR. Antes apareciam pra todo mundo, inclusive
-                pra quem esta procurando bico. Mesmo destino de sempre. */}
-            {contratar && (
-              <nav className="mt-10" aria-label="Categorias populares">
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                  Categorias populares
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {CATEGORIAS.map(cat => (
+                <p className="mt-7 text-sm text-white/70">{saudacao}</p>
+                <h1 className="bb-h1 mt-1.5 text-white">{ambiente.titulo}</h1>
+              </div>
+            </div>
+          </section>
+
+          {/* Conteudo: tonalizacao de 5% do ambiente, sobre o fundo opaco do
+              wrapper (sem ele o texto escuro cai em cima do body escuro). */}
+          <div className={ambiente.fundo}>
+            <section className="bb-container py-14 sm:py-20">
+              <div className="bb-measure">
+                {/* Duas acoes, sem caixa em volta de cada uma: separadas por
+                    uma unica linha. Menos borda, mais tipografia. */}
+                <div className="divide-y divide-border/50 border-y border-border/50">
+                  {ambiente.acoes.map(({ icone: Icone, titulo, descricao, cta, destino }) => (
                     <button
-                      key={cat}
+                      key={destino}
                       type="button"
-                      onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
-                      className="rounded-full bg-foreground/[0.04] px-3.5 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-foreground/[0.08]"
+                      onClick={() => navigate(destino)}
+                      className="group flex w-full items-start gap-4 py-8 text-left sm:gap-5 sm:py-10"
                     >
-                      {cat}
+                      {/* Selo circular solido, icone branco dentro. */}
+                      <span className="bb-badge-icon" aria-hidden="true">
+                        <Icone className="h-6 w-6" strokeWidth={1.9} />
+                      </span>
+
+                      <span className="flex-1">
+                        <span className="block text-lg font-bold text-foreground sm:text-xl">
+                          {titulo}
+                        </span>
+                        <span className="mt-1.5 block text-sm leading-relaxed text-muted-foreground">
+                          {descricao}
+                        </span>
+                        <span
+                          className={`bb-cta mt-5 inline-flex items-center gap-2 ${acentoBotao} px-5 py-2.5 text-sm font-bold text-white group-hover:-translate-y-0.5`}
+                        >
+                          {cta}
+                          <ArrowRight
+                            className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                            aria-hidden="true"
+                          />
+                        </span>
+                      </span>
                     </button>
                   ))}
                 </div>
-              </nav>
-            )}
-          </section>
 
-          {/* Conteudo de apoio, um por ambiente: quem contrata ve
-              profissionais, quem trabalha ve quem esta chegando na praca. */}
-          {contratar ? <FeaturedServicesSection /> : <RecentWorkersSection />}
+                {/* Categorias: atalho de busca de profissional, entao so
+                    existem no ambiente CONTRATAR. Mesmo destino de sempre. */}
+                {contratar && (
+                  <nav className="mt-14" aria-label="Categorias populares">
+                    <p className="bb-title-rule text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                      Categorias populares
+                    </p>
+                    <div className="mt-5 flex flex-wrap gap-2.5">
+                      {CATEGORIAS.map(cat => (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => navigate(`/search-workers?q=${encodeURIComponent(cat)}`)}
+                          className="rounded-full bg-foreground/[0.04] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-foreground/[0.08]"
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </nav>
+                )}
+              </div>
+            </section>
 
-          {/* Prova social institucional — vale para os dois, nao e um dos CTAs. */}
-          <PlatformAuthoritySection />
+            {/* Conteudo de apoio, um por ambiente: quem contrata ve
+                profissionais, quem trabalha ve quem esta chegando na praca. */}
+            {contratar ? <FeaturedServicesSection /> : <RecentWorkersSection />}
+
+            {/* Prova social institucional — vale para os dois, nao e um dos CTAs. */}
+            <PlatformAuthoritySection />
+          </div>
         </main>
 
         <Footer />
