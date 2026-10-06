@@ -196,6 +196,12 @@ All colors MUST be HSL.
     --input: var(--xp-surface);
     --ring: var(--xp-ring);
 
+    /* Cor do anel de foco. Existe separada de --ring porque --ring tambem
+       pinta bordas de campo: o foco precisa de contraste contra o FUNDO,
+       e esse fundo muda de tema para tema. Ver o bloco de foco em
+       @layer utilities. */
+    --bb-focus: 212 92% 38%;
+
     --radius: 0.75rem;
 
     --gradient-primary: linear-gradient(135deg, hsl(var(--xp-primary)), hsl(var(--xp-primary-hover)));
@@ -229,6 +235,10 @@ All colors MUST be HSL.
     --xp-border: 222 20% 26%;
     --xp-ring: 212 92% 58%;
     --xp-foreground: 210 40% 96%;
+
+    /* No escuro o azul da marca (212 92% 38%) encosta no navy do fundo e o
+       anel de foco fica em 2.8:1 — reprovado. Sobe para um azul claro. */
+    --bb-focus: 205 100% 74%;
     --xp-foreground-muted: 215 20% 85%;
     /* 🔧 CONTRAST FIX: was 70%, now 85% for better visibility */
 
@@ -645,22 +655,62 @@ button {
 
 @layer utilities {
 
-  /* ===== ACESSIBILIDADE - Focus Ring ===== */
-  .focus-ring:focus,
-  .focus-visible\:ring-2:focus-visible {
-    outline: 3px solid hsl(var(--ring) / 0.5);
+  /* ===== ACESSIBILIDADE - anel de foco unico =====
+     UM desenho de foco para o app inteiro. Antes conviviam oito aparencias
+     diferentes na mesma tela (2px e 3px, sete cores), porque cada
+     componente trazia a sua e ainda havia um override que repintava o
+     `focus-visible:ring-2` do Tailwind por fora. Duas delas caiam em tons
+     quase iguais ao do fundo e sumiam na pratica.
+
+     Quem precisa de um foco diferente do padrao NAO escreve um anel novo:
+     usa .bb-focus-inset (alvo que sangra ate a borda) ou .bb-focus
+     (componente que anula o outline por design). */
+  :focus-visible {
+    outline: 3px solid hsl(var(--bb-focus));
     outline-offset: 2px;
-    border-radius: var(--radius);
+  }
+
+  /* Alvos que vao ate a borda da tela nao tem espaco para um anel por fora
+     — nesses o anel entra para dentro. Ex.: as metades do portao. */
+  .bb-focus-inset:focus-visible {
+    outline: 3px solid hsl(var(--bb-focus));
+    outline-offset: -5px;
+  }
+
+  /* Reposicao explicita para quem usa `outline-none`. A classe do Tailwind
+     nao remove o contorno: ela pinta um contorno TRANSPARENTE de 2px, com
+     especificidade maior que a regra global acima. Onde o componente
+     precisa do proprio desenho mas ainda assim deve ser visivel no teclado,
+     .bb-focus devolve o anel padrao. */
+  .bb-focus:focus-visible,
+  .bb-focus:focus-visible:is(.outline-none, [class*="outline-none"]) {
+    outline: 3px solid hsl(var(--bb-focus));
+    outline-offset: 2px;
+  }
+
+  /* O anel aparece INSTANTANEO. Quem usa `transition-all` (varios links do
+     header) incluia outline-color na transicao: o anel nascia em
+     currentColor — a cor do proprio texto, as vezes quase igual a do fundo —
+     e so chegava na cor certa 300ms depois. Indicador de foco que desbota
+     por 300ms e indicador ruim. A lista abaixo e a mesma ja usada na regra
+     de `button` mais acima; o que muda e outline ficar de fora dela. */
+  :focus-visible,
+  .bb-focus:focus-visible,
+  .bb-focus-inset:focus-visible {
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform, filter;
+  }
+
+  /* Trechos que sao escuros nos DOIS temas (o header, as metades coloridas
+     do portao) precisam do anel claro mesmo no tema claro. Em vez de um
+     anel proprio em cada botao de dentro, troca-se o token no container e
+     todo mundo abaixo herda. */
+  .bb-on-dark {
+    --bb-focus: 205 100% 80%;
   }
 
   /* Esconder outline padrão e usar apenas quando navegando por teclado */
   :focus:not(:focus-visible) {
     outline: none;
-  }
-
-  :focus-visible {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
   }
 
   /* ===== CORREÇÕES DEFINITIVAS MODO ESCURO ===== */
@@ -1266,4 +1316,45 @@ button {
 /* Light mode hero gradient — replaces pure white */
 :root:not(.dark) .hero-bg {
   background-color: #f8fafc;
+}
+
+/* ===== prefers-reduced-motion =====
+   Fora de qualquer @layer, de proposito: precisa ganhar das utilities do
+   Tailwind (animate-*) e das animacoes declaradas acima.
+
+   Quem NAO pediu reducao continua vendo o app exatamente como antes. Quem
+   pediu recebe o mesmo app sem movimento: as animacoes sao encurtadas, nao
+   removidas, para o elemento terminar no estado final e o conteudo nao
+   sumir (fadeInUp, stagger-fade e companhia usam fill `both`). */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Decorativos puros: desligados, nao encurtados. Parados no quadro 1 eles
+     continuam bonitos e param de respirar no fundo da tela. */
+  .bb-blob,
+  .futuristic-bg-main,
+  .futuristic-bg-secondary,
+  .metallic-grid,
+  .shine-overlay,
+  .noise-texture,
+  .noise-texture::after {
+    animation: none !important;
+  }
+
+  /* Excecao deliberada: o giro do spinner e informacao, nao enfeite — e o
+     unico sinal de que algo esta carregando. Congelado, viraria um icone
+     quebrado. Fica, mais lento. */
+  .animate-spin {
+    animation: spin 1.5s linear infinite !important;
+  }
 }

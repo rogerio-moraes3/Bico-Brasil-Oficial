@@ -53,7 +53,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#080C14] text-zinc-400 relative overflow-hidden border-t border-white/5">
+    <footer className="bb-on-dark bg-[#080C14] text-zinc-400 relative overflow-hidden border-t border-white/5">
       {/* Final CTA Section - Only for logged out users or as a general brand message */}
       {!user && (
         <section className="relative py-24 md:py-32 overflow-hidden border-b border-white/5">

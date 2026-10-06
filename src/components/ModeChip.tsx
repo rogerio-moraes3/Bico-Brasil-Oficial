@@ -47,7 +47,7 @@ export const ModeChip = () => {
         <button
           type="button"
           aria-label={`Ambiente atual: ${atual?.label}. Trocar de ambiente`}
-          className="inline-flex items-center gap-1.5 h-8 min-h-8 rounded-full border border-white/15 bg-white/[0.06] px-3 text-white/70 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          className="inline-flex items-center gap-1.5 h-8 min-h-8 rounded-full border border-white/15 bg-white/[0.06] px-3 text-white/70 transition-colors hover:bg-white/10 hover:text-white bb-focus"
         >
           <span className="hidden sm:inline text-[10px] font-semibold uppercase tracking-[0.14em] text-white/45">
             Ambiente

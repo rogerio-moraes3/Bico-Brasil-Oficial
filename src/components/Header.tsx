@@ -171,14 +171,17 @@ const navItems = [
       {/* Skip Link for Accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg bb-focus"
       >
         Ir para conteúdo principal
       </a>
 
 <header
   className={cn(
-    "sticky top-0 z-50 w-full mx-auto min-h-24 text-white shadow-sm backdrop-blur-md",
+    // bb-on-dark: o header e escuro nos dois temas, entao o anel de foco
+    // dos links e botoes de dentro precisa ser o claro. Trocando o token
+    // aqui, todo mundo abaixo herda — sem anel proprio em cada elemento.
+    "bb-on-dark sticky top-0 z-50 w-full mx-auto min-h-24 text-white shadow-sm backdrop-blur-md",
     isShowcase
       ? "bico-showcase bg-bico-showcase border-b border-1.5 border-white/10"
       : "bg-gradient-to-r from-[#0B1F3A] to-[#0F2A4D] border-b border-white/10"

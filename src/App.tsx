@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MotionConfig } from "framer-motion";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { UserModeProvider } from "./contexts/UserModeContext";
@@ -166,6 +167,11 @@ function App() {
           }}
         />
       )}
+    {/* reducedMotion="user": o framer-motion anima por JS, com estilo inline
+        — a media query de prefers-reduced-motion do CSS nao o alcanca. Aqui
+        ele passa a respeitar a preferencia do sistema sozinho, em todos os
+        19 arquivos que usam motion, sem tocar em nenhum deles. */}
+    <MotionConfig reducedMotion="user">
     <BrowserRouter>
       {/* AuthProvider precisa envolver o UserModeProvider, nao o contrario:
           o UserModeProvider chama useAuth() e, invertido, lia um contexto que
@@ -300,6 +306,7 @@ function App() {
         </UserModeProvider>
       </AuthProvider>
     </BrowserRouter >
+    </MotionConfig>
     </>
   );
 }

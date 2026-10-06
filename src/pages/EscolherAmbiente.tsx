@@ -81,7 +81,7 @@ export default function EscolherAmbiente() {
               key={value}
               type="button"
               onClick={() => escolher(value)}
-              className={`group relative ${fundo} flex min-h-[50dvh] flex-col items-center justify-center gap-5 px-8 pb-24 pt-24 text-center lg:py-16 transition-[filter] duration-200 hover:brightness-[1.06] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white/50 lg:min-h-dvh`}
+              className={`group relative ${fundo} flex min-h-[50dvh] flex-col items-center justify-center gap-5 px-8 pb-24 pt-24 text-center lg:py-16 transition-[filter] duration-200 hover:brightness-[1.06] bb-on-dark bb-focus-inset lg:min-h-dvh`}
             >
               {/* Degrade de legibilidade — ver comentario em AMBIENTES. */}
               <div
