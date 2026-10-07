@@ -92,7 +92,7 @@ export const ProfileCompletionWidget = () => {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5">
               <span className="text-xs font-semibold text-foreground">Complete seu perfil</span>
-              <span className="text-[11px] text-muted-foreground">{pct}%</span>
+              <span className="text-xs text-muted-foreground">{pct}%</span>
             </div>
             <Progress value={pct} className="h-1 mb-2" />
             <div className="flex flex-wrap gap-1.5">
@@ -100,7 +100,7 @@ export const ProfileCompletionWidget = () => {
                 <Link
                   key={i}
                   to={step.href}
-                  className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full border border-border/70 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary transition-all duration-200"
+                  className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full border border-border/70 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary transition-all duration-200"
                 >
                   <step.icon className="w-3 h-3 shrink-0" aria-hidden="true" />
                   {step.label}

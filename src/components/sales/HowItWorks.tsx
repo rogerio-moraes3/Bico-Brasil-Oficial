@@ -70,7 +70,7 @@ export const HowItWorks = () => {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 mb-6 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold tracking-wider uppercase rounded-full bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 mb-6 backdrop-blur-sm">
             <CheckCircle2 className="w-3 h-3" />
             <span>Simples Assim</span>
           </div>

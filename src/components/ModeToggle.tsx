@@ -50,7 +50,7 @@ export const ModeToggle = () => {
                     aria-pressed={mode === value}
                     // Menor no mobile, maior a partir de sm — nunca escondido:
                     // a desorientacao de ambiente e justamente maior no celular.
-                    className={`flex items-center justify-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors duration-200 sm:px-5 sm:py-2.5 sm:text-sm ${mode === value
+                    className={`flex items-center justify-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors duration-200 sm:px-5 sm:py-2.5 sm:text-sm ${mode === value
                         ? active
                         : "text-white/60 hover:bg-white/10 hover:text-white"
                         }`}

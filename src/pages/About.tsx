@@ -38,12 +38,12 @@ export default function About() {
                 Voltar
               </Button>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-black tracking-[0.2em] uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-10">
                 <Sparkles className="w-3 h-3" />
                 <span>Nossa Essência</span>
               </div>
 
-              <h1 className="text-6xl md:text-8xl lg:text-[100px] font-black leading-[0.9] tracking-tighter mb-12 text-white">
+              <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter mb-12 text-white">
                 Mais que uma <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">plataforma.</span>
               </h1>

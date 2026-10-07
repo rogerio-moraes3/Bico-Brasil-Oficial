@@ -61,7 +61,7 @@ export const PlatformStatsStrip = () => {
           
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-            <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Plataforma Ativa</span>
+            <span className="text-xs font-black text-blue-400 uppercase tracking-widest">Plataforma Ativa</span>
           </div>
 
           {items.map((item, i) => (
@@ -80,14 +80,14 @@ export const PlatformStatsStrip = () => {
                 <span className="text-xl font-black text-white tracking-tighter leading-none mb-1">
                   {item.value}
                 </span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-blue-100/30">
+                <span className="text-xs font-black uppercase tracking-widest text-blue-100/30">
                   {item.label}
                 </span>
               </div>
             </motion.div>
           ))}
 
-          <div className="hidden lg:flex items-center gap-2 text-[10px] font-black text-blue-100/20 uppercase tracking-widest">
+          <div className="hidden lg:flex items-center gap-2 text-xs font-black text-blue-100/20 uppercase tracking-widest">
             <Sparkles className="w-3 h-3" />
             <span>Dados em Tempo Real</span>
           </div>

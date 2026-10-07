@@ -206,7 +206,7 @@ const navItems = [
             <Link to={user ? "/app" : "/"} className="flex items-center gap-2 flex-shrink-0 z-50 hover:opacity-90 transition-opacity">
               <img src={logo} alt="Bico Brasil" className="h-9 w-9 md:h-16 md:w-16 shrink-0 rounded-2xl shadow-sm" />
               <div className="flex flex-col justify-center">
-                <span className="text-[25px] font-bold leading-tight whitespace-nowrap text-white">
+                <span className="text-2xl font-bold leading-tight whitespace-nowrap text-white">
                   Bico Brasil
                 </span>
                 <span className="sr-only sm:not-sr-only text-xs text-zinc-400 leading-tight font-bold whitespace-nowrap uppercase tracking-wider">
@@ -247,7 +247,7 @@ const navItems = [
               <Link
                 to="/app"
                 className={cn(
-                  "relative text-[13px] font-bold transition-all duration-300 px-4 py-2 rounded-full",
+                  "relative text-sm font-bold transition-all duration-300 px-4 py-2 rounded-full",
                   location.pathname === '/' || location.pathname === '/app'
                     ? "bg-white/10 text-white border border-white/10"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
@@ -258,7 +258,7 @@ const navItems = [
               <Link
                 to="/premium"
                 className={cn(
-                  "relative text-[13px] font-bold transition-all duration-300 px-4 py-2 rounded-full",
+                  "relative text-sm font-bold transition-all duration-300 px-4 py-2 rounded-full",
                   location.pathname === '/premium'
                     ? "bg-white/10 text-white border border-white/10"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
@@ -268,7 +268,7 @@ const navItems = [
               </Link>
               <Link
                 to="/download"
-                className="relative text-[13px] font-bold transition-all duration-300 px-4 py-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 flex items-center gap-2"
+                className="relative text-sm font-bold transition-all duration-300 px-4 py-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 flex items-center gap-2"
               >
                 <Download className="h-4 w-4" />
                 <span className="hidden lg:inline">Baixar App</span>
@@ -330,7 +330,7 @@ const navItems = [
                     </Avatar>
                     <span className="hidden lg:inline text-sm font-medium">{getUserDisplayName()}</span>
                     {isPremium && (
-                      <Badge className="hidden lg:inline-flex bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-1.5 text-[10px] font-bold">
+                      <Badge className="hidden lg:inline-flex bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-1.5 text-xs font-bold">
                         <Crown className="h-3 w-3" />
                         Premium
                       </Badge>
@@ -353,7 +353,7 @@ const navItems = [
                 <button
                   onClick={() => navigate('/auth')}
                   className={cn(
-                    "text-[15px] font-bold transition-colors px-4 py-2",
+                    "text-sm font-bold transition-colors px-4 py-2",
                     isShowcase ? "text-bico-muted hover:text-bico-heading" : "text-white/80 hover:text-white hover:opacity-90"
                   )}
                 >
@@ -363,7 +363,7 @@ const navItems = [
                   onClick={() => navigate('/auth?mode=signup')}
                   animateOnMount={false}
                   className={cn(
-                    "text-[15px] font-bold text-slate-900 px-6 py-2 shadow-md hover:shadow-lg transition-all duration-300 h-10",
+                    "text-sm font-bold text-slate-900 px-6 py-2 shadow-md hover:shadow-lg transition-all duration-300 h-10",
                     isShowcase ? "bg-bico-orange hover:bg-bico-orange-hover rounded-lg" : "bg-orange-500 hover:bg-orange-600 rounded-lg"
                   )}
                 >
@@ -374,7 +374,7 @@ const navItems = [
               <div className="hidden md:flex items-center gap-3 ml-2">
                 <button
                   onClick={() => navigate('/auth')}
-                  className="hidden md:flex text-[13px] font-bold text-white/80 hover:text-white transition-colors"
+                  className="hidden md:flex text-sm font-bold text-white/80 hover:text-white transition-colors"
                 >
                   Entrar
                 </button>
@@ -382,7 +382,7 @@ const navItems = [
                   onClick={() => navigate('/auth?mode=signup')}
                   animateOnMount={false}
                   size="sm"
-                  className="hidden md:flex text-[13px] font-bold px-6 h-9 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 bg-white hover:bg-zinc-200 text-black border border-transparent"
+                  className="hidden md:flex text-sm font-bold px-6 h-9 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 bg-white hover:bg-zinc-200 text-black border border-transparent"
                 >
                   Criar conta grátis
                 </Button>
@@ -413,7 +413,7 @@ const navItems = [
                             {getUserDisplayName()}
                           </p>
                           {isPremium && (
-                            <Badge className="bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-1.5 text-[10px] font-bold shrink-0">
+                            <Badge className="bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-1.5 text-xs font-bold shrink-0">
                               <Crown className="h-3 w-3" />
                               Premium
                             </Badge>

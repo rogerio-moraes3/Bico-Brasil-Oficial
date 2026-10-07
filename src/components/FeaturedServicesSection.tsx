@@ -109,7 +109,7 @@ export const FeaturedServicesSection = () => {
                 }`}
               >
                 {worker.hasDestaque && (
-                  <Badge className="absolute -top-2.5 left-4 bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-2 text-[10px] font-bold shadow">
+                  <Badge className="absolute -top-2.5 left-4 bg-amber-500 hover:bg-amber-500 text-black gap-1 h-5 px-2 text-xs font-bold shadow">
                     <Zap className="h-3 w-3" />
                     Destaque
                   </Badge>
@@ -137,11 +137,11 @@ export const FeaturedServicesSection = () => {
                       </h3>
                       {worker.category && (
                         <div className="mt-1 flex items-center gap-1.5 flex-wrap">
-                          <Badge variant="secondary" className="text-[10px] px-2 py-0 h-5 font-medium">
+                          <Badge variant="secondary" className="text-xs px-2 py-0 h-5 font-medium">
                             {worker.category}
                           </Badge>
                           {worker.verified && (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-primary">
+                            <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
                               <Phone className="w-2.5 h-2.5" aria-hidden="true" />
                               Tel. verificado
                             </span>

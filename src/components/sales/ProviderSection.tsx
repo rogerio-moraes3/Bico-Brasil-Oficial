@@ -27,7 +27,7 @@ export const ProviderSection = () => {
           >
             <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-400/20 rounded-full px-4 py-2 mb-8 backdrop-blur-md">
               <Sparkles className="w-4 h-4 text-orange-400" />
-              <span className="!text-orange-400 text-[10px] font-bold tracking-widest uppercase">PARA PRESTADORES</span>
+              <span className="!text-orange-400 text-xs font-bold tracking-widest uppercase">PARA PRESTADORES</span>
             </div>
 
             <h2 className="text-4xl md:text-6xl font-black mb-8 leading-[1.1] tracking-tight text-white">
@@ -76,7 +76,7 @@ export const ProviderSection = () => {
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-3xl p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">0%</div>
-                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Taxa de Comissão</div>
+                <div className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em]">Taxa de Comissão</div>
               </motion.div>
 
               <motion.div
@@ -91,7 +91,7 @@ export const ProviderSection = () => {
               >
                 <Zap className="w-8 h-8 text-orange-400 mb-4" />
                 <div className="text-4xl lg:text-5xl font-black text-white mb-2 tracking-tighter">Direto</div>
-                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">No seu WhatsApp</div>
+                <div className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em]">No seu WhatsApp</div>
               </motion.div>
 
               <motion.div
@@ -106,7 +106,7 @@ export const ProviderSection = () => {
               >
                 <ShieldCheck className="w-8 h-8 text-orange-400 mb-4" />
                 <div className="text-4xl lg:text-5xl font-black text-white mb-2 tracking-tighter">Verificado</div>
-                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Selo de Confiança</div>
+                <div className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em]">Selo de Confiança</div>
               </motion.div>
 
               <motion.div
@@ -120,7 +120,7 @@ export const ProviderSection = () => {
                 className="bg-white/[0.02] border-1.5 border-white/10 rounded-3xl p-4 sm:p-6 lg:p-8 hover:bg-white/[0.04] flex flex-col justify-center items-center text-center group cursor-pointer will-change-transform"
               >
                 <div className="text-5xl lg:text-7xl font-black text-white mb-2 tracking-tighter">Local</div>
-                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Perto de Você</div>
+                <div className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em]">Perto de Você</div>
               </motion.div>
 
             </div>

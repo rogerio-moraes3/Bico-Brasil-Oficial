@@ -118,14 +118,14 @@ export const RecentWorkersSection = () => {
                   {worker.category && (
                     <Badge
                       variant="secondary"
-                      className="text-[10px] px-2 py-0 h-4 font-medium max-w-full truncate"
+                      className="text-xs px-2 py-0 h-4 font-medium max-w-full truncate"
                     >
                       {worker.category}
                     </Badge>
                   )}
 
                   {worker.city && (
-                    <p className="text-[10px] text-muted-foreground text-center truncate w-full">
+                    <p className="text-xs text-muted-foreground text-center truncate w-full">
                       {worker.city}{worker.state ? ` - ${worker.state}` : ''}
                     </p>
                   )}

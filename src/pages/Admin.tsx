@@ -519,11 +519,11 @@ export default function Admin() {
             <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mt-1">Bem-vindo, {userEmail}</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={loadAllData} variant="outline" size="sm" className="h-8 text-[10px] font-bold uppercase tracking-widest bg-card border-border hover:bg-gray-100">
+            <Button onClick={loadAllData} variant="outline" size="sm" className="h-8 text-xs font-bold uppercase tracking-widest bg-card border-border hover:bg-gray-100">
               <Activity className="h-3.5 w-3.5 mr-1.5" />
               Sincronizar
             </Button>
-            <Button onClick={exportToCSV} variant="default" size="sm" className="h-8 text-[10px] font-bold uppercase tracking-widest">
+            <Button onClick={exportToCSV} variant="default" size="sm" className="h-8 text-xs font-bold uppercase tracking-widest">
               <Download className="h-3.5 w-3.5 mr-1.5" />
               Exportar
             </Button>
@@ -537,7 +537,7 @@ export default function Admin() {
             onClick={() => setUsersModalOpen(true)}
           >
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
+              <CardTitle className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
                 Total Usuários
                 <ChevronRight className="h-3.5 w-3.5 text-slate-600" />
               </CardTitle>
@@ -545,8 +545,8 @@ export default function Admin() {
             <CardContent>
               <div className="text-3xl font-black text-foreground leading-none">{metrics.totalLeads}</div>
               <div className="flex gap-2 mt-2">
-                <Badge className="bg-blue-500/10 text-blue-400 border-0 text-[10px] h-5">{metrics.leadsByType.fazer_bico} P</Badge>
-                <Badge className="bg-amber-500/10 text-amber-400 border-0 text-[10px] h-5">{metrics.leadsByType.anunciar_servico} E</Badge>
+                <Badge className="bg-blue-500/10 text-blue-400 border-0 text-xs h-5">{metrics.leadsByType.fazer_bico} P</Badge>
+                <Badge className="bg-amber-500/10 text-amber-400 border-0 text-xs h-5">{metrics.leadsByType.anunciar_servico} E</Badge>
               </div>
             </CardContent>
           </Card>
@@ -556,7 +556,7 @@ export default function Admin() {
             onClick={() => setRevenueModalOpen(true)}
           >
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
+              <CardTitle className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
                 Receita Total
                 <ChevronRight className="h-3.5 w-3.5 text-slate-600" />
               </CardTitle>
@@ -565,19 +565,19 @@ export default function Admin() {
               <div className="text-3xl font-black text-emerald-400 leading-none">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(metrics.totalRevenue)}
               </div>
-              <p className="text-[10px] text-slate-500 mt-2">{metrics.approvedPayments} pagamentos</p>
+              <p className="text-xs text-slate-500 mt-2">{metrics.approvedPayments} pagamentos</p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-border shadow-xl">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Pendente</CardTitle>
+              <CardTitle className="text-xs font-black text-muted-foreground uppercase tracking-widest">Pendente</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-black text-amber-400 leading-none">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(metrics.pendingRevenue)}
               </div>
-              <p className="text-[10px] text-slate-500 mt-2">Aguardando confirmação</p>
+              <p className="text-xs text-slate-500 mt-2">Aguardando confirmação</p>
             </CardContent>
           </Card>
 
@@ -586,36 +586,36 @@ export default function Admin() {
             onClick={() => setConversionModalOpen(true)}
           >
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
+              <CardTitle className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
                 Conversão
                 <ChevronRight className="h-3.5 w-3.5 text-slate-600" />
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-primary leading-none">{metrics.conversionRate.toFixed(1)}%</div>
-              <p className="text-[10px] text-slate-500 mt-2">Usuários que pagaram</p>
+              <p className="text-xs text-slate-500 mt-2">Usuários que pagaram</p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-border shadow-xl">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Crescimento</CardTitle>
+              <CardTitle className="text-xs font-black text-muted-foreground uppercase tracking-widest">Crescimento</CardTitle>
             </CardHeader>
             <CardContent>
               <div className={`text-3xl font-black leading-none ${metrics.growthRate >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                 {metrics.growthRate >= 0 ? '+' : ''}{metrics.growthRate.toFixed(1)}%
               </div>
-              <p className="text-[10px] text-muted-foreground mt-2">vs mês anterior</p>
+              <p className="text-xs text-muted-foreground mt-2">vs mês anterior</p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-border shadow-xl">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Atividade Hoje</CardTitle>
+              <CardTitle className="text-xs font-black text-muted-foreground uppercase tracking-widest">Atividade Hoje</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-primary leading-none">+{metrics.leadsToday}</div>
-              <p className="text-[10px] text-muted-foreground mt-2">Novos registros em 24h</p>
+              <p className="text-xs text-muted-foreground mt-2">Novos registros em 24h</p>
             </CardContent>
           </Card>
         </div>
@@ -627,7 +627,7 @@ export default function Admin() {
               <TrendingUp className="h-4 w-4 text-primary" />
               Tendência de Receita (Últimos 30 Dias)
             </CardTitle>
-            <CardDescription className="text-[10px] text-slate-500">
+            <CardDescription className="text-xs text-slate-500">
               Receita diária de pagamentos aprovados
             </CardDescription>
           </CardHeader>
@@ -676,7 +676,7 @@ export default function Admin() {
               <DollarSign className="h-4 w-4 text-emerald-400" />
               Receita Anual
             </CardTitle>
-            <CardDescription className="text-[10px] text-slate-500">
+            <CardDescription className="text-xs text-slate-500">
               Histórico e projeção de receita por ano
             </CardDescription>
           </CardHeader>
@@ -684,10 +684,10 @@ export default function Admin() {
             <Table>
               <TableHeader className="bg-card/50">
                 <TableRow className="border-border hover:bg-transparent">
-                  <TableHead className="text-[10px] font-black text-slate-500 uppercase">Ano</TableHead>
-                  <TableHead className="text-[10px] font-black text-slate-500 uppercase text-right">Receita</TableHead>
-                  <TableHead className="text-[10px] font-black text-slate-500 uppercase text-right">Crescimento</TableHead>
-                  <TableHead className="text-[10px] font-black text-slate-500 uppercase text-center">Status</TableHead>
+                  <TableHead className="text-xs font-black text-slate-500 uppercase">Ano</TableHead>
+                  <TableHead className="text-xs font-black text-slate-500 uppercase text-right">Receita</TableHead>
+                  <TableHead className="text-xs font-black text-slate-500 uppercase text-right">Crescimento</TableHead>
+                  <TableHead className="text-xs font-black text-slate-500 uppercase text-center">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -713,7 +713,7 @@ export default function Admin() {
                         )}
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={`text-[8px] font-black ${yearData.isProjection ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'} border-0`}>
+                        <Badge className={`text-xs font-black ${yearData.isProjection ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'} border-0`}>
                           {yearData.isProjection ? 'PROJEÇÃO' : 'REALIZADO'}
                         </Badge>
                       </TableCell>
@@ -739,7 +739,7 @@ export default function Admin() {
             </div>
             <div className="flex gap-2">
               <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="admin-filter-select bg-card border-border text-[10px] font-black uppercase">
+                <SelectTrigger className="admin-filter-select bg-card border-border text-xs font-black uppercase">
                   <SelectValue placeholder="TIPO" />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
@@ -750,7 +750,7 @@ export default function Admin() {
               </Select>
 
               <Select value={filterCity} onValueChange={setFilterCity}>
-                <SelectTrigger className="admin-filter-select bg-card border-border text-[10px] font-black uppercase">
+                <SelectTrigger className="admin-filter-select bg-card border-border text-xs font-black uppercase">
                   <SelectValue placeholder="CIDADE" />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
@@ -767,7 +767,7 @@ export default function Admin() {
             <button
               type="button"
               onClick={() => setShowIncomplete(v => !v)}
-              className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
             >
               {showIncomplete
                 ? `— ocultar ${incompleteLeads.length} cadastros incompletos`
@@ -780,13 +780,13 @@ export default function Admin() {
               <Table className="admin-table">
                 <TableHeader className="bg-card/50 sticky top-0 z-10">
                   <TableRow className="border-border h-10 hover:bg-transparent">
-                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Nome Completo</TableHead>
-                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Email</TableHead>
-                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">CPF / ID</TableHead>
-                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Cidade</TableHead>
-                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Tipo</TableHead>
-                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4">Status</TableHead>
-                    <TableHead className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-4 text-right">Data</TableHead>
+                    <TableHead className="text-xs font-black text-muted-foreground uppercase tracking-widest px-4">Nome Completo</TableHead>
+                    <TableHead className="text-xs font-black text-muted-foreground uppercase tracking-widest px-4">Email</TableHead>
+                    <TableHead className="text-xs font-black text-muted-foreground uppercase tracking-widest px-4">CPF / ID</TableHead>
+                    <TableHead className="text-xs font-black text-muted-foreground uppercase tracking-widest px-4">Cidade</TableHead>
+                    <TableHead className="text-xs font-black text-muted-foreground uppercase tracking-widest px-4">Tipo</TableHead>
+                    <TableHead className="text-xs font-black text-muted-foreground uppercase tracking-widest px-4">Status</TableHead>
+                    <TableHead className="text-xs font-black text-muted-foreground uppercase tracking-widest px-4 text-right">Data</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -801,33 +801,33 @@ export default function Admin() {
                     >
                       <TableCell className="py-2 px-4">
                         <div className="flex flex-col">
-                          <span className="text-[11px] font-black text-foreground group-hover:text-primary transition-colors">{user.name?.toUpperCase() || '-'}</span>
+                          <span className="text-xs font-black text-foreground group-hover:text-primary transition-colors">{user.name?.toUpperCase() || '-'}</span>
                           {user.phone_verified === false || !user.phone ? (
-                            <span className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 font-sans w-fit mt-0.5">
+                            <span className="text-xs font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 font-sans w-fit mt-0.5">
                               {user.phone ? 'Telefone não verificado' : 'Sem Telefone'}
                             </span>
                           ) : (
-                            <span className="text-[9px] text-muted-foreground font-bold">{user.phone}</span>
+                            <span className="text-xs text-muted-foreground font-bold">{user.phone}</span>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="py-2 px-4 text-[10px] text-muted-foreground font-medium">{user.email}</TableCell>
-                      <TableCell className="py-2 px-4 text-[10px] font-mono text-muted-foreground">
+                      <TableCell className="py-2 px-4 text-xs text-muted-foreground font-medium">{user.email}</TableCell>
+                      <TableCell className="py-2 px-4 text-xs font-mono text-muted-foreground">
                         {user.cpf ? (
                           user.cpf
                         ) : (
                           <span className="inline-flex items-center gap-1.5">
-                            <span className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 font-sans">CPF pendente</span>
+                            <span className="text-xs font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 font-sans">CPF pendente</span>
                             <span className="text-muted-foreground">ID {user.id.slice(0, 8)}</span>
                           </span>
                         )}
                       </TableCell>
                       <TableCell className="py-2 px-4">
-                        <span className="text-[10px] font-black text-foreground bg-muted px-2 py-0.5 rounded">{getCityLabel(user)?.toUpperCase() || '-'}</span>
+                        <span className="text-xs font-black text-foreground bg-muted px-2 py-0.5 rounded">{getCityLabel(user)?.toUpperCase() || '-'}</span>
                       </TableCell>
                       <TableCell className="py-2 px-4">
                         <span className={cn(
-                          "text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-sm",
+                          "text-xs font-black px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-sm",
                           user.type === 'contractor' ? "bg-amber-500/10 text-amber-500" : "bg-blue-500/10 text-blue-500"
                         )}>
                           {user.type === 'contractor' ? 'EMPREGADOR' : 'PRESTADOR'}
@@ -840,7 +840,7 @@ export default function Admin() {
                           {!user.verified && !user.plan_active && <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />}
                         </div>
                       </TableCell>
-                      <TableCell className="py-2 px-4 text-right text-[10px] text-muted-foreground font-bold whitespace-nowrap">
+                      <TableCell className="py-2 px-4 text-right text-xs text-muted-foreground font-bold whitespace-nowrap">
                         {new Date(user.created_at).toLocaleDateString('pt-BR')}
                       </TableCell>
                     </TableRow>
@@ -856,10 +856,10 @@ export default function Admin() {
               </Table>
             </div>
             <div className="bg-muted/50 px-4 py-3 border-t border-border flex justify-between items-center">
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Exibindo {visibleLeads.length} usuários de {leads.length}</span>
+              <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Exibindo {visibleLeads.length} usuários de {leads.length}</span>
               <div className="flex items-center gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Dados Sincronizados</span>
+                <span className="text-xs font-black text-emerald-500 uppercase tracking-widest">Dados Sincronizados</span>
               </div>
             </div>
           </Card>
@@ -891,26 +891,26 @@ export default function Admin() {
                 <Table>
                   <TableHeader className="bg-slate-900/50">
                     <TableRow className="border-slate-800">
-                      <TableHead className="text-[9px] font-black text-slate-500">Data</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Usuário</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Valor</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Status</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Data</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Usuário</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Valor</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paymentDetails.filter(p => p.status === 'paid').slice(0, 10).map((payment) => (
                       <TableRow key={payment.id} className="border-slate-800 hover:bg-slate-900/40">
-                        <TableCell className="text-[10px] text-slate-400">
+                        <TableCell className="text-xs text-slate-400">
                           {new Date(payment.created_at).toLocaleDateString('pt-BR')}
                         </TableCell>
-                        <TableCell className="text-[10px] text-foreground font-bold">
+                        <TableCell className="text-xs text-foreground font-bold">
                           {payment.users?.name || 'N/A'}
                         </TableCell>
-                        <TableCell className="text-[11px] font-black text-emerald-400">
+                        <TableCell className="text-xs font-black text-emerald-400">
                           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.amount)}
                         </TableCell>
                         <TableCell>
-                          <Badge className="bg-emerald-500/10 text-emerald-500 text-[8px] font-black border-0">
+                          <Badge className="bg-emerald-500/10 text-emerald-500 text-xs font-black border-0">
                             PAGO
                           </Badge>
                         </TableCell>
@@ -926,26 +926,26 @@ export default function Admin() {
                 <Table>
                   <TableHeader className="bg-slate-900/50">
                     <TableRow className="border-slate-800">
-                      <TableHead className="text-[9px] font-black text-slate-500">Data</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Usuário</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Valor</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Status</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Data</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Usuário</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Valor</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paymentDetails.filter(p => p.status === 'pending').slice(0, 10).map((payment) => (
                       <TableRow key={payment.id} className="border-slate-800 hover:bg-slate-900/40">
-                        <TableCell className="text-[10px] text-slate-400">
+                        <TableCell className="text-xs text-slate-400">
                           {new Date(payment.created_at).toLocaleDateString('pt-BR')}
                         </TableCell>
-                        <TableCell className="text-[10px] text-foreground font-bold">
+                        <TableCell className="text-xs text-foreground font-bold">
                           {payment.users?.name || 'N/A'}
                         </TableCell>
-                        <TableCell className="text-[11px] font-black text-amber-400">
+                        <TableCell className="text-xs font-black text-amber-400">
                           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.amount)}
                         </TableCell>
                         <TableCell>
-                          <Badge className="bg-amber-500/10 text-amber-500 text-[8px] font-black border-0">
+                          <Badge className="bg-amber-500/10 text-amber-500 text-xs font-black border-0">
                             PENDENTE
                           </Badge>
                         </TableCell>
@@ -961,26 +961,26 @@ export default function Admin() {
                 <Table>
                   <TableHeader className="bg-slate-900/50">
                     <TableRow className="border-slate-800">
-                      <TableHead className="text-[9px] font-black text-slate-500">Data</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Usuário</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Valor</TableHead>
-                      <TableHead className="text-[9px] font-black text-slate-500">Status</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Data</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Usuário</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Valor</TableHead>
+                      <TableHead className="text-xs font-black text-slate-500">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paymentDetails.slice(0, 15).map((payment) => (
                       <TableRow key={payment.id} className="border-slate-800 hover:bg-slate-900/40">
-                        <TableCell className="text-[10px] text-slate-400">
+                        <TableCell className="text-xs text-slate-400">
                           {new Date(payment.created_at).toLocaleDateString('pt-BR')}
                         </TableCell>
-                        <TableCell className="text-[10px] text-foreground font-bold">
+                        <TableCell className="text-xs text-foreground font-bold">
                           {payment.users?.name || 'N/A'}
                         </TableCell>
-                        <TableCell className="text-[11px] font-black text-primary">
+                        <TableCell className="text-xs font-black text-primary">
                           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.amount)}
                         </TableCell>
                         <TableCell>
-                          <Badge className={`text-[8px] font-black border-0 ${payment.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500' :
+                          <Badge className={`text-xs font-black border-0 ${payment.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500' :
                             payment.status === 'pending' ? 'bg-amber-500/10 text-amber-500' :
                               'bg-red-500/10 text-red-500'
                             }`}>
@@ -1281,23 +1281,23 @@ export default function Admin() {
                 <div className="flex-1">
                   <h3 className="font-black text-xl text-foreground">{selectedUser.name || 'Sem Nome'}</h3>
                   <div className="flex gap-2 mt-2 flex-wrap">
-                    <Badge className={`text-[9px] font-black ${selectedUser.type === 'contractor' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'} border-0`}>
+                    <Badge className={`text-xs font-black ${selectedUser.type === 'contractor' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'} border-0`}>
                       {selectedUser.type === 'contractor' ? 'EMPREGADOR' : 'PRESTADOR'}
                     </Badge>
                     {selectedUser.plan_active && (
-                      <Badge className="text-[9px] font-black bg-amber-500/10 text-amber-500 border-0">
+                      <Badge className="text-xs font-black bg-amber-500/10 text-amber-500 border-0">
                         <Crown className="h-3 w-3 mr-1" />
                         PREMIUM
                       </Badge>
                     )}
                     {selectedUser.verified && (
-                      <Badge className="text-[9px] font-black bg-emerald-500/10 text-emerald-500 border-0">
+                      <Badge className="text-xs font-black bg-emerald-500/10 text-emerald-500 border-0">
                         <CheckCircle2 className="h-3 w-3 mr-1" />
                         VERIFICADO
                       </Badge>
                     )}
                     {selectedUser.is_tester && (
-                      <Badge className="text-[9px] font-black bg-purple-500/10 text-purple-500 border-0">
+                      <Badge className="text-xs font-black bg-purple-500/10 text-purple-500 border-0">
                         TESTER
                       </Badge>
                     )}
@@ -1313,22 +1313,22 @@ export default function Admin() {
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-muted/50 p-3 rounded border border-border">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Email</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Email</div>
                     <div className="text-xs text-foreground font-medium break-all">{selectedUser.email || '—'}</div>
                   </div>
                   <div className="bg-muted/50 p-3 rounded border border-border">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">CPF</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">CPF</div>
                     <div className="text-xs text-foreground font-mono">{selectedUser.cpf || '—'}</div>
                   </div>
                   <div className="bg-muted/50 p-3 rounded border border-border">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Telefone</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Telefone</div>
                     <div className="text-xs text-foreground font-medium">
                       <Smartphone className="h-3 w-3 inline mr-1" />
                       {selectedUser.phone || '—'}
                     </div>
                   </div>
                   <div className="bg-muted/50 p-3 rounded border border-border">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Data de Nascimento</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Data de Nascimento</div>
                     <div className="text-xs text-foreground font-medium">
                       <Calendar className="h-3 w-3 inline mr-1" />
                       {selectedUser.birth_date ? new Date(selectedUser.birth_date).toLocaleDateString('pt-BR') : '—'}
@@ -1345,11 +1345,11 @@ export default function Admin() {
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-muted/50 p-3 rounded border border-border">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Cidade</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Cidade</div>
                     <div className="text-xs text-foreground font-medium">{getCityLabel(selectedUser) || '—'}</div>
                   </div>
                   <div className="bg-muted/50 p-3 rounded border border-border">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Bairro</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Bairro</div>
                     <div className="text-xs text-foreground font-medium">{selectedUser.neighborhood || '—'}</div>
                   </div>
                 </div>
@@ -1363,7 +1363,7 @@ export default function Admin() {
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-muted/50 p-3 rounded border border-border">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Data de Cadastro</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Data de Cadastro</div>
                     <div className="text-xs text-foreground font-medium">
                       {selectedUser.created_at ? new Date(selectedUser.created_at).toLocaleString('pt-BR', {
                         day: '2-digit',
@@ -1375,7 +1375,7 @@ export default function Admin() {
                     </div>
                   </div>
                   <div className="bg-muted/50 p-3 rounded border border-border">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Última Atualização</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Última Atualização</div>
                     <div className="text-xs text-foreground font-medium">
                       {selectedUser.updated_at ? new Date(selectedUser.updated_at).toLocaleString('pt-BR', {
                         day: '2-digit',
@@ -1387,7 +1387,7 @@ export default function Admin() {
                     </div>
                   </div>
                   <div className="bg-muted/50 p-3 rounded border border-border col-span-2">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">ID do Usuário (public.users)</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">ID do Usuário (public.users)</div>
                     <div className="text-xs text-foreground font-mono break-all flex items-center gap-2">
                       {selectedUser.id || '—'}
                       {selectedUser.id && (
@@ -1404,7 +1404,7 @@ export default function Admin() {
                     </div>
                   </div>
                   <div className="bg-muted/50 p-3 rounded border border-border col-span-2">
-                    <div className="text-[9px] text-muted-foreground font-bold uppercase mb-1">Auth ID (auth.users)</div>
+                    <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Auth ID (auth.users)</div>
                     <div className="text-xs text-foreground font-mono break-all flex items-center gap-2">
                       {selectedUser.auth_id || '—'}
                       {selectedUser.auth_id && (

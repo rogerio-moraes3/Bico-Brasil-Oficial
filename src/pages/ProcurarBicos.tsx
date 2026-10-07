@@ -180,7 +180,7 @@ const ProcurarBicos = () => {
           {/* Header Section */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-black tracking-widest uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-black tracking-widest uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-6">
                 <Sparkles className="w-3 h-3" />
                 <span>Oportunidades agora</span>
               </div>
@@ -222,7 +222,7 @@ const ProcurarBicos = () => {
                   {/* Primeira Linha: Busca e Localização */}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="space-y-3 md:col-span-1">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">O que você busca?</Label>
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">O que você busca?</Label>
                       <div className="relative group">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-blue-400" />
                         <Input
@@ -235,7 +235,7 @@ const ProcurarBicos = () => {
                     </div>
 
                      <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Onde?</Label>
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Onde?</Label>
                       <Select
                         value={filters.city_id}
                         onValueChange={(v) => { setHasManualCitySelection(true); setFilters(p => ({ ...p, city_id: v })) }}
@@ -253,7 +253,7 @@ const ProcurarBicos = () => {
                     </div>
 
                     <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Categoria</Label>
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Categoria</Label>
                       <Select value={filters.category_id} onValueChange={(v) => setFilters(p => ({ ...p, category_id: v }))}>
                         <SelectTrigger className="h-14 bg-background border-border rounded-2xl focus:ring-blue-500/30">
                           <SelectValue placeholder="Todas" />
@@ -266,7 +266,7 @@ const ProcurarBicos = () => {
                     </div>
 
                     <div className="space-y-3 relative">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Profissão</Label>
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Profissão</Label>
                       <Input
                         placeholder="Ex: Pedreiro, Diarista..."
                         value={professionQuery}
@@ -299,7 +299,7 @@ const ProcurarBicos = () => {
                   {/* Segunda Linha: Período, Urgência e Ações */}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                     <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Período</Label>
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Período</Label>
                       <Select value={filters.dateFilter} onValueChange={(v) => setFilters(p => ({ ...p, dateFilter: v }))}>
                         <SelectTrigger className="h-14 bg-background border-border rounded-2xl focus:ring-blue-500/30">
                           <SelectValue placeholder="Qualquer data" />
@@ -314,7 +314,7 @@ const ProcurarBicos = () => {
                     </div>
 
                     <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Urgência</Label>
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Urgência</Label>
                       <div 
                         onClick={() => setFilters(p => ({ ...p, urgent: !p.urgent }))}
                         className={cn(
@@ -394,11 +394,11 @@ const ProcurarBicos = () => {
                   >
                     <CardContent className="p-10 flex flex-col h-full">
                       <div className="flex justify-between items-start mb-6">
-                        <Badge className="bg-blue-500/10 text-blue-400 border-none px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">
+                        <Badge className="bg-blue-500/10 text-blue-400 border-none px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
                           {job.category?.name || 'Geral'}
                         </Badge>
                         {job.urgent && (
-                           <Badge className="bg-red-500 text-white border-none px-3 py-1 rounded-full text-[10px] font-black uppercase animate-pulse">
+                           <Badge className="bg-red-500 text-white border-none px-3 py-1 rounded-full text-xs font-black uppercase animate-pulse">
                               Urgente
                            </Badge>
                         )}
@@ -419,11 +419,11 @@ const ProcurarBicos = () => {
 
                       <div className="pt-8 border-t border-border flex items-center justify-between">
                          <div className="flex flex-col">
-                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Preço Sugerido</span>
+                            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-1">Preço Sugerido</span>
                             <span className="text-2xl font-black">{formatCurrency(job.price)}</span>
                          </div>
                          <div className="flex flex-col items-end">
-                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Postado</span>
+                            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-1">Postado</span>
                             <span className="text-sm font-bold text-muted-foreground flex items-center gap-1">
                                <Clock className="w-3.5 h-3.5" />
                                {formatTimeAgo(job.created_at)}

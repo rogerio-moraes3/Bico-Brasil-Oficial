@@ -99,12 +99,12 @@ export default function Premium() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
              >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase rounded-full mb-10" style={{ border: '1.5px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-black tracking-[0.2em] uppercase rounded-full mb-10" style={{ border: '1.5px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
                   <Sparkles className="w-3 h-3 text-bico-accent" />
                   <span className="text-bico-accent">Cresça seu negócio</span>
                 </div>
 
-                <h1 className="text-6xl md:text-[100px] font-black leading-[0.85] tracking-tighter mb-12 text-white">
+                <h1 className="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter mb-12 text-white">
                    Planos <br />
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-500">Premium.</span>
                 </h1>
@@ -274,7 +274,7 @@ export default function Premium() {
            <div className="max-w-7xl mx-auto px-6">
               <div className="grid lg:grid-cols-2 gap-20 items-center">
                  <div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase rounded-full bg-yellow-500/10 border border-yellow-400/20 text-yellow-400 mb-8">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-black tracking-[0.2em] uppercase rounded-full bg-yellow-500/10 border border-yellow-400/20 text-yellow-400 mb-8">
                       <Star className="w-3 h-3 fill-current" />
                       <span>Boost Instantâneo</span>
                     </div>

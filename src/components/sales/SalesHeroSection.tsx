@@ -158,13 +158,13 @@ export const SalesHeroSection = () => {
             style={{ willChange: 'opacity, transform' }}
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 text-[10px] font-semibold tracking-wider uppercase rounded-full mb-10" style={{ border: '1px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-full mb-10" style={{ border: '1px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
               <Sparkles className="w-3 h-3 text-bico-accent-hover" />
               <span className="text-[#9FB6EE]">Contrate grátis, sem limite • Encontre trabalho • Sem intermediários</span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-5xl lg:text-[64px] font-extrabold leading-[1.12] tracking-tight mb-8 text-bico-heading">
+            <h1 className="text-5xl lg:text-6xl font-extrabold leading-[1.12] tracking-tight mb-8 text-bico-heading">
               Precisa <span className="text-bico-accent">contratar</span> alguém? <span className="text-bico-accent">É grátis, sem limite.</span><br />
               Ou quer <span className="text-bico-accent">ganhar dinheiro</span> hoje?
             </h1>
@@ -244,7 +244,7 @@ export const SalesHeroSection = () => {
 
                   {/* App header */}
                   <div className="relative z-10 pt-[52px] px-5 pb-4 flex items-center justify-between">
-                    <span className="text-[15px] font-extrabold !text-bico-heading tracking-tight">Bico Brasil</span>
+                    <span className="text-sm font-extrabold !text-bico-heading tracking-tight">Bico Brasil</span>
                     <div className="w-7 h-7 rounded-full bg-white/[0.08] flex items-center justify-center">
                       <Search className="w-3.5 h-3.5 text-bico-muted" />
                     </div>
@@ -253,7 +253,7 @@ export const SalesHeroSection = () => {
                   {/* Premium callout */}
                   <div className="relative z-10 mx-5 mb-4 p-3.5 rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(255,193,61,0.14), rgba(255,106,61,0.10))', border: '1px solid rgba(255,193,61,0.28)' }}>
                     <div className="flex items-center gap-1.5 mb-1">
-                      <span className="text-[9px] font-black tracking-wide text-[#0A0F1E] bg-[#FFC13D] px-1.5 py-0.5 rounded">PRO</span>
+                      <span className="text-xs font-black tracking-wide text-[#0A0F1E] bg-[#FFC13D] px-1.5 py-0.5 rounded">PRO</span>
                       <span className="text-xs font-bold text-bico-heading">Premium</span>
                     </div>
                     <span className="text-xs text-[#C7CCDA] leading-snug font-medium block">Quer aparecer primeiro e conseguir mais clientes? Ative o Premium.</span>
@@ -277,7 +277,7 @@ export const SalesHeroSection = () => {
                             style={{ border: idx === 0 ? '1px solid var(--bico-accent-blue-border)' : '1px solid rgba(255,255,255,0.06)' }}
                           >
                             {idx === 0 && (
-                              <span className="absolute -top-[7px] right-2.5 text-[8px] font-black tracking-wide text-[#0A0F1E] bg-bico-accent px-1.5 py-0.5 rounded uppercase">
+                              <span className="absolute -top-[7px] right-2.5 text-xs font-black tracking-wide text-[#0A0F1E] bg-bico-accent px-1.5 py-0.5 rounded uppercase">
                                 Anúncio
                               </span>
                             )}
@@ -291,8 +291,8 @@ export const SalesHeroSection = () => {
                                   </div>
                                 )}
                                 <div className="flex-1 min-w-0">
-                                  <span className="block text-[13px] font-bold text-bico-heading truncate">{card.name.split(" ")[0]}</span>
-                                  <span className="block text-[11px] text-[#8B93A7] font-medium truncate">
+                                  <span className="block text-sm font-bold text-bico-heading truncate">{card.name.split(" ")[0]}</span>
+                                  <span className="block text-xs text-[#8B93A7] font-medium truncate">
                                     {card.rating != null && `★ ${Number(card.rating).toFixed(1)} · `}
                                     {card.category}{card.city ? ` · ${card.city}` : ""}{card.state ? `, ${card.state}` : ""}
                                   </span>
@@ -304,8 +304,8 @@ export const SalesHeroSection = () => {
                                   <Briefcase className="w-4 h-4" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <span className="block text-[13px] font-bold text-bico-heading truncate">{card.title}</span>
-                                  <span className="block text-[11px] text-[#8B93A7] font-medium truncate">
+                                  <span className="block text-sm font-bold text-bico-heading truncate">{card.title}</span>
+                                  <span className="block text-xs text-[#8B93A7] font-medium truncate">
                                     {card.category}{card.city ? ` · ${card.city}` : ""}{card.state ? `, ${card.state}` : ""}
                                   </span>
                                 </div>

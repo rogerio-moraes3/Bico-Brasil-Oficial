@@ -109,7 +109,7 @@ export const BottomNav = () => {
                 }`}
             >
               <Icon className={`h-[22px] w-[22px] ${isActive(path) ? 'stroke-2' : 'stroke-[1.5]'}`} />
-              <span className={`text-[11px] font-medium ${isActive(path) ? 'font-semibold' : ''}`}>
+              <span className={`text-xs font-medium ${isActive(path) ? 'font-semibold' : ''}`}>
                 {label}
               </span>
             </Link>

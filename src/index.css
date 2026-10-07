@@ -442,7 +442,7 @@ All colors MUST be HSL.
 
   /* Botões menores e mais corporativos */
   .btn-premium {
-    @apply h-7 px-2.5 text-[11px] font-semibold rounded uppercase tracking-wider;
+    @apply h-7 px-2.5 text-xs font-semibold rounded uppercase tracking-wider;
   }
 
   /* Futuristic background layers moved from inline styles to classes */
@@ -1283,7 +1283,7 @@ button {
 }
 
 .admin-metric-label {
-  @apply text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1;
+  @apply text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1;
 }
 
 /* Tabela Ultra-Densa */
@@ -1321,7 +1321,7 @@ button {
 
 /* Badges Compactos */
 .admin-badge {
-  @apply px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded;
+  @apply px-2 py-0.5 text-xs font-bold uppercase tracking-wide rounded;
 }
 
 /* Responsividade */

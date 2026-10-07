@@ -33,7 +33,7 @@ export const PlanBadge = ({ variant, className }: PlanBadgeProps) => {
         <div
             className={cn(
                 "absolute top-0 right-0 rounded-bl-lg shadow-lg",
-                "px-4 py-1.5 text-[10px] font-black uppercase tracking-wider flex items-center gap-1",
+                "px-4 py-1.5 text-xs font-black uppercase tracking-wider flex items-center gap-1",
                 config.bg,
                 config.text,
                 className

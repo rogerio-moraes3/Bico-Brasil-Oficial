@@ -131,7 +131,7 @@ export default function Index() {
                 {/* Badge do ambiente: diz em 1 segundo onde a pessoa esta. */}
                 <div className="flex items-center gap-2">
                   <span className={`h-2 w-2 rounded-full ${ambiente.pontinho}`} aria-hidden="true" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">
                     Ambiente · {ambiente.rotulo}
                   </span>
                 </div>
@@ -187,7 +187,7 @@ export default function Index() {
                     existem no ambiente CONTRATAR. Mesmo destino de sempre. */}
                 {contratar && (
                   <nav className="mt-14" aria-label="Categorias populares">
-                    <p className="bb-title-rule text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                    <p className="bb-title-rule text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">
                       Categorias populares
                     </p>
                     <div className="mt-5 flex flex-wrap gap-2.5">

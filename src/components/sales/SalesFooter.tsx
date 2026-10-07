@@ -24,10 +24,10 @@ export const SalesFooter = () => {
             style={{ willChange: 'opacity, transform' }}
           >
             <Sparkles className="w-4 h-4 text-blue-400" />
-            <span className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">Bico Brasil</span>
+            <span className="text-xs font-black tracking-[0.2em] text-blue-400 uppercase">Bico Brasil</span>
           </motion.div>
 
-          <h2 className="text-5xl md:text-7xl lg:text-[88px] font-black mb-12 tracking-tighter text-white leading-[0.95] select-none">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-12 tracking-tighter text-white leading-[0.95] select-none">
             Seu próximo cliente ou o profissional que <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-500 animate-pulse">você procura</span> pode estar a poucos minutos de você.
           </h2>
@@ -123,7 +123,7 @@ export const SalesFooter = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center pt-16 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">
+        <div className="flex flex-col md:flex-row justify-between items-center pt-16 border-t border-white/5 text-xs font-black uppercase tracking-[0.3em] text-zinc-600">
           <p>© {new Date().getFullYear()} Bico Brasil. Todos os direitos reservados.</p>
           <p className="mt-6 md:mt-0 opacity-40">High Performance PWA System v4.0</p>
         </div>

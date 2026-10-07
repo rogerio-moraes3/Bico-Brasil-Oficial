@@ -67,7 +67,7 @@ export const Footer = () => {
               className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 rounded-full px-4 py-2 mb-8 backdrop-blur-md"
             >
               <Sparkles className="w-4 h-4 text-blue-400" />
-              <span className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">Junte-se à revolução do bico</span>
+              <span className="text-xs font-black tracking-[0.2em] text-blue-400 uppercase">Junte-se à revolução do bico</span>
             </motion.div>
 
             <h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tighter text-white leading-tight">
@@ -126,7 +126,7 @@ export const Footer = () => {
 
           <div className="grid grid-cols-2 md:col-span-2 gap-10">
             <div>
-              <h4 className="text-white font-black mb-6 uppercase text-[10px] tracking-[0.2em] opacity-50">Ajuda & Plataforma</h4>
+              <h4 className="text-white font-black mb-6 uppercase text-xs tracking-[0.2em] opacity-50">Ajuda & Plataforma</h4>
               <ul className="space-y-4 text-sm font-bold">
                 <li><Link to="/about" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Sobre Nós</Link></li>
                 <li><Link to="/app" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Buscar Bicos</Link></li>
@@ -137,7 +137,7 @@ export const Footer = () => {
             </div>
 
             <div>
-              <h4 className="text-white font-black mb-6 uppercase text-[10px] tracking-[0.2em] opacity-50">Legal & Suporte</h4>
+              <h4 className="text-white font-black mb-6 uppercase text-xs tracking-[0.2em] opacity-50">Legal & Suporte</h4>
               <ul className="space-y-4 text-sm font-bold">
                 <li><Link to="/terms" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Termos de Uso</Link></li>
                 <li><Link to="/privacy" onClick={scrollToTop} className="hover:text-blue-400 transition-colors">Privacidade</Link></li>
@@ -150,10 +150,10 @@ export const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/5 gap-8">
           <div className="flex flex-col items-center md:items-start gap-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-zinc-600">
               © {new Date().getFullYear()} Bico Brasil. Todos os direitos reservados.
             </p>
-            <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest">
+            <p className="text-xs font-bold text-zinc-700 uppercase tracking-widest">
               Contato LGPD: contato.bicobrasil@gmail.com
             </p>
           </div>
@@ -161,12 +161,12 @@ export const Footer = () => {
           <div className="flex items-center gap-8">
             <Link
               to={isAdmin ? "/admin" : "/auth"}
-              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 hover:text-blue-400 transition-colors group"
+              className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-zinc-600 hover:text-blue-400 transition-colors group"
             >
               <Settings size={12} className="group-hover:rotate-90 transition-transform duration-500" />
               Área Admin
             </Link>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-800">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-zinc-800">
               v4.0.2
             </p>
           </div>

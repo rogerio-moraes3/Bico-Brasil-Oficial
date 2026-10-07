@@ -12,7 +12,7 @@ const badgeVariants = cva(
         secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
-        subtle: "border-border/50 bg-muted/50 text-muted-foreground hover:bg-muted/80 text-[10px] px-2 py-0.5",
+        subtle: "border-border/50 bg-muted/50 text-muted-foreground hover:bg-muted/80 text-xs px-2 py-0.5",
         premium: "border-transparent bg-[image:var(--gradient-gold)] text-[hsl(var(--xp-gold-foreground))] font-bold",
         success: "border-transparent bg-green-500/15 text-green-700 dark:text-green-400",
         verified: "border-primary/30 bg-primary/10 text-primary",

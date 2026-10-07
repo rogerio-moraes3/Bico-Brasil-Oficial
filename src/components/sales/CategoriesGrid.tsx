@@ -61,7 +61,7 @@ export const CategoriesGrid = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full mb-6 backdrop-blur-sm" style={{ border: '1.5px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold tracking-wider uppercase rounded-full mb-6 backdrop-blur-sm" style={{ border: '1.5px solid var(--bico-accent-blue-border)', background: 'var(--bico-accent-blue-soft)' }}>
               <Clock className="w-3 h-3 text-bico-accent" />
               <span className="text-bico-accent">PARA CONTRATANTES</span>
             </div>

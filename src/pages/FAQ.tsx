@@ -39,7 +39,7 @@ export default function FAQPage() {
                 Voltar
               </Button>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-black tracking-[0.2em] uppercase rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 mb-10">
                 <Sparkles className="w-3 h-3" />
                 <span>Central de Ajuda</span>
               </div>
