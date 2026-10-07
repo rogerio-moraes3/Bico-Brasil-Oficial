@@ -81,7 +81,7 @@ export const Footer = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
                 onClick={() => navigate("/auth?mode=signup")}
-                className="group relative flex items-center gap-2 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-8 py-4 rounded-2xl font-black text-lg shadow-[0_20px_40px_rgba(255,92,53,0.2)] transition-all hover:scale-105 active:scale-95 w-full sm:w-auto justify-center"
+                className="group relative flex items-center gap-2 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-8 py-4 rounded-2xl font-black text-lg shadow-[0_20px_40px_rgba(255,92,53,0.2)] transition-all bb-lift active:scale-95 w-full sm:w-auto justify-center"
               >
                 Criar Conta Grátis
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

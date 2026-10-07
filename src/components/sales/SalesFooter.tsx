@@ -39,14 +39,14 @@ export const SalesFooter = () => {
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <button
               onClick={() => navigate("/app")}
-              className="group relative flex items-center gap-3 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-12 py-6 rounded-3xl font-black text-2xl shadow-[0_20px_60px_rgba(255,92,53,0.3)] transition-all duration-300 hover:scale-[1.05] active:scale-95 w-full sm:w-auto justify-center"
+              className="group relative flex items-center gap-3 bg-[#FF5C35] hover:bg-[#FF451A] text-white px-12 py-6 rounded-3xl font-black text-2xl shadow-[0_20px_60px_rgba(255,92,53,0.3)] transition-all duration-300 bb-lift active:scale-95 w-full sm:w-auto justify-center"
             >
               Encontrar Profissionais
               <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
             </button>
             <button
               onClick={() => navigate("/auth?mode=signup")}
-              className="px-12 py-6 text-2xl font-black text-white border border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-xl rounded-3xl transition-all hover:scale-[1.05] active:scale-95 w-full sm:w-auto"
+              className="px-12 py-6 text-2xl font-black text-white border border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-xl rounded-3xl transition-all bb-lift active:scale-95 w-full sm:w-auto"
             >
               Quero Trabalhar
             </button>

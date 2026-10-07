@@ -178,7 +178,7 @@ export const SalesHeroSection = () => {
             <div className="flex gap-4 mb-12 flex-wrap">
               <button
                 onClick={() => navigate("/app")}
-                className="group relative flex items-center gap-2 bg-bico-orange hover:bg-bico-orange-hover !text-slate-900 px-8 py-4 rounded-lg font-bold text-lg shadow-[0_8px_24px_rgba(255,92,53,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-95"
+                className="group relative flex items-center gap-2 bg-bico-orange hover:bg-bico-orange-hover !text-slate-900 px-8 py-4 rounded-lg font-bold text-lg shadow-[0_8px_24px_rgba(255,92,53,0.35)] transition-all duration-300 bb-lift active:scale-95"
               >
                 Quero contratar
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -417,7 +417,7 @@ export const SalesHeroSection = () => {
 
             <button
               onClick={handleSearch}
-              className="lg:w-48 h-16 flex items-center justify-center bg-bico-orange hover:bg-bico-orange-hover !text-slate-900 px-10 rounded-2xl font-bold text-lg shadow-lg shadow-bico-orange/20 transition-all hover:scale-[1.02] active:scale-95"
+              className="lg:w-48 h-16 flex items-center justify-center bg-bico-orange hover:bg-bico-orange-hover !text-slate-900 px-10 rounded-2xl font-bold text-lg shadow-lg shadow-bico-orange/20 transition-all bb-lift active:scale-95"
             >
               Buscar
             </button>

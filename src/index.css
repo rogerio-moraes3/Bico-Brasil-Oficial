@@ -763,21 +763,29 @@ button {
     background: var(--bb-env, hsl(var(--bb-focus)));
   }
 
-  /* CTA pilula: sombra discreta e elevacao no hover. */
+  /* CTA pilula: a FORMA. A elevacao mora em .bb-lift, separada, porque
+     botoes que nao sao pilula tambem precisam dela. */
   .bb-cta {
     border-radius: 999px;
     box-shadow: 0 6px 16px -8px rgba(2, 8, 23, 0.45);
+  }
+
+  /* Elevacao no hover — o UNICO hover de botao do app. Antes conviviam
+     cinco escalas diferentes (scale-105, 110, 1.02, 1.04, 1.05), as vezes
+     em dois botoes lado a lado. Subir 2px e discreto e, diferente de
+     scale, nao borra texto nem reflui o layout dos vizinhos. */
+  .bb-lift {
     transition-property: transform, box-shadow, background-color, filter;
     transition-duration: 180ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .bb-cta:hover {
+  .bb-lift:hover {
     transform: translateY(-2px);
     box-shadow: 0 14px 26px -12px rgba(2, 8, 23, 0.55);
   }
 
-  .bb-cta:active {
+  .bb-lift:active {
     transform: translateY(0);
   }
 

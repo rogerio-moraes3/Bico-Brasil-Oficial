@@ -54,7 +54,7 @@ export const ProviderSection = () => {
 
             <button
               onClick={() => navigate("/offer-services")}
-              className="group flex items-center gap-2 bg-white text-black hover:bg-zinc-90 px-10 py-5 rounded-full font-bold text-lg transition-all shadow-sm hover:shadow-lg hover:scale-[1.04] active:scale-95"
+              className="group flex items-center gap-2 bg-white text-black hover:bg-zinc-90 px-10 py-5 rounded-full font-bold text-lg transition-all shadow-sm hover:shadow-lg bb-lift active:scale-95"
             >
               Começar a Ganhar
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

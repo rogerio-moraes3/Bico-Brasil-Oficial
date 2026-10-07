@@ -216,7 +216,7 @@ export default function Premium() {
 
                 <button 
                   onClick={() => handlePlanClick({ type: 'vip', amount: 29.90, name: 'VIP' })}
-                  className="w-full py-6 bg-white text-black hover:bg-zinc-500 font-black text-2xl rounded-3xl shadow-[0_20px_40px_rgba(255,255,255,0.15)] transition-all hover:scale-110 active:scale-95"
+                  className="w-full py-6 bg-white text-black hover:bg-zinc-500 font-black text-2xl rounded-3xl shadow-[0_20px_40px_rgba(255,255,255,0.15)] transition-all bb-lift active:scale-95"
                 >
                    Ser VIP Agora
                 </button>

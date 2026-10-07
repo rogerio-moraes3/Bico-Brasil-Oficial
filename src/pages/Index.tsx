@@ -170,7 +170,7 @@ export default function Index() {
                           {descricao}
                         </span>
                         <span
-                          className={`bb-cta mt-5 inline-flex items-center gap-2 ${acentoBotao} px-5 py-2.5 text-sm font-bold text-white group-hover:-translate-y-0.5`}
+                          className={`bb-cta bb-lift mt-5 inline-flex items-center gap-2 ${acentoBotao} px-5 py-2.5 text-sm font-bold text-white group-hover:-translate-y-0.5`}
                         >
                           {cta}
                           <ArrowRight

@@ -196,7 +196,7 @@ const ProcurarBicos = () => {
                <Button
                 onClick={() => setShowFilters(!showFilters)}
                 variant="outline"
-                className="bg-card border-border rounded-2xl h-14 w-40 justify-center font-bold hover:scale-[1.02] active:scale-95 transition-all duration-300"
+                className="bg-card border-border rounded-2xl h-14 w-40 justify-center font-bold bb-lift active:scale-95 transition-all duration-300"
                >
                  <Filter className="w-5 h-5 mr-2" />
                  Filtros
@@ -363,7 +363,7 @@ const ProcurarBicos = () => {
             </div>
             <Button 
               onClick={() => navigate('/offer-services')} 
-              className="h-16 px-10 bg-white text-[#FF5C35] hover:bg-zinc-100 font-black text-xl rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95 shrink-0"
+              className="h-16 px-10 bg-white text-[#FF5C35] hover:bg-zinc-100 font-black text-xl rounded-2xl shadow-xl transition-all bb-lift active:scale-95 shrink-0"
             >
               Anunciar Meus Bicos
             </Button>

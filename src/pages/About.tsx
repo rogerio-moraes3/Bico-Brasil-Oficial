@@ -112,7 +112,7 @@ export default function About() {
               <div className="flex flex-wrap justify-center gap-4">
                  <Link 
                     to="/auth?mode=signup"
-                    className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black transition-all hover:scale-105"
+                    className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black transition-all bb-lift"
                  >
                     Começar Agora
                  </Link>

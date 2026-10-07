@@ -156,7 +156,7 @@ export const HowItWorks = () => {
         <div className="mt-20 flex flex-col items-center gap-4">
           <button 
           onClick={() => window.location.href = "/app"}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.02] active:scale-95">
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-lg shadow-blue-600/20 transition-all bb-lift active:scale-95">
             {activeTab === "client" ? "Começar a Contratar" : "Começar a Trabalhar"}
           </button>
           <span className="text-zinc-500 font-medium">Rápido, fácil e sem intermediários.</span>
